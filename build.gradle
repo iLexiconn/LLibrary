@@ -18,6 +18,7 @@ plugins {
 apply plugin: "net.minecraftforge.gradle.forge"
 
 import groovy.json.JsonSlurper;
+
 def secretFile = file "secret.json"
 project.ext.secret = null
 if (secretFile.exists()) {
@@ -29,12 +30,17 @@ if (secretFile.exists()) {
 version = getVersion()
 group = "net.ilexiconn"
 archivesBaseName = "llibrary"
-sourceCompatibility = targetCompatibility = "1.6"
+sourceCompatibility = targetCompatibility = "1.8"
 
 minecraft {
     version = "1.9-12.16.0.1770-1.9"
     runDir = "minecraft"
     mappings = "snapshot_20160312"
+}
+
+configurations {
+    shade
+    compile.extendsFrom shade
 }
 
 processResources {
@@ -45,9 +51,38 @@ processResources {
         include "mcmod.info"
         expand "version": project.version, "mcversion": project.minecraft.version
     }
-        
+
     from(sourceSets.main.resources.srcDirs) {
         exclude "mcmod.info"
+    }
+}
+
+repositories {
+    maven {
+        name "tterrag"
+        url "http://maven.tterrag.com/"
+    }
+}
+
+dependencies {
+    shade "chylex.javacheck:JavaChecker:v2.0-b3"
+}
+
+reobf {
+    jar {
+        extraLines "PK: chylex/javacheck net/ilexiconn/llibrary/shade/javacheck"
+    }
+}
+
+jar {
+    configurations.shade.each { dep ->
+        from(project.zipTree(dep)) {
+            exclude 'META-INF', 'META-INF/**'
+        }
+    }
+
+    manifest {
+        attributes 'TweakClass': 'net.ilexiconn.llibrary.shade.javacheck.Java8Checker'
     }
 }
 
