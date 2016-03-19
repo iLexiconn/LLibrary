@@ -6,18 +6,22 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 
 @Mod(modid = "llibrary", name = "LLibrary", version = LLibrary.VERSION)
 public class LLibrary {
-    public static final String VERSION = "0.10.0-develop";
+    public static final String VERSION = "1.0.0-develop";
 
     @SidedProxy(serverSide = "net.ilexiconn.llibrary.server.ServerProxy", clientSide = "net.ilexiconn.llibrary.client.ClientProxy")
     public static ServerProxy PROXY;
     @Mod.Instance("llibrary")
     public static LLibrary INSTANCE;
+    public static SimpleNetworkWrapper NETWORK_WRAPPER;
 
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent event) {
+        LLibrary.NETWORK_WRAPPER = NetworkRegistry.INSTANCE.newSimpleChannel("llibrary");
         LLibrary.PROXY.onPreInit();
     }
 
