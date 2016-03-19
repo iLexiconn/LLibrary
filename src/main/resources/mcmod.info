@@ -1,0 +1,10 @@
+[
+    {
+        "modid": "llibrary",
+        "name": "LLibrary",
+        "version": "${version}",
+        "authorList": ["iLexiconn"],
+        "credits": "",
+        "url": "https://github.com/iLexiconn/LLibrary"
+    }
+]

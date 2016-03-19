@@ -1,0 +1,120 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+    }
+    dependencies {
+        classpath "net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT"
+    }
+}
+
+plugins {
+    id "maven-publish"
+}
+
+apply plugin: "net.minecraftforge.gradle.forge"
+
+import groovy.json.JsonSlurper;
+def secretFile = file "secret.json"
+project.ext.secret = null
+if (secretFile.exists()) {
+    secretFile.withReader {
+        project.ext.secret = new JsonSlurper().parse it
+    }
+}
+
+version = getVersion()
+group = "net.ilexiconn"
+archivesBaseName = "llibrary"
+sourceCompatibility = targetCompatibility = "1.6"
+
+minecraft {
+    version = "1.9-12.16.0.1770-1.9"
+    runDir = "minecraft"
+    mappings = "snapshot_20160312"
+}
+
+processResources {
+    inputs.property "version", getVersion()
+    inputs.property "mcversion", project.minecraft.version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include "mcmod.info"
+        expand "version": project.version, "mcversion": project.minecraft.version
+    }
+        
+    from(sourceSets.main.resources.srcDirs) {
+        exclude "mcmod.info"
+    }
+}
+
+task devJar(type: Jar) {
+    classifier = "dev"
+    from sourceSets.main.output
+}
+
+artifacts {
+    archives devJar
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId "net.ilexiconn"
+            artifactId "llibrary"
+            version getVersion()
+
+            from components.java
+
+            artifact devJar {
+                classifier "dev"
+            }
+
+            artifact sourceJar {
+                classifier "sources"
+            }
+        }
+    }
+    repositories {
+        maven {
+            credentials {
+                if (secret) {
+                    username secret.username
+                    password secret.password
+                } else {
+                    username ""
+                    password ""
+                }
+            }
+            if (secret) {
+                url secret.url
+            } else {
+                url ""
+            }
+        }
+    }
+}
+
+String getVersion() {
+    String major = "0";
+    String revision = "0";
+    String patch = "0";
+    String prefix = "public static final String VERSION = \"";
+    File file = file("src/main/java/net/ilexiconn/llibrary/LLibrary.java")
+    file.eachLine { String s ->
+        s = s.trim();
+        if (s.startsWith(prefix)) {
+            s = s.substring(prefix.length(), s.length() - 2);
+            String[] pts = s.split("\\.");
+
+            major = pts[0];
+            revision = pts[1];
+            patch = pts[2];
+        }
+    }
+
+    return "$major.$revision.$patch";
+}
