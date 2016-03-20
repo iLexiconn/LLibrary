@@ -1,7 +1,11 @@
 package net.ilexiconn.llibrary.client.model.tabula.container;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
 import java.util.List;
 
+@SideOnly(Side.CLIENT)
 public class TabulaCubeGroupContainer {
     private String name;
     private String identifier;
