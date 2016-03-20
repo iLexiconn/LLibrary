@@ -63,7 +63,7 @@ public class ClientEventHandler {
 
             if (!this.checkedForUpdates && !UpdateHandler.INSTANCE.getOutdatedModList().isEmpty()) {
                 this.checkedForUpdates = true;
-                SnackbarHandler.INSTANCE.showSnackbar(Snackbar.create(I18n.translateToFallback("snackbar.llibrary.updates_found")));
+                SnackbarHandler.INSTANCE.showSnackbar(Snackbar.create(I18n.translateToLocal("snackbar.llibrary.updates_found")));
             }
         }
     }

@@ -2,6 +2,7 @@ package net.ilexiconn.llibrary.server;
 
 import net.ilexiconn.llibrary.LLibrary;
 import net.ilexiconn.llibrary.server.capability.EntityDataCapabilityImplementation;
+import net.ilexiconn.llibrary.server.config.ConfigHandler;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -9,6 +10,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class ServerEventHandler {
@@ -33,6 +35,13 @@ public class ServerEventHandler {
             NBTTagCompound data = new NBTTagCompound();
             EntityDataCapabilityImplementation.getCapability(event.original).saveToNBT(data);
             EntityDataCapabilityImplementation.getCapability(event.entityPlayer).loadFromNBT(data);
+        }
+    }
+
+    @SubscribeEvent
+    public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
+        if (ConfigHandler.INSTANCE.hasConfigForID(event.modID)) {
+            ConfigHandler.INSTANCE.saveConfigForID(event.modID);
         }
     }
 }
