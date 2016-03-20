@@ -26,7 +26,7 @@ public class LLibrary {
     public static Capability<IEntityDataCapability> ENTITY_DATA_CAPABILITY;
 
     public static final Logger LOGGER = LogManager.getLogger("LLibrary");
-    public static final SimpleNetworkWrapper NETWORK_WRAPPER= NetworkRegistry.INSTANCE.newSimpleChannel("llibrary");
+    public static final SimpleNetworkWrapper NETWORK_WRAPPER = NetworkRegistry.INSTANCE.newSimpleChannel("llibrary");
 
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent event) {
