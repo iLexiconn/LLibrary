@@ -25,8 +25,8 @@ public class ModelAnimator {
         this.tempTick = 0;
         this.correctAnimation = false;
         this.model = model;
-        this.transformMap = new HashMap<ModelRenderer, Transform>();
-        this.prevTransformMap = new HashMap<ModelRenderer, Transform>();
+        this.transformMap = new HashMap<>();
+        this.prevTransformMap = new HashMap<>();
     }
 
     public IAnimatedEntity getEntity() {

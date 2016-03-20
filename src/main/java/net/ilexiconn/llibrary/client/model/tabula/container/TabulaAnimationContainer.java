@@ -1,12 +1,8 @@
 package net.ilexiconn.llibrary.client.model.tabula.container;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
 import java.util.List;
 import java.util.Map;
 
-@SideOnly(Side.CLIENT)
 public class TabulaAnimationContainer {
     private String name;
     private String identifier;

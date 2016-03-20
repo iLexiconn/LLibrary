@@ -4,7 +4,7 @@
         "name": "LLibrary",
         "version": "${version}",
         "authorList": ["iLexiconn"],
-        "credits": "",
+        "credits": "gegy1000",
         "url": "https://github.com/iLexiconn/LLibrary"
     }
 ]
