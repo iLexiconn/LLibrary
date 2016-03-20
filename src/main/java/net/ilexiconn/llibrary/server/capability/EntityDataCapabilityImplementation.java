@@ -7,6 +7,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author gegy1000
+ * @since 1.0.0
+ */
 public class EntityDataCapabilityImplementation implements IEntityDataCapability {
     private List<IEntityData> managers = new ArrayList<>();
 

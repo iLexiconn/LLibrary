@@ -1,5 +1,9 @@
 package net.ilexiconn.llibrary.server.command.argument;
 
+/**
+ * @author iLexiconn
+ * @since 1.0.0
+ */
 public class Argument {
     private String name;
     private String value;

@@ -16,6 +16,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author iLexiconn
+ * @since 1.0.0
+ */
 public class Command extends CommandBase {
     private String name;
     private String commandUsage;
@@ -63,7 +67,7 @@ public class Command extends CommandBase {
     }
 
     @Override
-    public String getCommandUsage(ICommandSender iCommandSender) {
+    public String getCommandUsage(ICommandSender sender) {
         if (this.commandUsage == null) {
             StringBuilder builder = new StringBuilder();
             builder.append("/");

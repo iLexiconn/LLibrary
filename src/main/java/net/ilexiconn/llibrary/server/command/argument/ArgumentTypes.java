@@ -11,6 +11,10 @@ import net.minecraft.util.math.BlockPos;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * @author iLexiconn
+ * @since 1.0.0
+ */
 public enum ArgumentTypes {
     STRING,
     INTEGER,
@@ -18,6 +22,9 @@ public enum ArgumentTypes {
     ITEMSTACK,
     BOOLEAN;
 
+    /**
+     * @return the value of a given argument
+     */
     public Object getValue(MinecraftServer server, ICommandSender sender, String argument) throws CommandException {
         switch (this) {
             case INTEGER:
@@ -33,6 +40,9 @@ public enum ArgumentTypes {
         }
     }
 
+    /**
+     * @return a list of possible ways to complete this command argument
+     */
     public List<String> getTabCompletion(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
         switch (this) {
             case PLAYER:

@@ -5,9 +5,18 @@ import net.ilexiconn.llibrary.server.network.AnimationMessage;
 import net.minecraft.entity.Entity;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
+/**
+ * @author iLexiconn
+ * @since 1.0.0
+ */
 public enum AnimationHandler {
     INSTANCE;
 
+    /**
+     * Sends an animation packet to all clients, notifying them of a changed animation
+     * @param entity the entity with an animation to be updated
+     * @param animation the animation to be updated
+     */
     public void sendAnimationMessage(IAnimatedEntity entity, Animation animation) {
         if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
             return;
@@ -16,6 +25,9 @@ public enum AnimationHandler {
         LLibrary.NETWORK_WRAPPER.sendToAll(new AnimationMessage(((Entity) entity).getEntityId(), animation));
     }
 
+    /**
+     * Updates all animations for a given entity
+     */
     public void updateAnimations(IAnimatedEntity entity) {
         if (entity.getAnimation() == null) {
             entity.setAnimation(entity.getAnimations()[0]);

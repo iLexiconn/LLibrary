@@ -5,10 +5,19 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * An enhanced ModelBase
+ *
+ * @author gegy1000
+ * @since 1.0.0
+ */
 @SideOnly(Side.CLIENT)
 public class AdvancedModelBase extends ModelBase {
     private float movementScale;
 
+    /**
+     * Sets the default pose to the current pose of this model
+     */
     public void updateDefaultPose() {
         this.boxList.stream().filter(modelRenderer -> modelRenderer instanceof AdvancedModelRenderer).forEach(modelRenderer -> {
             AdvancedModelRenderer advancedModelRenderer = (AdvancedModelRenderer) modelRenderer;
@@ -16,6 +25,9 @@ public class AdvancedModelBase extends ModelBase {
         });
     }
 
+    /**
+     * Sets the current pose to the previously set default pose
+     */
     public void resetToDefaultPose() {
         this.boxList.stream().filter(modelRenderer -> modelRenderer instanceof AdvancedModelRenderer).forEach(modelRenderer -> {
             AdvancedModelRenderer advancedModelRenderer = (AdvancedModelRenderer) modelRenderer;
@@ -23,6 +35,14 @@ public class AdvancedModelBase extends ModelBase {
         });
     }
 
+    /**
+     * Rotates the given boxes to face a given target
+     *
+     * @param yaw the yaw to face
+     * @param pitch the pitch to face
+     * @param rotationDivisor the amount to divide the rotation angles by
+     * @param boxes the boxes to face the given target
+     */
     public void faceTarget(float yaw, float pitch, float rotationDivisor, AdvancedModelRenderer... boxes) {
         float actualRotationDivisor = rotationDivisor / boxes.length;
         float yawAmount = yaw / (180.0F / (float) Math.PI) / actualRotationDivisor;
@@ -33,6 +53,14 @@ public class AdvancedModelBase extends ModelBase {
         }
     }
 
+    /**
+     * Swings (rotates on the Y axis) the given model parts in a chain-like manner.
+     *
+     * @param speed the speed to swing this at
+     * @param degree the amount to rotate this by
+     * @param rootOffset the root rotation offset
+     * @param boxes the boxes to swing
+     */
     public void chainSwing(float speed, float degree, double rootOffset, float swing, float swingAmount, AdvancedModelRenderer... boxes) {
         float offset = calculateChainOffset(rootOffset, boxes);
         for (int index = 0; index < boxes.length; index++) {
@@ -40,6 +68,14 @@ public class AdvancedModelBase extends ModelBase {
         }
     }
 
+    /**
+     * Waves (rotates on the X axis) the given model parts in a chain-like manner.
+     *
+     * @param speed the speed to wave this at
+     * @param degree the amount to rotate this by
+     * @param rootOffset the root rotation offset
+     * @param boxes the boxes to wave
+     */
     public void chainWave(float speed, float degree, double rootOffset, float swing, float swingAmount, AdvancedModelRenderer... boxes) {
         float offset = calculateChainOffset(rootOffset, boxes);
         for (int index = 0; index < boxes.length; index++) {
@@ -47,6 +83,14 @@ public class AdvancedModelBase extends ModelBase {
         }
     }
 
+    /**
+     * Flaps (rotates on the Z axis) the given model parts in a chain-like manner.
+     *
+     * @param speed the speed to flap this at
+     * @param degree the amount to rotate this by
+     * @param rootOffset the root rotation offset
+     * @param boxes the boxes to flap
+     */
     public void chainFlap(float speed, float degree, double rootOffset, float swing, float swingAmount, AdvancedModelRenderer... boxes) {
         float offset = calculateChainOffset(rootOffset, boxes);
         for (int index = 0; index < boxes.length; index++) {
@@ -62,6 +106,9 @@ public class AdvancedModelBase extends ModelBase {
         return (float) ((rootOffset * Math.PI) / (2 * boxes.length));
     }
 
+    /**
+     * Multiplies all rotation and position changes by this value
+     */
     public void setMovementScale(float movementScale) {
         this.movementScale = movementScale;
     }

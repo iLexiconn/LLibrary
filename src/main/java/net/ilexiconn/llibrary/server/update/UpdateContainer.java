@@ -7,6 +7,10 @@ import net.minecraftforge.fml.common.versioning.DefaultArtifactVersion;
 import java.awt.image.BufferedImage;
 import java.util.Map;
 
+/**
+ * @author iLexiconn
+ * @since 1.0.0
+ */
 public class UpdateContainer {
     private transient ModContainer modContainer;
     private transient BufferedImage icon;

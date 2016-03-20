@@ -10,6 +10,10 @@ import net.minecraft.util.text.TextFormatting;
 
 import java.util.List;
 
+/**
+ * @author iLexiconn
+ * @since 1.0.0
+ */
 public class CommandArguments {
     private List<Argument> arguments;
     private ICommandSender commandSender;

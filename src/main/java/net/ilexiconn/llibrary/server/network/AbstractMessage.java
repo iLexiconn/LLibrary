@@ -10,6 +10,10 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * @author iLexiconn
+ * @since 1.0.0
+ */
 public abstract class AbstractMessage<MESSAGE extends AbstractMessage<MESSAGE>> implements IMessage, IMessageHandler<MESSAGE, IMessage> {
     @Override
     public IMessage onMessage(MESSAGE message, MessageContext messageContext) {

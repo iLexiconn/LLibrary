@@ -10,6 +10,11 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * An enhanced ModelRenderer
+ * @author gegy1000
+ * @since 1.0.0
+ */
 @SideOnly(Side.CLIENT)
 public class AdvancedModelRenderer extends ModelRenderer {
     private AdvancedModelBase model;
