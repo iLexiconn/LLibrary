@@ -1,12 +1,14 @@
 package net.ilexiconn.llibrary.client.model.tabula;
 
+import net.ilexiconn.llibrary.client.model.ModelAnimator;
+import net.ilexiconn.llibrary.client.model.tabula.container.*;
 import net.ilexiconn.llibrary.client.model.tools.AdvancedModelBase;
 import net.ilexiconn.llibrary.client.model.tools.AdvancedModelRenderer;
-import net.ilexiconn.llibrary.client.model.tabula.container.TabulaCubeContainer;
-import net.ilexiconn.llibrary.client.model.tabula.container.TabulaCubeGroupContainer;
-import net.ilexiconn.llibrary.client.model.tabula.container.TabulaModelContainer;
+import net.ilexiconn.llibrary.server.animation.Animation;
+import net.ilexiconn.llibrary.server.animation.IAnimatedEntity;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -20,13 +22,17 @@ public class TabulaModel extends AdvancedModelBase {
     private Map<String, AdvancedModelRenderer> cubes = new HashMap<>();
     private List<AdvancedModelRenderer> rootBoxes = new ArrayList<>();
     private TabulaModelContainer container;
-    private ITabulaModelAnimator animator;
+    private ITabulaModelAnimator tabulaAnimator;
+    private ModelAnimator modelAnimator;
+    private Map<TabulaAnimationContainer, Animation> animations = new HashMap<>();
+    private Map<String, AdvancedModelRenderer> identifierMap = new HashMap<>();
 
-    public TabulaModel(TabulaModelContainer container, ITabulaModelAnimator animator) {
+    public TabulaModel(TabulaModelContainer container, ITabulaModelAnimator tabulaAnimator) {
         this.textureWidth = container.getTextureWidth();
         this.textureHeight = container.getTextureHeight();
         this.container = container;
-        this.animator = animator;
+        this.tabulaAnimator = tabulaAnimator;
+        this.modelAnimator = new ModelAnimator(this);
         for (TabulaCubeContainer cube : container.getCubes()) {
             this.parseCube(cube, null);
         }
@@ -48,6 +54,7 @@ public class TabulaModel extends AdvancedModelBase {
     private void parseCube(TabulaCubeContainer cube, AdvancedModelRenderer parent) {
         AdvancedModelRenderer box = this.createBox(cube);
         this.cubes.put(cube.getName(), box);
+        this.identifierMap.put(cube.getIdentifier(), box);
         if (parent != null) {
             parent.addChild(box);
         } else {
@@ -90,8 +97,31 @@ public class TabulaModel extends AdvancedModelBase {
     @Override
     public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float rotationYaw, float rotationPitch, float scale, Entity entity) {
         this.resetToDefaultPose();
-        if (this.animator != null) {
-            this.animator.setRotationAngles(entity, limbSwing, limbSwingAmount, ageInTicks, rotationYaw, rotationPitch, scale);
+        if (this.tabulaAnimator != null) {
+            this.tabulaAnimator.setRotationAngles(entity, limbSwing, limbSwingAmount, ageInTicks, rotationYaw, rotationPitch, scale);
+        }
+    }
+
+    @Override
+    public void setLivingAnimations(EntityLivingBase entity, float f, float f1, float f2) {
+        if (entity instanceof IAnimatedEntity) {
+            this.modelAnimator.update((IAnimatedEntity) entity);
+            for (Map.Entry<TabulaAnimationContainer, Animation> entry : this.animations.entrySet()) {
+                TabulaAnimationContainer container = entry.getKey();
+                this.modelAnimator.setAnimation(entry.getValue());
+                for (Map.Entry<String, List<TabulaAnimationComponentContainer>> componentEntry : container.getComponents().entrySet()) {
+                    List<TabulaAnimationComponentContainer> componentContainers = componentEntry.getValue();
+                    AdvancedModelRenderer box = this.identifierMap.get(componentEntry.getKey());
+                    for (TabulaAnimationComponentContainer componentContainer : componentContainers) {
+                        this.modelAnimator.startKeyframe(componentContainer.getLength());
+                        double[] positionChange = componentContainer.getPositionChange();
+                        this.modelAnimator.move(box, (float) positionChange[0], (float) positionChange[1], (float) positionChange[2]);
+                        double[] rotationChange = componentContainer.getRotationChange();
+                        this.modelAnimator.rotate(box, (float) rotationChange[0], (float) rotationChange[1], (float) rotationChange[2]);
+                        this.modelAnimator.endKeyframe();
+                    }
+                }
+            }
         }
     }
 
@@ -101,5 +131,25 @@ public class TabulaModel extends AdvancedModelBase {
 
     public Map<String, AdvancedModelRenderer> getCubes() {
         return this.cubes;
+    }
+
+    public Animation getAnimation(String name, int id) {
+        for (TabulaAnimationContainer animationContainer : this.container.getAnimations()) {
+            if (name.equals(animationContainer.getName())) {
+                int animationLength = 0;
+                for (Map.Entry<String, List<TabulaAnimationComponentContainer>> entry : animationContainer.getComponents().entrySet()) {
+                    for (TabulaAnimationComponentContainer component : entry.getValue()) {
+                        int endKey = component.getEndKey();
+                        if (endKey > animationLength) {
+                            animationLength = endKey;
+                        }
+                    }
+                }
+                Animation animation = Animation.create(id, animationLength);
+                this.animations.put(animationContainer, animation);
+                return animation;
+            }
+        }
+        return null;
     }
 }

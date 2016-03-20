@@ -23,7 +23,7 @@ public class TabulaAnimationContainer {
         return this.loops;
     }
 
-    public Map<String, List<TabulaAnimationComponentContainer>> getSets() {
+    public Map<String, List<TabulaAnimationComponentContainer>> getComponents() {
         return this.sets;
     }
 }

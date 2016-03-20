@@ -53,7 +53,7 @@ public class ModelAnimator {
         return this.correctAnimation;
     }
 
-    public void startPhase(int duration) {
+    public void startKeyframe(int duration) {
         if (!this.correctAnimation) {
             return;
         }
@@ -61,14 +61,14 @@ public class ModelAnimator {
         this.tempTick += duration;
     }
 
-    public void setStationaryPhase(int duration) {
-        this.startPhase(duration);
-        this.endPhase(true);
+    public void setStationaryKeyframe(int duration) {
+        this.startKeyframe(duration);
+        this.endKeyframe(true);
     }
 
-    public void resetPhase(int duration) {
-        this.startPhase(duration);
-        this.endPhase();
+    public void resetKeyframe(int duration) {
+        this.startKeyframe(duration);
+        this.endKeyframe();
     }
 
     public void rotate(ModelRenderer box, float x, float y, float z) {
@@ -93,11 +93,11 @@ public class ModelAnimator {
         }
     }
 
-    public void endPhase() {
-        this.endPhase(false);
+    public void endKeyframe() {
+        this.endKeyframe(false);
     }
 
-    private void endPhase(boolean stationary) {
+    private void endKeyframe(boolean stationary) {
         if (!this.correctAnimation) {
             return;
         }
