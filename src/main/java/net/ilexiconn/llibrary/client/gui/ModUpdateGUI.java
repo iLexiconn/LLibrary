@@ -3,6 +3,7 @@ package net.ilexiconn.llibrary.client.gui;
 import net.ilexiconn.llibrary.server.update.UpdateContainer;
 import net.ilexiconn.llibrary.server.update.UpdateHandler;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.translation.I18n;
@@ -18,15 +19,15 @@ import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class ModUpdateGUI extends GuiScreen {
-    private GuiScreen mainMenu;
+    private GuiMainMenu parent;
     private ModUpdateListGUI modList;
     private ModUpdateEntryGUI modInfo;
     private int selected = -1;
     private GuiButton buttonUpdate;
     private GuiButton buttonDone;
 
-    public ModUpdateGUI(GuiScreen mainMenu) {
-        this.mainMenu = mainMenu;
+    public ModUpdateGUI(GuiMainMenu parent) {
+        this.parent = parent;
     }
 
     public ModUpdateListGUI getModList() {
@@ -39,18 +40,18 @@ public class ModUpdateGUI extends GuiScreen {
 
     @Override
     public void initGui() {
-        int listWidth = 0;
+        int width = 0;
         for (UpdateContainer mod : UpdateHandler.INSTANCE.getOutdatedModList()) {
-            listWidth = Math.max(listWidth, fontRendererObj.getStringWidth(mod.getModContainer().getName()) + 47);
-            listWidth = Math.max(listWidth, fontRendererObj.getStringWidth(mod.getModContainer().getVersion()) + 47);
+            width = Math.max(width, fontRendererObj.getStringWidth(mod.getModContainer().getName()) + 47);
+            width = Math.max(width, fontRendererObj.getStringWidth(mod.getModContainer().getVersion()) + 47);
         }
-        listWidth = Math.min(listWidth, 150);
-        this.modList = new ModUpdateListGUI(this, listWidth);
+        width = Math.min(width, 150);
+        this.modList = new ModUpdateListGUI(this, width);
 
-        this.buttonList.add(buttonDone = new GuiButton(6, ((modList.getRight() + this.width) / 2) - 100, this.height - 38, I18n.translateToLocal("gui.done")));
+        this.buttonList.add(buttonDone = new GuiButton(6, ((this.modList.getRight() + this.width) / 2) - 100, this.height - 38, I18n.translateToLocal("gui.done")));
         this.buttonList.add(buttonUpdate = new GuiButton(20, 10, this.height - 38, this.modList.getWidth(), 20, I18n.translateToLocal("gui.llibrary.update")));
 
-        this.updateCache();
+        this.updateModInfo();
     }
 
     @Override
@@ -58,7 +59,7 @@ public class ModUpdateGUI extends GuiScreen {
         if (button.enabled) {
             switch (button.id) {
                 case 6: {
-                    this.mc.displayGuiScreen(this.mainMenu);
+                    this.mc.displayGuiScreen(this.parent);
                     return;
                 }
                 case 20: {
@@ -87,7 +88,7 @@ public class ModUpdateGUI extends GuiScreen {
             this.buttonList.clear();
             this.buttonList.add(buttonDone);
             this.drawScaledString(I18n.translateToLocal("gui.llibrary.updated.1"), i, j - 40, 0xFFFFFF, 2.0F);
-            this.drawScaledString(I18n.translateToLocal("gui.llibrary.updated.2"), i, j - 20, 0xFFFFFF, 1.0F);
+            this.drawScaledString(I18n.translateToLocal("gui.llibrary.updated.2"), i, j - 15, 0xFFFFFF, 1.0F);
         } else {
             this.modList.drawScreen(mouseX, mouseY, partialTicks);
             if (this.modInfo != null) {
@@ -104,7 +105,7 @@ public class ModUpdateGUI extends GuiScreen {
     public void selectModIndex(int index) {
         if (this.selected != index) {
             this.selected = index;
-            this.updateCache();
+            this.updateModInfo();
         }
     }
 
@@ -112,19 +113,19 @@ public class ModUpdateGUI extends GuiScreen {
         return this.selected == index;
     }
 
-    private void updateCache() {
-        buttonUpdate.visible = false;
-        modInfo = null;
+    private void updateModInfo() {
+        this.buttonUpdate.visible = false;
+        this.modInfo = null;
 
-        if (selected == -1) {
+        if (this.selected == -1) {
             return;
         }
 
         List<String> textList = new ArrayList<>();
 
-        buttonUpdate.visible = true;
-        buttonUpdate.enabled = true;
-        buttonUpdate.displayString = I18n.translateToLocal("gui.llibrary.update");
+        this.buttonUpdate.visible = true;
+        this.buttonUpdate.enabled = true;
+        this.buttonUpdate.displayString = I18n.translateToLocal("gui.llibrary.update");
 
         UpdateContainer updateContainer = UpdateHandler.INSTANCE.getOutdatedModList().get(selected);
         textList.add(updateContainer.getModContainer().getName());
@@ -133,7 +134,7 @@ public class ModUpdateGUI extends GuiScreen {
         textList.add(null);
         Collections.addAll(textList, UpdateHandler.INSTANCE.getChangelog(updateContainer, updateContainer.getLatestVersion()));
 
-        modInfo = new ModUpdateEntryGUI(this, this.width - this.modList.getWidth() - 30, textList);
+        this.modInfo = new ModUpdateEntryGUI(this, this.width - this.modList.getWidth() - 30, textList);
     }
 
     public void drawScaledString(String text, int x, int y, int color, float scale) {

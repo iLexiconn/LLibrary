@@ -77,18 +77,22 @@ reobf {
 jar {
     configurations.shade.each { dep ->
         from(project.zipTree(dep)) {
-            exclude 'META-INF', 'META-INF/**'
+            exclude "META-INF", "META-INF/**"
         }
     }
 
     manifest {
-        attributes 'TweakClass': 'net.ilexiconn.llibrary.shade.javacheck.Java8Checker'
+        attributes "TweakClass": "net.ilexiconn.llibrary.shade.javacheck.Java8Checker"
+        attributes "FMLAT": "llibrary_at.cfg"
     }
 }
 
 task devJar(type: Jar) {
     classifier = "dev"
     from sourceSets.main.output
+    manifest {
+        attributes "FMLAT": "llibrary_at.cfg"
+    }
 }
 
 artifacts {
