@@ -2,9 +2,9 @@ package net.ilexiconn.llibrary.client.model.tabula;
 
 import net.ilexiconn.llibrary.client.model.tools.AdvancedModelBase;
 import net.ilexiconn.llibrary.client.model.tools.AdvancedModelRenderer;
-import net.ilexiconn.llibrary.server.model.tabula.TabulaCubeContainer;
-import net.ilexiconn.llibrary.server.model.tabula.TabulaCubeGroupContainer;
-import net.ilexiconn.llibrary.server.model.tabula.TabulaModelContainer;
+import net.ilexiconn.llibrary.client.model.tabula.container.TabulaCubeContainer;
+import net.ilexiconn.llibrary.client.model.tabula.container.TabulaCubeGroupContainer;
+import net.ilexiconn.llibrary.client.model.tabula.container.TabulaModelContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraftforge.fml.relauncher.Side;
@@ -30,9 +30,7 @@ public class TabulaModel extends AdvancedModelBase {
         for (TabulaCubeContainer cube : container.getCubes()) {
             this.parseCube(cube, null);
         }
-        for (TabulaCubeGroupContainer group : container.getCubeGroups()) {
-            this.parseCubeGroup(group);
-        }
+        container.getCubeGroups().forEach(this::parseCubeGroup);
         this.updateDefaultPose();
     }
 
@@ -44,9 +42,7 @@ public class TabulaModel extends AdvancedModelBase {
         for (TabulaCubeContainer cube : container.getCubes()) {
             parseCube(cube, null);
         }
-        for (TabulaCubeGroupContainer group : container.getCubeGroups()) {
-            parseCubeGroup(group);
-        }
+        container.getCubeGroups().forEach(this::parseCubeGroup);
     }
 
     private void parseCube(TabulaCubeContainer cube, AdvancedModelRenderer parent) {
