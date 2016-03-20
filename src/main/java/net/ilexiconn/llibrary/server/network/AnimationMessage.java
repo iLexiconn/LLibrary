@@ -46,7 +46,7 @@ public class AnimationMessage extends AbstractMessage<AnimationMessage> {
 
     @Override
     public void toBytes(ByteBuf byteBuf) {
-        byteBuf.writeInt(entityID);
-        byteBuf.writeInt(animationID);
+        byteBuf.writeInt(this.entityID);
+        byteBuf.writeInt(this.animationID);
     }
 }

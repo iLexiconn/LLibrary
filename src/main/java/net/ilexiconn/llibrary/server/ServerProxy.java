@@ -28,12 +28,7 @@ public class ServerProxy {
 
     public <MESSAGE extends AbstractMessage<MESSAGE>> void handleMessage(final MESSAGE message, final MessageContext messageContext) {
         WorldServer world = (WorldServer) messageContext.getServerHandler().playerEntity.worldObj;
-        world.addScheduledTask(new Runnable() {
-            @Override
-            public void run() {
-                message.onServerReceived(FMLServerHandler.instance().getServer(), message, messageContext.getServerHandler().playerEntity, messageContext);
-            }
-        });
+        world.addScheduledTask(() -> message.onServerReceived(FMLServerHandler.instance().getServer(), message, messageContext.getServerHandler().playerEntity, messageContext));
     }
 
     public float getPartialTicks() {

@@ -1,4 +1,4 @@
-package net.ilexiconn.llibrary.server.capabilities;
+package net.ilexiconn.llibrary.server.capability;
 
 import net.ilexiconn.llibrary.LLibrary;
 import net.minecraft.entity.Entity;
@@ -10,29 +10,29 @@ import java.util.List;
 public class EntityDataCapabilityImplementation implements IEntityDataCapability {
     private List<ExtendedEntityDataManager> managers = new ArrayList<>();
 
-    public static IEntityDataCapability get(Entity entity) {
+    public static IEntityDataCapability getCapability(Entity entity) {
         return entity.getCapability(LLibrary.ENTITY_DATA_CAPABILITY, null);
     }
 
     @Override
-    public void save(NBTTagCompound nbt) {
+    public void saveToNBT(NBTTagCompound compound) {
         for (ExtendedEntityDataManager manager : managers) {
             NBTTagCompound managerTag = new NBTTagCompound();
-            manager.write(managerTag);
-            nbt.setTag(manager.getIdentifier(), managerTag);
+            manager.writeToNBT(managerTag);
+            compound.setTag(manager.getIdentifier(), managerTag);
         }
     }
 
     @Override
-    public void load(NBTTagCompound nbt) {
+    public void loadFromNBT(NBTTagCompound compound) {
         for (ExtendedEntityDataManager manager : managers) {
-            NBTTagCompound managerTag = nbt.getCompoundTag(manager.getIdentifier());
-            manager.read(managerTag);
+            NBTTagCompound managerTag = compound.getCompoundTag(manager.getIdentifier());
+            manager.readFromNBT(managerTag);
         }
     }
 
     @Override
-    public void add(ExtendedEntityDataManager manager) {
+    public void addManager(ExtendedEntityDataManager manager) {
         managers.add(manager);
     }
 }

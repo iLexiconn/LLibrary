@@ -1,13 +1,10 @@
 package net.ilexiconn.llibrary;
 
 import net.ilexiconn.llibrary.server.ServerProxy;
-import net.ilexiconn.llibrary.server.capabilities.IEntityDataCapability;
-import net.ilexiconn.llibrary.server.capabilities.EntityDataCapabilityImplementation;
-import net.ilexiconn.llibrary.server.capabilities.EntityDataCapabilityStorage;
-import net.ilexiconn.llibrary.server.command.Command;
-import net.ilexiconn.llibrary.server.command.CommandHandler;
-import net.ilexiconn.llibrary.server.command.argument.ArgumentTypes;
-import net.minecraft.util.text.TextComponentString;
+import net.ilexiconn.llibrary.server.capability.EntityDataCapabilityImplementation;
+import net.ilexiconn.llibrary.server.capability.EntityDataCapabilityStorage;
+import net.ilexiconn.llibrary.server.capability.IEntityDataCapability;
+import net.ilexiconn.llibrary.server.update.UpdateHandler;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -16,9 +13,10 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Mod(modid = "llibrary", name = "LLibrary", version = LLibrary.VERSION)
 public class LLibrary {
@@ -28,16 +26,18 @@ public class LLibrary {
     public static ServerProxy PROXY;
     @Mod.Instance("llibrary")
     public static LLibrary INSTANCE;
-    public static SimpleNetworkWrapper NETWORK_WRAPPER;
-
     @CapabilityInject(IEntityDataCapability.class)
-    public static final Capability<IEntityDataCapability> ENTITY_DATA_CAPABILITY = null;
+    public static Capability<IEntityDataCapability> ENTITY_DATA_CAPABILITY;
+
+    public static Logger LOGGER;
+    public static SimpleNetworkWrapper NETWORK_WRAPPER;
 
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent event) {
+        LLibrary.LOGGER = LogManager.getLogger("LLibrary");
         LLibrary.NETWORK_WRAPPER = NetworkRegistry.INSTANCE.newSimpleChannel("llibrary");
-        LLibrary.PROXY.onPreInit();
         CapabilityManager.INSTANCE.register(IEntityDataCapability.class, new EntityDataCapabilityStorage(), EntityDataCapabilityImplementation.class);
+        LLibrary.PROXY.onPreInit();
     }
 
     @Mod.EventHandler
@@ -47,17 +47,7 @@ public class LLibrary {
 
     @Mod.EventHandler
     public void onPostInit(FMLPostInitializationEvent event) {
+        UpdateHandler.INSTANCE.searchForUpdates();
         LLibrary.PROXY.onPostInit();
-    }
-
-    @Mod.EventHandler
-    public void onServerStarting(FMLServerStartingEvent event) {
-        Command testCommand = Command.create("test").addRequiredArgument("player", ArgumentTypes.PLAYER).addOptionalArgument("boolean", ArgumentTypes.BOOLEAN);
-        CommandHandler.INSTANCE.registerCommand(event, testCommand, (server, sender, arguments) -> {
-            sender.addChatMessage(new TextComponentString(arguments.getPlayer("player").getDisplayNameString()));
-            if (arguments.hasArgument("boolean")) {
-                sender.addChatMessage(new TextComponentString(arguments.getBoolean("boolean") + ""));
-            }
-        });
     }
 }

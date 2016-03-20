@@ -1,7 +1,7 @@
 package net.ilexiconn.llibrary.server;
 
 import net.ilexiconn.llibrary.LLibrary;
-import net.ilexiconn.llibrary.server.capabilities.EntityDataCapabilityImplementation;
+import net.ilexiconn.llibrary.server.capability.EntityDataCapabilityImplementation;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -31,8 +31,8 @@ public class ServerEventHandler {
     public void playerClone(PlayerEvent.Clone event) {
         if (event.wasDeath) {
             NBTTagCompound data = new NBTTagCompound();
-            EntityDataCapabilityImplementation.get(event.original).save(data);
-            EntityDataCapabilityImplementation.get(event.entityPlayer).load(data);
+            EntityDataCapabilityImplementation.getCapability(event.original).saveToNBT(data);
+            EntityDataCapabilityImplementation.getCapability(event.entityPlayer).loadFromNBT(data);
         }
     }
 }

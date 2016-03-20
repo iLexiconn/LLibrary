@@ -1,4 +1,4 @@
-package net.ilexiconn.llibrary.server.capabilities;
+package net.ilexiconn.llibrary.server.capability;
 
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -8,13 +8,13 @@ import net.minecraftforge.common.capabilities.Capability;
 public class EntityDataCapabilityStorage implements Capability.IStorage<IEntityDataCapability> {
     @Override
     public NBTBase writeNBT(Capability<IEntityDataCapability> capability, IEntityDataCapability instance, EnumFacing side) {
-        NBTTagCompound nbt = new NBTTagCompound();
-        instance.save(nbt);
-        return nbt;
+        NBTTagCompound compound = new NBTTagCompound();
+        instance.saveToNBT(compound);
+        return compound;
     }
 
     @Override
     public void readNBT(Capability<IEntityDataCapability> capability, IEntityDataCapability instance, EnumFacing side, NBTBase nbt) {
-        instance.load((NBTTagCompound) nbt);
+        instance.loadFromNBT((NBTTagCompound) nbt);
     }
 }
