@@ -6,6 +6,10 @@ import net.minecraftforge.common.config.Property;
 
 import java.lang.reflect.Field;
 
+/**
+ * @author iLexiconn
+ * @since 1.0.0
+ */
 public enum EntryAdapters implements IEntryAdapter {
     INTEGER {
         @Override
@@ -57,7 +61,7 @@ public enum EntryAdapters implements IEntryAdapter {
         }
     },
 
-    INT_LIST {
+    INT_ARRAY {
         @Override
         public Object getValue(Configuration config, String name, ConfigEntry entry, Object defaultValue) {
             Property property = config.get(entry.category(), name, (int[]) defaultValue);
@@ -67,7 +71,7 @@ public enum EntryAdapters implements IEntryAdapter {
         }
     },
 
-    BOOLEAN_LIST {
+    BOOLEAN_ARRAY {
         @Override
         public Object getValue(Configuration config, String name, ConfigEntry entry, Object defaultValue) {
             Property property = config.get(entry.category(), name, (boolean[]) defaultValue);
@@ -77,14 +81,14 @@ public enum EntryAdapters implements IEntryAdapter {
         }
     },
 
-    STRING_LIST {
+    STRING_ARRAY {
         @Override
         public Object getValue(Configuration config, String name, ConfigEntry entry, Object defaultValue) {
             return config.getStringList(name, entry.category(), (String[]) defaultValue, entry.comment());
         }
     },
 
-    FLOAT_LIST {
+    FLOAT_ARRAY {
         @Override
         public Object getValue(Configuration config, String name, ConfigEntry entry, Object defaultValue) {
             float[] floatArray = (float[]) defaultValue;
@@ -104,7 +108,7 @@ public enum EntryAdapters implements IEntryAdapter {
         }
     },
 
-    DOUBLE_LIST {
+    DOUBLE_ARRAY {
         @Override
         public Object getValue(Configuration config, String name, ConfigEntry entry, Object defaultValue) {
             Property property = config.get(entry.category(), name, (double[]) defaultValue);
@@ -126,15 +130,15 @@ public enum EntryAdapters implements IEntryAdapter {
         } else if (Double.class.isAssignableFrom(field.getType()) || double.class.isAssignableFrom(field.getType())) {
             return DOUBLE;
         } else if (Integer[].class.isAssignableFrom(field.getType()) || int[].class.isAssignableFrom(field.getType())) {
-            return INT_LIST;
+            return INT_ARRAY;
         } else if (Boolean[].class.isAssignableFrom(field.getType()) || boolean[].class.isAssignableFrom(field.getType())) {
-            return BOOLEAN_LIST;
+            return BOOLEAN_ARRAY;
         } else if (String[].class.isAssignableFrom(field.getType())) {
-            return STRING_LIST;
+            return STRING_ARRAY;
         } else if (Float[].class.isAssignableFrom(field.getType()) || float[].class.isAssignableFrom(field.getType())) {
-            return FLOAT_LIST;
+            return FLOAT_ARRAY;
         } else if (Double[].class.isAssignableFrom(field.getType()) || double[].class.isAssignableFrom(field.getType())) {
-            return DOUBLE_LIST;
+            return DOUBLE_ARRAY;
         } else {
             return null;
         }

@@ -12,6 +12,10 @@ import net.minecraftforge.fml.common.Mod;
 import java.io.File;
 import java.util.*;
 
+/**
+ * @author iLexiconn
+ * @since 1.0.0
+ */
 public enum ConfigHandler {
     INSTANCE;
 
@@ -20,6 +24,13 @@ public enum ConfigHandler {
     private Map<String, Map<String, Object>> defaultValueMap = new HashMap<>();
     private Map<Class<?>, IEntryAdapter<?>> entryAdapterMap = new HashMap<>();
 
+    /**
+     * Register an entry adapter.
+     *
+     * @param entryClass   the class to handle
+     * @param entryAdapter the adapter
+     * @param <ENTRY>      the entry type
+     */
     public <ENTRY> void registerEntryAdapter(Class<ENTRY> entryClass, IEntryAdapter<ENTRY> entryAdapter) {
         this.entryAdapterMap.put(entryClass, entryAdapter);
     }
@@ -44,6 +55,7 @@ public enum ConfigHandler {
                         type = this.entryAdapterMap.get(field.getType());
                     }
                     if (type != null) {
+                        field.setAccessible(true);
                         typeMap.put(name, EntryAdapters.getBuiltinAdaper(field));
                         valueMap.put(name, field.get(config));
                     } else {

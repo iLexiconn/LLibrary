@@ -18,8 +18,20 @@ public abstract class AbstractMessage<MESSAGE extends AbstractMessage<MESSAGE>> 
         return null;
     }
 
+    /**
+     * Executes when message received on CLIENT side. Never use fields directly from the class you're in, but use data from the 'message' field instead.
+     *
+     * @param message The message instance with all variables.
+     * @param player  The client player entity.
+     */
     @SideOnly(Side.CLIENT)
     public abstract void onClientReceived(Minecraft client, MESSAGE message, EntityPlayer player, MessageContext messageContext);
 
+    /**
+     * Executes when message received on SERVER side. Never use fields directly from the class you're in, but use data from the 'message' field instead.
+     *
+     * @param message The message instance with all variables.
+     * @param player  The player who sent the message to the server.
+     */
     public abstract void onServerReceived(MinecraftServer server, MESSAGE message, EntityPlayer player, MessageContext messageContext);
 }

@@ -36,17 +36,12 @@ public class UpdateContainer {
     }
 
     private String version;
-    private boolean isBeta;
     private String updateURL;
     private String iconURL;
     private Map<String, String[]> versions;
 
     public String getVersion() {
         return this.version;
-    }
-
-    public boolean isBeta() {
-        return this.isBeta;
     }
 
     public String getUpdateURL() {
