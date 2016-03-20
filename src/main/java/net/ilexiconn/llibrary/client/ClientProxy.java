@@ -1,11 +1,13 @@
 package net.ilexiconn.llibrary.client;
 
 import net.ilexiconn.llibrary.client.gui.SnackbarGUI;
+import net.ilexiconn.llibrary.client.model.tabula.baked.BakedTabulaLoader;
 import net.ilexiconn.llibrary.server.ServerProxy;
 import net.ilexiconn.llibrary.server.network.AbstractMessage;
 import net.ilexiconn.llibrary.server.snackbar.Snackbar;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Timer;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
@@ -29,6 +31,8 @@ public class ClientProxy extends ServerProxy {
         super.onPreInit();
 
         MinecraftForge.EVENT_BUS.register(ClientProxy.CLIENT_EVENT_HANDLER);
+        ModelLoaderRegistry.registerLoader(BakedTabulaLoader.INSTANCE);
+
         timer = ReflectionHelper.getPrivateValue(Minecraft.class, MINECRAFT, "timer", "field_71428_T", "aa");
     }
 

@@ -3,7 +3,10 @@ package net.ilexiconn.llibrary.client.model.tools;
 import net.ilexiconn.llibrary.LLibrary;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class ChainBuffer {
     private int yawTimer;
     private float yawVariation;
