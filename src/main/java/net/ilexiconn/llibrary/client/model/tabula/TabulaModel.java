@@ -105,6 +105,7 @@ public class TabulaModel extends AdvancedModelBase {
     @Override
     public void setLivingAnimations(EntityLivingBase entity, float f, float f1, float f2) {
         if (entity instanceof IAnimatedEntity) {
+            this.resetToDefaultPose();
             this.modelAnimator.update((IAnimatedEntity) entity);
             for (Map.Entry<TabulaAnimationContainer, Animation> entry : this.animations.entrySet()) {
                 TabulaAnimationContainer container = entry.getKey();
