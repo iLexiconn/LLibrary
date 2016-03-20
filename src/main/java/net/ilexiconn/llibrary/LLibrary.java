@@ -1,13 +1,9 @@
 package net.ilexiconn.llibrary;
 
 import net.ilexiconn.llibrary.server.ServerProxy;
-import net.ilexiconn.llibrary.server.capability.EntityDataCapabilityImplementation;
-import net.ilexiconn.llibrary.server.capability.EntityDataCapabilityStorage;
 import net.ilexiconn.llibrary.server.capability.IEntityDataCapability;
-import net.ilexiconn.llibrary.server.update.UpdateHandler;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
-import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -34,7 +30,6 @@ public class LLibrary {
 
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent event) {
-        CapabilityManager.INSTANCE.register(IEntityDataCapability.class, new EntityDataCapabilityStorage(), EntityDataCapabilityImplementation.class);
         LLibrary.PROXY.onPreInit();
     }
 
@@ -45,7 +40,6 @@ public class LLibrary {
 
     @Mod.EventHandler
     public void onPostInit(FMLPostInitializationEvent event) {
-        UpdateHandler.INSTANCE.searchForUpdates();
         LLibrary.PROXY.onPostInit();
     }
 }
