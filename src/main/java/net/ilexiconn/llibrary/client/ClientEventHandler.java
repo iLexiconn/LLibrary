@@ -8,6 +8,7 @@ import net.ilexiconn.llibrary.server.snackbar.SnackbarHandler;
 import net.ilexiconn.llibrary.server.update.UpdateHandler;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -62,7 +63,7 @@ public class ClientEventHandler {
 
             if (!this.checkedForUpdates && !UpdateHandler.INSTANCE.getOutdatedModList().isEmpty()) {
                 this.checkedForUpdates = true;
-                SnackbarHandler.INSTANCE.showSnackbar(Snackbar.create("LLibrary found outdated mods!"));
+                SnackbarHandler.INSTANCE.showSnackbar(Snackbar.create(I18n.translateToFallback("snackbar.llibrary.updates_found")));
             }
         }
     }

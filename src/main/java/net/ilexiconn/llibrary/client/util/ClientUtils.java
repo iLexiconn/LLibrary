@@ -13,7 +13,7 @@ public class ClientUtils {
     }
 
     public static float smoothenValue(float value, float factor) {
-        float times = (System.currentTimeMillis() - lastUpdate) / 16.666666666666668f;
+        float times = (System.currentTimeMillis() - lastUpdate) / 16.666666666666668F;
         return (float) (value * Math.pow(factor, times));
     }
 }
