@@ -1,6 +1,7 @@
 package net.ilexiconn.llibrary.server.config;
 
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -10,9 +11,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface ConfigEntry {
-    String name();
-
-    EntryTypes type();
+    String name() default "";
 
     String comment() default "";
 
@@ -21,4 +20,8 @@ public @interface ConfigEntry {
     String minValue() default "";
 
     String maxValue() default "";
+
+    String[] validValues() default "";
+
+    Side side() default Side.SERVER;
 }
