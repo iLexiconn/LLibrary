@@ -29,13 +29,11 @@ public class LLibrary {
     @CapabilityInject(IEntityDataCapability.class)
     public static Capability<IEntityDataCapability> ENTITY_DATA_CAPABILITY;
 
-    public static Logger LOGGER;
-    public static SimpleNetworkWrapper NETWORK_WRAPPER;
+    public static Logger LOGGER = LogManager.getLogger("LLibrary");
+    public static SimpleNetworkWrapper NETWORK_WRAPPER= NetworkRegistry.INSTANCE.newSimpleChannel("llibrary");
 
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent event) {
-        LLibrary.LOGGER = LogManager.getLogger("LLibrary");
-        LLibrary.NETWORK_WRAPPER = NetworkRegistry.INSTANCE.newSimpleChannel("llibrary");
         CapabilityManager.INSTANCE.register(IEntityDataCapability.class, new EntityDataCapabilityStorage(), EntityDataCapabilityImplementation.class);
         LLibrary.PROXY.onPreInit();
     }
