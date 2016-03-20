@@ -38,11 +38,6 @@ minecraft {
     mappings = "snapshot_20160312"
 }
 
-configurations {
-    shade
-    compile.extendsFrom shade
-}
-
 processResources {
     inputs.property "version", getVersion()
     inputs.property "mcversion", project.minecraft.version
@@ -57,32 +52,8 @@ processResources {
     }
 }
 
-repositories {
-    maven {
-        name "tterrag"
-        url "http://maven.tterrag.com/"
-    }
-}
-
-dependencies {
-    shade "chylex.javacheck:JavaChecker:v2.0-b3"
-}
-
-reobf {
-    jar {
-        extraLines "PK: chylex/javacheck net/ilexiconn/llibrary/shade/javacheck"
-    }
-}
-
 jar {
-    configurations.shade.each { dep ->
-        from(project.zipTree(dep)) {
-            exclude "META-INF", "META-INF/**"
-        }
-    }
-
     manifest {
-        attributes "TweakClass": "net.ilexiconn.llibrary.shade.javacheck.Java8Checker"
         attributes "FMLAT": "llibrary_at.cfg"
     }
 }
