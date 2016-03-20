@@ -153,7 +153,7 @@ public class ChainBuffer {
                 boxes[i].rotateAngleY += this.yawArray[i];
             }
         } else {
-            LLibrary.LOGGER.error("Wrong array length being used in the buffer! (Y axis)");
+            LLibrary.LOGGER.error("Wrong array length used in the y-axis buffer!");
         }
     }
 
@@ -163,7 +163,7 @@ public class ChainBuffer {
                 boxes[i].rotateAngleX += this.pitchArray[i];
             }
         } else {
-            LLibrary.LOGGER.error("Wrong array length being used in the buffer! (X axis)");
+            LLibrary.LOGGER.error("Wrong array length used in the x-axis buffer!");
         }
     }
 }

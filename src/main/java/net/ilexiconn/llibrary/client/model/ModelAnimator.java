@@ -116,7 +116,7 @@ public class ModelAnimator {
                 }
             } else {
                 float tick = (animationTick - this.prevTempTick + LLibrary.PROXY.getPartialTicks()) / (this.tempTick - this.prevTempTick);
-                float inc = MathHelper.sin((float) (tick * Math.PI / 2F)), dec = 1F - inc;
+                float inc = MathHelper.sin((float) (tick * Math.PI / 2.0F)), dec = 1.0F - inc;
                 for (ModelRenderer box : this.prevTransformMap.keySet()) {
                     Transform transform = this.prevTransformMap.get(box);
                     box.rotateAngleX += dec * transform.rotX;

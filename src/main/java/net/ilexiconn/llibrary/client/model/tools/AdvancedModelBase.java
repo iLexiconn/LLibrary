@@ -1,7 +1,6 @@
 package net.ilexiconn.llibrary.client.model.tools;
 
 import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -11,21 +10,17 @@ public class AdvancedModelBase extends ModelBase {
     private float movementScale;
 
     public void updateDefaultPose() {
-        for (ModelRenderer modelRenderer : this.boxList) {
-            if (modelRenderer instanceof AdvancedModelRenderer) {
-                AdvancedModelRenderer advancedModelRenderer = (AdvancedModelRenderer) modelRenderer;
-                advancedModelRenderer.updateDefaultPose();
-            }
-        }
+        this.boxList.stream().filter(modelRenderer -> modelRenderer instanceof AdvancedModelRenderer).forEach(modelRenderer -> {
+            AdvancedModelRenderer advancedModelRenderer = (AdvancedModelRenderer) modelRenderer;
+            advancedModelRenderer.updateDefaultPose();
+        });
     }
 
     public void resetToDefaultPose() {
-        for (ModelRenderer modelRenderer : this.boxList) {
-            if (modelRenderer instanceof AdvancedModelRenderer) {
-                AdvancedModelRenderer advancedModelRenderer = (AdvancedModelRenderer) modelRenderer;
-                advancedModelRenderer.resetToDefaultPose();
-            }
-        }
+        this.boxList.stream().filter(modelRenderer -> modelRenderer instanceof AdvancedModelRenderer).forEach(modelRenderer -> {
+            AdvancedModelRenderer advancedModelRenderer = (AdvancedModelRenderer) modelRenderer;
+            advancedModelRenderer.resetToDefaultPose();
+        });
     }
 
     public void faceTarget(float yaw, float pitch, float rotationDivisor, AdvancedModelRenderer... boxes) {
