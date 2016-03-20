@@ -40,12 +40,6 @@ public enum UpdateHandler {
         this.updateContainerList.add(updateContainer);
     }
 
-    public UpdateContainer getContainerByID(String id) {
-        final UpdateContainer[] updateContainer = {null};
-        this.updateContainerList.stream().filter(container -> container.getModContainer().getModId().equals(id)).forEach(container -> updateContainer[0] = container);
-        return updateContainer[0];
-    }
-
     public void searchForUpdates() {
         this.updateContainerList.stream().filter(updateContainer -> updateContainer.getLatestVersion().compareTo(updateContainer.getModContainer().getProcessedVersion()) > 0).forEach(updateContainer -> outdatedModList.add(updateContainer));
     }
@@ -54,19 +48,15 @@ public enum UpdateHandler {
         return outdatedModList;
     }
 
-    public String[] getChangelog(UpdateContainer mod, ArtifactVersion version) {
-        if (hasChangelogForVersion(mod, version)) {
-            return getVersionChangelog(mod, version);
+    public String[] getChangelog(UpdateContainer updateContainer, ArtifactVersion version) {
+        if (hasChangelog(updateContainer, version)) {
+            return updateContainer.getVersions().get(version.getVersionString());
         } else {
             return new String[]{};
         }
     }
 
-    private String[] getVersionChangelog(UpdateContainer updateContainer, ArtifactVersion version) {
-        return updateContainer.getVersions().get(version.getVersionString());
-    }
-
-    public boolean hasChangelogForVersion(UpdateContainer updateContainer, ArtifactVersion version) {
+    public boolean hasChangelog(UpdateContainer updateContainer, ArtifactVersion version) {
         return updateContainer.getVersions().containsKey(version.getVersionString());
     }
 }
