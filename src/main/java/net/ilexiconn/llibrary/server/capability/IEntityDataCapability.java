@@ -7,5 +7,5 @@ public interface IEntityDataCapability {
 
     void loadFromNBT(NBTTagCompound compound);
 
-    void addManager(ExtendedEntityDataManager manager);
+    void addManager(IEntityData manager);
 }
