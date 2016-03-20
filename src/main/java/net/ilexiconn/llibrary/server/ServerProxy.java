@@ -3,6 +3,8 @@ package net.ilexiconn.llibrary.server;
 import net.ilexiconn.llibrary.LLibrary;
 import net.ilexiconn.llibrary.server.network.AbstractMessage;
 import net.ilexiconn.llibrary.server.network.AnimationMessage;
+import net.ilexiconn.llibrary.server.network.SnackbarMessage;
+import net.ilexiconn.llibrary.server.snackbar.Snackbar;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -16,6 +18,7 @@ public class ServerProxy {
         MinecraftForge.EVENT_BUS.register(ServerProxy.SERVER_EVENT_HANDLER);
 
         LLibrary.NETWORK_WRAPPER.registerMessage(AnimationMessage.class, AnimationMessage.class, 0, Side.CLIENT);
+        LLibrary.NETWORK_WRAPPER.registerMessage(SnackbarMessage.class, SnackbarMessage.class, 1, Side.CLIENT);
     }
 
     public void onInit() {
@@ -33,5 +36,9 @@ public class ServerProxy {
 
     public float getPartialTicks() {
         return 0.0F;
+    }
+
+    public void showSnackbar(Snackbar snackbar) {
+        LLibrary.NETWORK_WRAPPER.sendToAll(new SnackbarMessage(snackbar));
     }
 }

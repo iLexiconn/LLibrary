@@ -1,16 +1,26 @@
 package net.ilexiconn.llibrary.client;
 
 import net.ilexiconn.llibrary.client.gui.ModUpdateGUI;
+import net.ilexiconn.llibrary.client.gui.SnackbarGUI;
+import net.ilexiconn.llibrary.client.util.ClientUtils;
+import net.ilexiconn.llibrary.server.snackbar.Snackbar;
+import net.ilexiconn.llibrary.server.snackbar.SnackbarHandler;
+import net.ilexiconn.llibrary.server.update.UpdateHandler;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.util.Rectangle;
 
 @SideOnly(Side.CLIENT)
 public class ClientEventHandler {
+    public SnackbarGUI snackbarGUI;
+    private boolean checkedForUpdates;
+
     @SubscribeEvent
     public void onInitGuiPost(GuiScreenEvent.InitGuiEvent.Post event) {
         if (event.gui instanceof GuiMainMenu) {
@@ -49,6 +59,11 @@ public class ClientEventHandler {
             }
 
             event.gui.buttonList.add(new GuiButton(ClientProxy.UPDATE_BUTTON_ID, buttonX, buttonY, 20, 20, "U"));
+
+            if (!this.checkedForUpdates && !UpdateHandler.INSTANCE.getOutdatedModList().isEmpty()) {
+                this.checkedForUpdates = true;
+                SnackbarHandler.INSTANCE.showSnackbar(Snackbar.create("LLibrary found outdated mods!"));
+            }
         }
     }
 
@@ -57,6 +72,36 @@ public class ClientEventHandler {
         if (event.gui instanceof GuiMainMenu && event.button.id == ClientProxy.UPDATE_BUTTON_ID) {
             ClientProxy.MINECRAFT.displayGuiScreen(new ModUpdateGUI((GuiMainMenu) event.gui));
             event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public void onClientUpdate(TickEvent.ClientTickEvent event) {
+        if (this.snackbarGUI == null && !ClientProxy.SNACKBAR_LIST.isEmpty()) {
+            this.snackbarGUI = ClientProxy.SNACKBAR_LIST.get(0);
+            ClientProxy.SNACKBAR_LIST.remove(this.snackbarGUI);
+        }
+        if (this.snackbarGUI != null) {
+            this.snackbarGUI.updateSnackbar();
+        }
+    }
+
+    @SubscribeEvent
+    public void onRenderUpdate(TickEvent.RenderTickEvent event) {
+        ClientUtils.updateLast();
+    }
+
+    @SubscribeEvent
+    public void onRenderOverlayPost(RenderGameOverlayEvent.Post event) {
+        if (this.snackbarGUI != null) {
+            this.snackbarGUI.drawSnackbar();
+        }
+    }
+
+    @SubscribeEvent
+    public void onDrawScreenPost(GuiScreenEvent.DrawScreenEvent.Post event) {
+        if (this.snackbarGUI != null) {
+            this.snackbarGUI.drawSnackbar();
         }
     }
 }

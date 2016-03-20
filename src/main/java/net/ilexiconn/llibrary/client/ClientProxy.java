@@ -1,7 +1,9 @@
 package net.ilexiconn.llibrary.client;
 
+import net.ilexiconn.llibrary.client.gui.SnackbarGUI;
 import net.ilexiconn.llibrary.server.ServerProxy;
 import net.ilexiconn.llibrary.server.network.AbstractMessage;
+import net.ilexiconn.llibrary.server.snackbar.Snackbar;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Timer;
 import net.minecraftforge.common.MinecraftForge;
@@ -10,11 +12,15 @@ import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends ServerProxy {
     public static final ClientEventHandler CLIENT_EVENT_HANDLER = new ClientEventHandler();
     public static final Minecraft MINECRAFT = Minecraft.getMinecraft();
     public static final int UPDATE_BUTTON_ID = "UPDATE_BUTTON_ID".hashCode();
+    public static final List<SnackbarGUI> SNACKBAR_LIST = new ArrayList<>();
 
     private Timer timer;
 
@@ -44,5 +50,10 @@ public class ClientProxy extends ServerProxy {
     @Override
     public float getPartialTicks() {
         return timer.renderPartialTicks;
+    }
+
+    @Override
+    public void showSnackbar(Snackbar snackbar) {
+        ClientProxy.SNACKBAR_LIST.add(new SnackbarGUI(snackbar));
     }
 }
