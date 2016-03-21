@@ -38,10 +38,10 @@ public class AdvancedModelBase extends ModelBase {
     /**
      * Rotates the given boxes to face a given target
      *
-     * @param yaw the yaw to face
-     * @param pitch the pitch to face
+     * @param yaw             the yaw to face
+     * @param pitch           the pitch to face
      * @param rotationDivisor the amount to divide the rotation angles by
-     * @param boxes the boxes to face the given target
+     * @param boxes           the boxes to face the given target
      */
     public void faceTarget(float yaw, float pitch, float rotationDivisor, AdvancedModelRenderer... boxes) {
         float actualRotationDivisor = rotationDivisor / boxes.length;
@@ -56,10 +56,10 @@ public class AdvancedModelBase extends ModelBase {
     /**
      * Swings (rotates on the Y axis) the given model parts in a chain-like manner.
      *
-     * @param speed the speed to swing this at
-     * @param degree the amount to rotate this by
+     * @param speed      the speed to swing this at
+     * @param degree     the amount to rotate this by
      * @param rootOffset the root rotation offset
-     * @param boxes the boxes to swing
+     * @param boxes      the boxes to swing
      */
     public void chainSwing(float speed, float degree, double rootOffset, float swing, float swingAmount, AdvancedModelRenderer... boxes) {
         float offset = calculateChainOffset(rootOffset, boxes);
@@ -71,10 +71,10 @@ public class AdvancedModelBase extends ModelBase {
     /**
      * Waves (rotates on the X axis) the given model parts in a chain-like manner.
      *
-     * @param speed the speed to wave this at
-     * @param degree the amount to rotate this by
+     * @param speed      the speed to wave this at
+     * @param degree     the amount to rotate this by
      * @param rootOffset the root rotation offset
-     * @param boxes the boxes to wave
+     * @param boxes      the boxes to wave
      */
     public void chainWave(float speed, float degree, double rootOffset, float swing, float swingAmount, AdvancedModelRenderer... boxes) {
         float offset = calculateChainOffset(rootOffset, boxes);
@@ -86,10 +86,10 @@ public class AdvancedModelBase extends ModelBase {
     /**
      * Flaps (rotates on the Z axis) the given model parts in a chain-like manner.
      *
-     * @param speed the speed to flap this at
-     * @param degree the amount to rotate this by
+     * @param speed      the speed to flap this at
+     * @param degree     the amount to rotate this by
      * @param rootOffset the root rotation offset
-     * @param boxes the boxes to flap
+     * @param boxes      the boxes to flap
      */
     public void chainFlap(float speed, float degree, double rootOffset, float swing, float swingAmount, AdvancedModelRenderer... boxes) {
         float offset = calculateChainOffset(rootOffset, boxes);

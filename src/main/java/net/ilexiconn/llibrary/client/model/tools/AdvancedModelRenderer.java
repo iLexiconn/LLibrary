@@ -12,6 +12,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * An enhanced ModelRenderer
+ *
  * @author gegy1000
  * @since 1.0.0
  */

@@ -14,8 +14,8 @@ public class Animation {
     }
 
     /**
-     * @param id
-     * @param duration
+     * @param id the animation id
+     * @param duration the animation duration
      * @return an animation with the given id and duration
      */
     public static Animation create(int id, int duration) {

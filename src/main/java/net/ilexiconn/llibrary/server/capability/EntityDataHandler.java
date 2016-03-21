@@ -11,7 +11,8 @@ public enum EntityDataHandler {
 
     /**
      * Registers an Extended Entity Data Manager to the given entity
-     * @param entity the entity to add data to
+     *
+     * @param entity  the entity to add data to
      * @param manager the data manager
      */
     public void registerExtendedEntityData(Entity entity, IEntityData manager) {

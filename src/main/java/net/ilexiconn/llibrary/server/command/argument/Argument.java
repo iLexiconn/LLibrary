@@ -7,12 +7,12 @@ package net.ilexiconn.llibrary.server.command.argument;
 public class Argument {
     private String name;
     private String value;
-    private ArgumentTypes type;
+    private IArgumentParser<?> argumentParser;
 
-    public Argument(String name, String value, ArgumentTypes type) {
+    public Argument(String name, String value, IArgumentParser<?> argumentParser) {
         this.name = name;
         this.value = value;
-        this.type = type;
+        this.argumentParser = argumentParser;
     }
 
     public String getName() {
@@ -23,7 +23,7 @@ public class Argument {
         return value;
     }
 
-    public ArgumentTypes getType() {
-        return type;
+    public IArgumentParser<?> getArgumentParser() {
+        return argumentParser;
     }
 }

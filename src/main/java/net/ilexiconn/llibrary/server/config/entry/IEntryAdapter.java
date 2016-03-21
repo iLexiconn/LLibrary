@@ -11,9 +11,9 @@ public interface IEntryAdapter<ENTRY> {
     /**
      * Parse the entry into the correct value.
      *
-     * @param config the config
-     * @param name the entry name
-     * @param entry the entry annotation
+     * @param config       the config
+     * @param name         the entry name
+     * @param entry        the entry annotation
      * @param defaultValue the default value
      * @return the updated object from the config
      */

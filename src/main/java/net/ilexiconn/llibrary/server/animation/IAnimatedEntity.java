@@ -5,6 +5,9 @@ package net.ilexiconn.llibrary.server.animation;
  * @since 1.0.0
  */
 public interface IAnimatedEntity {
+    /**
+     * An empty animation container. Always use this field as frst value in the animation array.
+     */
     Animation ANIMATION_NONE = Animation.create(0, 0);
 
     /**
