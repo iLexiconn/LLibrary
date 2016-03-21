@@ -111,22 +111,20 @@ public class AdvancedModelRenderer extends ModelRenderer {
                     this.compileDisplayList(scale);
                 }
                 GlStateManager.translate(this.offsetX, this.offsetY, this.offsetZ);
-                if (this.rotateAngleX != 0.0F || this.rotateAngleY != 0.0F || this.rotateAngleZ != 0.0F) {
-                    GlStateManager.translate(this.rotationPointX * scale, this.rotationPointY * scale, this.rotationPointZ * scale);
-                    if (this.rotateAngleZ != 0.0F) {
-                        GlStateManager.rotate((float) Math.toDegrees(this.rotateAngleZ), 0.0F, 0.0F, 1.0F);
-                    }
-                    if (this.rotateAngleY != 0.0F) {
-                        GlStateManager.rotate((float) Math.toDegrees(this.rotateAngleY), 0.0F, 1.0F, 0.0F);
-                    }
-                    if (this.rotateAngleX != 0.0F) {
-                        GlStateManager.rotate((float) Math.toDegrees(this.rotateAngleZ), 1.0F, 0.0F, 0.0F);
-                    }
-                    GlStateManager.callList(this.displayList);
-                    if (this.childModels != null) {
-                        for (ModelRenderer childModel : this.childModels) {
-                            childModel.render(scale);
-                        }
+                GlStateManager.translate(this.rotationPointX * scale, this.rotationPointY * scale, this.rotationPointZ * scale);
+                if (this.rotateAngleZ != 0.0F) {
+                    GlStateManager.rotate((float) Math.toDegrees(this.rotateAngleZ), 0.0F, 0.0F, 1.0F);
+                }
+                if (this.rotateAngleY != 0.0F) {
+                    GlStateManager.rotate((float) Math.toDegrees(this.rotateAngleY), 0.0F, 1.0F, 0.0F);
+                }
+                if (this.rotateAngleX != 0.0F) {
+                    GlStateManager.rotate((float) Math.toDegrees(this.rotateAngleX), 1.0F, 0.0F, 0.0F);
+                }
+                GlStateManager.callList(this.displayList);
+                if (this.childModels != null) {
+                    for (ModelRenderer childModel : this.childModels) {
+                        childModel.render(scale);
                     }
                 }
                 GlStateManager.popMatrix();

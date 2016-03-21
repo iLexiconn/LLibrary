@@ -7,5 +7,5 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 @FunctionalInterface
 public interface ITabulaModelAnimator<ENTITY extends Entity> {
-    void setRotationAngles(ENTITY entity, float limbSwing, float limbSwingAmount, float ageInTicks, float rotationYaw, float rotationPitch, float scale);
+    void setRotationAngles(TabulaModel model, ENTITY entity, float limbSwing, float limbSwingAmount, float ageInTicks, float rotationYaw, float rotationPitch, float scale);
 }

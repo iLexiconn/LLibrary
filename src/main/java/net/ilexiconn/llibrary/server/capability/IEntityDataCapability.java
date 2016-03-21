@@ -1,5 +1,6 @@
 package net.ilexiconn.llibrary.server.capability;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**
@@ -17,8 +18,5 @@ public interface IEntityDataCapability {
      */
     void loadFromNBT(NBTTagCompound compound);
 
-    /**
-     * Adds an IEntityData manager to this capability
-     */
-    void addManager(IEntityData manager);
+    void setEntity(Entity entity);
 }

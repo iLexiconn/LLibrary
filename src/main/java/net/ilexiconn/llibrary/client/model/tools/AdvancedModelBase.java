@@ -13,7 +13,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 @SideOnly(Side.CLIENT)
 public class AdvancedModelBase extends ModelBase {
-    private float movementScale;
+    private float movementScale = 1.0F;
 
     /**
      * Sets the default pose to the current pose of this model

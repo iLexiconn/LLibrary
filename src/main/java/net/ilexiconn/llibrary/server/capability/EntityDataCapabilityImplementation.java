@@ -12,7 +12,7 @@ import java.util.List;
  * @since 1.0.0
  */
 public class EntityDataCapabilityImplementation implements IEntityDataCapability {
-    private List<IEntityData> managers = new ArrayList<>();
+    private Entity entity;
 
     public static IEntityDataCapability getCapability(Entity entity) {
         return entity.getCapability(LLibrary.ENTITY_DATA_CAPABILITY, null);
@@ -20,7 +20,7 @@ public class EntityDataCapabilityImplementation implements IEntityDataCapability
 
     @Override
     public void saveToNBT(NBTTagCompound compound) {
-        for (IEntityData manager : this.managers) {
+        for (IEntityData manager : EntityDataHandler.getManagers(entity)) {
             NBTTagCompound managerTag = new NBTTagCompound();
             manager.writeToNBT(managerTag);
             compound.setTag(manager.getIdentifier(), managerTag);
@@ -29,14 +29,14 @@ public class EntityDataCapabilityImplementation implements IEntityDataCapability
 
     @Override
     public void loadFromNBT(NBTTagCompound compound) {
-        for (IEntityData manager : this.managers) {
+        for (IEntityData manager : EntityDataHandler.getManagers(entity)) {
             NBTTagCompound managerTag = compound.getCompoundTag(manager.getIdentifier());
             manager.readFromNBT(managerTag);
         }
     }
 
     @Override
-    public void addManager(IEntityData manager) {
-        this.managers.add(manager);
+    public void setEntity(Entity entity) {
+        this.entity = entity;
     }
 }

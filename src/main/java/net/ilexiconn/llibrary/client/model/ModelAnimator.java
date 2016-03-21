@@ -39,12 +39,6 @@ public class ModelAnimator {
         this.entity = entity;
         this.transformMap.clear();
         this.prevTransformMap.clear();
-        for (int i = 0; i < this.model.boxList.size(); i++) {
-            ModelRenderer box = this.model.boxList.get(i);
-            box.rotateAngleX = 0.0F;
-            box.rotateAngleY = 0.0F;
-            box.rotateAngleZ = 0.0F;
-        }
     }
 
     public boolean setAnimation(Animation animation) {
@@ -75,22 +69,23 @@ public class ModelAnimator {
         if (!this.correctAnimation) {
             return;
         }
-        if (!this.transformMap.containsKey(box)) {
-            this.transformMap.put(box, new Transform(x, y, z));
-        } else {
-            this.transformMap.get(box).addRotation(x, y, z);
-        }
+        getTransform(box).addRotation(x, y, z);
     }
 
     public void move(ModelRenderer box, float x, float y, float z) {
         if (!this.correctAnimation) {
             return;
         }
-        if (!this.transformMap.containsKey(box)) {
-            this.transformMap.put(box, new Transform(x, y, z, 0.0F, 0.0F, 0.0F));
-        } else {
-            this.transformMap.get(box).addOffset(x, y, z);
+        getTransform(box).addOffset(x, y, z);
+    }
+
+    private Transform getTransform(ModelRenderer box) {
+        Transform transform = this.transformMap.get(box);
+        if (transform == null) {
+            transform = new Transform();
+            this.transformMap.put(box, transform);
         }
+        return transform;
     }
 
     public void endKeyframe() {
