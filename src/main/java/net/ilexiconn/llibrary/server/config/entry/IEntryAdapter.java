@@ -7,7 +7,7 @@ import net.minecraftforge.common.config.Configuration;
  * @author iLexiconn
  * @since 1.0.0
  */
-public interface IEntryAdapter<ENTRY> {
+public interface IEntryAdapter<T> {
     /**
      * Parse the entry into the correct value.
      *
@@ -17,5 +17,5 @@ public interface IEntryAdapter<ENTRY> {
      * @param defaultValue the default value
      * @return the updated object from the config
      */
-    ENTRY getValue(Configuration config, String name, ConfigEntry entry, Object defaultValue);
+    T getValue(Configuration config, String name, ConfigEntry entry, Object defaultValue);
 }

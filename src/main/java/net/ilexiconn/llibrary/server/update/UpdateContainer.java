@@ -8,6 +8,8 @@ import java.awt.image.BufferedImage;
 import java.util.Map;
 
 /**
+ * A container used by the update checker. This instance get's generated when an update checker gets registered.
+ *
  * @author iLexiconn
  * @since 1.0.0
  */
@@ -16,22 +18,41 @@ public class UpdateContainer {
     private transient BufferedImage icon;
     private transient ArtifactVersion latestVersion;
 
+    /**
+     * @return the mod container of this update checker
+     */
     public ModContainer getModContainer() {
         return this.modContainer;
     }
 
+    /**
+     * Set the mod container update container. There's no need to call this, LLibrary handles this internally.
+     *
+     * @param modContainer the new mod container
+     */
     public void setModContainer(ModContainer modContainer) {
         this.modContainer = modContainer;
     }
 
+    /**
+     * @return the icon of this update container
+     */
     public BufferedImage getIcon() {
         return this.icon;
     }
 
+    /**
+     * Set the icon of this update container. There's no need to call this, LLibrary handles this internally.
+     *
+     * @param icon the new icon
+     */
     public void setIcon(BufferedImage icon) {
         this.icon = icon;
     }
 
+    /**
+     * @return the latest version
+     */
     public ArtifactVersion getLatestVersion() {
         if (this.latestVersion == null) {
             this.latestVersion = new DefaultArtifactVersion(this.version);
@@ -44,18 +65,30 @@ public class UpdateContainer {
     private String iconURL;
     private Map<String, String[]> versions;
 
+    /**
+     * @return the atest version as String
+     */
     public String getVersion() {
         return this.version;
     }
 
+    /**
+     * @return the update url
+     */
     public String getUpdateURL() {
         return this.updateURL;
     }
 
+    /**
+     * @return the icon url
+     */
     public String getIconURL() {
         return this.iconURL;
     }
 
+    /**
+     * @return a map with all versions and changelogs
+     */
     public Map<String, String[]> getVersions() {
         return this.versions;
     }

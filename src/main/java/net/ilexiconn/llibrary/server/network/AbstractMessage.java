@@ -14,28 +14,30 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author iLexiconn
  * @since 1.0.0
  */
-public abstract class AbstractMessage<MESSAGE extends AbstractMessage<MESSAGE>> implements IMessage, IMessageHandler<MESSAGE, IMessage> {
+public abstract class AbstractMessage<T extends AbstractMessage<T>> implements IMessage, IMessageHandler<T, IMessage> {
     @Override
-    public IMessage onMessage(MESSAGE message, MessageContext messageContext) {
+    public IMessage onMessage(T message, MessageContext messageContext) {
         LLibrary.PROXY.handleMessage(message, messageContext);
 
         return null;
     }
 
     /**
-     * Executes when message received on CLIENT side. Never use fields directly from the class you're in, but use data from the 'message' field instead.
+     * Executes when the message is received on CLIENT side. Never use fields directly from the class you're in, but
+     * use data from the 'message' argument instead.
      *
      * @param message The message instance with all variables.
-     * @param player  The client player entity.
+     * @param player  The client player assets.testmod.models.entity.
      */
     @SideOnly(Side.CLIENT)
-    public abstract void onClientReceived(Minecraft client, MESSAGE message, EntityPlayer player, MessageContext messageContext);
+    public abstract void onClientReceived(Minecraft client, T message, EntityPlayer player, MessageContext messageContext);
 
     /**
-     * Executes when message received on SERVER side. Never use fields directly from the class you're in, but use data from the 'message' field instead.
+     * Executes when the message is received on SERVER side. Never use fields directly from the class you're in, but
+     * use data from the 'message' argument instead.
      *
      * @param message The message instance with all variables.
      * @param player  The player who sent the message to the server.
      */
-    public abstract void onServerReceived(MinecraftServer server, MESSAGE message, EntityPlayer player, MessageContext messageContext);
+    public abstract void onServerReceived(MinecraftServer server, T message, EntityPlayer player, MessageContext messageContext);
 }

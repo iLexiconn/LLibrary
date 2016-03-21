@@ -17,9 +17,9 @@ public enum EntityDataHandler {
     private Map<Entity, List<IEntityData>> registeredDataManagers = new HashMap<>();
 
     /**
-     * Registers an Extended Entity Data Manager to the given entity
+     * Registers an Extended Entity Data Manager to the given assets.testmod.models.entity
      *
-     * @param entity  the entity to add data to
+     * @param entity  the assets.testmod.models.entity to add data to
      * @param manager the data manager
      */
     public void registerExtendedEntityData(Entity entity, IEntityData manager) {
@@ -34,7 +34,7 @@ public enum EntityDataHandler {
     }
 
     /**
-     * @returns an ArrayList of registered managers for the given entity, if none are registered for that entity it will return an empty ArrayList
+     * @return an ArrayList of registered managers for the given assets.testmod.models.entity, if none are registered for that assets.testmod.models.entity it will return an empty ArrayList
      */
     public static List<IEntityData> getManagers(Entity entity) {
         List<IEntityData> managers = INSTANCE.registeredDataManagers.get(entity);

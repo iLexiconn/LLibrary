@@ -15,7 +15,7 @@ public enum AnimationHandler {
     /**
      * Sends an animation packet to all clients, notifying them of a changed animation
      *
-     * @param entity    the entity with an animation to be updated
+     * @param entity    the assets.testmod.models.entity with an animation to be updated
      * @param animation the animation to be updated
      */
     public void sendAnimationMessage(IAnimatedEntity entity, Animation animation) {
@@ -27,7 +27,7 @@ public enum AnimationHandler {
     }
 
     /**
-     * Updates all animations for a given entity
+     * Updates all animations for a given assets.testmod.models.entity
      */
     public void updateAnimations(IAnimatedEntity entity) {
         if (entity.getAnimation() == null) {

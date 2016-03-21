@@ -18,7 +18,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class ServerEventHandler {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void attachCapabilities(AttachCapabilitiesEvent.Entity event) {
+    public void onAttachCapabilities(AttachCapabilitiesEvent.Entity event) {
         event.addCapability(new ResourceLocation("llibrary", "ExtendedEntityDataCapability"), new ICapabilitySerializable() {
             @Override
             public NBTBase serializeNBT() {
@@ -48,18 +48,12 @@ public class ServerEventHandler {
         });
     }
 
-//    @SubscribeEvent
-//    public void entityJoinWorld(EntityJoinWorldEvent event) {
-//        Entity entity = event.entity;
-//        entity.getCapability(LLibrary.ENTITY_DATA_CAPABILITY, null).init(entity);
-//    }
-
     @SubscribeEvent
     public void playerClone(PlayerEvent.Clone event) {
         if (event.wasDeath) {
-            NBTTagCompound data = new NBTTagCompound();
-            EntityDataCapabilityImplementation.getCapability(event.original).saveToNBT(data);
-            EntityDataCapabilityImplementation.getCapability(event.entityPlayer).loadFromNBT(data);
+            NBTTagCompound compound = new NBTTagCompound();
+            EntityDataCapabilityImplementation.getCapability(event.original).saveToNBT(compound);
+            EntityDataCapabilityImplementation.getCapability(event.entityPlayer).loadFromNBT(compound);
         }
     }
 

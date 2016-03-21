@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Update checker handle. Based off FiskFille's version for LLibrary Beta.
+ * Update checker handler. Based off FiskFille's version for LLibrary Beta.
  *
  * @author iLexiconn
  * @since 1.0.0

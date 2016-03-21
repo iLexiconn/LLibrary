@@ -14,7 +14,7 @@ public class Snackbar {
     }
 
     /**
-     * Creae a new snackbar nstance. Every snackbar instance can be shown multiple times.
+     * Creae a new snackbar instance. Every snackbar instance can be shown multiple times.
      *
      * @param message the message to display
      * @return the new snackbar instance

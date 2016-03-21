@@ -9,14 +9,23 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public interface IEntityDataCapability {
     /**
-     * Saves this capability to NBT
+     * Saves this capability to NBT.
+     *
+     * @param compound the tag to write to
      */
     void saveToNBT(NBTTagCompound compound);
 
     /**
-     * Loads this capability from NBT
+     * Loads this capability from NBT.
+     *
+     * @param compound the tag to read from
      */
     void loadFromNBT(NBTTagCompound compound);
 
+    /**
+     * Set the entity of this data handler.
+     *
+     * @param entity the new entity
+     */
     void setEntity(Entity entity);
 }

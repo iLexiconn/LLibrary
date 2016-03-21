@@ -8,7 +8,7 @@ public interface IAnimatedEntity {
     /**
      * An empty animation container. Always use this field as first value in the animation array.
      */
-    Animation ANIMATION_NONE = Animation.create(0, 0);
+    Animation NO_ANIMATION = Animation.create(0, 0);
 
     /**
      * @return the current animation tick
@@ -31,7 +31,7 @@ public interface IAnimatedEntity {
     void setAnimation(Animation animation);
 
     /**
-     * @return an array of all the Animations this entity can play
+     * @return an array of all the Animations this assets.testmod.models.entity can play
      */
     Animation[] getAnimations();
 }

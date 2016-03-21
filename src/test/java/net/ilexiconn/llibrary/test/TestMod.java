@@ -1,10 +1,8 @@
 package net.ilexiconn.llibrary.test;
 
 import net.ilexiconn.llibrary.client.model.ModelAnimator;
-import net.ilexiconn.llibrary.client.model.tabula.ITabulaModelAnimator;
 import net.ilexiconn.llibrary.client.model.tabula.TabulaModel;
 import net.ilexiconn.llibrary.client.model.tabula.TabulaModelHandler;
-import net.ilexiconn.llibrary.client.model.tabula.baked.BakedTabulaLoader;
 import net.ilexiconn.llibrary.client.model.tools.AdvancedModelBase;
 import net.ilexiconn.llibrary.client.model.tools.AdvancedModelRenderer;
 import net.ilexiconn.llibrary.server.animation.Animation;
@@ -14,24 +12,14 @@ import net.ilexiconn.llibrary.server.capability.EntityDataHandler;
 import net.ilexiconn.llibrary.server.capability.IEntityData;
 import net.ilexiconn.llibrary.server.command.Command;
 import net.ilexiconn.llibrary.server.command.CommandHandler;
-import net.ilexiconn.llibrary.server.command.argument.IArgumentParser;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.entity.RenderLiving;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.command.CommandException;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -42,11 +30,8 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Things to be tested:
@@ -72,7 +57,7 @@ public class TestMod {
         EntityRegistry.registerModEntity(TabulaTestEntity.class, "tabula_test_entity", 1, this, 64, 1, false);
         RenderingRegistry.registerEntityRenderingHandler(TabulaTestEntity.class, manager -> {
             try {
-                return new RenderLiving<TabulaTestEntity>(manager, new TabulaModel(TabulaModelHandler.INSTANCE.loadModel("assets/testmod/models/entity/model.tbl"), (model, entity, limbSwing, limbSwingAmount, ageInTicks, rotationYaw, rotationPitch, scale) -> {
+                return new RenderLiving<TabulaTestEntity>(manager, new TabulaModel(TabulaModelHandler.INSTANCE.loadModel("entity/model.tbl"), (model, entity, limbSwing, limbSwingAmount, ageInTicks, rotationYaw, rotationPitch, scale) -> {
                     AdvancedModelRenderer waist = model.getCube("body3");
                     AdvancedModelRenderer chest = model.getCube("body2");
                     AdvancedModelRenderer shoulders = model.getCube("body1");
@@ -106,10 +91,10 @@ public class TestMod {
                     AdvancedModelRenderer Hand_Right = model.getCube("Right hand");
                     AdvancedModelRenderer Hand_Left = model.getCube("Left hand");
 
-                    AdvancedModelRenderer[] rightArmParts = new AdvancedModelRenderer[] { Hand_Right, lowerArmRight, upperArmRight };
-                    AdvancedModelRenderer[] leftArmParts = new AdvancedModelRenderer[] { Hand_Left, lowerArmLeft, upperArmLeft };
-                    AdvancedModelRenderer[] tailParts = new AdvancedModelRenderer[] { tail6, tail5, tail4, tail3, tail2, tail1 };
-                    AdvancedModelRenderer[] bodyParts = new AdvancedModelRenderer[] { waist, chest, shoulders, neck4, neck3, neck2, neck1, head };
+                    AdvancedModelRenderer[] rightArmParts = new AdvancedModelRenderer[]{Hand_Right, lowerArmRight, upperArmRight};
+                    AdvancedModelRenderer[] leftArmParts = new AdvancedModelRenderer[]{Hand_Left, lowerArmLeft, upperArmLeft};
+                    AdvancedModelRenderer[] tailParts = new AdvancedModelRenderer[]{tail6, tail5, tail4, tail3, tail2, tail1};
+                    AdvancedModelRenderer[] bodyParts = new AdvancedModelRenderer[]{waist, chest, shoulders, neck4, neck3, neck2, neck1, head};
 
                     float speed = 0.75F;
                     float height = 2F * limbSwingAmount;
@@ -141,7 +126,7 @@ public class TestMod {
                     model.chainWave(0.1F, 0.05F, 2, entity.ticksExisted, 1F, tailParts);
                     model.chainWave(0.1F, -0.03F, 5, entity.ticksExisted, 1F, bodyParts);
                     model.chainWave(0.1F, -0.1F, 4, entity.ticksExisted, 1F, rightArmParts);
-                    model.chainWave(0.1F, -0.1F, 4, entity.ticksExisted, 1F,  leftArmParts);
+                    model.chainWave(0.1F, -0.1F, 4, entity.ticksExisted, 1F, leftArmParts);
                 }), 0.0F) {
                     @Override
                     protected ResourceLocation getEntityTexture(TabulaTestEntity entity) {
@@ -166,24 +151,12 @@ public class TestMod {
 
     @Mod.EventHandler
     public void serverStarting(FMLServerStartingEvent event) {
-        CommandHandler.INSTANCE.registerArgumentParser(Double.class, new IArgumentParser<Double>() {
-            @Override
-            public Double getValue(MinecraftServer server, ICommandSender sender, String argument) throws CommandException {
-                return Double.parseDouble(argument);
-            }
-
-            @Override
-            public List<String> getTabCompletion(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
-                return Collections.emptyList();
-            }
-        });
         Command command = Command.create("testcommand").addOptionalArgument("optionalargument", Integer.class).addRequiredArgument("requiredargument", EntityPlayer.class).addRequiredArgument("double", Double.class);
-        CommandHandler.INSTANCE.registerCommand(event, command, (server, sender, arguments) ->
-                System.out.println("Execute with arguments: " + arguments.getInteger("optionalargument") + ", " + arguments.getPlayer("requiredargument") + ", double: " + arguments.getArgument("double", Double.class)));
+        CommandHandler.INSTANCE.registerCommand(event, command, (server, sender, arguments) -> System.out.println("Execute with arguments: " + arguments.getInteger("optionalargument") + ", " + arguments.getPlayer("requiredargument") + ", double: " + arguments.getArgument("double", Double.class)));
     }
 
     @SubscribeEvent
-    public void attachCapabilities(EntityEvent.EntityConstructing event) {
+    public void onAttachCapabilities(EntityEvent.EntityConstructing event) {
         if (event.entity instanceof EntityPlayer) {
             EntityDataHandler.INSTANCE.registerExtendedEntityData(event.entity, new IEntityData() {
                 @Override
@@ -247,7 +220,7 @@ public class TestMod {
 
         @Override
         public Animation[] getAnimations() {
-            return new Animation[] { ANIMATION_NONE, TEST_ANIMATION };
+            return new Animation[]{NO_ANIMATION, TEST_ANIMATION};
         }
     }
 

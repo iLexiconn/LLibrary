@@ -19,7 +19,7 @@ import java.util.List;
 public enum ArgumentParsers implements IArgumentParser {
     STRING {
         @Override
-        public Object getValue(MinecraftServer server, ICommandSender sender, String argument) throws CommandException {
+        public Object parseArgument(MinecraftServer server, ICommandSender sender, String argument) throws CommandException {
             return argument;
         }
 
@@ -31,7 +31,7 @@ public enum ArgumentParsers implements IArgumentParser {
 
     INTEGER {
         @Override
-        public Object getValue(MinecraftServer server, ICommandSender sender, String argument) throws CommandException {
+        public Object parseArgument(MinecraftServer server, ICommandSender sender, String argument) throws CommandException {
             return CommandBase.parseInt(argument);
         }
 
@@ -43,7 +43,7 @@ public enum ArgumentParsers implements IArgumentParser {
 
     PLAYER {
         @Override
-        public Object getValue(MinecraftServer server, ICommandSender sender, String argument) throws CommandException {
+        public Object parseArgument(MinecraftServer server, ICommandSender sender, String argument) throws CommandException {
             return CommandBase.getPlayer(server, sender, argument);
         }
 
@@ -55,7 +55,7 @@ public enum ArgumentParsers implements IArgumentParser {
 
     ITEMSTACK {
         @Override
-        public Object getValue(MinecraftServer server, ICommandSender sender, String argument) throws CommandException {
+        public Object parseArgument(MinecraftServer server, ICommandSender sender, String argument) throws CommandException {
             return new ItemStack(CommandBase.getItemByText(sender, argument));
         }
 
@@ -67,7 +67,7 @@ public enum ArgumentParsers implements IArgumentParser {
 
     BOOLEAN {
         @Override
-        public Object getValue(MinecraftServer server, ICommandSender sender, String argument) throws CommandException {
+        public Object parseArgument(MinecraftServer server, ICommandSender sender, String argument) throws CommandException {
             return CommandBase.parseBoolean(argument);
         }
 
@@ -79,15 +79,15 @@ public enum ArgumentParsers implements IArgumentParser {
 
     @SuppressWarnings("unchecked")
     public static <T> IArgumentParser<T> getBuiltinParser(Class<T> type) {
-        if (type.isAssignableFrom(String.class)) {
+        if (String.class.isAssignableFrom(type)) {
             return STRING;
-        } else if (type.isAssignableFrom(Integer.class)) {
+        } else if (Integer.class.isAssignableFrom(type)) {
             return INTEGER;
-        } else if (type.isAssignableFrom(EntityPlayer.class)) {
+        } else if (EntityPlayer.class.isAssignableFrom(type)) {
             return PLAYER;
-        } else if (type.isAssignableFrom(ItemStack.class)) {
+        } else if (ItemStack.class.isAssignableFrom(type)) {
             return ITEMSTACK;
-        } else if (type.isAssignableFrom(Boolean.class)) {
+        } else if (Boolean.class.isAssignableFrom(type)) {
             return BOOLEAN;
         } else {
             return null;

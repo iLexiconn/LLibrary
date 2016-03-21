@@ -11,7 +11,7 @@ import java.util.List;
  * @author iLexiconn
  * @since 1.0.0
  */
-public interface IArgumentParser<ARGUMENT> {
+public interface IArgumentParser<T> {
     /**
      * Parse the strng argument into an object.
      *
@@ -21,7 +21,7 @@ public interface IArgumentParser<ARGUMENT> {
      * @return the parsed argument
      * @throws CommandException if something goes wrong
      */
-    ARGUMENT getValue(MinecraftServer server, ICommandSender sender, String argument) throws CommandException;
+    T parseArgument(MinecraftServer server, ICommandSender sender, String argument) throws CommandException;
 
     /**
      * Get the tab completion for this argument.

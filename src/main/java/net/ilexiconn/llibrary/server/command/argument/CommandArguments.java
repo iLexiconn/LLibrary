@@ -48,7 +48,7 @@ public class CommandArguments {
         for (Argument argument : this.arguments) {
             if (argument.getName().equals(name)) {
                 try {
-                    return argumentParser.getValue(this.commandSender.getServer(), this.commandSender, argument.getValue());
+                    return argumentParser.parseArgument(this.commandSender.getServer(), this.commandSender, argument.getValue());
                 } catch (CommandException e) {
                     this.commandSender.addChatMessage(new TextComponentString(e.getLocalizedMessage()).setChatStyle(new Style().setColor(TextFormatting.RED)));
                 }
@@ -69,19 +69,6 @@ public class CommandArguments {
         for (Argument argument : this.arguments) {
             if (argument.getName().equals(name)) {
                 return type.cast(getArgument(name, argument.getArgumentParser()));
-            }
-        }
-        return null;
-    }
-
-    /**
-     * @param name the argument name to check
-     * @return the argument type. Null if the argument can't be found.
-     */
-    public IArgumentParser<?> getArgumentType(String name) {
-        for (Argument argument : this.arguments) {
-            if (argument.getName().equals(name)) {
-                return argument.getArgumentParser();
             }
         }
         return null;
