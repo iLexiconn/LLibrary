@@ -1,4 +1,4 @@
-package net.ilexiconn.llibrary.test.tabula;
+package net.ilexiconn.llibrary.test;
 
 import net.ilexiconn.llibrary.client.model.tabula.ITabulaModelAnimator;
 import net.ilexiconn.llibrary.client.model.tabula.TabulaModel;
@@ -26,12 +26,12 @@ public class TabulaTest {
     public static ServerProxy PROXY;
 
     @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event) {
-        TabulaTest.PROXY.preInit();
+    public void onPreInit(FMLPreInitializationEvent event) {
+        TabulaTest.PROXY.onPreInit();
     }
 
     public static class ServerProxy {
-        public void preInit() {
+        public void onPreInit() {
             EntityRegistry.registerModEntity(TabulaTestEntity.class, "tabula_test_entity", 0, INSTANCE, 64, 1, false);
         }
     }
@@ -39,11 +39,11 @@ public class TabulaTest {
     @SideOnly(Side.CLIENT)
     public static class ClientProxy extends ServerProxy {
         @Override
-        public void preInit() {
-            super.preInit();
+        public void onPreInit() {
+            super.onPreInit();
             RenderingRegistry.registerEntityRenderingHandler(TabulaTestEntity.class, manager -> {
                 try {
-                    return new RenderLiving<TabulaTestEntity>(manager, new TabulaModel(TabulaModelHandler.INSTANCE.loadModel("assets/testmod/models/entity/model.tbl"), new Animator()), 0.0F) {
+                    return new RenderLiving<TabulaTestEntity>(manager, new TabulaModel(TabulaModelHandler.INSTANCE.loadModel("assets/tabulatest/models/entity/tabula_model.tbl"), new Animator()), 0.0F) {
                         @Override
                         protected ResourceLocation getEntityTexture(TabulaTestEntity entity) {
                             return new ResourceLocation("missingno");

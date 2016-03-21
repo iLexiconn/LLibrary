@@ -1,4 +1,4 @@
-package net.ilexiconn.llibrary.test.animation;
+package net.ilexiconn.llibrary.test;
 
 import net.ilexiconn.llibrary.client.model.ModelAnimator;
 import net.ilexiconn.llibrary.client.model.tools.AdvancedModelBase;
@@ -28,12 +28,12 @@ public class AnimationTest {
     public static ServerProxy PROXY;
 
     @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event) {
-        AnimationTest.PROXY.preInit();
+    public void onPreInit(FMLPreInitializationEvent event) {
+        AnimationTest.PROXY.onPreInit();
     }
 
     public static class ServerProxy {
-        public void preInit() {
+        public void onPreInit() {
             EntityRegistry.registerModEntity(AnimationTestEntity.class, "animation_test_entity", 0, INSTANCE, 64, 1, false);
         }
     }
@@ -41,8 +41,8 @@ public class AnimationTest {
     @SideOnly(Side.CLIENT)
     public static class ClientProxy extends ServerProxy {
         @Override
-        public void preInit() {
-            super.preInit();
+        public void onPreInit() {
+            super.onPreInit();
             RenderingRegistry.registerEntityRenderingHandler(AnimationTestEntity.class, manager -> {
                 return new RenderLiving<AnimationTestEntity>(manager, new TestModel(), 0.0F) {
                     @Override

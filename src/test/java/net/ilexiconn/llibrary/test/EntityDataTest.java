@@ -1,4 +1,4 @@
-package net.ilexiconn.llibrary.test.entity.data;
+package net.ilexiconn.llibrary.test;
 
 import net.ilexiconn.llibrary.server.capability.EntityDataHandler;
 import net.ilexiconn.llibrary.server.capability.IEntityData;
@@ -17,7 +17,7 @@ public class EntityDataTest {
     public static final Logger LOGGER = LogManager.getLogger("EntityDataTest");
 
     @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event) {
+    public void onPreInit(FMLPreInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
     }
 

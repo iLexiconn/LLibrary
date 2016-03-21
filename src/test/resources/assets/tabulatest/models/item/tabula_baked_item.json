@@ -1,0 +1,29 @@
+{
+  "parent": "builtin/generated",
+  "textures": {
+    "texture": "missingno"
+  },
+  "tabula": "tabulatest:models/item/tabula_baked_item",
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [ 90, 0, 0 ],
+      "translation": [ 3, -1.75, -7 ],
+      "scale": [ 0.85, 0.85, 0.85 ]
+    },
+    "firstperson_righthand": {
+      "rotation": [ 0, -45, 180 ],
+      "translation": [ -1, 13, -5 ],
+      "scale": [ 3, 3, 3 ]
+    },
+    "gui": {
+      "rotation": [ 0, 90, 180 ],
+      "translation": [ 4, 4.5, 0 ],
+      "scale": [ 0.85, 0.85, 0.85 ]
+    },
+    "ground": {
+      "rotation": [ 0, 90, 180 ],
+      "translation": [ 6, 10, 6 ],
+      "scale": [ 1.5, 1.5, 1.5 ]
+    }
+  }
+}

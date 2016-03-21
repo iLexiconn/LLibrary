@@ -1,4 +1,4 @@
-package net.ilexiconn.llibrary.test.command;
+package net.ilexiconn.llibrary.test;
 
 import net.ilexiconn.llibrary.server.command.Command;
 import net.ilexiconn.llibrary.server.command.CommandHandler;
