@@ -8,14 +8,14 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public interface IEntityData {
     /**
-     * Saves data to an assets.testmod.models.entity
+     * Saves data to an entity
      *
      * @param compound the NBTTagCompound to write the data to
      */
     void writeToNBT(NBTTagCompound compound);
 
     /**
-     * Reads data saved on an assets.testmod.models.entity
+     * Reads data saved on an entity
      *
      * @param compound the NBTTagCompound to read the data from
      */

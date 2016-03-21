@@ -31,7 +31,7 @@ public interface IAnimatedEntity {
     void setAnimation(Animation animation);
 
     /**
-     * @return an array of all the Animations this assets.testmod.models.entity can play
+     * @return an array of all the Animations this entity can play
      */
     Animation[] getAnimations();
 }

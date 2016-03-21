@@ -27,7 +27,7 @@ public abstract class AbstractMessage<T extends AbstractMessage<T>> implements I
      * use data from the 'message' argument instead.
      *
      * @param message The message instance with all variables.
-     * @param player  The client player assets.testmod.models.entity.
+     * @param player  The client player entity.
      */
     @SideOnly(Side.CLIENT)
     public abstract void onClientReceived(Minecraft client, T message, EntityPlayer player, MessageContext messageContext);

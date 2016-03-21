@@ -66,8 +66,14 @@ task devJar(type: Jar) {
     }
 }
 
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = "javadoc"
+    from javadoc.getDestinationDir()
+}
+
 artifacts {
     archives devJar
+    archives javadocJar
 }
 
 publishing {
@@ -85,6 +91,10 @@ publishing {
 
             artifact sourceJar {
                 classifier "sources"
+            }
+
+            artifact javadocJar {
+                classifier "javadoc"
             }
         }
     }
