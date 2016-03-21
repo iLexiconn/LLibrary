@@ -2,10 +2,13 @@ package net.ilexiconn.llibrary.server.command;
 
 import net.ilexiconn.llibrary.server.command.argument.ArgumentParsers;
 import net.ilexiconn.llibrary.server.command.argument.IArgumentParser;
+import net.minecraft.command.CommandBase;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author iLexiconn
@@ -28,10 +31,33 @@ public enum CommandHandler {
     }
 
     /**
-     * Get the argument parser for a specefic type. Returns null if none can be found.
+     * Get an argument parser for the specific enum.
+     *
+     * @param enumClass the enum class
+     * @param <T>       the enum type
+     * @return the enum parser
+     */
+    public static <T extends Enum<T>> IArgumentParser<T> getEnumParser(Class<T> enumClass) {
+        return new IArgumentParser<T>() {
+            private String values[] = Arrays.stream(enumClass.getEnumConstants()).map(T::name).map(s -> s.toLowerCase(Locale.ENGLISH)).toArray(String[]::new);
+
+            @Override
+            public T parseArgument(MinecraftServer server, ICommandSender sender, String argument) {
+                return Enum.valueOf(enumClass, argument.toLowerCase(Locale.ENGLISH));
+            }
+
+            @Override
+            public List<String> getTabCompletion(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
+                return CommandBase.getListOfStringsMatchingLastWord(args, values);
+            }
+        };
+    }
+
+    /**
+     * Get the argument parser for a specific type. Returns null if none can be found.
      *
      * @param type the argument type
-     * @param <T> the argument type
+     * @param <T>  the argument type
      * @return the argument parser, null if it can't be found
      */
     @SuppressWarnings("unchecked")
@@ -51,9 +77,9 @@ public enum CommandHandler {
      *
      * @param event    the FMLServerStartingEvent
      * @param command  the command to register
-     * @param executor a CommandExecuter to execute this command
+     * @param executor a CommandExecutor to execute this command
      */
     public void registerCommand(FMLServerStartingEvent event, Command command, ICommandExecutor executor) {
-        event.registerServerCommand(command.setExector(executor));
+        event.registerServerCommand(command.setExecutor(executor));
     }
 }

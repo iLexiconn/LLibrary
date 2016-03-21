@@ -51,8 +51,8 @@ public enum ConfigHandler {
             return null;
         }
 
-        Mod annotaton = mod.getClass().getAnnotation(Mod.class);
-        this.configList.add(new Tuple3<>(annotaton.modid(), new Configuration(file), config));
+        Mod annotation = mod.getClass().getAnnotation(Mod.class);
+        this.configList.add(new Tuple3<>(annotation.modid(), new Configuration(file), config));
         Map<String, IEntryAdapter> typeMap = new HashMap<>();
         Map<String, Object> valueMap = new HashMap<>();
         Arrays.stream(config.getClass().getFields()).filter(field -> field.isAnnotationPresent(ConfigEntry.class)).forEach(field -> {
@@ -69,16 +69,16 @@ public enum ConfigHandler {
                         typeMap.put(name, EntryAdapters.getBuiltinAdapter(field));
                         valueMap.put(name, field.get(config));
                     } else {
-                        LLibrary.LOGGER.error("Found unsupported config entry " + field.getName() + " for mod " + annotaton.modid());
+                        LLibrary.LOGGER.error("Found unsupported config entry " + field.getName() + " for mod " + annotation.modid());
                     }
                 }
             } catch (IllegalAccessException e) {
-                LLibrary.LOGGER.error(CrashReport.makeCrashReport(e, "Failed to get config value " + field.getName() + " for mod " + annotaton.modid()).getCompleteReport());
+                LLibrary.LOGGER.error(CrashReport.makeCrashReport(e, "Failed to get config value " + field.getName() + " for mod " + annotation.modid()).getCompleteReport());
             }
         });
-        this.valueTypeMap.put(annotaton.modid(), typeMap);
-        this.defaultValueMap.put(annotaton.modid(), valueMap);
-        this.saveConfigForID(annotaton.modid());
+        this.valueTypeMap.put(annotation.modid(), typeMap);
+        this.defaultValueMap.put(annotation.modid(), valueMap);
+        this.saveConfigForID(annotation.modid());
         return config;
     }
 

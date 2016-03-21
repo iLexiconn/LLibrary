@@ -96,7 +96,7 @@ public class Command extends CommandBase {
         return this;
     }
 
-    Command setExector(ICommandExecutor executor) {
+    Command setExecutor(ICommandExecutor executor) {
         this.executor = executor;
         return this;
     }
