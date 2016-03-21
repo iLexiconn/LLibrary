@@ -22,16 +22,16 @@ public class CommandTest {
         CommandHandler.INSTANCE.registerCommand(event, command, (server, sender, arguments) -> {
             CommandTest.LOGGER.info("=== Test command ===");
             CommandTest.LOGGER.info("== Player ==");
-            EntityPlayer required_player = arguments.getPlayer("required_player");
+            EntityPlayer required_player = arguments.getArgument("required_player");
             CommandTest.LOGGER.info(" -> " + required_player.getUniqueID());
             CommandTest.LOGGER.info("== Double ==");
-            double required_double = arguments.getArgument("required_double", double.class);
+            double required_double = arguments.getArgument("required_double");
             CommandTest.LOGGER.info(" -> " + required_double);
             CommandTest.LOGGER.info("== Integer ==");
             boolean has_optional_integer = arguments.hasArgument("optional_integer");
             CommandTest.LOGGER.info("hasArgument: " + has_optional_integer);
             if (has_optional_integer) {
-                int optional_integer = arguments.getInteger("optional_integer");
+                int optional_integer = arguments.getArgument("optional_integer");
                 CommandTest.LOGGER.info(" -> " + optional_integer);
             }
         });

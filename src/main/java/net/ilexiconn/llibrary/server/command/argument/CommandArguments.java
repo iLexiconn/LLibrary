@@ -2,8 +2,6 @@ package net.ilexiconn.llibrary.server.command.argument;
 
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
@@ -40,40 +38,19 @@ public class CommandArguments {
      * Get the argument with the class type, and parse it using the registered parser.
      *
      * @param name the argument name
-     * @param type the argument type
      * @param <T>  the argument type
      * @return the argument value, null if it can't be found
      */
-    public <T> T getArgument(String name, Class<T> type) {
+    public <T> T getArgument(String name) {
         for (Argument argument : this.arguments) {
             if (argument.getName().equals(name)) {
                 try {
-                    return type.cast(argument.getArgumentParser().parseArgument(this.commandSender.getServer(), this.commandSender, argument.getValue()));
+                    return (T) argument.getArgumentParser().parseArgument(this.commandSender.getServer(), this.commandSender, argument.getValue());
                 } catch (CommandException e) {
                     this.commandSender.addChatMessage(new TextComponentString(e.getLocalizedMessage()).setChatStyle(new Style().setColor(TextFormatting.RED)));
                 }
             }
         }
         return null;
-    }
-
-    public String getString(String argument) {
-        return getArgument(argument, String.class);
-    }
-
-    public int getInteger(String argument) {
-        return getArgument(argument, Integer.class);
-    }
-
-    public EntityPlayer getPlayer(String argument) {
-        return getArgument(argument, EntityPlayer.class);
-    }
-
-    public ItemStack getItemStack(String argument) {
-        return getArgument(argument, ItemStack.class);
-    }
-
-    public boolean getBoolean(String argument) {
-        return getArgument(argument, Boolean.class);
     }
 }
