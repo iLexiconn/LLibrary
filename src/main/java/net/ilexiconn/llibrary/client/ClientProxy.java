@@ -48,7 +48,11 @@ public class ClientProxy extends ServerProxy {
 
     @Override
     public <MESSAGE extends AbstractMessage<MESSAGE>> void handleMessage(final MESSAGE message, final MessageContext messageContext) {
-        MINECRAFT.addScheduledTask(() -> message.onClientReceived(MINECRAFT, message, MINECRAFT.thePlayer, messageContext));
+        if (messageContext.side.isServer()) {
+            super.handleMessage(message, messageContext);
+        } else {
+            ClientProxy.MINECRAFT.addScheduledTask(() -> message.onClientReceived(MINECRAFT, message, MINECRAFT.thePlayer, messageContext));
+        }
     }
 
     @Override
