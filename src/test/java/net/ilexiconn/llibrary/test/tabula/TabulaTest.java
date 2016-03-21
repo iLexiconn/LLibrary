@@ -22,13 +22,12 @@ import java.io.IOException;
 public class TabulaTest {
     @Mod.Instance("TabulaTest")
     public static TabulaTest INSTANCE;
-
     @SidedProxy
-    private static ServerProxy PROXY;
+    public static ServerProxy PROXY;
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        PROXY.preInit();
+        TabulaTest.PROXY.preInit();
     }
 
     public static class ServerProxy {

@@ -24,13 +24,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class AnimationTest {
     @Mod.Instance("AnimationTest")
     public static AnimationTest INSTANCE;
-
     @SidedProxy
-    private static ServerProxy PROXY;
+    public static ServerProxy PROXY;
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        PROXY.preInit();
+        AnimationTest.PROXY.preInit();
     }
 
     public static class ServerProxy {
