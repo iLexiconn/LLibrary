@@ -12,6 +12,9 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 
 import java.util.Collections;
 import java.util.List;
@@ -140,17 +143,25 @@ public class Command extends CommandBase {
         } else if (args.length > this.requiredArguments.size() + this.optionalArguments.size()) {
             throw new WrongUsageException(getCommandUsage(sender));
         } else {
-            List<Argument> arguments = Lists.newArrayList();
+            List<Argument<?>> arguments = Lists.newArrayList();
             for (int i = 0; i < args.length; i++) {
                 if (i < this.requiredArguments.size()) {
                     Map.Entry<String, IArgumentParser<?>> entry = this.requiredArguments.getEntry(i);
-                    arguments.add(new Argument(entry.getKey(), args[i], entry.getValue()));
+                    try {
+                        arguments.add(new Argument<>(entry.getKey(), entry.getValue().parseArgument(server, sender, args[i])));
+                    } catch (CommandException e) {
+                        sender.addChatMessage(new TextComponentString(e.getLocalizedMessage()).setChatStyle(new Style().setColor(TextFormatting.RED)));
+                    }
                 } else {
                     Map.Entry<String, IArgumentParser<?>> entry = this.optionalArguments.getEntry(i - this.requiredArguments.size());
-                    arguments.add(new Argument(entry.getKey(), args[i], entry.getValue()));
+                    try {
+                        arguments.add(new Argument<>(entry.getKey(), entry.getValue().parseArgument(server, sender, args[i])));
+                    } catch (CommandException e) {
+                        sender.addChatMessage(new TextComponentString(e.getLocalizedMessage()).setChatStyle(new Style().setColor(TextFormatting.RED)));
+                    }
                 }
             }
-            this.executor.execute(server, sender, new CommandArguments(arguments, sender));
+            this.executor.execute(server, sender, new CommandArguments(arguments));
         }
     }
 

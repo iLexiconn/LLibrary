@@ -13,7 +13,7 @@ import java.util.List;
  */
 public interface IArgumentParser<T> {
     /**
-     * Parse the strng argument into an object.
+     * Parse the string argument into an object.
      *
      * @param server   the server instance
      * @param sender   the command sender

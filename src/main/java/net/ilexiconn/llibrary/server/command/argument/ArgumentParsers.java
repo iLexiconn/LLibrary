@@ -101,8 +101,7 @@ public enum ArgumentParsers implements IArgumentParser {
         }
     };
 
-    @SuppressWarnings("unchecked")
-    public static <T> IArgumentParser<T> getBuiltinParser(Class<T> type) {
+    public static IArgumentParser<?> getBuiltinParser(Class<?> type) {
         if (Integer.class.isAssignableFrom(type) || int.class.isAssignableFrom(type)) {
             return INTEGER;
         } else if (Boolean.class.isAssignableFrom(type) || boolean.class.isAssignableFrom(type)) {

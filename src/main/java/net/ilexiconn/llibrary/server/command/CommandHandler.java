@@ -34,10 +34,11 @@ public enum CommandHandler {
      * @param <T> the argument type
      * @return the argument parser, null if it can't be found
      */
+    @SuppressWarnings("unchecked")
     public <T> IArgumentParser<T> getParserForType(Class<T> type) {
-        IArgumentParser<T> argumentParser = ArgumentParsers.getBuiltinParser(type);
+        IArgumentParser<?> argumentParser = ArgumentParsers.getBuiltinParser(type);
         if (argumentParser != null) {
-            return argumentParser;
+            return (IArgumentParser<T>) argumentParser;
         } else if (this.argumentParserMap.containsKey(type)) {
             return (IArgumentParser<T>) this.argumentParserMap.get(type);
         } else {

@@ -1,29 +1,24 @@
 package net.ilexiconn.llibrary.server.command.argument;
 
 /**
+ * @param <T> the argument type
  * @author iLexiconn
  * @since 1.0.0
  */
-public class Argument {
+public class Argument<T> {
     private String name;
-    private String value;
-    private IArgumentParser<?> argumentParser;
+    private T value;
 
-    public Argument(String name, String value, IArgumentParser<?> argumentParser) {
+    public Argument(String name, T value) {
         this.name = name;
         this.value = value;
-        this.argumentParser = argumentParser;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getValue() {
+    public T getValue() {
         return value;
-    }
-
-    public IArgumentParser<?> getArgumentParser() {
-        return argumentParser;
     }
 }

@@ -1,11 +1,5 @@
 package net.ilexiconn.llibrary.server.command.argument;
 
-import net.minecraft.command.CommandException;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextFormatting;
-
 import java.util.List;
 
 /**
@@ -13,12 +7,10 @@ import java.util.List;
  * @since 1.0.0
  */
 public class CommandArguments {
-    private List<Argument> arguments;
-    private ICommandSender commandSender;
+    private List<Argument<?>> arguments;
 
-    public CommandArguments(List<Argument> arguments, ICommandSender commandSender) {
+    public CommandArguments(List<Argument<?>> arguments) {
         this.arguments = arguments;
-        this.commandSender = commandSender;
     }
 
     /**
@@ -42,13 +34,9 @@ public class CommandArguments {
      * @return the argument value, null if it can't be found
      */
     public <T> T getArgument(String name) {
-        for (Argument argument : this.arguments) {
+        for (Argument<?> argument : this.arguments) {
             if (argument.getName().equals(name)) {
-                try {
-                    return (T) argument.getArgumentParser().parseArgument(this.commandSender.getServer(), this.commandSender, argument.getValue());
-                } catch (CommandException e) {
-                    this.commandSender.addChatMessage(new TextComponentString(e.getLocalizedMessage()).setChatStyle(new Style().setColor(TextFormatting.RED)));
-                }
+                return (T) argument.getValue();
             }
         }
         return null;
