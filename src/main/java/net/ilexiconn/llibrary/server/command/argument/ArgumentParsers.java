@@ -17,6 +17,30 @@ import java.util.List;
  * @since 1.0.0
  */
 public enum ArgumentParsers implements IArgumentParser {
+    INTEGER {
+        @Override
+        public Object parseArgument(MinecraftServer server, ICommandSender sender, String argument) throws CommandException {
+            return CommandBase.parseInt(argument);
+        }
+
+        @Override
+        public List<String> getTabCompletion(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
+            return Collections.emptyList();
+        }
+    },
+
+    BOOLEAN {
+        @Override
+        public Object parseArgument(MinecraftServer server, ICommandSender sender, String argument) throws CommandException {
+            return CommandBase.parseBoolean(argument);
+        }
+
+        @Override
+        public List<String> getTabCompletion(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
+            return CommandBase.getListOfStringsMatchingLastWord(args, "true", "false");
+        }
+    },
+
     STRING {
         @Override
         public Object parseArgument(MinecraftServer server, ICommandSender sender, String argument) throws CommandException {
@@ -29,10 +53,22 @@ public enum ArgumentParsers implements IArgumentParser {
         }
     },
 
-    INTEGER {
+    FLOAT {
         @Override
         public Object parseArgument(MinecraftServer server, ICommandSender sender, String argument) throws CommandException {
-            return CommandBase.parseInt(argument);
+            return (float) CommandBase.parseDouble(argument);
+        }
+
+        @Override
+        public List<String> getTabCompletion(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
+            return Collections.emptyList();
+        }
+    },
+
+    DOUBLE {
+        @Override
+        public Object parseArgument(MinecraftServer server, ICommandSender sender, String argument) throws CommandException {
+            return CommandBase.parseDouble(argument);
         }
 
         @Override
@@ -53,7 +89,7 @@ public enum ArgumentParsers implements IArgumentParser {
         }
     },
 
-    ITEMSTACK {
+    ITEM_STACK {
         @Override
         public Object parseArgument(MinecraftServer server, ICommandSender sender, String argument) throws CommandException {
             return new ItemStack(CommandBase.getItemByText(sender, argument));
@@ -63,32 +99,24 @@ public enum ArgumentParsers implements IArgumentParser {
         public List<String> getTabCompletion(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
             return CommandBase.getListOfStringsMatchingLastWord(args, Item.itemRegistry.getKeys());
         }
-    },
-
-    BOOLEAN {
-        @Override
-        public Object parseArgument(MinecraftServer server, ICommandSender sender, String argument) throws CommandException {
-            return CommandBase.parseBoolean(argument);
-        }
-
-        @Override
-        public List<String> getTabCompletion(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
-            return CommandBase.getListOfStringsMatchingLastWord(args, "true", "false");
-        }
     };
 
     @SuppressWarnings("unchecked")
     public static <T> IArgumentParser<T> getBuiltinParser(Class<T> type) {
-        if (String.class.isAssignableFrom(type)) {
-            return STRING;
-        } else if (Integer.class.isAssignableFrom(type)) {
+        if (Integer.class.isAssignableFrom(type) || int.class.isAssignableFrom(type)) {
             return INTEGER;
+        } else if (Boolean.class.isAssignableFrom(type) || boolean.class.isAssignableFrom(type)) {
+            return BOOLEAN;
+        } else if (String.class.isAssignableFrom(type)) {
+            return STRING;
+        } else if (Float.class.isAssignableFrom(type) || float.class.isAssignableFrom(type)) {
+            return FLOAT;
+        } else if (Double.class.isAssignableFrom(type) || double.class.isAssignableFrom(type)) {
+            return DOUBLE;
         } else if (EntityPlayer.class.isAssignableFrom(type)) {
             return PLAYER;
         } else if (ItemStack.class.isAssignableFrom(type)) {
-            return ITEMSTACK;
-        } else if (Boolean.class.isAssignableFrom(type)) {
-            return BOOLEAN;
+            return ITEM_STACK;
         } else {
             return null;
         }

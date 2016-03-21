@@ -47,7 +47,7 @@ public class Command extends CommandBase {
      * Set the required permission level for this command.
      *
      * @param permissionLevel the required permission level
-     * @return this command intannce
+     * @return this command instance
      */
     public Command setPermissionLevel(int permissionLevel) {
         this.permissionLevel = permissionLevel;
@@ -55,13 +55,18 @@ public class Command extends CommandBase {
     }
 
     /**
-     * Add a requird argument to this command. If it isn't filled in, the command won't be executed.
+     * Add a required argument to this command. If it isn't filled in, the command won't be executed. Required arguments
+     * have to be registered before optional ones.
      *
      * @param argument the argument name
      * @param type     the type for this argument
-     * @return this command intannce
+     * @return this command instance
      */
     public <T> Command addRequiredArgument(String argument, Class<T> type) {
+        if (!this.optionalArguments.isEmpty()) {
+            LLibrary.LOGGER.error("Please register required arguments before optional ones! Skipping argument " + argument + " with type " + type + ".");
+            return this;
+        }
         IArgumentParser<T> argumentParser = CommandHandler.INSTANCE.getParserForType(type);
         if (argumentParser != null) {
             this.requiredArguments.put(argument, argumentParser);
@@ -76,7 +81,7 @@ public class Command extends CommandBase {
      *
      * @param argument the argument name
      * @param type     the type for this argument
-     * @return this command intannce
+     * @return this command instance
      */
     public <T> Command addOptionalArgument(String argument, Class<T> type) {
         IArgumentParser<T> argumentParser = CommandHandler.INSTANCE.getParserForType(type);

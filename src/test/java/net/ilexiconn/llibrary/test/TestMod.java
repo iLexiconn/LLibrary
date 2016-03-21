@@ -10,8 +10,6 @@ import net.ilexiconn.llibrary.server.animation.AnimationHandler;
 import net.ilexiconn.llibrary.server.animation.IAnimatedEntity;
 import net.ilexiconn.llibrary.server.capability.EntityDataHandler;
 import net.ilexiconn.llibrary.server.capability.IEntityData;
-import net.ilexiconn.llibrary.server.command.Command;
-import net.ilexiconn.llibrary.server.command.CommandHandler;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -27,7 +25,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 
@@ -57,7 +54,7 @@ public class TestMod {
         EntityRegistry.registerModEntity(TabulaTestEntity.class, "tabula_test_entity", 1, this, 64, 1, false);
         RenderingRegistry.registerEntityRenderingHandler(TabulaTestEntity.class, manager -> {
             try {
-                return new RenderLiving<TabulaTestEntity>(manager, new TabulaModel(TabulaModelHandler.INSTANCE.loadModel("entity/model.tbl"), (model, entity, limbSwing, limbSwingAmount, ageInTicks, rotationYaw, rotationPitch, scale) -> {
+                return new RenderLiving<TabulaTestEntity>(manager, new TabulaModel(TabulaModelHandler.INSTANCE.loadModel("assets/testmod/models/entity/model.tbl"), (model, entity, limbSwing, limbSwingAmount, ageInTicks, rotationYaw, rotationPitch, scale) -> {
                     AdvancedModelRenderer waist = model.getCube("body3");
                     AdvancedModelRenderer chest = model.getCube("body2");
                     AdvancedModelRenderer shoulders = model.getCube("body1");
@@ -147,12 +144,6 @@ public class TestMod {
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
 
-    }
-
-    @Mod.EventHandler
-    public void serverStarting(FMLServerStartingEvent event) {
-        Command command = Command.create("testcommand").addOptionalArgument("optionalargument", Integer.class).addRequiredArgument("requiredargument", EntityPlayer.class).addRequiredArgument("double", Double.class);
-        CommandHandler.INSTANCE.registerCommand(event, command, (server, sender, arguments) -> System.out.println("Execute with arguments: " + arguments.getInteger("optionalargument") + ", " + arguments.getPlayer("requiredargument") + ", double: " + arguments.getArgument("double", Double.class)));
     }
 
     @SubscribeEvent

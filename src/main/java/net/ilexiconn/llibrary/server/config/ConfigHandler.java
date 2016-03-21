@@ -60,13 +60,13 @@ public enum ConfigHandler {
                 ConfigEntry configEntry = field.getAnnotation(ConfigEntry.class);
                 if (configEntry.side().isServer() || FMLCommonHandler.instance().getEffectiveSide().isClient()) {
                     String name = configEntry.name().isEmpty() ? field.getName() : configEntry.name();
-                    IEntryAdapter type = EntryAdapters.getBuiltinAdaper(field);
+                    IEntryAdapter type = EntryAdapters.getBuiltinAdapter(field);
                     if (type == null) {
                         type = this.entryAdapterMap.get(field.getType());
                     }
                     if (type != null) {
                         field.setAccessible(true);
-                        typeMap.put(name, EntryAdapters.getBuiltinAdaper(field));
+                        typeMap.put(name, EntryAdapters.getBuiltinAdapter(field));
                         valueMap.put(name, field.get(config));
                     } else {
                         LLibrary.LOGGER.error("Found unsupported config entry " + field.getName() + " for mod " + annotaton.modid());

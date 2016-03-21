@@ -118,7 +118,7 @@ public enum EntryAdapters implements IEntryAdapter {
         }
     };
 
-    public static IEntryAdapter getBuiltinAdaper(Field field) {
+    public static IEntryAdapter getBuiltinAdapter(Field field) {
         if (Integer.class.isAssignableFrom(field.getType()) || int.class.isAssignableFrom(field.getType())) {
             return INTEGER;
         } else if (Boolean.class.isAssignableFrom(field.getType()) || boolean.class.isAssignableFrom(field.getType())) {

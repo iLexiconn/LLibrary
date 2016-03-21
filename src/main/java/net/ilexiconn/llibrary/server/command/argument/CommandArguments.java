@@ -37,27 +37,6 @@ public class CommandArguments {
     }
 
     /**
-     * Get the argument and parse it using a specific argument parser.
-     *
-     * @param name           the argument name
-     * @param argumentParser the argument parser
-     * @param <T>            the argument type
-     * @return the argument value, null if it can't be found
-     */
-    public <T> T getArgument(String name, IArgumentParser<T> argumentParser) {
-        for (Argument argument : this.arguments) {
-            if (argument.getName().equals(name)) {
-                try {
-                    return argumentParser.parseArgument(this.commandSender.getServer(), this.commandSender, argument.getValue());
-                } catch (CommandException e) {
-                    this.commandSender.addChatMessage(new TextComponentString(e.getLocalizedMessage()).setChatStyle(new Style().setColor(TextFormatting.RED)));
-                }
-            }
-        }
-        return null;
-    }
-
-    /**
      * Get the argument with the class type, and parse it using the registered parser.
      *
      * @param name the argument name
@@ -68,7 +47,11 @@ public class CommandArguments {
     public <T> T getArgument(String name, Class<T> type) {
         for (Argument argument : this.arguments) {
             if (argument.getName().equals(name)) {
-                return type.cast(getArgument(name, argument.getArgumentParser()));
+                try {
+                    return type.cast(argument.getArgumentParser().parseArgument(this.commandSender.getServer(), this.commandSender, argument.getValue()));
+                } catch (CommandException e) {
+                    this.commandSender.addChatMessage(new TextComponentString(e.getLocalizedMessage()).setChatStyle(new Style().setColor(TextFormatting.RED)));
+                }
             }
         }
         return null;
