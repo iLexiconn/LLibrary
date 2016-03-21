@@ -17,31 +17,31 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @Mod(modid = "AnimationTest")
 public class AnimationTest {
-    public static final Logger LOGGER = LogManager.getLogger();
-
     @Mod.Instance("AnimationTest")
-    public static AnimationTest instance;
+    public static AnimationTest INSTANCE;
 
     @SidedProxy
-    private static ServerProxy proxy;
+    private static ServerProxy PROXY;
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        proxy.preInit();
+        PROXY.preInit();
     }
 
     public static class ServerProxy {
         public void preInit() {
-            EntityRegistry.registerModEntity(AnimationTestEntity.class, "animation_test_entity", 0, instance, 64, 1, false);
+            EntityRegistry.registerModEntity(AnimationTestEntity.class, "animation_test_entity", 0, INSTANCE, 64, 1, false);
         }
     }
 
+    @SideOnly(Side.CLIENT)
     public static class ClientProxy extends ServerProxy {
+        @Override
         public void preInit() {
             super.preInit();
             RenderingRegistry.registerEntityRenderingHandler(AnimationTestEntity.class, manager -> {
@@ -101,6 +101,7 @@ public class AnimationTest {
         }
     }
 
+    @SideOnly(Side.CLIENT)
     public static class TestModel extends AdvancedModelBase {
         public AdvancedModelRenderer body, head;
         public ModelAnimator animator;
