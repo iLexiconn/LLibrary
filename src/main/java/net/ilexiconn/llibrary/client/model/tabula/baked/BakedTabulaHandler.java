@@ -28,7 +28,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 @SideOnly(Side.CLIENT)
-public enum BakedTabulaLoader implements ICustomModelLoader, JsonDeserializationContext {
+public enum BakedTabulaHandler implements ICustomModelLoader, JsonDeserializationContext {
     INSTANCE;
 
     private Gson gson = new GsonBuilder().registerTypeAdapter(ItemTransformVec3f.class, new ItemTransformVec3fDeserializer()).registerTypeAdapter(ItemCameraTransforms.class, new ItemCameraTransformsDeserializer()).create();
@@ -67,7 +67,11 @@ public enum BakedTabulaLoader implements ICustomModelLoader, JsonDeserialization
         TabulaModelContainer modelJson = TabulaModelHandler.INSTANCE.loadModel(modelStream);
         modelStream.close();
         ImmutableList.Builder<ResourceLocation> builder = ImmutableList.builder();
-        builder.add(new ResourceLocation(modelBlock.textures.get("texture")));
+        int layer = 0;
+        String texture;
+        while ((texture = modelBlock.textures.get("layer" + layer++)) != null) {
+            builder.add(new ResourceLocation(texture));
+        }
         return new UnbakedTabulaModel(modelJson, builder.build(), IPerspectiveAwareModel.MapWrapper.getTransforms(modelBlock.getAllTransforms()));
     }
 

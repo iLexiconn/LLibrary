@@ -172,8 +172,8 @@ public class UnbakedTabulaModel implements IModel {
         for (int i = 0; i < vertices.length; i++) {
             Point3f vertex = vertices[i];
             for (int n = i + 1; n < vertices.length; n++) {
-                float opsilon = 1e-4F;
-                if (vertex.epsilonEquals(vertices[n], opsilon)) {
+                float epsilon = 1e-4F;
+                if (vertex.epsilonEquals(vertices[n], epsilon)) {
                     return true;
                 }
             }
