@@ -3,8 +3,8 @@ package net.ilexiconn.llibrary.client.gui;
 import net.minecraft.client.gui.GuiUtilRenderComponents;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.client.GuiScrollingList;
 import net.minecraftforge.fml.relauncher.Side;
@@ -20,7 +20,7 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class ModUpdateEntryGUI extends GuiScrollingList {
     private ModUpdateGUI parent;
-    private List<ITextComponent> textList = null;
+    private List<IChatComponent> textList = null;
 
     public ModUpdateEntryGUI(ModUpdateGUI parent, int width, List<String> textList) {
         super(parent.mc, width, parent.height, 32, parent.height - 55, parent.getModList().getWidth() + 20, 60, parent.width, parent.height);
@@ -54,16 +54,16 @@ public class ModUpdateEntryGUI extends GuiScrollingList {
 
     }
 
-    private List<ITextComponent> resizeContent(List<String> textList) {
-        List<ITextComponent> list = new ArrayList<>();
+    private List<IChatComponent> resizeContent(List<String> textList) {
+        List<IChatComponent> list = new ArrayList<>();
         for (String text : textList) {
             if (text == null) {
                 list.add(null);
                 continue;
             }
 
-            ITextComponent chat = ForgeHooks.newChatWithLinks(text, false);
-            list.addAll(GuiUtilRenderComponents.splitText(chat, this.listWidth - 8, this.parent.mc.fontRendererObj, false, true));
+            IChatComponent chat = ForgeHooks.newChatWithLinks(text, false);
+            list.addAll(GuiUtilRenderComponents.func_178908_a(chat, this.listWidth - 8, this.parent.mc.fontRendererObj, false, true));
         }
         return list;
     }
@@ -80,7 +80,7 @@ public class ModUpdateEntryGUI extends GuiScrollingList {
     protected void drawHeader(int entryRight, int relativeY, Tessellator tess) {
         int top = relativeY;
 
-        for (ITextComponent text : this.textList) {
+        for (IChatComponent text : this.textList) {
             if (text != null) {
                 GlStateManager.enableBlend();
                 this.parent.mc.fontRendererObj.drawStringWithShadow(text.getFormattedText(), this.left + 4, top, 0xFFFFFF);
@@ -102,14 +102,14 @@ public class ModUpdateEntryGUI extends GuiScrollingList {
             return;
         }
 
-        ITextComponent text = this.textList.get(lineIdx);
+        IChatComponent text = this.textList.get(lineIdx);
         if (text != null) {
             int k = -4;
-            for (ITextComponent part : text) {
-                if (!(part instanceof TextComponentString)) {
+            for (IChatComponent part : text) {
+                if (!(part instanceof ChatComponentText)) {
                     continue;
                 }
-                k += this.parent.mc.fontRendererObj.getStringWidth(((TextComponentString) part).getChatComponentText_TextValue());
+                k += this.parent.mc.fontRendererObj.getStringWidth(((ChatComponentText) part).getChatComponentText_TextValue());
                 if (k >= x) {
                     this.parent.handleComponentClick(part);
                     break;

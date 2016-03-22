@@ -5,7 +5,7 @@ import net.ilexiconn.llibrary.server.command.argument.IArgumentParser;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
 import java.util.*;

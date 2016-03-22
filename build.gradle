@@ -11,11 +11,8 @@ buildscript {
     }
 }
 
-plugins {
-    id "maven-publish"
-}
-
 apply plugin: "net.minecraftforge.gradle.forge"
+apply plugin: "maven-publish"
 
 import groovy.json.JsonSlurper;
 
@@ -27,15 +24,15 @@ if (secretFile.exists()) {
     }
 }
 
-version = getVersion()
+version = getVersion() + "-1.8.9"
 group = "net.ilexiconn"
 archivesBaseName = "llibrary"
 sourceCompatibility = targetCompatibility = "1.8"
 
 minecraft {
-    version = "1.9-12.16.0.1770-1.9"
+    version = "1.8.9-11.15.1.1794"
     runDir = "minecraft"
-    mappings = "snapshot_20160312"
+    mappings = "stable_20"
 }
 
 processResources {

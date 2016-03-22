@@ -5,10 +5,11 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.util.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 
 /**
  * An enhanced ModelRenderer
@@ -134,12 +135,12 @@ public class AdvancedModelRenderer extends ModelRenderer {
 
     private void compileDisplayList(float scale) {
         this.displayList = GLAllocation.generateDisplayLists(1);
-        GlStateManager.glNewList(this.displayList, 4864);
-        VertexBuffer buffer = Tessellator.getInstance().getBuffer();
+        GL11.glNewList(this.displayList, 4864);
+        WorldRenderer worldRenderer = Tessellator.getInstance().getWorldRenderer();
         for (ModelBox box : this.cubeList) {
-            box.render(buffer, scale);
+            box.render(worldRenderer, scale);
         }
-        GlStateManager.glEndList();
+        GL11.glEndList();
         this.compiled = true;
     }
 

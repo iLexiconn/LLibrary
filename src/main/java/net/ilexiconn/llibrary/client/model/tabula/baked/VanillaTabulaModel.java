@@ -7,12 +7,12 @@ import net.ilexiconn.llibrary.client.model.tabula.container.TabulaCubeContainer;
 import net.ilexiconn.llibrary.client.model.tabula.container.TabulaModelContainer;
 import net.ilexiconn.llibrary.client.util.Matrix;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.model.IFlexibleBakedModel;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.IModelState;
 import net.minecraftforge.client.model.TRSRTransformation;
@@ -54,14 +54,14 @@ public class VanillaTabulaModel implements IModel {
     }
 
     @Override
-    public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
+    public IFlexibleBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
         TextureAtlasSprite sprite = bakedTextureGetter.apply(this.textures.isEmpty() ? new ResourceLocation("missingno") : this.textures.get(0));
         ImmutableList.Builder<BakedQuad> builder = ImmutableList.builder();
         Matrix matrix = new Matrix();
         matrix.scale(0.0625F, 0.0625F, 0.0625F);
         build(matrix, builder, format, this.model.getCubes(), sprite);
         ImmutableList<BakedQuad> leQuads = builder.build();
-        return new BakedTabulaModel(leQuads, sprite, this.transforms);
+        return new BakedTabulaModel(leQuads, sprite, format, this.transforms);
     }
 
     private void build(Matrix mat, ImmutableList.Builder<BakedQuad> builder, VertexFormat format, List<TabulaCubeContainer> cubeContainerList, TextureAtlasSprite sprite) {

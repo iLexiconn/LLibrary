@@ -6,7 +6,7 @@ import net.ilexiconn.llibrary.server.update.UpdateHandler;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
@@ -93,12 +93,12 @@ public class ModUpdateListGUI extends GuiScrollingList {
         float iconWidth = cachedLogoDimensions.get(idx).getX() * scale;
         float iconHeight = cachedLogoDimensions.get(idx).getY() * scale;
         int offset = 12;
-        VertexBuffer renderer = tess.getBuffer();
-        renderer.begin(7, DefaultVertexFormats.POSITION_TEX);
-        renderer.pos(offset, top + iconHeight, 0).tex(0, 1).endVertex();
-        renderer.pos(offset + iconWidth, top + iconHeight, 0).tex(1, 1).endVertex();
-        renderer.pos(offset + iconWidth, top, 0).tex(1, 0).endVertex();
-        renderer.pos(offset, top, 0).tex(0, 0).endVertex();
+        WorldRenderer worldRenderer = tess.getWorldRenderer();
+        worldRenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
+        worldRenderer.pos(offset, top + iconHeight, 0).tex(0, 1).endVertex();
+        worldRenderer.pos(offset + iconWidth, top + iconHeight, 0).tex(1, 1).endVertex();
+        worldRenderer.pos(offset + iconWidth, top, 0).tex(1, 0).endVertex();
+        worldRenderer.pos(offset, top, 0).tex(0, 0).endVertex();
         tess.draw();
     }
 

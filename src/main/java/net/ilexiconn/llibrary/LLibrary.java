@@ -1,9 +1,6 @@
 package net.ilexiconn.llibrary;
 
 import net.ilexiconn.llibrary.server.ServerProxy;
-import net.ilexiconn.llibrary.server.capability.IEntityDataCapability;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -22,8 +19,6 @@ public class LLibrary {
     public static ServerProxy PROXY;
     @Mod.Instance("llibrary")
     public static LLibrary INSTANCE;
-    @CapabilityInject(IEntityDataCapability.class)
-    public static Capability<IEntityDataCapability> ENTITY_DATA_CAPABILITY;
 
     public static final Logger LOGGER = LogManager.getLogger("LLibrary");
     public static final SimpleNetworkWrapper NETWORK_WRAPPER = NetworkRegistry.INSTANCE.newSimpleChannel("llibrary");

@@ -33,7 +33,7 @@ public class ClientProxy extends ServerProxy {
         MinecraftForge.EVENT_BUS.register(ClientProxy.CLIENT_EVENT_HANDLER);
         ModelLoaderRegistry.registerLoader(TabulaModelHandler.INSTANCE);
 
-        timer = ReflectionHelper.getPrivateValue(Minecraft.class, MINECRAFT, "timer", "field_71428_T", "aa");
+        timer = ReflectionHelper.getPrivateValue(Minecraft.class, ClientProxy.MINECRAFT, "timer", "field_71428_T", "Y");
     }
 
     @Override
@@ -51,7 +51,7 @@ public class ClientProxy extends ServerProxy {
         if (messageContext.side.isServer()) {
             super.handleMessage(message, messageContext);
         } else {
-            ClientProxy.MINECRAFT.addScheduledTask(() -> message.onClientReceived(MINECRAFT, message, MINECRAFT.thePlayer, messageContext));
+            ClientProxy.MINECRAFT.addScheduledTask(() -> message.onClientReceived(ClientProxy.MINECRAFT, message, ClientProxy.MINECRAFT.thePlayer, messageContext));
         }
     }
 

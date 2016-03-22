@@ -95,7 +95,7 @@ public enum TabulaModelHandler implements ICustomModelLoader, JsonDeserializatio
         while ((texture = modelBlock.textures.get("layer" + layer++)) != null) {
             builder.add(new ResourceLocation(texture));
         }
-        return new VanillaTabulaModel(modelJson, builder.build(), IPerspectiveAwareModel.MapWrapper.getTransforms(modelBlock.getAllTransforms()));
+        return new VanillaTabulaModel(modelJson, builder.build(), IPerspectiveAwareModel.MapWrapper.getTransforms(modelBlock.func_181682_g()));
     }
 
     private InputStream getModelJsonStream(String name, InputStream file) throws IOException {

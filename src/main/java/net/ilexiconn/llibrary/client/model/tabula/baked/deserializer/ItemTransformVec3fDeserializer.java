@@ -3,7 +3,7 @@ package net.ilexiconn.llibrary.client.model.tabula.baked.deserializer;
 import com.google.gson.*;
 import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
 import net.minecraft.util.JsonUtils;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.util.vector.Vector3f;

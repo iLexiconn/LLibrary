@@ -11,10 +11,10 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatStyle;
+import net.minecraft.util.EnumChatFormatting;
 
 import java.util.Collections;
 import java.util.List;
@@ -137,7 +137,7 @@ public class Command extends CommandBase {
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+    public void processCommand(ICommandSender sender, String[] args) throws CommandException {
         if (args.length < this.requiredArguments.size()) {
             throw new WrongUsageException(getCommandUsage(sender));
         } else if (args.length > this.requiredArguments.size() + this.optionalArguments.size()) {
@@ -148,29 +148,29 @@ public class Command extends CommandBase {
                 if (i < this.requiredArguments.size()) {
                     Map.Entry<String, IArgumentParser<?>> entry = this.requiredArguments.getEntry(i);
                     try {
-                        arguments.add(new Argument<>(entry.getKey(), entry.getValue().parseArgument(server, sender, args[i])));
+                        arguments.add(new Argument<>(entry.getKey(), entry.getValue().parseArgument(MinecraftServer.getServer(), sender, args[i])));
                     } catch (CommandException e) {
-                        sender.addChatMessage(new TextComponentString(e.getLocalizedMessage()).setChatStyle(new Style().setColor(TextFormatting.RED)));
+                        sender.addChatMessage(new ChatComponentText(e.getLocalizedMessage()).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
                     }
                 } else {
                     Map.Entry<String, IArgumentParser<?>> entry = this.optionalArguments.getEntry(i - this.requiredArguments.size());
                     try {
-                        arguments.add(new Argument<>(entry.getKey(), entry.getValue().parseArgument(server, sender, args[i])));
+                        arguments.add(new Argument<>(entry.getKey(), entry.getValue().parseArgument(MinecraftServer.getServer(), sender, args[i])));
                     } catch (CommandException e) {
-                        sender.addChatMessage(new TextComponentString(e.getLocalizedMessage()).setChatStyle(new Style().setColor(TextFormatting.RED)));
+                        sender.addChatMessage(new ChatComponentText(e.getLocalizedMessage()).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
                     }
                 }
             }
-            this.executor.execute(server, sender, new CommandArguments(arguments));
+            this.executor.execute(MinecraftServer.getServer(), sender, new CommandArguments(arguments));
         }
     }
 
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
+    public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
         if (args.length <= this.requiredArguments.size()) {
-            return this.requiredArguments.getValue(args.length - 1).getTabCompletion(server, sender, args, pos);
+            return this.requiredArguments.getValue(args.length - 1).getTabCompletion(MinecraftServer.getServer(), sender, args, pos);
         } else if (args.length <= this.requiredArguments.size() + this.optionalArguments.size()) {
-            return this.optionalArguments.getValue(args.length - this.requiredArguments.size() - 1).getTabCompletion(server, sender, args, pos);
+            return this.optionalArguments.getValue(args.length - this.requiredArguments.size() - 1).getTabCompletion(MinecraftServer.getServer(), sender, args, pos);
         } else {
             return Collections.emptyList();
         }

@@ -7,7 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.BlockPos;
 
 import java.util.Collections;
 import java.util.List;
@@ -80,7 +80,7 @@ public enum ArgumentParsers implements IArgumentParser {
     PLAYER {
         @Override
         public Object parseArgument(MinecraftServer server, ICommandSender sender, String argument) throws CommandException {
-            return CommandBase.getPlayer(server, sender, argument);
+            return CommandBase.getPlayer(sender, argument);
         }
 
         @Override

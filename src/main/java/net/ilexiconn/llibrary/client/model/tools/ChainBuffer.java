@@ -2,7 +2,7 @@ package net.ilexiconn.llibrary.client.model.tools;
 
 import net.ilexiconn.llibrary.LLibrary;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 

@@ -3,7 +3,7 @@ package net.ilexiconn.llibrary.server.command.argument;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.BlockPos;
 
 import java.util.List;
 
