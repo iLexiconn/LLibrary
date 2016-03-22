@@ -12,12 +12,12 @@ public class ClientUtils {
     }
 
     public static float updateValue(float current, float target) {
-        float off = (off = target - current) > 0.01F || off < -0.01F ? ClientUtils.smoothenValue(off, 0.7F) : 0.0F;
-        return target - off;
+        return ClientUtils.updateValue(current, target, 0.5F);
     }
 
-    public static float smoothenValue(float value, float factor) {
+    public static float updateValue(float current, float target, float factor) {
         float times = (System.currentTimeMillis() - lastUpdate) / 16.666666666666668F;
-        return (float) (value * Math.pow(factor, times));
+        float off = (off = target - current) > 0.01F || off < -0.01F ? off * (float) Math.pow(factor, times) : 0.0F;
+        return target - off;
     }
 }

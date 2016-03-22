@@ -31,7 +31,7 @@ public class Snackbar {
     }
 
     /**
-     * Set a custom duration for this snackbar. If it's 0 (default), the text lenght * 2 will be used.
+     * Set a custom duration for this snackbar. If it's 0 (default), the text length * 3 will be used.
      *
      * @param duration the custom curation
      * @return this snackbar instance

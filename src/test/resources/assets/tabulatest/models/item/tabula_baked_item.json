@@ -1,7 +1,7 @@
 {
   "parent": "builtin/generated",
   "textures": {
-    "layer0": "items/iron_sword"
+    "layer0": "missingno"
   },
   "tabula": "tabulatest:models/item/tabula_baked_item",
   "display": {

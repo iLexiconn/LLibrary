@@ -18,7 +18,7 @@ public class SnackbarGUI extends Gui {
 
     public SnackbarGUI(Snackbar snackbar) {
         this.snackbar = snackbar;
-        this.maxAge = snackbar.getDuration() > 0 ? snackbar.getDuration() : ClientProxy.MINECRAFT.fontRendererObj.getStringWidth(snackbar.getMessage()) * 2;
+        this.maxAge = snackbar.getDuration() > 0 ? snackbar.getDuration() : ClientProxy.MINECRAFT.fontRendererObj.getStringWidth(snackbar.getMessage()) * 3;
     }
 
     public void updateSnackbar() {
