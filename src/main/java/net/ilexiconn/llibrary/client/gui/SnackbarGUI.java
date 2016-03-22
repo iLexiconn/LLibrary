@@ -30,16 +30,11 @@ public class SnackbarGUI extends Gui {
 
     public void drawSnackbar() {
         GlStateManager.pushMatrix();
-        GlStateManager.translate(0.0F, yOffset, 0.0F);
+        GlStateManager.translate(0.0F, this.yOffset, 0.0F);
         ScaledResolution resolution = new ScaledResolution(ClientProxy.MINECRAFT);
         drawRect(0, resolution.getScaledHeight() - 20, resolution.getScaledWidth(), resolution.getScaledHeight(), 0xFF333333);
         ClientProxy.MINECRAFT.fontRendererObj.drawString(this.snackbar.getMessage(), 10, resolution.getScaledHeight() - 14, 0xFFFFFFFF);
         GlStateManager.popMatrix();
-
-        if (this.age < this.maxAge - 73) {
-            yOffset = ClientUtils.updateValue(yOffset, 0.0F);
-        } else {
-            yOffset = ClientUtils.updateValue(yOffset, 20.0F);
-        }
+        this.yOffset = ClientUtils.updateValue(this.yOffset, this.age < this.maxAge - 61 ? 0.0F : 20.0F);
     }
 }
