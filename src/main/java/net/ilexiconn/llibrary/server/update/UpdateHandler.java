@@ -1,13 +1,13 @@
 package net.ilexiconn.llibrary.server.update;
 
 import com.google.gson.Gson;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.ModContainer;
+import cpw.mods.fml.common.versioning.ArtifactVersion;
 import net.ilexiconn.llibrary.LLibrary;
 import net.ilexiconn.llibrary.server.ServerProxy;
 import net.ilexiconn.llibrary.server.util.WebUtils;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.ModContainer;
-import net.minecraftforge.fml.common.versioning.ArtifactVersion;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ public enum UpdateHandler {
 
     /**
      * Register a update checker. The first object has to be the main mod class - the class with the
-     * {@link net.minecraftforge.fml.common.Mod} annotation. The second argument is the url to the version checker.
+     * {@link cpw.mods.fml.common.Mod} annotation. The second argument is the url to the version checker.
      * <p>Example:
      * <pre>{@code
      * {

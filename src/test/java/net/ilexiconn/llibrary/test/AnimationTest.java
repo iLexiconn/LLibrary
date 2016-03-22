@@ -1,5 +1,12 @@
 package net.ilexiconn.llibrary.test;
 
+import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.registry.EntityRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.ilexiconn.llibrary.client.model.ModelAnimator;
 import net.ilexiconn.llibrary.client.model.tools.AdvancedModelBase;
 import net.ilexiconn.llibrary.client.model.tools.AdvancedModelRenderer;
@@ -12,19 +19,12 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 @Mod(modid = "AnimationTest")
 public class AnimationTest {
     @Mod.Instance("AnimationTest")
     public static AnimationTest INSTANCE;
-    @SidedProxy
+    @SidedProxy(serverSide = "net.ilexiconn.llibrary.test.AnimationTest$ServerProxy", clientSide = "net.ilexiconn.llibrary.test.AnimationTest$ClientProxy")
     public static ServerProxy PROXY;
 
     @Mod.EventHandler
@@ -43,13 +43,11 @@ public class AnimationTest {
         @Override
         public void onPreInit() {
             super.onPreInit();
-            RenderingRegistry.registerEntityRenderingHandler(AnimationTestEntity.class, manager -> {
-                return new RenderLiving<AnimationTestEntity>(manager, new TestModel(), 0.0F) {
-                    @Override
-                    protected ResourceLocation getEntityTexture(AnimationTestEntity entity) {
-                        return new ResourceLocation("missingno");
-                    }
-                };
+            RenderingRegistry.registerEntityRenderingHandler(AnimationTestEntity.class, new RenderLiving(new TestModel(), 0.0F) {
+                @Override
+                protected ResourceLocation getEntityTexture(Entity entity) {
+                    return new ResourceLocation("missingno");
+                }
             });
         }
     }

@@ -1,14 +1,14 @@
 package net.ilexiconn.llibrary.client.model.tabula;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.ilexiconn.llibrary.client.model.tabula.container.TabulaCubeContainer;
 import net.ilexiconn.llibrary.client.model.tabula.container.TabulaCubeGroupContainer;
 import net.ilexiconn.llibrary.client.model.tabula.container.TabulaModelContainer;
 import net.ilexiconn.llibrary.client.model.tools.AdvancedModelBase;
 import net.ilexiconn.llibrary.client.model.tools.AdvancedModelRenderer;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -84,13 +84,13 @@ public class TabulaModel extends AdvancedModelBase {
     @Override
     public void render(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float rotationYaw, float rotationPitch, float scale) {
         this.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, rotationYaw, rotationPitch, scale, entity);
-        GlStateManager.pushMatrix();
+        GL11.glPushMatrix();
         double[] modelScale = this.container.getScale();
-        GlStateManager.scale(modelScale[0], modelScale[1], modelScale[2]);
+        GL11.glScaled(modelScale[0], modelScale[1], modelScale[2]);
         for (AdvancedModelRenderer box : this.rootBoxes) {
             box.render(scale);
         }
-        GlStateManager.popMatrix();
+        GL11.glPopMatrix();
     }
 
     @Override

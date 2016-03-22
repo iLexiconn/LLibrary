@@ -1,13 +1,13 @@
 package net.ilexiconn.llibrary.server.config;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Mod;
 import net.ilexiconn.llibrary.LLibrary;
 import net.ilexiconn.llibrary.server.config.entry.EntryAdapters;
 import net.ilexiconn.llibrary.server.config.entry.IEntryAdapter;
 import net.ilexiconn.llibrary.server.util.Tuple3;
 import net.minecraft.crash.CrashReport;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.Mod;
 
 import java.io.File;
 import java.util.*;
@@ -36,7 +36,7 @@ public enum ConfigHandler {
     }
 
     /**
-     * Register your mod's config. the first oject has to be the main mod class - the class with the {@link Mod}
+     * Register your mod's config. the first object has to be the main mod class - the class with the {@link Mod}
      * annotation. This method returns the new instance of the config.
      *
      * @param mod    the mod instance
@@ -47,7 +47,7 @@ public enum ConfigHandler {
      */
     public <T> T registerConfig(Object mod, File file, T config) {
         if (!mod.getClass().isAnnotationPresent(Mod.class)) {
-            LLibrary.LOGGER.warn("Please register the config using the main mod class. Skipping registeration of object " + mod + ".");
+            LLibrary.LOGGER.warn("Please register the config using the main mod class. Skipping registration of object " + mod + ".");
             return null;
         }
 

@@ -1,12 +1,11 @@
 package net.ilexiconn.llibrary.server.command;
 
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import net.ilexiconn.llibrary.server.command.argument.ArgumentParsers;
 import net.ilexiconn.llibrary.server.command.argument.IArgumentParser;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
 import java.util.*;
 
@@ -47,7 +46,7 @@ public enum CommandHandler {
             }
 
             @Override
-            public List<String> getTabCompletion(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
+            public List<String> getTabCompletion(MinecraftServer server, ICommandSender sender, String[] args) {
                 return CommandBase.getListOfStringsMatchingLastWord(args, values);
             }
         };

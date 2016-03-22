@@ -1,22 +1,22 @@
 package net.ilexiconn.llibrary.test;
 
+import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.InputEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.ilexiconn.llibrary.server.snackbar.Snackbar;
 import net.ilexiconn.llibrary.server.snackbar.SnackbarHandler;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
 @Mod(modid = "SnackbarTest")
 public class SnackbarTest {
-    @SidedProxy
+    @SidedProxy(serverSide = "net.ilexiconn.llibrary.test.SnackbarTest$ServerProxy", clientSide = "net.ilexiconn.llibrary.test.SnackbarTest$ClientProxy")
     public static ServerProxy PROXY;
 
     @Mod.EventHandler
@@ -39,14 +39,14 @@ public class SnackbarTest {
         public void onPreInit() {
             super.onPreInit();
             ClientRegistry.registerKeyBinding(ClientProxy.SNACKBAR_KEY);
-            MinecraftForge.EVENT_BUS.register(ClientProxy.CLIENT_EVENT_HANDLER);
+            FMLCommonHandler.instance().bus().register(ClientProxy.CLIENT_EVENT_HANDLER);
         }
     }
 
     @SideOnly(Side.CLIENT)
     public static class ClientEventHandler {
         @SubscribeEvent
-        public void onKeyInputPost(GuiScreenEvent.KeyboardInputEvent.Post event) {
+        public void onKeyInputPost(InputEvent.KeyInputEvent event) {
             if (Keyboard.isKeyDown(ClientProxy.SNACKBAR_KEY.getKeyCode())) {
                 SnackbarHandler.INSTANCE.showSnackbar(Snackbar.create("Snackbar test"));
             }

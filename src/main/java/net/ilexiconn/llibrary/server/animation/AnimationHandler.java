@@ -1,9 +1,9 @@
 package net.ilexiconn.llibrary.server.animation;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import net.ilexiconn.llibrary.LLibrary;
 import net.ilexiconn.llibrary.server.network.AnimationMessage;
 import net.minecraft.entity.Entity;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 
 /**
  * @author iLexiconn

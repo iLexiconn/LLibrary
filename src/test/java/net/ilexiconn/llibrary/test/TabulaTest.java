@@ -1,20 +1,21 @@
 package net.ilexiconn.llibrary.test;
 
+import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.registry.EntityRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.ilexiconn.llibrary.client.model.tabula.ITabulaModelAnimator;
 import net.ilexiconn.llibrary.client.model.tabula.TabulaModel;
 import net.ilexiconn.llibrary.client.model.tabula.TabulaModelHandler;
 import net.ilexiconn.llibrary.client.model.tools.AdvancedModelRenderer;
 import net.minecraft.client.renderer.entity.RenderLiving;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
 
@@ -22,7 +23,7 @@ import java.io.IOException;
 public class TabulaTest {
     @Mod.Instance("TabulaTest")
     public static TabulaTest INSTANCE;
-    @SidedProxy
+    @SidedProxy(serverSide = "net.ilexiconn.llibrary.test.TabulaTest$ServerProxy", clientSide = "net.ilexiconn.llibrary.test.TabulaTest$ClientProxy")
     public static ServerProxy PROXY;
 
     @Mod.EventHandler
@@ -41,19 +42,16 @@ public class TabulaTest {
         @Override
         public void onPreInit() {
             super.onPreInit();
-            RenderingRegistry.registerEntityRenderingHandler(TabulaTestEntity.class, manager -> {
-                try {
-                    return new RenderLiving<TabulaTestEntity>(manager, new TabulaModel(TabulaModelHandler.INSTANCE.loadTabulaModel("assets/tabulatest/models/entity/tabula_model.tbl"), new Animator()), 0.0F) {
-                        @Override
-                        protected ResourceLocation getEntityTexture(TabulaTestEntity entity) {
-                            return new ResourceLocation("missingno");
-                        }
-                    };
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return null;
-                }
-            });
+            try {
+                RenderingRegistry.registerEntityRenderingHandler(TabulaTestEntity.class, new RenderLiving(new TabulaModel(TabulaModelHandler.INSTANCE.loadTabulaModel("assets/tabulatest/models/entity/tabula_model.tbl"), new Animator()), 0.0F) {
+                    @Override
+                    protected ResourceLocation getEntityTexture(Entity entity) {
+                        return new ResourceLocation("missingno");
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

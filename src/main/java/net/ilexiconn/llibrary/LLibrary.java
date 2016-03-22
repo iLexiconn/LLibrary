@@ -1,16 +1,13 @@
 package net.ilexiconn.llibrary;
 
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.ilexiconn.llibrary.server.ServerProxy;
-import net.ilexiconn.llibrary.server.capability.IEntityDataCapability;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,8 +19,6 @@ public class LLibrary {
     public static ServerProxy PROXY;
     @Mod.Instance("llibrary")
     public static LLibrary INSTANCE;
-    @CapabilityInject(IEntityDataCapability.class)
-    public static Capability<IEntityDataCapability> ENTITY_DATA_CAPABILITY;
 
     public static final Logger LOGGER = LogManager.getLogger("LLibrary");
     public static final SimpleNetworkWrapper NETWORK_WRAPPER = NetworkRegistry.INSTANCE.newSimpleChannel("llibrary");

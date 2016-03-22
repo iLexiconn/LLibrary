@@ -1,19 +1,17 @@
 package net.ilexiconn.llibrary.client.gui;
 
+import cpw.mods.fml.client.GuiScrollingList;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.ilexiconn.llibrary.client.ClientProxy;
 import net.ilexiconn.llibrary.server.update.UpdateContainer;
 import net.ilexiconn.llibrary.server.update.UpdateHandler;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
-import net.minecraftforge.fml.client.GuiScrollingList;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 
 import java.awt.image.BufferedImage;
@@ -29,9 +27,11 @@ public class ModUpdateListGUI extends GuiScrollingList {
     private ModUpdateGUI parent;
     private Map<Integer, ResourceLocation> cachedLogo;
     private Map<Integer, Vector2f> cachedLogoDimensions;
+    private int right;
 
     public ModUpdateListGUI(ModUpdateGUI parent, int width) {
-        super(parent.mc, width, parent.height, 32, parent.height - 55, 10, 35, parent.width, parent.height);
+        super(parent.mc, width, parent.height, 32, parent.height - 55, 10, 35);
+        this.right = 10;
         this.parent = parent;
         this.cachedLogo = new HashMap<>();
         this.cachedLogoDimensions = new HashMap<>();
@@ -67,7 +67,7 @@ public class ModUpdateListGUI extends GuiScrollingList {
         UpdateContainer updateContainer = UpdateHandler.INSTANCE.getOutdatedModList().get(idx);
         String name = StringUtils.stripControlCodes(updateContainer.getModContainer().getName());
         String version = StringUtils.stripControlCodes(updateContainer.getLatestVersion().getVersionString());
-        FontRenderer font = ClientProxy.MINECRAFT.fontRendererObj;
+        FontRenderer font = ClientProxy.MINECRAFT.fontRenderer;
 
         font.drawString(font.trimStringToWidth(name, listWidth - 10), this.left + 36, top + 2, 0xFFFFFF);
         font.drawString(font.trimStringToWidth(version, listWidth - 10), this.left + 36, top + 12, 0xCCCCCC);
@@ -80,7 +80,7 @@ public class ModUpdateListGUI extends GuiScrollingList {
             }
         }
 
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         ClientProxy.MINECRAFT.renderEngine.bindTexture(cachedLogo.get(idx));
         float scaleX = cachedLogoDimensions.get(idx).getX() / 32.0F;
         float scaleY = cachedLogoDimensions.get(idx).getY() / 32.0F;
@@ -93,12 +93,11 @@ public class ModUpdateListGUI extends GuiScrollingList {
         float iconWidth = cachedLogoDimensions.get(idx).getX() * scale;
         float iconHeight = cachedLogoDimensions.get(idx).getY() * scale;
         int offset = 12;
-        VertexBuffer renderer = tess.getBuffer();
-        renderer.begin(7, DefaultVertexFormats.POSITION_TEX);
-        renderer.pos(offset, top + iconHeight, 0).tex(0, 1).endVertex();
-        renderer.pos(offset + iconWidth, top + iconHeight, 0).tex(1, 1).endVertex();
-        renderer.pos(offset + iconWidth, top, 0).tex(1, 0).endVertex();
-        renderer.pos(offset, top, 0).tex(0, 0).endVertex();
+        tess.startDrawingQuads();
+        tess.addVertexWithUV(offset, top + iconHeight, 0, 0, 1);
+        tess.addVertexWithUV(offset + iconWidth, top + iconHeight, 0, 1, 1);
+        tess.addVertexWithUV(offset + iconWidth, top, 0, 1, 0);
+        tess.addVertexWithUV(offset, top, 0, 0, 0);
         tess.draw();
     }
 

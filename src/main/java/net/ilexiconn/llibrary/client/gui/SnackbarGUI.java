@@ -1,13 +1,13 @@
 package net.ilexiconn.llibrary.client.gui;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.ilexiconn.llibrary.client.ClientProxy;
 import net.ilexiconn.llibrary.client.util.ClientUtils;
 import net.ilexiconn.llibrary.server.snackbar.Snackbar;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 
 /**
  * @author iLexiconn
@@ -22,7 +22,7 @@ public class SnackbarGUI extends Gui {
 
     public SnackbarGUI(Snackbar snackbar) {
         this.snackbar = snackbar;
-        this.maxAge = snackbar.getDuration() > 0 ? snackbar.getDuration() : ClientProxy.MINECRAFT.fontRendererObj.getStringWidth(snackbar.getMessage()) * 3;
+        this.maxAge = snackbar.getDuration() > 0 ? snackbar.getDuration() : ClientProxy.MINECRAFT.fontRenderer.getStringWidth(snackbar.getMessage()) * 3;
     }
 
     public void updateSnackbar() {
@@ -33,12 +33,12 @@ public class SnackbarGUI extends Gui {
     }
 
     public void drawSnackbar() {
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(0.0F, this.yOffset, 0.0F);
-        ScaledResolution resolution = new ScaledResolution(ClientProxy.MINECRAFT);
+        GL11.glPushMatrix();
+        GL11.glTranslatef(0.0F, this.yOffset, 0.0F);
+        ScaledResolution resolution = new ScaledResolution(ClientProxy.MINECRAFT, ClientProxy.MINECRAFT.displayWidth, ClientProxy.MINECRAFT.displayHeight);
         drawRect(0, resolution.getScaledHeight() - 20, resolution.getScaledWidth(), resolution.getScaledHeight(), 0xFF333333);
-        ClientProxy.MINECRAFT.fontRendererObj.drawString(this.snackbar.getMessage(), 10, resolution.getScaledHeight() - 14, 0xFFFFFFFF);
-        GlStateManager.popMatrix();
+        ClientProxy.MINECRAFT.fontRenderer.drawString(this.snackbar.getMessage(), 10, resolution.getScaledHeight() - 14, 0xFFFFFFFF);
+        GL11.glPopMatrix();
         this.yOffset = ClientUtils.updateValue(this.yOffset, this.age < this.maxAge - 61 ? 0.0F : 20.0F);
     }
 }

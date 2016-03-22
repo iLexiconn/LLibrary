@@ -1,7 +1,7 @@
 package net.ilexiconn.llibrary.client.util;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 import javax.vecmath.*;
 import java.util.Stack;

@@ -7,7 +7,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
 
 import java.util.Collections;
 import java.util.List;
@@ -20,11 +19,11 @@ public enum ArgumentParsers implements IArgumentParser {
     INTEGER {
         @Override
         public Object parseArgument(MinecraftServer server, ICommandSender sender, String argument) throws CommandException {
-            return CommandBase.parseInt(argument);
+            return CommandBase.parseInt(sender, argument);
         }
 
         @Override
-        public List<String> getTabCompletion(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
+        public List<String> getTabCompletion(MinecraftServer server, ICommandSender sender, String[] args) {
             return Collections.emptyList();
         }
     },
@@ -32,11 +31,11 @@ public enum ArgumentParsers implements IArgumentParser {
     BOOLEAN {
         @Override
         public Object parseArgument(MinecraftServer server, ICommandSender sender, String argument) throws CommandException {
-            return CommandBase.parseBoolean(argument);
+            return CommandBase.parseBoolean(sender, argument);
         }
 
         @Override
-        public List<String> getTabCompletion(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
+        public List<String> getTabCompletion(MinecraftServer server, ICommandSender sender, String[] args) {
             return CommandBase.getListOfStringsMatchingLastWord(args, "true", "false");
         }
     },
@@ -48,7 +47,7 @@ public enum ArgumentParsers implements IArgumentParser {
         }
 
         @Override
-        public List<String> getTabCompletion(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
+        public List<String> getTabCompletion(MinecraftServer server, ICommandSender sender, String[] args) {
             return Collections.emptyList();
         }
     },
@@ -56,11 +55,11 @@ public enum ArgumentParsers implements IArgumentParser {
     FLOAT {
         @Override
         public Object parseArgument(MinecraftServer server, ICommandSender sender, String argument) throws CommandException {
-            return (float) CommandBase.parseDouble(argument);
+            return (float) CommandBase.parseDouble(sender, argument);
         }
 
         @Override
-        public List<String> getTabCompletion(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
+        public List<String> getTabCompletion(MinecraftServer server, ICommandSender sender, String[] args) {
             return Collections.emptyList();
         }
     },
@@ -68,11 +67,11 @@ public enum ArgumentParsers implements IArgumentParser {
     DOUBLE {
         @Override
         public Object parseArgument(MinecraftServer server, ICommandSender sender, String argument) throws CommandException {
-            return CommandBase.parseDouble(argument);
+            return CommandBase.parseDouble(sender, argument);
         }
 
         @Override
-        public List<String> getTabCompletion(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
+        public List<String> getTabCompletion(MinecraftServer server, ICommandSender sender, String[] args) {
             return Collections.emptyList();
         }
     },
@@ -80,11 +79,11 @@ public enum ArgumentParsers implements IArgumentParser {
     PLAYER {
         @Override
         public Object parseArgument(MinecraftServer server, ICommandSender sender, String argument) throws CommandException {
-            return CommandBase.getPlayer(server, sender, argument);
+            return CommandBase.getPlayer(sender, argument);
         }
 
         @Override
-        public List<String> getTabCompletion(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
+        public List<String> getTabCompletion(MinecraftServer server, ICommandSender sender, String[] args) {
             return CommandBase.getListOfStringsMatchingLastWord(args, server.getAllUsernames());
         }
     },
@@ -96,8 +95,8 @@ public enum ArgumentParsers implements IArgumentParser {
         }
 
         @Override
-        public List<String> getTabCompletion(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
-            return CommandBase.getListOfStringsMatchingLastWord(args, Item.itemRegistry.getKeys());
+        public List<String> getTabCompletion(MinecraftServer server, ICommandSender sender, String[] args) {
+            return CommandBase.getListOfStringsFromIterableMatchingLastWord(args, Item.itemRegistry.getKeys());
         }
     };
 

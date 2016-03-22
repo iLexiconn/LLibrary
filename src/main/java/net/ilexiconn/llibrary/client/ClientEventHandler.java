@@ -1,5 +1,9 @@
 package net.ilexiconn.llibrary.client;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.ilexiconn.llibrary.client.gui.ModUpdateGUI;
 import net.ilexiconn.llibrary.client.gui.SnackbarGUI;
 import net.ilexiconn.llibrary.client.util.ClientUtils;
@@ -8,13 +12,9 @@ import net.ilexiconn.llibrary.server.snackbar.SnackbarHandler;
 import net.ilexiconn.llibrary.server.update.UpdateHandler;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
-import net.minecraft.util.text.translation.I18n;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.util.Rectangle;
 
 @SideOnly(Side.CLIENT)
@@ -46,7 +46,7 @@ public class ClientEventHandler {
                 Rectangle rectangle = new Rectangle(buttonX, buttonY, 20, 20);
                 boolean intersects = false;
                 for (int i = 0; i < event.gui.buttonList.size(); i++) {
-                    GuiButton button = event.gui.buttonList.get(i);
+                    GuiButton button = (GuiButton) event.gui.buttonList.get(i);
                     if (!intersects) {
                         intersects = rectangle.intersects(new Rectangle(button.xPosition, button.yPosition, button.width, button.height));
                     }
@@ -63,7 +63,7 @@ public class ClientEventHandler {
 
             if (!this.checkedForUpdates && !UpdateHandler.INSTANCE.getOutdatedModList().isEmpty()) {
                 this.checkedForUpdates = true;
-                SnackbarHandler.INSTANCE.showSnackbar(Snackbar.create(I18n.translateToLocal("snackbar.llibrary.updates_found")));
+                SnackbarHandler.INSTANCE.showSnackbar(Snackbar.create(StatCollector.translateToLocal("snackbar.llibrary.updates_found")));
             }
         }
     }

@@ -1,8 +1,8 @@
 package net.ilexiconn.llibrary.server.update;
 
-import net.minecraftforge.fml.common.ModContainer;
-import net.minecraftforge.fml.common.versioning.ArtifactVersion;
-import net.minecraftforge.fml.common.versioning.DefaultArtifactVersion;
+import cpw.mods.fml.common.ModContainer;
+import cpw.mods.fml.common.versioning.ArtifactVersion;
+import cpw.mods.fml.common.versioning.DefaultArtifactVersion;
 
 import java.awt.image.BufferedImage;
 import java.util.Map;

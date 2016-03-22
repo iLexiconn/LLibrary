@@ -1,10 +1,10 @@
 package net.ilexiconn.llibrary.test;
 
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.relauncher.Side;
 import net.ilexiconn.llibrary.server.config.ConfigEntry;
 import net.ilexiconn.llibrary.server.config.ConfigHandler;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.relauncher.Side;
 
 @Mod(modid = "ConfigTest")
 public class ConfigTest {

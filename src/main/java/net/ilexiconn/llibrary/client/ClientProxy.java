@@ -1,18 +1,17 @@
 package net.ilexiconn.llibrary.client;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import cpw.mods.fml.relauncher.ReflectionHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.ilexiconn.llibrary.client.gui.SnackbarGUI;
-import net.ilexiconn.llibrary.client.model.tabula.TabulaModelHandler;
 import net.ilexiconn.llibrary.server.ServerProxy;
 import net.ilexiconn.llibrary.server.network.AbstractMessage;
 import net.ilexiconn.llibrary.server.snackbar.Snackbar;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Timer;
-import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,9 +30,9 @@ public class ClientProxy extends ServerProxy {
         super.onPreInit();
 
         MinecraftForge.EVENT_BUS.register(ClientProxy.CLIENT_EVENT_HANDLER);
-        ModelLoaderRegistry.registerLoader(TabulaModelHandler.INSTANCE);
+        FMLCommonHandler.instance().bus().register(ClientProxy.CLIENT_EVENT_HANDLER);
 
-        timer = ReflectionHelper.getPrivateValue(Minecraft.class, MINECRAFT, "timer", "field_71428_T", "aa");
+        timer = ReflectionHelper.getPrivateValue(Minecraft.class, ClientProxy.MINECRAFT, "timer", "field_71428_T", "Q");
     }
 
     @Override
@@ -51,7 +50,7 @@ public class ClientProxy extends ServerProxy {
         if (messageContext.side.isServer()) {
             super.handleMessage(message, messageContext);
         } else {
-            ClientProxy.MINECRAFT.addScheduledTask(() -> message.onClientReceived(MINECRAFT, message, MINECRAFT.thePlayer, messageContext));
+            message.onClientReceived(ClientProxy.MINECRAFT, message, ClientProxy.MINECRAFT.thePlayer, messageContext);
         }
     }
 

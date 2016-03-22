@@ -1,7 +1,7 @@
 package net.ilexiconn.llibrary.server.config;
 
+import cpw.mods.fml.relauncher.Side;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.relauncher.Side;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

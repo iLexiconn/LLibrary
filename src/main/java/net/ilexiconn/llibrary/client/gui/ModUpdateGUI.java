@@ -1,18 +1,17 @@
 package net.ilexiconn.llibrary.client.gui;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.ilexiconn.llibrary.server.update.UpdateContainer;
 import net.ilexiconn.llibrary.server.update.UpdateHandler;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.translation.I18n;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.GuiYesNoCallback;
+import net.minecraft.util.StatCollector;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
-import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,13 +22,13 @@ import java.util.List;
  * @since 1.0.0
  */
 @SideOnly(Side.CLIENT)
-public class ModUpdateGUI extends GuiScreen {
+public class ModUpdateGUI extends GuiScreen implements GuiYesNoCallback {
     private GuiMainMenu parent;
     private ModUpdateListGUI modList;
-    private ModUpdateEntryGUI modInfo;
     private int selected = -1;
     private GuiButton buttonUpdate;
     private GuiButton buttonDone;
+    private List<String> textList = new ArrayList<>();
 
     public ModUpdateGUI(GuiMainMenu parent) {
         this.parent = parent;
@@ -37,10 +36,6 @@ public class ModUpdateGUI extends GuiScreen {
 
     public ModUpdateListGUI getModList() {
         return modList;
-    }
-
-    public ModUpdateEntryGUI getModInfo() {
-        return modInfo;
     }
 
     @Override
@@ -53,14 +48,14 @@ public class ModUpdateGUI extends GuiScreen {
         width = Math.min(width, 150);
         this.modList = new ModUpdateListGUI(this, width);
 
-        this.buttonList.add(buttonDone = new GuiButton(6, ((this.modList.getRight() + this.width) / 2) - 100, this.height - 38, I18n.translateToLocal("gui.done")));
-        this.buttonList.add(buttonUpdate = new GuiButton(20, 10, this.height - 38, this.modList.getWidth(), 20, I18n.translateToLocal("gui.llibrary.update")));
+        this.buttonList.add(buttonDone = new GuiButton(6, this.width / 2 - 75, this.height - 38, StatCollector.translateToLocal("gui.done")));
+        this.buttonList.add(buttonUpdate = new GuiButton(20, 10, this.height - 38, this.modList.getWidth(), 20, StatCollector.translateToLocal("gui.llibrary.update")));
 
         this.updateModInfo();
     }
 
     @Override
-    protected void actionPerformed(GuiButton button) throws IOException {
+    protected void actionPerformed(GuiButton button) {
         if (button.enabled) {
             switch (button.id) {
                 case 6: {
@@ -92,19 +87,25 @@ public class ModUpdateGUI extends GuiScreen {
             this.buttonDone.yPosition = height - 38;
             this.buttonList.clear();
             this.buttonList.add(buttonDone);
-            this.drawScaledString(I18n.translateToLocal("gui.llibrary.updated.1"), i, j - 40, 0xFFFFFF, 2.0F);
-            this.drawScaledString(I18n.translateToLocal("gui.llibrary.updated.2"), i, j - 15, 0xFFFFFF, 1.0F);
+            this.drawScaledString(StatCollector.translateToLocal("gui.llibrary.updated.1"), i, j - 40, 0xFFFFFF, 2.0F);
+            this.drawScaledString(StatCollector.translateToLocal("gui.llibrary.updated.2"), i, j - 15, 0xFFFFFF, 1.0F);
         } else {
             this.modList.drawScreen(mouseX, mouseY, partialTicks);
-            if (this.modInfo != null) {
-                this.modInfo.drawScreen(mouseX, mouseY, partialTicks);
+            int x = this.getModList().getWidth()  + 20;
+            int y = 35;
+            for (String text : this.textList) {
+                y = drawLine(text, x, y);
             }
-
             int left = ((this.width - this.modList.getWidth() - 38) / 2) + this.modList.getWidth() + 30;
-            this.drawCenteredString(this.fontRendererObj, I18n.translateToLocal("gui.llibrary.update.title"), left, 16, 0xFFFFFF);
+            this.drawCenteredString(this.fontRendererObj, StatCollector.translateToLocal("gui.llibrary.update.title"), left, 16, 0xFFFFFF);
         }
 
         super.drawScreen(mouseX, mouseY, partialTicks);
+    }
+
+    public int drawLine(String line, int offset, int shifty) {
+        this.fontRendererObj.drawString(line, offset, shifty, 0xd7edea);
+        return shifty + 10;
     }
 
     public void selectModIndex(int index) {
@@ -120,7 +121,6 @@ public class ModUpdateGUI extends GuiScreen {
 
     private void updateModInfo() {
         this.buttonUpdate.visible = false;
-        this.modInfo = null;
 
         if (this.selected == -1) {
             return;
@@ -130,16 +130,16 @@ public class ModUpdateGUI extends GuiScreen {
 
         this.buttonUpdate.visible = true;
         this.buttonUpdate.enabled = true;
-        this.buttonUpdate.displayString = I18n.translateToLocal("gui.llibrary.update");
+        this.buttonUpdate.displayString = StatCollector.translateToLocal("gui.llibrary.update");
 
         UpdateContainer updateContainer = UpdateHandler.INSTANCE.getOutdatedModList().get(selected);
         textList.add(updateContainer.getModContainer().getName());
-        textList.add(I18n.translateToLocal("gui.llibrary.currentVersion") + String.format(": %s", updateContainer.getModContainer().getVersion()));
-        textList.add(I18n.translateToLocal("gui.llibrary.latestVersion") + String.format(": %s", updateContainer.getLatestVersion().getVersionString()));
-        textList.add(null);
+        textList.add(StatCollector.translateToLocal("gui.llibrary.currentVersion") + String.format(": %s", updateContainer.getModContainer().getVersion()));
+        textList.add(StatCollector.translateToLocal("gui.llibrary.latestVersion") + String.format(": %s", updateContainer.getLatestVersion().getVersionString()));
+        textList.add("");
         Collections.addAll(textList, UpdateHandler.INSTANCE.getChangelog(updateContainer, updateContainer.getLatestVersion()));
 
-        this.modInfo = new ModUpdateEntryGUI(this, this.width - this.modList.getWidth() - 30, textList);
+        this.textList = textList;
     }
 
     public void drawScaledString(String text, int x, int y, int color, float scale) {
@@ -147,10 +147,5 @@ public class ModUpdateGUI extends GuiScreen {
         GL11.glScalef(scale, scale, scale);
         drawCenteredString(fontRendererObj, text, (int) (x / scale), (int) (y / scale), color);
         GL11.glPopMatrix();
-    }
-
-    @Override
-    public boolean handleComponentClick(ITextComponent component) {
-        return super.handleComponentClick(component);
     }
 }
