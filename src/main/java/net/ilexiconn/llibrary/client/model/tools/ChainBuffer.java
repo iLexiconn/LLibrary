@@ -6,6 +6,10 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * @author gegy1000
+ * @since 1.0.0
+ */
 @SideOnly(Side.CLIENT)
 public class ChainBuffer {
     private int yawTimer;

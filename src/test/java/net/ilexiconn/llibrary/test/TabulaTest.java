@@ -43,7 +43,7 @@ public class TabulaTest {
             super.onPreInit();
             RenderingRegistry.registerEntityRenderingHandler(TabulaTestEntity.class, manager -> {
                 try {
-                    return new RenderLiving<TabulaTestEntity>(manager, new TabulaModel(TabulaModelHandler.INSTANCE.loadModel("assets/tabulatest/models/entity/tabula_model.tbl"), new Animator()), 0.0F) {
+                    return new RenderLiving<TabulaTestEntity>(manager, new TabulaModel(TabulaModelHandler.INSTANCE.loadTabulaModel("assets/tabulatest/models/entity/tabula_model.tbl"), new Animator()), 0.0F) {
                         @Override
                         protected ResourceLocation getEntityTexture(TabulaTestEntity entity) {
                             return new ResourceLocation("missingno");

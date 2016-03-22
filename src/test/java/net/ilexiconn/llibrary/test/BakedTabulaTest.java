@@ -1,6 +1,5 @@
 package net.ilexiconn.llibrary.test;
 
-import net.ilexiconn.llibrary.client.model.tabula.baked.BakedTabulaHandler;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -35,7 +34,6 @@ public class BakedTabulaTest {
         public void onPreInit() {
             super.onPreInit();
 
-            BakedTabulaHandler.INSTANCE.registerDomain("tabulatest");
             ModelLoader.setCustomModelResourceLocation(BakedTabulaTest.ITEM, 0, new ModelResourceLocation("tabulatest:tabula_baked_item.tbl", "inventory"));
         }
     }

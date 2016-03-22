@@ -2,6 +2,10 @@ package net.ilexiconn.llibrary.client.model.tabula.container;
 
 import java.util.List;
 
+/**
+ * @author gegy1000
+ * @since 1.0.0
+ */
 public class TabulaModelContainer {
     private String modelName;
     private String authorName;

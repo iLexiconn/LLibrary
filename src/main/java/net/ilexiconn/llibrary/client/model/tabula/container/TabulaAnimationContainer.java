@@ -3,6 +3,10 @@ package net.ilexiconn.llibrary.client.model.tabula.container;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author gegy1000
+ * @since 1.0.0
+ */
 public class TabulaAnimationContainer {
     private String name;
     private String identifier;

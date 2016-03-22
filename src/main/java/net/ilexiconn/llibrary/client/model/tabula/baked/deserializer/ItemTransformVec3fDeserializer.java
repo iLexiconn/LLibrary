@@ -10,6 +10,10 @@ import org.lwjgl.util.vector.Vector3f;
 
 import java.lang.reflect.Type;
 
+/**
+ * @author pau101
+ * @since 1.0.0
+ */
 @SuppressWarnings("deprecation")
 @SideOnly(Side.CLIENT)
 public class ItemTransformVec3fDeserializer implements JsonDeserializer<ItemTransformVec3f> {

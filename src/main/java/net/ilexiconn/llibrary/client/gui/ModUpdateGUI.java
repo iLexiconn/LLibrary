@@ -17,6 +17,10 @@ import java.net.URI;
 import java.util.*;
 import java.util.List;
 
+/**
+ * @author iLexiconn
+ * @since 1.0.0
+ */
 @SideOnly(Side.CLIENT)
 public class ModUpdateGUI extends GuiScreen {
     private GuiMainMenu parent;

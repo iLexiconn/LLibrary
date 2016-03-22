@@ -115,7 +115,7 @@ public class AnimationTest {
             head.setRotationPoint(0f, -10f, 0f);
             body.addChild(head);
 
-            animator = new ModelAnimator(this);
+            animator = ModelAnimator.create();
 
             updateDefaultPose();
         }
@@ -140,7 +140,7 @@ public class AnimationTest {
             animator.rotate(body, (float) (Math.PI / 2f), 0f, 0f);
             animator.move(body, 0f, -2f, 0f);
             animator.endKeyframe();
-            animator.setStationaryKeyframe(6);
+            animator.setStaticKeyframe(6);
             animator.resetKeyframe(10);
         }
     }

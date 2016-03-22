@@ -18,6 +18,10 @@ import org.apache.commons.lang3.tuple.Pair;
 import javax.vecmath.Matrix4f;
 import java.util.List;
 
+/**
+ * @author pau101
+ * @since 1.0.0
+ */
 @SideOnly(Side.CLIENT)
 public class BakedTabulaModel implements IPerspectiveAwareModel {
     private ImmutableList<BakedQuad> quads;

@@ -20,6 +20,10 @@ import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author iLexiconn
+ * @since 1.0.0
+ */
 @SideOnly(Side.CLIENT)
 public class ModUpdateListGUI extends GuiScrollingList {
     private ModUpdateGUI parent;

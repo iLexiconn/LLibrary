@@ -13,6 +13,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author gegy1000
+ * @since 1.0.0
+ */
 @SideOnly(Side.CLIENT)
 public class TabulaModel extends AdvancedModelBase {
     private Map<String, AdvancedModelRenderer> cubes = new HashMap<>();

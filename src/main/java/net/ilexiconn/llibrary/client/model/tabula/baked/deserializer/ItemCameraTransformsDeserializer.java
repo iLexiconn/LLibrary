@@ -8,6 +8,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.lang.reflect.Type;
 
+/**
+ * @author pau101
+ * @since 1.0.0
+ */
 @SuppressWarnings("deprecation")
 @SideOnly(Side.CLIENT)
 public class ItemCameraTransformsDeserializer implements JsonDeserializer<ItemCameraTransforms> {

@@ -27,13 +27,17 @@ import javax.vecmath.Vector3f;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * @author pau101
+ * @since 1.0.0
+ */
 @SideOnly(Side.CLIENT)
-public class UnbakedTabulaModel implements IModel {
+public class VanillaTabulaModel implements IModel {
     private TabulaModelContainer model;
     private ImmutableList<ResourceLocation> textures;
     private ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> transforms;
 
-    public UnbakedTabulaModel(TabulaModelContainer model, ImmutableList<ResourceLocation> textures, ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> transforms) {
+    public VanillaTabulaModel(TabulaModelContainer model, ImmutableList<ResourceLocation> textures, ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> transforms) {
         this.model = model;
         this.textures = textures;
         this.transforms = transforms;

@@ -9,6 +9,10 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * @author iLexiconn
+ * @since 1.0.0
+ */
 @SideOnly(Side.CLIENT)
 public class SnackbarGUI extends Gui {
     private Snackbar snackbar;
