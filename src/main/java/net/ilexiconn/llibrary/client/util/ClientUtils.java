@@ -22,7 +22,7 @@ public class ClientUtils {
      * Update a value with the default factor of 0.5.
      *
      * @param current the current value
-     * @param target the target
+     * @param target  the target
      * @return the updated value
      */
     public static float updateValue(float current, float target) {
@@ -34,8 +34,8 @@ public class ClientUtils {
      * slower if the user has a low framerate.
      *
      * @param current the current value
-     * @param target the target
-     * @param factor the factor
+     * @param target  the target
+     * @param factor  the factor
      * @return the updated value
      */
     public static float updateValue(float current, float target, float factor) {

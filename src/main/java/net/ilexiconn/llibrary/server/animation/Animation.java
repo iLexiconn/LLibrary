@@ -14,7 +14,7 @@ public class Animation {
     }
 
     /**
-     * @param id the animation id
+     * @param id       the animation id
      * @param duration the animation duration
      * @return an animation with the given id and duration
      */

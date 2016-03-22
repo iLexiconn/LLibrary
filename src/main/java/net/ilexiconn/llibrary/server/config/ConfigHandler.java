@@ -29,7 +29,7 @@ public enum ConfigHandler {
      *
      * @param entryClass   the class to handle
      * @param entryAdapter the adapter
-     * @param <T>      the entry type
+     * @param <T>          the entry type
      */
     public <T> void registerEntryAdapter(Class<T> entryClass, IEntryAdapter<T> entryAdapter) {
         this.entryAdapterMap.put(entryClass, entryAdapter);
@@ -39,10 +39,10 @@ public enum ConfigHandler {
      * Register your mod's config. the first oject has to be the main mod class - the class with the {@link Mod}
      * annotation. This method returns the new instance of the config.
      *
-     * @param mod      the mod instance
-     * @param file     the file to use
-     * @param config   the config instance
-     * @param <T> the config type
+     * @param mod    the mod instance
+     * @param file   the file to use
+     * @param config the config instance
+     * @param <T>    the config type
      * @return the config instance
      */
     public <T> T registerConfig(Object mod, File file, T config) {
