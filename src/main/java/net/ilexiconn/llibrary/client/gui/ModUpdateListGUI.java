@@ -69,29 +69,29 @@ public class ModUpdateListGUI extends GuiScrollingList {
         String version = StringUtils.stripControlCodes(updateContainer.getLatestVersion().getVersionString());
         FontRenderer font = ClientProxy.MINECRAFT.fontRendererObj;
 
-        font.drawString(font.trimStringToWidth(name, listWidth - 10), this.left + 36, top + 2, 0xFFFFFF);
-        font.drawString(font.trimStringToWidth(version, listWidth - 10), this.left + 36, top + 12, 0xCCCCCC);
+        font.drawString(font.trimStringToWidth(name, this.listWidth - 10), this.left + 36, top + 7, 0xFFFFFF);
+        font.drawString(font.trimStringToWidth(version, this.listWidth - 10), this.left + 36, top + 17, 0xCCCCCC);
 
-        if (!cachedLogo.containsKey(idx)) {
+        if (!this.cachedLogo.containsKey(idx)) {
             BufferedImage icon = updateContainer.getIcon();
             if (icon != null) {
-                cachedLogo.put(idx, ClientProxy.MINECRAFT.getTextureManager().getDynamicTextureLocation("mod_icon", new DynamicTexture(icon)));
-                cachedLogoDimensions.put(idx, new Vector2f(icon.getWidth(), icon.getHeight()));
+                this.cachedLogo.put(idx, ClientProxy.MINECRAFT.getTextureManager().getDynamicTextureLocation("mod_icon", new DynamicTexture(icon)));
+                this.cachedLogoDimensions.put(idx, new Vector2f(icon.getWidth(), icon.getHeight()));
             }
         }
 
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        ClientProxy.MINECRAFT.renderEngine.bindTexture(cachedLogo.get(idx));
-        float scaleX = cachedLogoDimensions.get(idx).getX() / 32.0F;
-        float scaleY = cachedLogoDimensions.get(idx).getY() / 32.0F;
+        ClientProxy.MINECRAFT.renderEngine.bindTexture(this.cachedLogo.get(idx));
+        float scaleX = this.cachedLogoDimensions.get(idx).getX() / 32.0F;
+        float scaleY = this.cachedLogoDimensions.get(idx).getY() / 32.0F;
         float scale = 1.0F;
 
         if (scaleX > 1.0F || scaleY > 1.0F) {
             scale = 1.0F / Math.max(scaleX, scaleY);
         }
 
-        float iconWidth = cachedLogoDimensions.get(idx).getX() * scale;
-        float iconHeight = cachedLogoDimensions.get(idx).getY() * scale;
+        float iconWidth = this.cachedLogoDimensions.get(idx).getX() * scale;
+        float iconHeight = this.cachedLogoDimensions.get(idx).getY() * scale;
         int offset = 12;
         VertexBuffer renderer = tess.getBuffer();
         renderer.begin(7, DefaultVertexFormats.POSITION_TEX);
@@ -103,10 +103,10 @@ public class ModUpdateListGUI extends GuiScrollingList {
     }
 
     public int getWidth() {
-        return listWidth;
+        return this.listWidth;
     }
 
     public int getRight() {
-        return right;
+        return this.right;
     }
 }
