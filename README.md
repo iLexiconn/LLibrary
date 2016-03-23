@@ -15,8 +15,8 @@ Compiling from source
 
 Contributors
 ==========
-iLexiconn
-gegy1000
-pau101
-BobMowzie
-FiskFille
+iLexiconn  
+gegy1000  
+pau101  
+BobMowzie  
+FiskFille  
