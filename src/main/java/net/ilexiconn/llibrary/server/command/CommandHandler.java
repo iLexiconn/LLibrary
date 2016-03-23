@@ -42,7 +42,7 @@ public enum CommandHandler {
 
             @Override
             public T parseArgument(MinecraftServer server, ICommandSender sender, String argument) {
-                return Enum.valueOf(enumClass, argument.toLowerCase(Locale.ENGLISH));
+                return Enum.valueOf(enumClass, argument.toUpperCase(Locale.ENGLISH));
             }
 
             @Override

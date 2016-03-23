@@ -41,12 +41,12 @@ public @interface ConfigEntry {
     String maxValue() default "";
 
     /**
-     * @return return a list of valid values. this field is used by all arrays.
+     * @return return a list of valid values. This field is used by all arrays
      */
     String[] validValues() default "";
 
     /**
-     * @return the side f this config entry. If it returns SERVER, this entry will be universal.
+     * @return the side if this config entry. If it returns SERVER, this entry will be universal
      */
     Side side() default Side.SERVER;
 }

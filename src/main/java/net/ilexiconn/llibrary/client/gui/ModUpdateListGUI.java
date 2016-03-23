@@ -67,9 +67,6 @@ public class ModUpdateListGUI extends GuiScrollingList {
         String version = StringUtils.stripControlCodes(updateContainer.getLatestVersion().getVersionString());
         FontRenderer font = ClientProxy.MINECRAFT.fontRenderer;
 
-        font.drawString(font.trimStringToWidth(name, this.listWidth - 10), this.left + 36, top + 7, 0xFFFFFF);
-        font.drawString(font.trimStringToWidth(version, this.listWidth - 10), this.left + 36, top + 17, 0xCCCCCC);
-
         if (!this.cachedLogo.containsKey(idx)) {
             BufferedImage icon = updateContainer.getIcon();
             if (icon != null) {
@@ -78,25 +75,32 @@ public class ModUpdateListGUI extends GuiScrollingList {
             }
         }
 
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        ClientProxy.MINECRAFT.renderEngine.bindTexture(this.cachedLogo.get(idx));
-        float scaleX = this.cachedLogoDimensions.get(idx).getX() / 32.0F;
-        float scaleY = this.cachedLogoDimensions.get(idx).getY() / 32.0F;
-        float scale = 1.0F;
+        boolean hasIcon = this.cachedLogo.containsKey(idx);
 
-        if (scaleX > 1.0F || scaleY > 1.0F) {
-            scale = 1.0F / Math.max(scaleX, scaleY);
+        font.drawString(font.trimStringToWidth(name, this.listWidth - 10), hasIcon ? this.left + 36 : this.left + 6, top + 7, 0xFFFFFF);
+        font.drawString(font.trimStringToWidth(version, this.listWidth - 10), hasIcon ? this.left + 36 : this.left + 6, top + 17, 0xCCCCCC);
+
+        if (hasIcon) {
+            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+            ClientProxy.MINECRAFT.renderEngine.bindTexture(this.cachedLogo.get(idx));
+            float scaleX = this.cachedLogoDimensions.get(idx).getX() / 32.0F;
+            float scaleY = this.cachedLogoDimensions.get(idx).getY() / 32.0F;
+            float scale = 1.0F;
+
+            if (scaleX > 1.0F || scaleY > 1.0F) {
+                scale = 1.0F / Math.max(scaleX, scaleY);
+            }
+
+            float iconWidth = this.cachedLogoDimensions.get(idx).getX() * scale;
+            float iconHeight = this.cachedLogoDimensions.get(idx).getY() * scale;
+            int offset = 12;
+            tess.startDrawingQuads();
+            tess.addVertexWithUV(offset, top + iconHeight, 0, 0, 1);
+            tess.addVertexWithUV(offset + iconWidth, top + iconHeight, 0, 1, 1);
+            tess.addVertexWithUV(offset + iconWidth, top, 0, 1, 0);
+            tess.addVertexWithUV(offset, top, 0, 0, 0);
+            tess.draw();
         }
-
-        float iconWidth = this.cachedLogoDimensions.get(idx).getX() * scale;
-        float iconHeight = this.cachedLogoDimensions.get(idx).getY() * scale;
-        int offset = 12;
-        tess.startDrawingQuads();
-        tess.addVertexWithUV(offset, top + iconHeight, 0, 0, 1);
-        tess.addVertexWithUV(offset + iconWidth, top + iconHeight, 0, 1, 1);
-        tess.addVertexWithUV(offset + iconWidth, top, 0, 1, 0);
-        tess.addVertexWithUV(offset, top, 0, 0, 0);
-        tess.draw();
     }
 
     public int getWidth() {
