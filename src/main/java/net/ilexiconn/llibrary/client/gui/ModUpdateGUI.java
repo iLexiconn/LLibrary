@@ -96,16 +96,15 @@ public class ModUpdateGUI extends GuiScreen implements GuiYesNoCallback {
             for (String text : this.textList) {
                 y = drawLine(text, x, y);
             }
-            int left = ((this.width - this.modList.getWidth() - 38) / 2) + this.modList.getWidth() + 30;
-            this.drawCenteredString(this.fontRendererObj, StatCollector.translateToLocal("gui.llibrary.update.title"), left, 16, 0xFFFFFF);
+            this.drawCenteredString(this.fontRendererObj, StatCollector.translateToLocal("gui.llibrary.update.title"), this.width / 2, 16, 0xFFFFFF);
         }
 
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
-    public int drawLine(String line, int offset, int shifty) {
-        this.fontRendererObj.drawString(line, offset, shifty, 0xd7edea);
-        return shifty + 10;
+    public int drawLine(String text, int x, int y) {
+        this.fontRendererObj.drawString(text, x, y, 0xd7edea);
+        return y + 10;
     }
 
     public void selectModIndex(int index) {
@@ -133,7 +132,7 @@ public class ModUpdateGUI extends GuiScreen implements GuiYesNoCallback {
         this.buttonUpdate.displayString = StatCollector.translateToLocal("gui.llibrary.update");
 
         UpdateContainer updateContainer = UpdateHandler.INSTANCE.getOutdatedModList().get(selected);
-        textList.add(updateContainer.getModContainer().getName());
+        textList.add(String.format("%s (%s)", updateContainer.getModContainer().getName(), updateContainer.getModContainer().getModId()));
         textList.add(StatCollector.translateToLocal("gui.llibrary.currentVersion") + String.format(": %s", updateContainer.getModContainer().getVersion()));
         textList.add(StatCollector.translateToLocal("gui.llibrary.latestVersion") + String.format(": %s", updateContainer.getLatestVersion().getVersionString()));
         textList.add("");
