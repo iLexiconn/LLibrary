@@ -12,6 +12,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.ilexiconn.llibrary.server.snackbar.Snackbar;
 import net.ilexiconn.llibrary.server.snackbar.SnackbarHandler;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.input.Keyboard;
 
 @Mod(modid = "SnackbarTest")
@@ -32,19 +33,21 @@ public class SnackbarTest {
 
     @SideOnly(Side.CLIENT)
     public static class ClientProxy extends ServerProxy {
-        public static final ClientEventHandler CLIENT_EVENT_HANDLER = new ClientEventHandler();
         public static final KeyBinding SNACKBAR_KEY = new KeyBinding("snackbar", Keyboard.KEY_U, "key.llibrary.debug");
 
         @Override
         public void onPreInit() {
             super.onPreInit();
             ClientRegistry.registerKeyBinding(ClientProxy.SNACKBAR_KEY);
-            FMLCommonHandler.instance().bus().register(ClientProxy.CLIENT_EVENT_HANDLER);
+            MinecraftForge.EVENT_BUS.register(ClientEventHandler.INSTANCE);
+            FMLCommonHandler.instance().bus().register(ClientEventHandler.INSTANCE);
         }
     }
 
     @SideOnly(Side.CLIENT)
-    public static class ClientEventHandler {
+    public enum ClientEventHandler {
+        INSTANCE;
+
         @SubscribeEvent
         public void onKeyInputPost(InputEvent.KeyInputEvent event) {
             if (Keyboard.isKeyDown(ClientProxy.SNACKBAR_KEY.getKeyCode())) {

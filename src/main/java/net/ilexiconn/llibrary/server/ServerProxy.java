@@ -13,11 +13,9 @@ import net.ilexiconn.llibrary.server.update.UpdateHandler;
 import net.minecraftforge.common.MinecraftForge;
 
 public class ServerProxy {
-    public static final ServerEventHandler SERVER_EVENT_HANDLER = new ServerEventHandler();
-
     public void onPreInit() {
-        MinecraftForge.EVENT_BUS.register(ServerProxy.SERVER_EVENT_HANDLER);
-        FMLCommonHandler.instance().bus().register(ServerProxy.SERVER_EVENT_HANDLER);
+        MinecraftForge.EVENT_BUS.register(ServerEventHandler.INSTANCE);
+        FMLCommonHandler.instance().bus().register(ServerEventHandler.INSTANCE);
 
         LLibrary.NETWORK_WRAPPER.registerMessage(AnimationMessage.class, AnimationMessage.class, 0, Side.CLIENT);
         LLibrary.NETWORK_WRAPPER.registerMessage(SnackbarMessage.class, SnackbarMessage.class, 1, Side.CLIENT);
