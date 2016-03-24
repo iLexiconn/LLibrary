@@ -16,7 +16,9 @@ import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class ServerEventHandler {
+public enum ServerEventHandler {
+    INSTANCE;
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onAttachCapabilities(AttachCapabilitiesEvent.Entity event) {
         event.addCapability(new ResourceLocation("llibrary", "ExtendedEntityDataCapability"), new ICapabilitySerializable() {

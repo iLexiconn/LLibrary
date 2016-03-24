@@ -18,9 +18,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.util.Rectangle;
 
 @SideOnly(Side.CLIENT)
-public class ClientEventHandler {
-    public SnackbarGUI snackbarGUI;
+public enum ClientEventHandler {
+    INSTANCE;
+
+    private SnackbarGUI snackbarGUI;
     private boolean checkedForUpdates;
+
+    public void setOpenSnackbar(SnackbarGUI snackbarGUI) {
+        this.snackbarGUI = snackbarGUI;
+    }
 
     @SubscribeEvent
     public void onInitGuiPost(GuiScreenEvent.InitGuiEvent.Post event) {
@@ -79,7 +85,7 @@ public class ClientEventHandler {
     @SubscribeEvent
     public void onClientUpdate(TickEvent.ClientTickEvent event) {
         if (this.snackbarGUI == null && !ClientProxy.SNACKBAR_LIST.isEmpty()) {
-            this.snackbarGUI = ClientProxy.SNACKBAR_LIST.get(0);
+            this.setOpenSnackbar(ClientProxy.SNACKBAR_LIST.get(0));
             ClientProxy.SNACKBAR_LIST.remove(this.snackbarGUI);
         }
         if (this.snackbarGUI != null) {

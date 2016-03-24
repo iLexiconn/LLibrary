@@ -32,19 +32,20 @@ public class SnackbarTest {
 
     @SideOnly(Side.CLIENT)
     public static class ClientProxy extends ServerProxy {
-        public static final ClientEventHandler CLIENT_EVENT_HANDLER = new ClientEventHandler();
         public static final KeyBinding SNACKBAR_KEY = new KeyBinding("snackbar", Keyboard.KEY_U, "key.llibrary.debug");
 
         @Override
         public void onPreInit() {
             super.onPreInit();
             ClientRegistry.registerKeyBinding(ClientProxy.SNACKBAR_KEY);
-            MinecraftForge.EVENT_BUS.register(ClientProxy.CLIENT_EVENT_HANDLER);
+            MinecraftForge.EVENT_BUS.register(ClientEventHandler.INSTANCE);
         }
     }
 
     @SideOnly(Side.CLIENT)
-    public static class ClientEventHandler {
+    public enum ClientEventHandler {
+        INSTANCE;
+
         @SubscribeEvent
         public void onKeyInputPost(GuiScreenEvent.KeyboardInputEvent.Post event) {
             if (Keyboard.isKeyDown(ClientProxy.SNACKBAR_KEY.getKeyCode())) {

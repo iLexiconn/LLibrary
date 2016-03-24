@@ -93,11 +93,11 @@ public enum UpdateHandler {
     }
 
     /**
-     * Get the changelog for a specefic version. Never returns null.
+     * Get the changelog for a specific version. Never returns null.
      *
      * @param updateContainer the mod container
      * @param version         the version
-     * @return the changelog for a specefic version
+     * @return the changelog for a specific version
      */
     public String[] getChangelog(UpdateContainer updateContainer, ArtifactVersion version) {
         if (hasChangelog(updateContainer, version)) {

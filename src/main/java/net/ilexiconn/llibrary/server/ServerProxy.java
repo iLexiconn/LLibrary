@@ -17,10 +17,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.server.FMLServerHandler;
 
 public class ServerProxy {
-    public static final ServerEventHandler SERVER_EVENT_HANDLER = new ServerEventHandler();
-
     public void onPreInit() {
-        MinecraftForge.EVENT_BUS.register(ServerProxy.SERVER_EVENT_HANDLER);
+        MinecraftForge.EVENT_BUS.register(ServerEventHandler.INSTANCE);
         CapabilityManager.INSTANCE.register(IEntityDataCapability.class, new EntityDataCapabilityStorage(), EntityDataCapabilityImplementation.class);
 
         LLibrary.NETWORK_WRAPPER.registerMessage(AnimationMessage.class, AnimationMessage.class, 0, Side.CLIENT);
