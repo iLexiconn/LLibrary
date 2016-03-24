@@ -1,5 +1,6 @@
 package net.ilexiconn.llibrary.client.gui;
 
+import net.ilexiconn.llibrary.client.ClientEventHandler;
 import net.ilexiconn.llibrary.client.ClientProxy;
 import net.ilexiconn.llibrary.client.util.ClientUtils;
 import net.ilexiconn.llibrary.server.snackbar.Snackbar;
@@ -28,7 +29,7 @@ public class SnackbarGUI extends Gui {
     public void updateSnackbar() {
         this.age++;
         if (this.age > this.maxAge) {
-            ClientProxy.CLIENT_EVENT_HANDLER.snackbarGUI = null;
+            ClientEventHandler.INSTANCE.setOpenSnackbar(null);
         }
     }
 

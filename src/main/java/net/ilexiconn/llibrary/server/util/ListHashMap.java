@@ -12,7 +12,7 @@ import java.util.Set;
  */
 public class ListHashMap<K, V> extends LinkedHashMap<K, V> {
     /**
-     * Get the value of a specefic index. Returns null if this map doesn't have a value at the specefied index.
+     * Get the value of a specific index. Returns null if this map doesn't have a value at the specefied index.
      *
      * @param index the index
      * @return the value of the index, null if the index can't be found.
@@ -26,7 +26,7 @@ public class ListHashMap<K, V> extends LinkedHashMap<K, V> {
     }
 
     /**
-     * Get the entry of a specefic index. Returns null if this map doesn't have an entry at the specefied index.
+     * Get the entry of a specific index. Returns null if this map doesn't have an entry at the specefied index.
      *
      * @param index the index
      * @return the entry of the index, null if the index can't be found.

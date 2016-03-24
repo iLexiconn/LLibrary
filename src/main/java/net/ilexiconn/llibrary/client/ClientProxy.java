@@ -19,7 +19,6 @@ import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends ServerProxy {
-    public static final ClientEventHandler CLIENT_EVENT_HANDLER = new ClientEventHandler();
     public static final Minecraft MINECRAFT = Minecraft.getMinecraft();
     public static final int UPDATE_BUTTON_ID = "UPDATE_BUTTON_ID".hashCode();
     public static final List<SnackbarGUI> SNACKBAR_LIST = new ArrayList<>();
@@ -30,7 +29,7 @@ public class ClientProxy extends ServerProxy {
     public void onPreInit() {
         super.onPreInit();
 
-        MinecraftForge.EVENT_BUS.register(ClientProxy.CLIENT_EVENT_HANDLER);
+        MinecraftForge.EVENT_BUS.register(ClientEventHandler.INSTANCE);
         ModelLoaderRegistry.registerLoader(TabulaModelHandler.INSTANCE);
 
         timer = ReflectionHelper.getPrivateValue(Minecraft.class, ClientProxy.MINECRAFT, "timer", "field_71428_T", "Y");
