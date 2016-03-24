@@ -66,7 +66,7 @@ public class UpdateContainer {
     private Map<String, String[]> versions;
 
     /**
-     * @return the atest version as String
+     * @return the latest version as String
      */
     public String getVersion() {
         return this.version;

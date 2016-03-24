@@ -58,9 +58,8 @@ public enum TabulaModelHandler implements ICustomModelLoader, JsonDeserializatio
      *
      * @param stream the model.json input stream
      * @return the new {@link TabulaModelContainer} instance
-     * @throws IOException if the file can't be found
      */
-    public TabulaModelContainer loadTabulaModel(InputStream stream) throws IOException {
+    public TabulaModelContainer loadTabulaModel(InputStream stream) {
         return gson.fromJson(new InputStreamReader(stream), TabulaModelContainer.class);
     }
 

@@ -5,14 +5,14 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @param <K> the type of the frst object
+ * @param <K> the type of the first object
  * @param <V> the type of the second object
  * @author iLexiconn
  * @since 0.1.0
  */
 public class ListHashMap<K, V> extends LinkedHashMap<K, V> {
     /**
-     * Get the value of a specific index. Returns null if this map doesn't have a value at the specefied index.
+     * Get the value of a specific index. Returns null if this map doesn't have a value at the specified index.
      *
      * @param index the index
      * @return the value of the index, null if the index can't be found.
@@ -26,7 +26,7 @@ public class ListHashMap<K, V> extends LinkedHashMap<K, V> {
     }
 
     /**
-     * Get the entry of a specific index. Returns null if this map doesn't have an entry at the specefied index.
+     * Get the entry of a specific index. Returns null if this map doesn't have an entry at the specified index.
      *
      * @param index the index
      * @return the entry of the index, null if the index can't be found.

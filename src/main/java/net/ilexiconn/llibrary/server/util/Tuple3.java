@@ -69,7 +69,7 @@ public class Tuple3<A, B, C> {
     }
 
     /**
-     * Set all three tuple vlues at once.
+     * Set all three tuple values at once.
      *
      * @param a the new object
      * @param b the new object

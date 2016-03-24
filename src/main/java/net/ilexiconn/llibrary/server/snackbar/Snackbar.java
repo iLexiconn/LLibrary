@@ -14,7 +14,7 @@ public class Snackbar {
     }
 
     /**
-     * Creae a new snackbar instance. Every snackbar instance can be shown multiple times.
+     * Create a new snackbar instance. Every snackbar instance can be shown multiple times.
      *
      * @param message the message to display
      * @return the new snackbar instance
@@ -33,7 +33,7 @@ public class Snackbar {
     /**
      * Set a custom duration for this snackbar. If it's 0 (default), the text length * 3 will be used.
      *
-     * @param duration the custom curation
+     * @param duration the custom duration
      * @return this snackbar instance
      */
     public Snackbar setDuration(int duration) {
