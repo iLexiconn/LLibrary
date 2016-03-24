@@ -1,10 +1,10 @@
 package net.ilexiconn.llibrary.client.model.tools;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MathHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author rafa_mv
@@ -121,8 +121,8 @@ public class ChainBuffer {
      * Applies this buffer on the Y axis to the given array of model boxes.
      */
     public void applyChainSwingBuffer(ModelRenderer[] boxes) {
-        for (int i = 0; i < boxes.length; i++) {
-            boxes[i].rotateAngleY += 0.01745329251F * yawVariation / boxes.length;
+        for (ModelRenderer box : boxes) {
+            box.rotateAngleY += 0.01745329251F * yawVariation / boxes.length;
         }
     }
 
@@ -130,8 +130,8 @@ public class ChainBuffer {
      * Applies this buffer on the X axis to the given array of model boxes.
      */
     public void applyChainWaveBuffer(ModelRenderer[] boxes) {
-        for (int i = 0; i < boxes.length; i++) {
-            boxes[i].rotateAngleX += 0.01745329251F * pitchVariation / boxes.length;
+        for (ModelRenderer box : boxes) {
+            box.rotateAngleX += 0.01745329251F * pitchVariation / boxes.length;
         }
     }
 }
