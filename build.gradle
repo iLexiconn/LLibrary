@@ -30,7 +30,7 @@ if (secretFile.exists()) {
     }
 }
 
-version = getVersion() + "-1.7.10"
+version = getLLibraryVersion()
 group = "net.ilexiconn"
 archivesBaseName = "llibrary"
 sourceCompatibility = targetCompatibility = "1.8"
@@ -41,7 +41,7 @@ minecraft {
 }
 
 processResources {
-    inputs.property "version", getVersion()
+    inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
 
     from(sourceSets.main.resources.srcDirs) {
@@ -89,7 +89,7 @@ publishing {
         mavenJava(MavenPublication) {
             groupId "net.ilexiconn"
             artifactId "llibrary"
-            version getVersion()
+            version project.version + "-1.7.10"
 
             from components.java
 
@@ -162,7 +162,7 @@ curseforge {
     }
 }
 
-String getVersion() {
+String getLLibraryVersion() {
     String major = "0";
     String revision = "0";
     String patch = "0";
