@@ -5,14 +5,20 @@ buildscript {
             name = "forge"
             url = "http://files.minecraftforge.net/maven"
         }
+        maven {
+            name = "gradle"
+            url "https://plugins.gradle.org/m2/"
+        }
     }
     dependencies {
         classpath "net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT"
+        classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.0.7"
     }
 }
 
 apply plugin: "net.minecraftforge.gradle.forge"
 apply plugin: "maven-publish"
+apply plugin: "com.matthewprenger.cursegradle"
 
 import groovy.json.JsonSlurper;
 
@@ -111,6 +117,42 @@ publishing {
             } else {
                 url ""
             }
+        }
+    }
+}
+
+curseforge {
+    def url = "http://pastebin.com/raw/qh3Pnuuk".toURL()
+    def versions = new JsonSlurper().parseText url.text
+
+    if (secret) {
+        apiKey = secret.apiKey
+    } else {
+        apiKey = ""
+    }
+
+    project {
+        id = "243298"
+
+        releaseType = "release"
+        changelog = versions.versions[versions.getAt(releaseType)].join("\n")
+
+        addGameVersion("1.9")
+
+        mainArtifact(jar) {
+            displayName = "LLibrary $project.version"
+        }
+
+        addArtifact(sourceJar) {
+            displayName = "LLibrary $project.version Sources"
+        }
+
+        addArtifact(devJar) {
+            displayName = "LLibrary $project.version Development"
+        }
+
+        addArtifact(javadocJar) {
+            displayName = "LLibrary $project.version Javadoc"
         }
     }
 }
