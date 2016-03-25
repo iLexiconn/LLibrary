@@ -56,12 +56,12 @@ public class AdvancedModelBase extends ModelBase {
     /**
      * Swings (rotates on the Y axis) the given model parts in a chain-like manner.
      *
+     * @param boxes      the boxes to swing
      * @param speed      the speed to swing this at
      * @param degree     the amount to rotate this by
      * @param rootOffset the root rotation offset
-     * @param boxes      the boxes to swing
      */
-    public void chainSwing(float speed, float degree, double rootOffset, float swing, float swingAmount, AdvancedModelRenderer... boxes) {
+    public void chainSwing(AdvancedModelRenderer[] boxes, float speed, float degree, double rootOffset, float swing, float swingAmount) {
         float offset = calculateChainOffset(rootOffset, boxes);
         for (int index = 0; index < boxes.length; index++) {
             boxes[index].rotateAngleY += calculateChainRotation(speed, degree, swing, swingAmount, offset, index);
@@ -71,12 +71,12 @@ public class AdvancedModelBase extends ModelBase {
     /**
      * Waves (rotates on the X axis) the given model parts in a chain-like manner.
      *
+     * @param boxes      the boxes to wave
      * @param speed      the speed to wave this at
      * @param degree     the amount to rotate this by
      * @param rootOffset the root rotation offset
-     * @param boxes      the boxes to wave
      */
-    public void chainWave(float speed, float degree, double rootOffset, float swing, float swingAmount, AdvancedModelRenderer... boxes) {
+    public void chainWave(AdvancedModelRenderer[] boxes, float speed, float degree, double rootOffset, float swing, float swingAmount) {
         float offset = calculateChainOffset(rootOffset, boxes);
         for (int index = 0; index < boxes.length; index++) {
             boxes[index].rotateAngleX += calculateChainRotation(speed, degree, swing, swingAmount, offset, index);
@@ -86,18 +86,18 @@ public class AdvancedModelBase extends ModelBase {
     /**
      * Flaps (rotates on the Z axis) the given model parts in a chain-like manner.
      *
+     * @param boxes      the boxes to flap
      * @param speed      the speed to flap this at
      * @param degree     the amount to rotate this by
      * @param rootOffset the root rotation offset
-     * @param boxes      the boxes to flap
      */
-    public void chainFlap(float speed, float degree, double rootOffset, float swing, float swingAmount, AdvancedModelRenderer... boxes) {
+    public void chainFlap(AdvancedModelRenderer[] boxes, float speed, float degree, double rootOffset, float swing, float swingAmount) {
         float offset = calculateChainOffset(rootOffset, boxes);
         for (int index = 0; index < boxes.length; index++) {
             boxes[index].rotateAngleZ += calculateChainRotation(speed, degree, swing, swingAmount, offset, index);
         }
     }
-
+    
     private float calculateChainRotation(float speed, float degree, float swing, float swingAmount, float offset, int boxIndex) {
         return MathHelper.cos(swing * (speed * movementScale) + offset * boxIndex) * swingAmount * (degree * movementScale);
     }
@@ -118,5 +118,67 @@ public class AdvancedModelBase extends ModelBase {
      */
     public float getMovementScale() {
         return this.movementScale;
+    }
+
+    /**
+     * Rotates this box back and forth (rotateAngleX). Useful for arms and legs.
+     *
+     * @param box the box to animate
+     * @param speed      is how fast the animation runs
+     * @param degree     is how far the box will rotate;
+     * @param invert     will invert the rotation
+     * @param offset     will offset the timing of the animation
+     * @param weight     will make the animation favor one direction more based on how fast the mob is moving
+     * @param walk       is the walked distance
+     * @param walkAmount is the walk speed
+     */
+    public void walk(AdvancedModelRenderer box, float speed, float degree, boolean invert, float offset, float weight, float walk, float walkAmount) {
+        box.walk(speed, degree, invert, offset, weight, walk, walkAmount);
+    }
+
+    /**
+     * Rotates this box up and down (rotateAngleZ). Useful for wing and ears.
+     *
+     * @param box the box to animate
+     * @param speed      is how fast the animation runs
+     * @param degree     is how far the box will rotate;
+     * @param invert     will invert the rotation
+     * @param offset     will offset the timing of the animation
+     * @param weight     will make the animation favor one direction more based on how fast the mob is moving
+     * @param flap       is the flapped distance
+     * @param flapAmount is the flap speed
+     */
+    public void flap(AdvancedModelRenderer box, float speed, float degree, boolean invert, float offset, float weight, float flap, float flapAmount) {
+        box.flap(speed, degree, invert, offset, weight, flap, flapAmount);
+    }
+
+    /**
+     * Rotates this box side to side (rotateAngleY).
+     *
+     * @param box the box to animate
+     * @param speed       is how fast the animation runs
+     * @param degree      is how far the box will rotate;
+     * @param invert      will invert the rotation
+     * @param offset      will offset the timing of the animation
+     * @param weight      will make the animation favor one direction more based on how fast the mob is moving
+     * @param swing       is the swung distance
+     * @param swingAmount is the swing speed
+     */
+    public void swing(AdvancedModelRenderer box, float speed, float degree, boolean invert, float offset, float weight, float swing, float swingAmount) {
+        box.swing(speed, degree, invert, offset, weight, swing, swingAmount);
+    }
+
+    /**
+     * Moves this box up and down (rotationPointY). Useful for bodies.
+     *
+     * @param box the box to animate
+     * @param speed  is how fast the animation runs;
+     * @param degree is how far the box will move;
+     * @param bounce will make the box bounce;
+     * @param f      is the walked distance;
+     * @param f1     is the walk speed.
+     */
+    public void bob(AdvancedModelRenderer box, float speed, float degree, boolean bounce, float f, float f1) {
+        box.bob(speed, degree, bounce, f, f1);
     }
 }

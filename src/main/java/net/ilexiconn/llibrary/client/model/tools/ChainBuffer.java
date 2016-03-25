@@ -120,7 +120,7 @@ public class ChainBuffer {
     /**
      * Applies this buffer on the Y axis to the given array of model boxes.
      */
-    public void applyChainSwingBuffer(ModelRenderer[] boxes) {
+    public void applyChainSwingBuffer(ModelRenderer... boxes) {
         for (ModelRenderer box : boxes) {
             box.rotateAngleY += 0.01745329251F * yawVariation / boxes.length;
         }
@@ -129,7 +129,7 @@ public class ChainBuffer {
     /**
      * Applies this buffer on the X axis to the given array of model boxes.
      */
-    public void applyChainWaveBuffer(ModelRenderer[] boxes) {
+    public void applyChainWaveBuffer(ModelRenderer... boxes) {
         for (ModelRenderer box : boxes) {
             box.rotateAngleX += 0.01745329251F * pitchVariation / boxes.length;
         }

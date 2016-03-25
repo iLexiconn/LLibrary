@@ -121,17 +121,17 @@ public class TabulaTest {
             rightUpperFoot.walk(0.5F * speed, 0.8F, true, -1F, -0.1F, limbSwing, limbSwingAmount);
             rightFoot.walk(0.5F * speed, 1.5F, false, -1F, 1F, limbSwing, limbSwingAmount);
 
-            model.chainSwing(0.5F * speed, -0.1F, 2, limbSwing, limbSwingAmount, tailParts);
-            model.chainWave(1F * speed, -0.1F, 2.5F, limbSwing, limbSwingAmount, tailParts);
-            model.chainWave(1F * speed, -0.1F, 4, limbSwing, limbSwingAmount, bodyParts);
+            model.chainSwing(tailParts, 0.5F * speed, -0.1F, 2, limbSwing, limbSwingAmount);
+            model.chainWave(tailParts, 1F * speed, -0.1F, 2.5F, limbSwing, limbSwingAmount);
+            model.chainWave(bodyParts, 1F * speed, -0.1F, 4, limbSwing, limbSwingAmount);
 
-            model.chainWave(1F * speed, -0.3F, 4, limbSwing, limbSwingAmount, rightArmParts);
-            model.chainWave(1F * speed, -0.3F, 4, limbSwing, limbSwingAmount, leftArmParts);
+            model.chainWave(rightArmParts, 1F * speed, -0.3F, 4, limbSwing, limbSwingAmount);
+            model.chainWave(leftArmParts, 1F * speed, -0.3F, 4, limbSwing, limbSwingAmount);
 
-            model.chainWave(0.1F, 0.05F, 2, entity.ticksExisted, 1F, tailParts);
-            model.chainWave(0.1F, -0.03F, 5, entity.ticksExisted, 1F, bodyParts);
-            model.chainWave(0.1F, -0.1F, 4, entity.ticksExisted, 1F, rightArmParts);
-            model.chainWave(0.1F, -0.1F, 4, entity.ticksExisted, 1F, leftArmParts);
+            model.chainWave(tailParts, 0.1F, 0.05F, 2, entity.ticksExisted, 1F);
+            model.chainWave(bodyParts, 0.1F, -0.03F, 5, entity.ticksExisted, 1F);
+            model.chainWave(rightArmParts, 0.1F, -0.1F, 4, entity.ticksExisted, 1F);
+            model.chainWave(leftArmParts, 0.1F, -0.1F, 4, entity.ticksExisted, 1F);
         }
     }
 }
