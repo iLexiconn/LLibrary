@@ -135,7 +135,7 @@ curseforge {
         id = "243298"
 
         releaseType = "release"
-        changelog = versions.versions[versions.getAt(releaseType)].join("\n")
+        changelog = versions.versions[versions.getAt("version")].join("\n")
 
         addGameVersion("1.8.9")
 
