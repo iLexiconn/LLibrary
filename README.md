@@ -6,7 +6,19 @@ The lightweight Minecraft modding library.
 
 Quickstart
 ==========
-To use this library, all you have to do is adding it as dependency in the Gradle build script. However, since we haven't released 1.0.0 yet, there is no repo yet.
+To use this library, all you have to do is adding it as dependency in the Gradle build script.
+```gradle
+repositories {
+    maven {
+        name = "ilexiconn"
+        url = "http://maven.ilexiconn.net"
+    }
+}
+
+dependencies {
+    compile "net.ilexiconn:llibrary:1.0.0-1.8.9:dev"
+}
+```
 
 Compiling from source
 ==========
