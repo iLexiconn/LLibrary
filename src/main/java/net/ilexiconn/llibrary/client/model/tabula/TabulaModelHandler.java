@@ -32,6 +32,9 @@ public enum TabulaModelHandler {
         if (!path.startsWith("/")) {
             path = "/" + path;
         }
+        if (!path.endsWith(".tbl")) {
+            path += ".tbl";
+        }
         InputStream stream = TabulaModelHandler.class.getResourceAsStream(path);
         return TabulaModelHandler.INSTANCE.loadTabulaModel(this.getModelJsonStream(path, stream));
     }

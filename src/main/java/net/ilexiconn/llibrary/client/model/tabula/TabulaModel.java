@@ -21,11 +21,11 @@ import java.util.Map;
  */
 @SideOnly(Side.CLIENT)
 public class TabulaModel extends AdvancedModelBase {
-    private Map<String, AdvancedModelRenderer> cubes = new HashMap<>();
-    private List<AdvancedModelRenderer> rootBoxes = new ArrayList<>();
-    private TabulaModelContainer container;
-    private ITabulaModelAnimator tabulaAnimator;
-    private Map<String, AdvancedModelRenderer> identifierMap = new HashMap<>();
+    protected Map<String, AdvancedModelRenderer> cubes = new HashMap<>();
+    protected List<AdvancedModelRenderer> rootBoxes = new ArrayList<>();
+    protected TabulaModelContainer container;
+    protected ITabulaModelAnimator tabulaAnimator;
+    protected Map<String, AdvancedModelRenderer> identifierMap = new HashMap<>();
 
     public TabulaModel(TabulaModelContainer container, ITabulaModelAnimator tabulaAnimator) {
         this.textureWidth = container.getTextureWidth();
