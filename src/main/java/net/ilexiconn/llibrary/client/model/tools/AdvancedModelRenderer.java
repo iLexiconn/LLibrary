@@ -153,18 +153,60 @@ public class AdvancedModelRenderer extends ModelRenderer {
         return invert ? -rotation : rotation;
     }
 
+    /**
+     * Rotates this box back and forth (rotateAngleX). Useful for arms and legs.
+     *
+     * @param speed      is how fast the animation runs
+     * @param degree     is how far the box will rotate;
+     * @param invert     will invert the rotation
+     * @param offset     will offset the timing of the animation
+     * @param weight     will make the animation favor one direction more based on how fast the mob is moving
+     * @param walk       is the walked distance
+     * @param walkAmount is the walk speed
+     */
     public void walk(float speed, float degree, boolean invert, float offset, float weight, float walk, float walkAmount) {
         this.rotateAngleX += calculateRotation(speed, degree, invert, offset, weight, walk, walkAmount);
     }
 
+    /**
+     * Rotates this box up and down (rotateAngleZ). Useful for wing and ears.
+     *
+     * @param speed      is how fast the animation runs
+     * @param degree     is how far the box will rotate;
+     * @param invert     will invert the rotation
+     * @param offset     will offset the timing of the animation
+     * @param weight     will make the animation favor one direction more based on how fast the mob is moving
+     * @param flap       is the flapped distance
+     * @param flapAmount is the flap speed
+     */
     public void flap(float speed, float degree, boolean invert, float offset, float weight, float flap, float flapAmount) {
         this.rotateAngleZ += calculateRotation(speed, degree, invert, offset, weight, flap, flapAmount);
     }
 
+    /**
+     * Rotates this box side to side (rotateAngleY).
+     *
+     * @param speed       is how fast the animation runs
+     * @param degree      is how far the box will rotate;
+     * @param invert      will invert the rotation
+     * @param offset      will offset the timing of the animation
+     * @param weight      will make the animation favor one direction more based on how fast the mob is moving
+     * @param swing       is the swung distance
+     * @param swingAmount is the swing speed
+     */
     public void swing(float speed, float degree, boolean invert, float offset, float weight, float swing, float swingAmount) {
         this.rotateAngleY += calculateRotation(speed, degree, invert, offset, weight, swing, swingAmount);
     }
 
+    /**
+     * Moves this box up and down (rotationPointY). Useful for bodies.
+     *
+     * @param speed  is how fast the animation runs;
+     * @param degree is how far the box will move;
+     * @param bounce will make the box bounce;
+     * @param f      is the walked distance;
+     * @param f1     is the walk speed.
+     */
     public void bob(float speed, float degree, boolean bounce, float f, float f1) {
         float movementScale = this.model.getMovementScale();
         degree *= movementScale;
