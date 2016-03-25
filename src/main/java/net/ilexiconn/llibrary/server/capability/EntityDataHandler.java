@@ -40,4 +40,19 @@ public enum EntityDataHandler {
         List<IEntityData> managers = INSTANCE.registeredDataManagers.get(entity);
         return managers == null ? new ArrayList<>() : managers;
     }
+
+    /**
+     * @return an IEntityData instance on the given entity with the given identifier
+     */
+    public static IEntityData getManager(Entity entity, String identifier) {
+        List<IEntityData> managers = INSTANCE.registeredDataManagers.get(entity);
+        if (managers != null) {
+            for (IEntityData manager : managers) {
+                if (manager.getIdentifier().equals(identifier)) {
+                    return manager;
+                }
+            }
+        }
+        return null;
+    }
 }
