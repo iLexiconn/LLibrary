@@ -1,5 +1,6 @@
 package net.ilexiconn.llibrary.client.model.tabula.container;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,14 +14,14 @@ public class TabulaModelContainer {
     private int projVersion;
     private String[] metadata;
 
-    private double[] scale;
+    private double[] scale = new double[3];
 
     private int textureWidth;
     private int textureHeight;
 
-    private List<TabulaCubeGroupContainer> cubeGroups;
-    private List<TabulaCubeContainer> cubes;
-    private List<TabulaAnimationContainer> anims;
+    private List<TabulaCubeGroupContainer> cubeGroups = new ArrayList<>();
+    private List<TabulaCubeContainer> cubes = new ArrayList<>();
+    private List<TabulaAnimationContainer> anims = new ArrayList<>();
     private int cubeCount;
 
     public String getName() {

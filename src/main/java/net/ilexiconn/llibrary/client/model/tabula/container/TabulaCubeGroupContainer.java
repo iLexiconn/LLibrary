@@ -1,5 +1,6 @@
 package net.ilexiconn.llibrary.client.model.tabula.container;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,8 +11,8 @@ public class TabulaCubeGroupContainer {
     private String name;
     private String identifier;
 
-    private List<TabulaCubeContainer> cubes;
-    private List<TabulaCubeGroupContainer> cubeGroups;
+    private List<TabulaCubeContainer> cubes = new ArrayList<>();
+    private List<TabulaCubeGroupContainer> cubeGroups = new ArrayList<>();
 
     private boolean txMirror;
     private boolean hidden;
