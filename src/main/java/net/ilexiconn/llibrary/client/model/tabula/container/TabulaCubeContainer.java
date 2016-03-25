@@ -1,5 +1,6 @@
 package net.ilexiconn.llibrary.client.model.tabula.container;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,20 +12,20 @@ public class TabulaCubeContainer {
     private String identifier;
     private String parentIdentifier;
 
-    private int[] dimensions;
-    private double[] position;
-    private double[] offset;
-    private double[] rotation;
-    private double[] scale;
+    private int[] dimensions = new int[3];
+    private double[] position = new double[3];
+    private double[] offset = new double[3];
+    private double[] rotation = new double[3];
+    private double[] scale = new double[3];
 
-    private int[] txOffset;
+    private int[] txOffset = new int[2];
     private boolean txMirror;
 
     private double mcScale = 1.0;
     private double opacity = 100.0;
     private boolean hidden;
 
-    private List<TabulaCubeContainer> children;
+    private List<TabulaCubeContainer> children = new ArrayList<>();
 
     public String getName() {
         return this.name;

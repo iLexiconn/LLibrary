@@ -1,5 +1,6 @@
 package net.ilexiconn.llibrary.client.model.tabula.container;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +14,7 @@ public class TabulaAnimationContainer {
 
     private boolean loops;
 
-    private Map<String, List<TabulaAnimationComponentContainer>> sets;
+    private Map<String, List<TabulaAnimationComponentContainer>> sets = new HashMap<>();
 
     public String getName() {
         return this.name;
