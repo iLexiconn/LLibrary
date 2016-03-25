@@ -1,5 +1,6 @@
 package net.ilexiconn.llibrary.client.model.tabula.container;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,17 +14,17 @@ public class TabulaAnimationComponentContainer {
     private int startKey;
     private int length;
 
-    private double[] posChange;
-    private double[] rotChange;
-    private double[] scaleChange;
+    private double[] posChange = new double[3];
+    private double[] rotChange = new double[3];
+    private double[] scaleChange = new double[3];
     private double opacityChange;
 
-    private double[] posOffset;
-    private double[] rotOffset;
-    private double[] scaleOffset;
+    private double[] posOffset = new double[3];
+    private double[] rotOffset = new double[3];
+    private double[] scaleOffset = new double[3];
     private double opacityOffset;
 
-    private List<double[]> progressionCoords;
+    private List<double[]> progressionCoords = new ArrayList<>();
 
     private boolean hidden;
 
