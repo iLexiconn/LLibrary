@@ -2,11 +2,12 @@
   {
     "modid": "llibrary",
     "name": "LLibrary",
+    "descroption": "The lightweight Minecraft modding library"
     "version": "${version}",
     "authorList": [
       "iLexiconn"
     ],
-    "credits": "gegy1000, pau101",
+    "credits": "gegy1000, pau101, BobMowzie, FiskFille",
     "url": "https://github.com/iLexiconn/LLibrary"
   }
 ]
