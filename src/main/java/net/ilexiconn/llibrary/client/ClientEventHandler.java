@@ -100,7 +100,7 @@ public enum ClientEventHandler {
 
     @SubscribeEvent
     public void onRenderOverlayPost(RenderGameOverlayEvent.Post event) {
-        if (this.snackbarGUI != null) {
+        if (ClientProxy.MINECRAFT.currentScreen == null && this.snackbarGUI != null && event.getType() == RenderGameOverlayEvent.ElementType.HOTBAR) {
             this.snackbarGUI.drawSnackbar();
         }
     }
