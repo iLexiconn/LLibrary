@@ -113,7 +113,7 @@ public enum ConfigHandler {
     }
 
     /**
-     * Saves the config file for the mod. There is no need to call this, LLibrary handles this internally.
+     * Saves the config file for the mod.
      *
      * @param modid the mod id
      */

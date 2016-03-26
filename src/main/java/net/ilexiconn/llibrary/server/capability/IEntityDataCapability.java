@@ -2,12 +2,20 @@ package net.ilexiconn.llibrary.server.capability;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 
 /**
  * @author gegy1000
  * @since 1.0.0
  */
 public interface IEntityDataCapability {
+    /**
+     * Initialize the entity of this data handler.
+     *
+     * @param entity the new entity
+     */
+    void init(Entity entity, World world);
+
     /**
      * Saves this capability to NBT.
      *
@@ -21,11 +29,4 @@ public interface IEntityDataCapability {
      * @param compound the tag to read from
      */
     void loadFromNBT(NBTTagCompound compound);
-
-    /**
-     * Set the entity of this data handler.
-     *
-     * @param entity the new entity
-     */
-    void setEntity(Entity entity);
 }

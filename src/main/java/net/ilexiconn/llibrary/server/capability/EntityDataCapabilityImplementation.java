@@ -3,6 +3,7 @@ package net.ilexiconn.llibrary.server.capability;
 import net.ilexiconn.llibrary.LLibrary;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 
 /**
  * @author gegy1000
@@ -16,24 +17,27 @@ public class EntityDataCapabilityImplementation implements IEntityDataCapability
     }
 
     @Override
+    public void init(Entity entity, World world) {
+        this.entity = entity;
+        for (IEntityData entityData : EntityDataHandler.INSTANCE.getEntityData(entity)) {
+            entityData.init(entity, world);
+        }
+    }
+
+    @Override
     public void saveToNBT(NBTTagCompound compound) {
-        for (IEntityData manager : EntityDataHandler.getManagers(entity)) {
+        for (IEntityData entityData : EntityDataHandler.INSTANCE.getEntityData(entity)) {
             NBTTagCompound managerTag = new NBTTagCompound();
-            manager.writeToNBT(managerTag);
-            compound.setTag(manager.getIdentifier(), managerTag);
+            entityData.saveNBTData(managerTag);
+            compound.setTag(entityData.getID(), managerTag);
         }
     }
 
     @Override
     public void loadFromNBT(NBTTagCompound compound) {
-        for (IEntityData manager : EntityDataHandler.getManagers(entity)) {
-            NBTTagCompound managerTag = compound.getCompoundTag(manager.getIdentifier());
-            manager.readFromNBT(managerTag);
+        for (IEntityData entityData : EntityDataHandler.INSTANCE.getEntityData(entity)) {
+            NBTTagCompound managerTag = compound.getCompoundTag(entityData.getID());
+            entityData.loadNBTData(managerTag);
         }
-    }
-
-    @Override
-    public void setEntity(Entity entity) {
-        this.entity = entity;
     }
 }
