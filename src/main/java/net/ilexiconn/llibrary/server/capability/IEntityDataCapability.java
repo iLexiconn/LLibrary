@@ -10,9 +10,10 @@ import net.minecraft.world.World;
  */
 public interface IEntityDataCapability {
     /**
-     * Initialize the entity of this data handler.
+     * Initialize this data handler.
      *
      * @param entity the new entity
+     * @param world the new world
      */
     void init(Entity entity, World world);
 
