@@ -30,11 +30,11 @@ public enum ClientEventHandler {
 
     @SubscribeEvent
     public void onInitGuiPost(GuiScreenEvent.InitGuiEvent.Post event) {
-        if (event.gui instanceof GuiMainMenu) {
+        if (event.getGui() instanceof GuiMainMenu) {
             int offsetX = 0;
             int offsetY = 0;
-            int buttonX = event.gui.width / 2 - 124 + offsetX;
-            int buttonY = event.gui.height / 4 + 48 + 24 * 2 + offsetY;
+            int buttonX = event.getGui().width / 2 - 124 + offsetX;
+            int buttonY = event.getGui().height / 4 + 48 + 24 * 2 + offsetY;
             while (true) {
                 if (buttonX < 0) {
                     if (offsetY <= -48) {
@@ -44,15 +44,15 @@ public enum ClientEventHandler {
                     } else {
                         offsetX = 0;
                         offsetY -= 24;
-                        buttonX = event.gui.width / 2 - 124 + offsetX;
-                        buttonY = event.gui.height / 4 + 48 + 24 * 2 + offsetY;
+                        buttonX = event.getGui().width / 2 - 124 + offsetX;
+                        buttonY = event.getGui().height / 4 + 48 + 24 * 2 + offsetY;
                     }
                 }
 
                 Rectangle rectangle = new Rectangle(buttonX, buttonY, 20, 20);
                 boolean intersects = false;
-                for (int i = 0; i < event.gui.buttonList.size(); i++) {
-                    GuiButton button = event.gui.buttonList.get(i);
+                for (int i = 0; i < event.getGui().buttonList.size(); i++) {
+                    GuiButton button = event.getGui().buttonList.get(i);
                     if (!intersects) {
                         intersects = rectangle.intersects(new Rectangle(button.xPosition, button.yPosition, button.width, button.height));
                     }
@@ -65,7 +65,7 @@ public enum ClientEventHandler {
                 buttonX -= 24;
             }
 
-            event.gui.buttonList.add(new GuiButton(ClientProxy.UPDATE_BUTTON_ID, buttonX, buttonY, 20, 20, "U"));
+            event.getGui().buttonList.add(new GuiButton(ClientProxy.UPDATE_BUTTON_ID, buttonX, buttonY, 20, 20, "U"));
 
             if (!this.checkedForUpdates && !UpdateHandler.INSTANCE.getOutdatedModList().isEmpty()) {
                 this.checkedForUpdates = true;
@@ -76,8 +76,8 @@ public enum ClientEventHandler {
 
     @SubscribeEvent
     public void onButtonPressPre(GuiScreenEvent.ActionPerformedEvent.Pre event) {
-        if (event.gui instanceof GuiMainMenu && event.button.id == ClientProxy.UPDATE_BUTTON_ID) {
-            ClientProxy.MINECRAFT.displayGuiScreen(new ModUpdateGUI((GuiMainMenu) event.gui));
+        if (event.getGui() instanceof GuiMainMenu && event.getButton().id == ClientProxy.UPDATE_BUTTON_ID) {
+            ClientProxy.MINECRAFT.displayGuiScreen(new ModUpdateGUI((GuiMainMenu) event.getGui()));
             event.setCanceled(true);
         }
     }

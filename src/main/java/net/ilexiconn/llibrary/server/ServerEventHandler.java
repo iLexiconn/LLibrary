@@ -52,17 +52,17 @@ public enum ServerEventHandler {
 
     @SubscribeEvent
     public void playerClone(PlayerEvent.Clone event) {
-        if (event.wasDeath) {
+        if (event.isWasDeath()) {
             NBTTagCompound compound = new NBTTagCompound();
-            EntityDataCapabilityImplementation.getCapability(event.original).saveToNBT(compound);
-            EntityDataCapabilityImplementation.getCapability(event.entityPlayer).loadFromNBT(compound);
+            EntityDataCapabilityImplementation.getCapability(event.getOriginal()).saveToNBT(compound);
+            EntityDataCapabilityImplementation.getCapability(event.getEntityPlayer()).loadFromNBT(compound);
         }
     }
 
     @SubscribeEvent
     public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-        if (ConfigHandler.INSTANCE.hasConfigForID(event.modID)) {
-            ConfigHandler.INSTANCE.saveConfigForID(event.modID);
+        if (ConfigHandler.INSTANCE.hasConfigForID(event.getModID())) {
+            ConfigHandler.INSTANCE.saveConfigForID(event.getModID());
         }
     }
 }

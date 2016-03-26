@@ -23,8 +23,8 @@ public class EntityDataTest {
 
     @SubscribeEvent
     public void onAttachCapabilities(EntityEvent.EntityConstructing event) {
-        if (event.entity instanceof EntityPlayer) {
-            EntityDataHandler.INSTANCE.registerExtendedEntityData(event.entity, new IEntityData() {
+        if (event.getEntity() instanceof EntityPlayer) {
+            EntityDataHandler.INSTANCE.registerExtendedEntityData(event.getEntity(), new IEntityData() {
                 @Override
                 public void writeToNBT(NBTTagCompound compound) {
                     compound.setString("Test", "yay");

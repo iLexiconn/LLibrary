@@ -49,7 +49,7 @@ public enum EntryAdapters implements IEntryAdapter {
             double minDouble = entry.minValue().isEmpty() ? Double.MIN_VALUE : Double.parseDouble(entry.minValue());
             double maxDouble = entry.maxValue().isEmpty() ? Double.MAX_VALUE : Double.parseDouble(entry.maxValue());
             Property property = config.get(entry.category(), name, Double.toString((double) defaultValue), name);
-            property.comment = entry.comment() + " [range: " + minDouble + " ~ " + maxDouble + ", default: " + defaultValue + "]";
+            property.setComment(entry.comment() + " [range: " + minDouble + " ~ " + maxDouble + ", default: " + defaultValue + "]");;
             property.setMinValue(minDouble);
             property.setMaxValue(maxDouble);
             try {
@@ -66,7 +66,7 @@ public enum EntryAdapters implements IEntryAdapter {
         public Object getValue(Configuration config, String name, ConfigEntry entry, Object defaultValue) {
             Property property = config.get(entry.category(), name, (int[]) defaultValue);
             property.setValidValues(entry.validValues());
-            property.comment = entry.comment() + " [default: " + property.getDefault() + "]";
+            property.setComment(entry.comment() + " [default: " + property.getDefault() + "]");
             return property.getIntList();
         }
     },
@@ -76,7 +76,7 @@ public enum EntryAdapters implements IEntryAdapter {
         public Object getValue(Configuration config, String name, ConfigEntry entry, Object defaultValue) {
             Property property = config.get(entry.category(), name, (boolean[]) defaultValue);
             property.setValidValues(entry.validValues());
-            property.comment = entry.comment() + " [default: " + property.getDefault() + "]";
+            property.setComment(entry.comment() + " [default: " + property.getDefault() + "]");
             return property.getBooleanList();
         }
     },
@@ -98,7 +98,7 @@ public enum EntryAdapters implements IEntryAdapter {
             }
             Property property = config.get(entry.category(), name, doubleArray);
             property.setValidValues(entry.validValues());
-            property.comment = entry.comment() + " [default: " + property.getDefault() + "]";
+            property.setComment(entry.comment() + " [default: " + property.getDefault() + "]");
             doubleArray = property.getDoubleList();
             floatArray = new float[doubleArray.length];
             for (int i = 0; i < doubleArray.length; i++) {
@@ -113,7 +113,7 @@ public enum EntryAdapters implements IEntryAdapter {
         public Object getValue(Configuration config, String name, ConfigEntry entry, Object defaultValue) {
             Property property = config.get(entry.category(), name, (double[]) defaultValue);
             property.setValidValues(entry.validValues());
-            property.comment = entry.comment() + " [default: " + property.getDefault() + "]";
+            property.setComment(entry.comment() + " [default: " + property.getDefault() + "]");
             return property.getDoubleList();
         }
     };
