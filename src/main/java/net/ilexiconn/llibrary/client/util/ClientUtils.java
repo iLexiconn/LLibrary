@@ -12,7 +12,7 @@ public class ClientUtils {
     private static long lastUpdate = System.currentTimeMillis();
 
     /**
-     * Update the current time. there's no need to call this, LLibrary handles this internally.
+     * Update the current time.
      */
     public static void updateLast() {
         ClientUtils.lastUpdate = System.currentTimeMillis();

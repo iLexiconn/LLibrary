@@ -26,7 +26,7 @@ public class UpdateContainer {
     }
 
     /**
-     * Set the mod container update container. There's no need to call this, LLibrary handles this internally.
+     * Set the mod container update container.
      *
      * @param modContainer the new mod container
      */
@@ -42,7 +42,7 @@ public class UpdateContainer {
     }
 
     /**
-     * Set the icon of this update container. There's no need to call this, LLibrary handles this internally.
+     * Set the icon of this update container.
      *
      * @param icon the new icon
      */
