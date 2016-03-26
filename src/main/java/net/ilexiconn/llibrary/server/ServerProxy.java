@@ -29,7 +29,7 @@ public class ServerProxy {
         UpdateHandler.INSTANCE.searchForUpdates();
     }
 
-    public <MESSAGE extends AbstractMessage<MESSAGE>> void handleMessage(final MESSAGE message, final MessageContext messageContext) {
+    public <T extends AbstractMessage<T>> void handleMessage(final T message, final MessageContext messageContext) {
         message.onServerReceived(FMLServerHandler.instance().getServer(), message, messageContext.getServerHandler().playerEntity, messageContext);
     }
 

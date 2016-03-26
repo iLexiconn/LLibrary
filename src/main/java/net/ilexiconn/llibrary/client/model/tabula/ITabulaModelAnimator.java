@@ -10,6 +10,6 @@ import net.minecraft.entity.Entity;
  */
 @SideOnly(Side.CLIENT)
 @FunctionalInterface
-public interface ITabulaModelAnimator<ENTITY extends Entity> {
-    void setRotationAngles(TabulaModel model, ENTITY entity, float limbSwing, float limbSwingAmount, float ageInTicks, float rotationYaw, float rotationPitch, float scale);
+public interface ITabulaModelAnimator<T extends Entity> {
+    void setRotationAngles(TabulaModel model, T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float rotationYaw, float rotationPitch, float scale);
 }

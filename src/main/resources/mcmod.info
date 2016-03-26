@@ -2,7 +2,7 @@
   {
     "modid": "llibrary",
     "name": "LLibrary",
-    "descroption": "The lightweight Minecraft modding library"
+    "descroption": "The lightweight Minecraft modding library",
     "version": "${version}",
     "authorList": [
       "iLexiconn"
