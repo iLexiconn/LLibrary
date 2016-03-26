@@ -46,7 +46,7 @@ public class ClientProxy extends ServerProxy {
     }
 
     @Override
-    public <MESSAGE extends AbstractMessage<MESSAGE>> void handleMessage(final MESSAGE message, final MessageContext messageContext) {
+    public <T extends AbstractMessage<T>> void handleMessage(final T message, final MessageContext messageContext) {
         if (messageContext.side.isServer()) {
             super.handleMessage(message, messageContext);
         } else {
