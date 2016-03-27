@@ -1,5 +1,6 @@
 package net.ilexiconn.llibrary.client;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
@@ -10,11 +11,16 @@ import net.ilexiconn.llibrary.client.util.ClientUtils;
 import net.ilexiconn.llibrary.server.snackbar.Snackbar;
 import net.ilexiconn.llibrary.server.snackbar.SnackbarHandler;
 import net.ilexiconn.llibrary.server.update.UpdateHandler;
+import net.ilexiconn.llibrary.server.util.ModUtils;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import org.lwjgl.util.Rectangle;
 
 @SideOnly(Side.CLIENT)
@@ -70,6 +76,22 @@ public enum ClientEventHandler {
             if (!this.checkedForUpdates && !UpdateHandler.INSTANCE.getOutdatedModList().isEmpty()) {
                 this.checkedForUpdates = true;
                 SnackbarHandler.INSTANCE.showSnackbar(Snackbar.create(StatCollector.translateToLocal("snackbar.llibrary.updates_found")));
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onItemTooltip(ItemTooltipEvent event) {
+        if (ClientProxy.MINECRAFT.gameSettings.advancedItemTooltips) {
+            event.toolTip.add(EnumChatFormatting.DARK_GRAY + "" + Item.itemRegistry.getNameForObject(event.itemStack.getItem()));
+        }
+        if (!Loader.isModLoaded("Waila")) {
+            ItemStack stack = event.itemStack;
+            if (stack != null) {
+                String name = ModUtils.getModNameForStack(stack);
+                if (name != null) {
+                    event.toolTip.add(EnumChatFormatting.BLUE.toString() + EnumChatFormatting.ITALIC.toString() + name);
+                }
             }
         }
     }
