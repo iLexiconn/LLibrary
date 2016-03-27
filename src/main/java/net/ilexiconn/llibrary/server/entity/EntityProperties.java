@@ -10,8 +10,8 @@ import java.util.Set;
 import java.util.WeakHashMap;
 
 /**
- * If you want to keep certain values in sync with clients, use a tracker time of >= 0.
- * Use 0 if you want changes to be sent every tick if the data has changed. Using a tracker time > 0
+ * If you want to keep certain values in sync with clients, use a tracker time of 0 or higher.
+ * Use 0 if you want changes to be sent every tick if the data has changed. Using a tracker time of 1 or higher
  * limits how often the packet is sent. The tracker automatically detects any changes and keeps
  * the values in sync.
  *
