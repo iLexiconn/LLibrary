@@ -47,7 +47,7 @@ public enum ServerEventHandler {
             public NBTBase serializeNBT() {
                 Capability<IEntityDataCapability> capability = LLibrary.ENTITY_DATA_CAPABILITY;
                 IEntityDataCapability instance = capability.getDefaultInstance();
-                instance.init(event.getEntity(), event.getEntity().getEntityWorld());
+                instance.init(event.getEntity(), event.getEntity().getEntityWorld(), false);
                 return capability.getStorage().writeNBT(capability, instance, null);
             }
 
@@ -55,7 +55,7 @@ public enum ServerEventHandler {
             public void deserializeNBT(NBTBase nbt) {
                 Capability<IEntityDataCapability> capability = LLibrary.ENTITY_DATA_CAPABILITY;
                 IEntityDataCapability instance = capability.getDefaultInstance();
-                instance.init(event.getEntity(), event.getEntity().getEntityWorld());
+                instance.init(event.getEntity(), event.getEntity().getEntityWorld(), true);
                 capability.getStorage().readNBT(capability, instance, null, nbt);
             }
 

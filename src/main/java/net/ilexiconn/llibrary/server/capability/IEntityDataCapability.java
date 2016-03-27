@@ -14,8 +14,9 @@ public interface IEntityDataCapability {
      *
      * @param entity the new entity
      * @param world the new world
+     * @param init true if all managers should be initialized
      */
-    void init(Entity entity, World world);
+    void init(Entity entity, World world, boolean init);
 
     /**
      * Saves this capability to NBT.

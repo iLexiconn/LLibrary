@@ -17,10 +17,12 @@ public class EntityDataCapabilityImplementation implements IEntityDataCapability
     }
 
     @Override
-    public void init(Entity entity, World world) {
+    public void init(Entity entity, World world, boolean init) {
         this.entity = entity;
-        for (IEntityData entityData : EntityDataHandler.INSTANCE.getEntityData(entity)) {
-            entityData.init(entity, world);
+        if (init) {
+            for (IEntityData entityData : EntityDataHandler.INSTANCE.getEntityData(entity)) {
+                entityData.init(entity, world);
+            }
         }
     }
 
