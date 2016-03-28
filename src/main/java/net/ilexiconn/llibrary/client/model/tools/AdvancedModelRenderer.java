@@ -21,14 +21,16 @@ import java.util.List;
 public class AdvancedModelRenderer extends ModelRenderer {
     private AdvancedModelBase model;
 
-    private float defaultRotationX, defaultRotationY, defaultRotationZ;
-    private float defaultOffsetX, defaultOffsetY, defaultOffsetZ;
-    private float defaultPositionX, defaultPositionY, defaultPositionZ;
+    public float defaultRotationX, defaultRotationY, defaultRotationZ;
+    public float defaultOffsetX, defaultOffsetY, defaultOffsetZ;
+    public float defaultPositionX, defaultPositionY, defaultPositionZ;
 
     private AdvancedModelRenderer parent;
 
     private int displayList;
     private boolean compiled;
+
+    public float scaleX = 1.0F, scaleY = 1.0F, scaleZ = 1.0F;
 
     public AdvancedModelRenderer(AdvancedModelBase model, String name) {
         super(model, name);
@@ -42,6 +44,15 @@ public class AdvancedModelRenderer extends ModelRenderer {
     public AdvancedModelRenderer(AdvancedModelBase model, int textureOffsetX, int textureOffsetY) {
         this(model);
         this.setTextureOffset(textureOffsetX, textureOffsetY);
+    }
+
+    /**
+     * Sets the scale for this AdvancedModelRenderer to be rendered at. (Performs a call to GL11.glScalef())
+     */
+    public void setScale(float scaleX, float scaleY, float scaleZ) {
+        this.scaleX = scaleX;
+        this.scaleY = scaleY;
+        this.scaleZ = scaleZ;
     }
 
     public void updateDefaultPose() {
@@ -121,6 +132,9 @@ public class AdvancedModelRenderer extends ModelRenderer {
                 }
                 if (this.rotateAngleX != 0.0F) {
                     GL11.glRotatef((float) Math.toDegrees(this.rotateAngleX), 1.0F, 0.0F, 0.0F);
+                }
+                if (this.scaleX != 1.0F || this.scaleY != 1.0F || this.scaleZ != 1.0F) {
+                    GL11.glScalef(this.scaleX, this.scaleY, this.scaleZ);
                 }
                 GL11.glCallList(this.displayList);
                 if (this.childModels != null) {
