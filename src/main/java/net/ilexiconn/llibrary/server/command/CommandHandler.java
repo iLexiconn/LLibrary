@@ -36,7 +36,7 @@ public enum CommandHandler {
      * @param <T>       the enum type
      * @return the enum parser
      */
-    public static <T extends Enum<T>> IArgumentParser<T> getEnumParser(Class<T> enumClass) {
+    public <T extends Enum<T>> IArgumentParser<T> getEnumParser(Class<T> enumClass) {
         return new IArgumentParser<T>() {
             private String values[] = Arrays.stream(enumClass.getEnumConstants()).map(T::name).map(s -> s.toLowerCase(Locale.ENGLISH)).toArray(String[]::new);
 
@@ -59,11 +59,10 @@ public enum CommandHandler {
      * @param <T>  the argument type
      * @return the argument parser, null if it can't be found
      */
-    @SuppressWarnings("unchecked")
     public <T> IArgumentParser<T> getParserForType(Class<T> type) {
-        IArgumentParser<?> argumentParser = ArgumentParsers.getBuiltinParser(type);
+        IArgumentParser<T> argumentParser = ArgumentParsers.getBuiltinParser(type);
         if (argumentParser != null) {
-            return (IArgumentParser<T>) argumentParser;
+            return argumentParser;
         } else if (this.argumentParserMap.containsKey(type)) {
             return (IArgumentParser<T>) this.argumentParserMap.get(type);
         } else {

@@ -100,7 +100,7 @@ public enum ArgumentParsers implements IArgumentParser {
         }
     };
 
-    public static IArgumentParser<?> getBuiltinParser(Class<?> type) {
+    public static <T> IArgumentParser<T> getBuiltinParser(Class<T> type) {
         if (Integer.class.isAssignableFrom(type) || int.class.isAssignableFrom(type)) {
             return INTEGER;
         } else if (Boolean.class.isAssignableFrom(type) || boolean.class.isAssignableFrom(type)) {
