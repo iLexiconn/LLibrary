@@ -32,6 +32,8 @@ public class AdvancedModelRenderer extends ModelRenderer {
 
     public float scaleX = 1.0F, scaleY = 1.0F, scaleZ = 1.0F;
 
+    public boolean scaleChildren;
+
     public AdvancedModelRenderer(AdvancedModelBase model, String name) {
         super(model, name);
         this.model = model;
@@ -44,6 +46,13 @@ public class AdvancedModelRenderer extends ModelRenderer {
     public AdvancedModelRenderer(AdvancedModelBase model, int textureOffsetX, int textureOffsetY) {
         this(model);
         this.setTextureOffset(textureOffsetX, textureOffsetY);
+    }
+
+    /**
+     * If true, when using setScale, the children of this model part will be scaled as well as just this part. If false, just this part will be scaled
+     */
+    public void setShouldScaleChildren(boolean scaleChildren) {
+        this.scaleChildren = scaleChildren;
     }
 
     /**
@@ -137,6 +146,9 @@ public class AdvancedModelRenderer extends ModelRenderer {
                     GL11.glScalef(this.scaleX, this.scaleY, this.scaleZ);
                 }
                 GL11.glCallList(this.displayList);
+                if (!this.scaleChildren && (this.scaleX != 1.0F || this.scaleY != 1.0F || this.scaleZ != 1.0F)) {
+                    GL11.glScalef(this.scaleX == 0.0F ? 1.0F : 1.0F / this.scaleX, this.scaleY == 0.0F ? 1.0F : 1.0F / this.scaleY, this.scaleZ == 0.0F ? 1.0F : 1.0F / this.scaleZ);
+                }
                 if (this.childModels != null) {
                     for (ModelRenderer childModel : (List<ModelRenderer>) this.childModels) {
                         childModel.render(scale);
