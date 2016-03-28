@@ -4,8 +4,6 @@ import net.ilexiconn.llibrary.server.config.ConfigEntry;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 
-import java.lang.reflect.Field;
-
 /**
  * @author iLexiconn
  * @since 1.0.0
@@ -118,26 +116,26 @@ public enum EntryAdapters implements IEntryAdapter {
         }
     };
 
-    public static IEntryAdapter<?> getBuiltinAdapter(Field field) {
-        if (Integer.class.isAssignableFrom(field.getType()) || int.class.isAssignableFrom(field.getType())) {
+    public static <T> IEntryAdapter<T> getBuiltinAdapter(Class<T> type) {
+        if (Integer.class.isAssignableFrom(type) || int.class.isAssignableFrom(type)) {
             return INTEGER;
-        } else if (Boolean.class.isAssignableFrom(field.getType()) || boolean.class.isAssignableFrom(field.getType())) {
+        } else if (Boolean.class.isAssignableFrom(type) || boolean.class.isAssignableFrom(type)) {
             return BOOLEAN;
-        } else if (String.class.isAssignableFrom(field.getType())) {
+        } else if (String.class.isAssignableFrom(type)) {
             return STRING;
-        } else if (Float.class.isAssignableFrom(field.getType()) || float.class.isAssignableFrom(field.getType())) {
+        } else if (Float.class.isAssignableFrom(type) || float.class.isAssignableFrom(type)) {
             return FLOAT;
-        } else if (Double.class.isAssignableFrom(field.getType()) || double.class.isAssignableFrom(field.getType())) {
+        } else if (Double.class.isAssignableFrom(type) || double.class.isAssignableFrom(type)) {
             return DOUBLE;
-        } else if (Integer[].class.isAssignableFrom(field.getType()) || int[].class.isAssignableFrom(field.getType())) {
+        } else if (Integer[].class.isAssignableFrom(type) || int[].class.isAssignableFrom(type)) {
             return INT_ARRAY;
-        } else if (Boolean[].class.isAssignableFrom(field.getType()) || boolean[].class.isAssignableFrom(field.getType())) {
+        } else if (Boolean[].class.isAssignableFrom(type) || boolean[].class.isAssignableFrom(type)) {
             return BOOLEAN_ARRAY;
-        } else if (String[].class.isAssignableFrom(field.getType())) {
+        } else if (String[].class.isAssignableFrom(type)) {
             return STRING_ARRAY;
-        } else if (Float[].class.isAssignableFrom(field.getType()) || float[].class.isAssignableFrom(field.getType())) {
+        } else if (Float[].class.isAssignableFrom(type) || float[].class.isAssignableFrom(type)) {
             return FLOAT_ARRAY;
-        } else if (Double[].class.isAssignableFrom(field.getType()) || double[].class.isAssignableFrom(field.getType())) {
+        } else if (Double[].class.isAssignableFrom(type) || double[].class.isAssignableFrom(type)) {
             return DOUBLE_ARRAY;
         } else {
             return null;

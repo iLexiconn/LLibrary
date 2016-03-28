@@ -20,19 +20,19 @@ public enum ConfigHandler {
     INSTANCE;
 
     private List<Tuple3<String, Configuration, Object>> configList = new ArrayList<>();
-    private Map<String, Map<String, IEntryAdapter>> valueTypeMap = new HashMap<>();
+    private Map<String, Map<String, IEntryAdapter<?>>> valueTypeMap = new HashMap<>();
     private Map<String, Map<String, Object>> defaultValueMap = new HashMap<>();
     private Map<Class<?>, IEntryAdapter<?>> entryAdapterMap = new HashMap<>();
 
     /**
      * Register an entry adapter.
      *
-     * @param entryClass   the class to handle
+     * @param type         the class to handle
      * @param entryAdapter the adapter
      * @param <T>          the entry type
      */
-    public <T> void registerEntryAdapter(Class<T> entryClass, IEntryAdapter<T> entryAdapter) {
-        this.entryAdapterMap.put(entryClass, entryAdapter);
+    public <T> void registerEntryAdapter(Class<T> type, IEntryAdapter<T> entryAdapter) {
+        this.entryAdapterMap.put(type, entryAdapter);
     }
 
     /**
@@ -53,20 +53,20 @@ public enum ConfigHandler {
 
         Mod annotation = mod.getClass().getAnnotation(Mod.class);
         this.configList.add(new Tuple3<>(annotation.modid(), new Configuration(file), config));
-        Map<String, IEntryAdapter> typeMap = new HashMap<>();
+        Map<String, IEntryAdapter<?>> typeMap = new HashMap<>();
         Map<String, Object> valueMap = new HashMap<>();
         Arrays.stream(config.getClass().getFields()).filter(field -> field.isAnnotationPresent(ConfigEntry.class)).forEach(field -> {
             try {
                 ConfigEntry configEntry = field.getAnnotation(ConfigEntry.class);
                 if (configEntry.side().isServer() || FMLCommonHandler.instance().getEffectiveSide().isClient()) {
                     String name = configEntry.name().isEmpty() ? field.getName() : configEntry.name();
-                    IEntryAdapter type = EntryAdapters.getBuiltinAdapter(field);
-                    if (type == null) {
-                        type = this.entryAdapterMap.get(field.getType());
+                    IEntryAdapter<?> entryAdapter = EntryAdapters.getBuiltinAdapter(field.getType());
+                    if (entryAdapter == null) {
+                        entryAdapter = this.entryAdapterMap.get(field.getType());
                     }
-                    if (type != null) {
+                    if (entryAdapter != null) {
                         field.setAccessible(true);
-                        typeMap.put(name, EntryAdapters.getBuiltinAdapter(field));
+                        typeMap.put(name, entryAdapter);
                         valueMap.put(name, field.get(config));
                     } else {
                         LLibrary.LOGGER.error("Found unsupported config entry " + field.getName() + " for mod " + annotation.modid());
@@ -120,16 +120,16 @@ public enum ConfigHandler {
     public void saveConfigForID(String modid) {
         Object object = this.getObjectForID(modid);
         Configuration config = this.getConfigForID(modid);
-        Map<String, IEntryAdapter> typeMap = this.valueTypeMap.get(modid);
+        Map<String, IEntryAdapter<?>> typeMap = this.valueTypeMap.get(modid);
         Map<String, Object> valueMap = this.defaultValueMap.get(modid);
         Arrays.stream(object.getClass().getFields()).filter(field -> field.isAnnotationPresent(ConfigEntry.class)).forEach(field -> {
             try {
                 ConfigEntry configEntry = field.getAnnotation(ConfigEntry.class);
                 if (configEntry.side().isServer() || FMLCommonHandler.instance().getEffectiveSide().isClient()) {
                     String name = configEntry.name().isEmpty() ? field.getName() : configEntry.name();
-                    IEntryAdapter type = typeMap.get(name);
-                    if (type != null) {
-                        field.set(object, type.getValue(config, name, configEntry, valueMap.get(name)));
+                    IEntryAdapter<?> entryAdapter = typeMap.get(name);
+                    if (entryAdapter != null) {
+                        field.set(object, entryAdapter.getValue(config, name, configEntry, valueMap.get(name)));
                     }
                 }
             } catch (IllegalAccessException e) {
