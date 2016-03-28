@@ -121,7 +121,9 @@ public class TabulaTest {
             rightUpperFoot.walk(0.5F * speed, 0.8F, true, -1F, -0.1F, limbSwing, limbSwingAmount);
             rightFoot.walk(0.5F * speed, 1.5F, false, -1F, 1F, limbSwing, limbSwingAmount);
 
-            rightShin.setScale(1.5F, 1.5F, 1.5F);
+            rightShin.setScale(0.0F, 0.0F, 0.0F);
+            leftShin.setShouldScaleChildren(true);
+            leftShin.setScale(0.0F, 0.0F, 0.0F);
 
             model.chainSwing(tailParts, 0.5F * speed, -0.1F, 2, limbSwing, limbSwingAmount);
             model.chainWave(tailParts, 1F * speed, -0.1F, 2.5F, limbSwing, limbSwingAmount);
