@@ -147,7 +147,22 @@ public class AdvancedModelRenderer extends ModelRenderer {
                 }
                 GL11.glCallList(this.displayList);
                 if (!this.scaleChildren && (this.scaleX != 1.0F || this.scaleY != 1.0F || this.scaleZ != 1.0F)) {
-                    GL11.glScalef(this.scaleX == 0.0F ? 1.0F : 1.0F / this.scaleX, this.scaleY == 0.0F ? 1.0F : 1.0F / this.scaleY, this.scaleZ == 0.0F ? 1.0F : 1.0F / this.scaleZ);
+                    GL11.glPopMatrix();
+                    GL11.glPushMatrix();
+                    GL11.glTranslatef(this.offsetX, this.offsetY, this.offsetZ);
+                    GL11.glTranslatef(this.rotationPointX * scale, this.rotationPointY * scale, this.rotationPointZ * scale);
+                    if (this.rotateAngleZ != 0.0F) {
+                        GL11.glRotatef((float) Math.toDegrees(this.rotateAngleZ), 0.0F, 0.0F, 1.0F);
+                    }
+                    if (this.rotateAngleY != 0.0F) {
+                        GL11.glRotatef((float) Math.toDegrees(this.rotateAngleY), 0.0F, 1.0F, 0.0F);
+                    }
+                    if (this.rotateAngleX != 0.0F) {
+                        GL11.glRotatef((float) Math.toDegrees(this.rotateAngleX), 1.0F, 0.0F, 0.0F);
+                    }
+                    if (this.scaleX != 1.0F || this.scaleY != 1.0F || this.scaleZ != 1.0F) {
+                        GL11.glScalef(this.scaleX, this.scaleY, this.scaleZ);
+                    }
                 }
                 if (this.childModels != null) {
                     for (ModelRenderer childModel : (List<ModelRenderer>) this.childModels) {
