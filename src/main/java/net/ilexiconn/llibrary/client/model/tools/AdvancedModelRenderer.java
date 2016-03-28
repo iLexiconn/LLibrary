@@ -163,9 +163,6 @@ public class AdvancedModelRenderer extends ModelRenderer {
                     if (this.rotateAngleX != 0.0F) {
                         GlStateManager.rotate((float) Math.toDegrees(this.rotateAngleX), 1.0F, 0.0F, 0.0F);
                     }
-                    if (this.scaleX != 1.0F || this.scaleY != 1.0F || this.scaleZ != 1.0F) {
-                        GlStateManager.scale(this.scaleX, this.scaleY, this.scaleZ);
-                    }
                 }
                 if (this.childModels != null) {
                     for (ModelRenderer childModel : this.childModels) {
