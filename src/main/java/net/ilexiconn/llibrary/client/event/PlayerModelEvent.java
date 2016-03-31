@@ -8,7 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 
 @SideOnly(Side.CLIENT)
 public class PlayerModelEvent extends Event {
-    public final ModelBiped model;
+    protected ModelBiped model;
 
     public PlayerModelEvent(ModelBiped model) {
         this.model = model;
@@ -17,6 +17,10 @@ public class PlayerModelEvent extends Event {
     public static class Construct extends PlayerModelEvent {
         public Construct(ModelBiped model) {
             super(model);
+        }
+
+        public void setModel(ModelBiped model) {
+            this.model = model;
         }
     }
 
@@ -45,5 +49,9 @@ public class PlayerModelEvent extends Event {
             this.rotationPitch = rotationPitch;
             this.scale = scale;
         }
+    }
+
+    public ModelBiped getModel() {
+        return this.model;
     }
 }
