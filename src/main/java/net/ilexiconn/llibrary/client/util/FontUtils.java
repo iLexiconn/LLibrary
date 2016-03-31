@@ -105,7 +105,7 @@ public class FontUtils {
     }
 
     /**
-     * Get if the input test should keep its formatting. This hook checks the Minecraft settings, but it can be
+     * Get if the input test should keep its formatting. This method checks the Minecraft settings, but it can be
      * overridden with the keepFormatting parameter.
      *
      * @param text           the input text

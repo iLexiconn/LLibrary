@@ -58,30 +58,28 @@ public class LLibraryClassTransformer implements IClassTransformer {
         ClassReader cr = new ClassReader(bytes);
         ClassNode classNode = new ClassNode();
         cr.accept(classNode, 0);
-        for (MethodNode methodNode : classNode.methods) {
-            if (methodNode.name.equals("renderFirstPersonArm") && methodNode.desc.equals("(L" + mappings.get("net/minecraft/entity/player/EntityPlayer") + ";)V")) {
-                String desc = "(L" + mappings.get("net/minecraft/entity/player/EntityPlayer") + ";L" + mappings.get(RENDER_PLAYER).replaceAll("\\.", "/") + ";)";
-                InsnList inject = new InsnList();
-                LabelNode label = new LabelNode();
-                inject.add(new VarInsnNode(Opcodes.ALOAD, 1));
-                inject.add(new VarInsnNode(Opcodes.ALOAD, 0));
-                inject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", "renderArmPre", desc + "Z", false));
-                inject.add(new JumpInsnNode(Opcodes.IFEQ, label));
-                InsnNode returnNode = new InsnNode(Opcodes.RETURN);
-                inject.add(returnNode);
-                inject.add(label);
-                for (AbstractInsnNode node : methodNode.instructions.toArray()) {
-                    if (node.getOpcode() == Opcodes.RETURN && node != returnNode) {
-                        inject.add(new VarInsnNode(Opcodes.ALOAD, 1));
-                        inject.add(new VarInsnNode(Opcodes.ALOAD, 0));
-                        inject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", "renderArmPost", desc + "V", false));
-                    }
-                    inject.add(node);
+        classNode.methods.stream().filter(methodNode -> methodNode.name.equals(mappings.get("renderFirstPersonArm")) && methodNode.desc.equals("(L" + mappings.get("net/minecraft/entity/player/EntityPlayer") + ";)V")).forEach(methodNode -> {
+            String desc = "(L" + mappings.get("net/minecraft/entity/player/EntityPlayer") + ";L" + mappings.get(RENDER_PLAYER).replaceAll("\\.", "/") + ";)";
+            InsnList inject = new InsnList();
+            LabelNode label = new LabelNode();
+            inject.add(new VarInsnNode(Opcodes.ALOAD, 1));
+            inject.add(new VarInsnNode(Opcodes.ALOAD, 0));
+            inject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", "renderArmPre", desc + "Z", false));
+            inject.add(new JumpInsnNode(Opcodes.IFEQ, label));
+            InsnNode returnNode = new InsnNode(Opcodes.RETURN);
+            inject.add(returnNode);
+            inject.add(label);
+            for (AbstractInsnNode node : methodNode.instructions.toArray()) {
+                if (node.getOpcode() == Opcodes.RETURN && node != returnNode) {
+                    inject.add(new VarInsnNode(Opcodes.ALOAD, 1));
+                    inject.add(new VarInsnNode(Opcodes.ALOAD, 0));
+                    inject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", "renderArmPost", desc + "V", false));
                 }
-                methodNode.instructions.clear();
-                methodNode.instructions.add(inject);
+                inject.add(node);
             }
-        }
+            methodNode.instructions.clear();
+            methodNode.instructions.add(inject);
+        });
         ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_MAXS);
         classNode.accept(cw);
         saveBytecode(name, cw);

@@ -1,8 +1,7 @@
-package net.ilexiconn.llibrary.server.plugin;
+package net.ilexiconn.llibrary.server.asm;
 
 import cpw.mods.fml.relauncher.IFMLCallHook;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
-import net.ilexiconn.llibrary.server.asm.LLibraryClassTransformer;
 
 import java.util.Map;
 
