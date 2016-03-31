@@ -9,6 +9,7 @@ import net.ilexiconn.llibrary.server.update.UpdateHandler;
 import net.ilexiconn.llibrary.server.util.ModUtils;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
+import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
@@ -28,6 +29,8 @@ public enum ClientEventHandler {
 
     private SnackbarGUI snackbarGUI;
     private boolean checkedForUpdates;
+
+    private ModelRenderer hat;
 
     public void setOpenSnackbar(SnackbarGUI snackbarGUI) {
         this.snackbarGUI = snackbarGUI;
