@@ -9,8 +9,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class RenderArmEvent extends Event {
-    public final AbstractClientPlayer player;
-    public final RenderPlayer renderPlayer;
+    protected AbstractClientPlayer player;
+    protected RenderPlayer renderPlayer;
 
     public RenderArmEvent(AbstractClientPlayer player, RenderPlayer renderPlayer) {
         this.player = player;
@@ -53,5 +53,13 @@ public class RenderArmEvent extends Event {
                 super(player, renderPlayer);
             }
         }
+    }
+
+    public AbstractClientPlayer getPlayer() {
+        return this.player;
+    }
+
+    public RenderPlayer getRenderPlayer() {
+        return this.renderPlayer;
     }
 }

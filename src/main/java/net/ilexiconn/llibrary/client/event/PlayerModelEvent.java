@@ -8,7 +8,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class PlayerModelEvent extends Event {
-    public final ModelPlayer model;
+    protected ModelPlayer model;
 
     public PlayerModelEvent(ModelPlayer model) {
         this.model = model;
@@ -17,6 +17,10 @@ public class PlayerModelEvent extends Event {
     public static class Construct extends PlayerModelEvent {
         public Construct(ModelPlayer model) {
             super(model);
+        }
+
+        public void setModel(ModelPlayer model) {
+            this.model = model;
         }
     }
 
@@ -45,5 +49,9 @@ public class PlayerModelEvent extends Event {
             this.rotationPitch = rotationPitch;
             this.scale = scale;
         }
+    }
+
+    public ModelPlayer getModel() {
+        return this.model;
     }
 }
