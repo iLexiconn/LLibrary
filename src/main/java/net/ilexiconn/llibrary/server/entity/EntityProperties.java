@@ -99,7 +99,7 @@ public abstract class EntityProperties<T extends Entity> implements IEntityData<
     }
 
     /**
-     * Client reads tracking sensitive data from this method
+     * Client reads tracking sensitive data from this hook
      *
      * @param compound the compound to load from
      */

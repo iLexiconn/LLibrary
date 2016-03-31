@@ -4,15 +4,7 @@ import net.minecraft.launchwrapper.IClassTransformer;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.InsnList;
-import org.objectweb.asm.tree.InsnNode;
-import org.objectweb.asm.tree.JumpInsnNode;
-import org.objectweb.asm.tree.LabelNode;
-import org.objectweb.asm.tree.MethodInsnNode;
-import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.tree.VarInsnNode;
+import org.objectweb.asm.tree.*;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -24,47 +16,49 @@ public class LLibraryClassTransformer implements IClassTransformer {
     private static final String RENDER_PLAYER = "net.minecraft.client.renderer.entity.RenderPlayer";
     private static final String MODEL_PLAYER = "net.minecraft.client.model.ModelPlayer";
 
-    private Map<String, String> obfMappings = new HashMap<>();
     private Map<String, String> mappings = new HashMap<>();
 
     public LLibraryClassTransformer() {
-        obfMappings.put(RENDER_PLAYER, "buk");
-        obfMappings.put(MODEL_PLAYER, "bjf");
-        obfMappings.put("renderLeftArm", "c");
-        obfMappings.put("renderRightArm", "b");
-        obfMappings.put("setRotationAngles", "a");
-        obfMappings.put("render", "a");
-        obfMappings.put("net/minecraft/client/entity/AbstractClientPlayer", "bmq");
-        obfMappings.put("net/minecraft/entity/Entity", "rr");
-        for (Map.Entry<String, String> entry : obfMappings.entrySet()) {
-            mappings.put(entry.getKey(), entry.getKey());
+        this.mappings.put(RENDER_PLAYER, "buk");
+        this.mappings.put(MODEL_PLAYER, "bjf");
+        this.mappings.put("renderLeftArm", "c");
+        this.mappings.put("renderRightArm", "b");
+        this.mappings.put("setRotationAngles", "a");
+        this.mappings.put("render", "a");
+        this.mappings.put("net/minecraft/client/entity/AbstractClientPlayer", "bmq");
+        this.mappings.put("net/minecraft/entity/Entity", "rr");
+        this.mappings.put("mainModel", "g");
+        this.mappings.put("net/minecraft/client/renderer/entity/RenderManager", "brm");
+    }
+
+    public String getMappingFor(String name) {
+        if (LLibraryPlugin.isObfuscated()) {
+            return this.mappings.get(name);
+        } else {
+            return name;
         }
     }
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] bytes) {
-        if (name.equals(obfMappings.get(RENDER_PLAYER))) {
-            return transformRenderPlayer(bytes, name, obfMappings);
-        } else if (name.equals(mappings.get(RENDER_PLAYER))) {
-            return transformRenderPlayer(bytes, name, mappings);
-        } else if (name.equals(obfMappings.get(MODEL_PLAYER))) {
-            return transformModelPlayer(bytes, name, obfMappings);
-        } else if (name.equals(mappings.get(MODEL_PLAYER))) {
-            return transformModelPlayer(bytes, name, mappings);
+        if (name.equals(this.getMappingFor(RENDER_PLAYER))) {
+            return transformRenderPlayer(bytes, name);
+        } else if (name.equals(this.getMappingFor(MODEL_PLAYER))) {
+            return transformModelPlayer(bytes, name);
         }
         return bytes;
     }
 
-    private byte[] transformRenderPlayer(byte[] bytes, String name, Map<String, String> mappings) {
+    private byte[] transformRenderPlayer(byte[] bytes, String name) {
         ClassReader cr = new ClassReader(bytes);
         ClassNode classNode = new ClassNode();
         cr.accept(classNode, 0);
         for (MethodNode methodNode : classNode.methods) {
-            boolean leftArm = methodNode.name.equals(mappings.get("renderLeftArm"));
-            boolean rightArm = methodNode.name.equals("renderRightArm");
-            if ((leftArm || rightArm) && methodNode.desc.equals("(L" + mappings.get("net/minecraft/client/entity/AbstractClientPlayer") + ";)V")) {
+            boolean leftArm = methodNode.name.equals(this.getMappingFor("renderLeftArm"));
+            boolean rightArm = methodNode.name.equals(this.getMappingFor("renderRightArm"));
+            if ((leftArm || rightArm) && methodNode.desc.equals("(L" + this.getMappingFor("net/minecraft/client/entity/AbstractClientPlayer") + ";)V")) {
                 String prefix = "render" + (leftArm ? "Left" : "Right") + "Arm";
-                String desc = "(L" + mappings.get("net/minecraft/client/entity/AbstractClientPlayer") + ";L" + mappings.get(RENDER_PLAYER).replaceAll("\\.", "/") + ";)";
+                String desc = "(L" + this.getMappingFor("net/minecraft/client/entity/AbstractClientPlayer") + ";L" + this.getMappingFor(RENDER_PLAYER).replaceAll("\\.", "/") + ";)";
                 InsnList inject = new InsnList();
                 LabelNode label = new LabelNode();
                 inject.add(new VarInsnNode(Opcodes.ALOAD, 1));
@@ -84,6 +78,17 @@ public class LLibraryClassTransformer implements IClassTransformer {
                 }
                 methodNode.instructions.clear();
                 methodNode.instructions.add(inject);
+            } else if (methodNode.name.equals("<init>") && methodNode.desc.equals("(Lnet/minecraft/client/renderer/entity/RenderManager;Z)V")) {
+                System.out.println(methodNode.desc);
+                String desc = "(L" + this.getMappingFor(MODEL_PLAYER).replaceAll("\\.", "/") + ";)V";
+                for (AbstractInsnNode node : methodNode.instructions.toArray()) {
+                    if (node.getOpcode() == Opcodes.RETURN) {
+                        InsnList inject = new InsnList();
+                        inject.add(new FieldInsnNode(Opcodes.ACC_PROTECTED, this.getMappingFor(RENDER_PLAYER), this.getMappingFor("mainModel").replaceAll("\\.", "/"), "L" + this.getMappingFor(MODEL_PLAYER).replaceAll("\\.", "/") + ";"));
+                        inject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", "constructModel", desc, false));
+                        methodNode.instructions.insertBefore(node, inject);
+                    }
+                }
             }
         }
         ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_MAXS);
@@ -92,13 +97,13 @@ public class LLibraryClassTransformer implements IClassTransformer {
         return cw.toByteArray();
     }
 
-    private byte[] transformModelPlayer(byte[] bytes, String name, Map<String, String> mappings) {
+    private byte[] transformModelPlayer(byte[] bytes, String name) {
         ClassReader cr = new ClassReader(bytes);
         ClassNode classNode = new ClassNode();
         cr.accept(classNode, 0);
         for (MethodNode methodNode : classNode.methods) {
-            if (methodNode.name.equals(mappings.get("setRotationAngles")) && methodNode.desc.equals("(FFFFFFL" + mappings.get("net/minecraft/entity/Entity") + ";)V")) {
-                String desc = "(L" + mappings.get(MODEL_PLAYER).replaceAll("\\.", "/") + ";L" + mappings.get("net/minecraft/entity/Entity") + ";FFFFFF)V";
+            if (methodNode.name.equals(this.getMappingFor("setRotationAngles")) && methodNode.desc.equals("(FFFFFFL" + this.getMappingFor("net/minecraft/entity/Entity") + ";)V")) {
+                String desc = "(L" + this.getMappingFor(MODEL_PLAYER).replaceAll("\\.", "/") + ";L" + this.getMappingFor("net/minecraft/entity/Entity") + ";FFFFFF)V";
                 InsnList inject = new InsnList();
                 for (AbstractInsnNode node : methodNode.instructions.toArray()) {
                     if (node.getOpcode() == Opcodes.RETURN) {
@@ -116,8 +121,8 @@ public class LLibraryClassTransformer implements IClassTransformer {
                 }
                 methodNode.instructions.clear();
                 methodNode.instructions.add(inject);
-            } else if (methodNode.name.equals(mappings.get("render")) && methodNode.desc.equals("(L" + mappings.get("net/minecraft/entity/Entity") + ";FFFFFF)V")) {
-                String desc = "(L" + mappings.get(MODEL_PLAYER).replaceAll("\\.", "/") + ";L" + mappings.get("net/minecraft/entity/Entity") + ";FFFFFF)V";
+            } else if (methodNode.name.equals(this.getMappingFor("render")) && methodNode.desc.equals("(L" + this.getMappingFor("net/minecraft/entity/Entity") + ";FFFFFF)V")) {
+                String desc = "(L" + this.getMappingFor(MODEL_PLAYER).replaceAll("\\.", "/") + ";L" + this.getMappingFor("net/minecraft/entity/Entity") + ";FFFFFF)V";
                 InsnList inject = new InsnList();
                 for (AbstractInsnNode node : methodNode.instructions.toArray()) {
                     if (node.getOpcode() == Opcodes.RETURN) {
@@ -130,18 +135,6 @@ public class LLibraryClassTransformer implements IClassTransformer {
                         inject.add(new VarInsnNode(Opcodes.FLOAD, 6));
                         inject.add(new VarInsnNode(Opcodes.FLOAD, 7));
                         inject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", "renderModel", desc, false));
-                    }
-                    inject.add(node);
-                }
-                methodNode.instructions.clear();
-                methodNode.instructions.add(inject);
-            } else if (methodNode.name.equals("<init>")) {
-                String desc = "(L" + mappings.get(MODEL_PLAYER).replaceAll("\\.", "/") + ";)V";
-                InsnList inject = new InsnList();
-                for (AbstractInsnNode node : methodNode.instructions.toArray()) {
-                    if (node.getOpcode() == Opcodes.RETURN) {
-                        inject.add(new VarInsnNode(Opcodes.ALOAD, 0));
-                        inject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", "constructModel", desc, false));
                     }
                     inject.add(node);
                 }

@@ -58,7 +58,7 @@ processResources {
 jar {
     manifest {
         attributes "FMLAT": "llibrary_at.cfg"
-		attributes 'FMLCorePlugin': 'net.ilexiconn.llibrary.server.plugin.LLibraryPlugin', 'FMLCorePluginContainsFMLMod': 'false'
+		attributes 'FMLCorePlugin': 'net.ilexiconn.llibrary.server.asm.LLibraryPlugin', 'FMLCorePluginContainsFMLMod': 'false'
     }
 }
 

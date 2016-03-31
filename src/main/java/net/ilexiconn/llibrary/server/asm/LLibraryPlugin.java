@@ -1,6 +1,5 @@
-package net.ilexiconn.llibrary.server.plugin;
+package net.ilexiconn.llibrary.server.asm;
 
-import net.ilexiconn.llibrary.server.asm.LLibraryClassTransformer;
 import net.minecraftforge.fml.relauncher.IFMLCallHook;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 
@@ -10,6 +9,8 @@ import java.util.Map;
 @IFMLLoadingPlugin.MCVersion(value = "1.9")
 @IFMLLoadingPlugin.TransformerExclusions(value = "net.ilexiconn.llibrary.server.plugin")
 public class LLibraryPlugin implements IFMLLoadingPlugin, IFMLCallHook {
+    private static boolean isObfuscated;
+
     @Override
     public String[] getASMTransformerClass() {
         return new String[] { LLibraryClassTransformer.class.getName() };
@@ -27,7 +28,7 @@ public class LLibraryPlugin implements IFMLLoadingPlugin, IFMLCallHook {
 
     @Override
     public void injectData(Map<String, Object> data) {
-
+        LLibraryPlugin.isObfuscated = (boolean) data.get("runtimeDeobfuscationEnabled");
     }
 
     @Override
@@ -38,5 +39,9 @@ public class LLibraryPlugin implements IFMLLoadingPlugin, IFMLCallHook {
     @Override
     public Void call() throws Exception {
         return null;
+    }
+
+    public static boolean isObfuscated() {
+        return isObfuscated;
     }
 }

@@ -37,7 +37,7 @@ public enum ConfigHandler {
 
     /**
      * Register your mod's config. the first object has to be the main mod class - the class with the {@link Mod}
-     * annotation. This method returns the new instance of the config.
+     * annotation. This hook returns the new instance of the config.
      *
      * @param mod    the mod instance
      * @param file   the file to use
