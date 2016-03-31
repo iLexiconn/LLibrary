@@ -1,20 +1,10 @@
 package net.ilexiconn.llibrary.server.asm;
 
-import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.launchwrapper.IClassTransformer;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.InsnList;
-import org.objectweb.asm.tree.InsnNode;
-import org.objectweb.asm.tree.JumpInsnNode;
-import org.objectweb.asm.tree.LabelNode;
-import org.objectweb.asm.tree.LineNumberNode;
-import org.objectweb.asm.tree.MethodInsnNode;
-import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.tree.VarInsnNode;
+import org.objectweb.asm.tree.*;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -63,7 +53,7 @@ public class LLibraryClassTransformer implements IClassTransformer {
         cr.accept(classNode, 0);
         for (MethodNode methodNode : classNode.methods) {
             boolean leftArm = methodNode.name.equals(mappings.get("renderLeftArm"));
-            boolean rightArm = methodNode.name.equals("renderRightArm");
+            boolean rightArm = methodNode.name.equals(mappings.get("renderRightArm"));
             if ((leftArm || rightArm) && methodNode.desc.equals("(L" + mappings.get("net/minecraft/client/entity/AbstractClientPlayer") + ";)V")) {
                 String prefix = "render" + (leftArm ? "Left" : "Right") + "Arm";
                 String desc = "(L" + mappings.get("net/minecraft/client/entity/AbstractClientPlayer") + ";L" + mappings.get(RENDER_PLAYER).replaceAll("\\.", "/") + ";)";

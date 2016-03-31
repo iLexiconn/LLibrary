@@ -1,6 +1,5 @@
-package net.ilexiconn.llibrary.server.plugin;
+package net.ilexiconn.llibrary.server.asm;
 
-import net.ilexiconn.llibrary.server.asm.LLibraryClassTransformer;
 import net.minecraftforge.fml.relauncher.IFMLCallHook;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 

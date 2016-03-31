@@ -77,7 +77,7 @@ public enum UpdateHandler {
     }
 
     /**
-     * Search for mod updates. This method is getting called by {@link ServerProxy#onPostInit()}
+     * Search for mod updates. This hook is getting called by {@link ServerProxy#onPostInit()}
      */
     public void searchForUpdates() {
         this.updateContainerList.stream().filter(updateContainer -> updateContainer.getLatestVersion().compareTo(updateContainer.getModContainer().getProcessedVersion()) > 0).forEach(updateContainer -> outdatedModList.add(updateContainer));
