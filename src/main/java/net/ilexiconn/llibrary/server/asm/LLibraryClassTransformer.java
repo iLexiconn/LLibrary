@@ -56,9 +56,10 @@ public class LLibraryClassTransformer implements IClassTransformer {
         for (MethodNode methodNode : classNode.methods) {
             boolean leftArm = methodNode.name.equals(this.getMappingFor("renderLeftArm"));
             boolean rightArm = methodNode.name.equals(this.getMappingFor("renderRightArm"));
+            String renderPlayerFriendlyName = this.getMappingFor(RENDER_PLAYER).replaceAll("\\.", "/");
             if ((leftArm || rightArm) && methodNode.desc.equals("(L" + this.getMappingFor("net/minecraft/client/entity/AbstractClientPlayer") + ";)V")) {
                 String prefix = "render" + (leftArm ? "Left" : "Right") + "Arm";
-                String desc = "(L" + this.getMappingFor("net/minecraft/client/entity/AbstractClientPlayer") + ";L" + this.getMappingFor(RENDER_PLAYER).replaceAll("\\.", "/") + ";)";
+                String desc = "(L" + this.getMappingFor("net/minecraft/client/entity/AbstractClientPlayer") + ";L" + renderPlayerFriendlyName + ";)";
                 InsnList inject = new InsnList();
                 LabelNode label = new LabelNode();
                 inject.add(new VarInsnNode(Opcodes.ALOAD, 1));
@@ -78,17 +79,22 @@ public class LLibraryClassTransformer implements IClassTransformer {
                 }
                 methodNode.instructions.clear();
                 methodNode.instructions.add(inject);
-            } else if (methodNode.name.equals("<init>") && methodNode.desc.equals("(Lnet/minecraft/client/renderer/entity/RenderManager;Z)V")) {
-                System.out.println(methodNode.desc);
-                String desc = "(L" + this.getMappingFor(MODEL_PLAYER).replaceAll("\\.", "/") + ";)V";
+            } else if (methodNode.name.equals("<init>") && methodNode.desc.equals("(L" + this.getMappingFor("net/minecraft/client/renderer/entity/RenderManager;Z)V"))) {
+                String modelPlayerFriendlyName = getMappingFor(MODEL_PLAYER).replaceAll("\\.", "/");
+                String desc = "(L" + renderPlayerFriendlyName + ";L" + this.getMappingFor(MODEL_PLAYER).replaceAll("\\.", "/") + ";)L" + modelPlayerFriendlyName + ";";
+                InsnList inject = new InsnList();
                 for (AbstractInsnNode node : methodNode.instructions.toArray()) {
                     if (node.getOpcode() == Opcodes.RETURN) {
-                        InsnList inject = new InsnList();
-                        inject.add(new FieldInsnNode(Opcodes.ACC_PROTECTED, this.getMappingFor(RENDER_PLAYER), this.getMappingFor("mainModel").replaceAll("\\.", "/"), "L" + this.getMappingFor(MODEL_PLAYER).replaceAll("\\.", "/") + ";"));
-                        inject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", "constructModel", desc, false));
-                        methodNode.instructions.insertBefore(node, inject);
+                        inject.add(new VarInsnNode(Opcodes.ALOAD, 0));
+                        inject.add(new VarInsnNode(Opcodes.ALOAD, 0));
+                        inject.add(new FieldInsnNode(Opcodes.GETFIELD, renderPlayerFriendlyName, this.getMappingFor("mainModel"), "L" + modelPlayerFriendlyName + ";"));
+                        inject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", "assign", desc, false));
+                        inject.add(new FieldInsnNode(Opcodes.PUTFIELD, renderPlayerFriendlyName, this.getMappingFor("mainModel"), "L" + modelPlayerFriendlyName + ";"));
                     }
+                    inject.add(node);
                 }
+                methodNode.instructions.clear();
+                methodNode.instructions.add(inject);
             }
         }
         ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_MAXS);
