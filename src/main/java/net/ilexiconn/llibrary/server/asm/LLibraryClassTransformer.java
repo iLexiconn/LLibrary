@@ -108,11 +108,7 @@ public class LLibraryClassTransformer implements IClassTransformer {
                 if (setRotationAngles != null) {
                     for (List<AbstractInsnNode> assignment : rotateAngleAssignments) {
                         InsnList list = new InsnList();
-                        for (AbstractInsnNode node : assignment) {
-                            if (!(node instanceof LineNumberNode)) {
-                                list.add(node.clone(new HashMap<>()));
-                            }
-                        }
+                        assignment.stream().filter(node -> !(node instanceof LineNumberNode)).forEach(node -> list.add(node.clone(new HashMap<>())));
                         methodNode.instructions.insertBefore(setRotationAngles.getNext(), list);
                     }
                 }
