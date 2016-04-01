@@ -163,6 +163,18 @@ public class LLibraryClassTransformer implements IClassTransformer {
                 }
                 methodNode.instructions.clear();
                 methodNode.instructions.add(inject);
+            } else if (methodNode.name.equals("<init>")) {
+                String desc = "(L" + this.getMappingFor(MODEL_PLAYER).replaceAll("\\.", "/") + ";)V";
+                InsnList inject = new InsnList();
+                for (AbstractInsnNode node : methodNode.instructions.toArray()) {
+                    if (node.getOpcode() == Opcodes.RETURN) {
+                        inject.add(new VarInsnNode(Opcodes.ALOAD, 0));
+                        inject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", "constructModel", desc, false));
+                    }
+                    inject.add(node);
+                }
+                methodNode.instructions.clear();
+                methodNode.instructions.add(inject);
             }
         }
         ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_MAXS);
