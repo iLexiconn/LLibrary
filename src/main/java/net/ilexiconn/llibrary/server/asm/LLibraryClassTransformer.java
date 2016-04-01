@@ -152,7 +152,7 @@ public class LLibraryClassTransformer implements IClassTransformer {
                 }
                 methodNode.instructions.clear();
                 methodNode.instructions.add(inject);
-            } else if (methodNode.name.equals("<init>")) {
+            } else if (methodNode.name.equals("<init>") && methodNode.desc.equals("(FFII)V")) {
                 String desc = "(L" + this.getMappingFor(MODEL_BIPED).replaceAll("\\.", "/") + ";)V";
                 InsnList inject = new InsnList();
                 for (AbstractInsnNode node : methodNode.instructions.toArray()) {
