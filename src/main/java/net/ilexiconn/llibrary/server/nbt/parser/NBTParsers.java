@@ -493,7 +493,7 @@ public enum NBTParsers implements INBTParser {
         }
     };
 
-    public static <T> INBTParser<T> getBuiltinParser(Class<T> type) {
+    public static <V, T extends NBTBase> INBTParser<V, T> getBuiltinParser(Class<V> type) {
         if (Boolean.class.isAssignableFrom(type) || boolean.class.isAssignableFrom(type)) {
             return BOOLEAN;
         } else if (Byte.class.isAssignableFrom(type) || byte.class.isAssignableFrom(type)) {

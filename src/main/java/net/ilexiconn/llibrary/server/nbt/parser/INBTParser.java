@@ -6,8 +6,8 @@ import net.minecraft.nbt.NBTBase;
  * @author iLexiconn
  * @since 1.1.0
  */
-public interface INBTParser<T> {
-    T parseTag(NBTBase tag);
+public interface INBTParser<V, T extends NBTBase> {
+    V parseTag(T tag);
 
-    NBTBase parseValue(T value);
+    T parseValue(V value);
 }
