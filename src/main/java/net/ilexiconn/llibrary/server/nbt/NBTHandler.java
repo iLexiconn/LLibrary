@@ -19,9 +19,9 @@ import java.util.Map;
 public enum NBTHandler {
     INSTANCE;
 
-    private Map<Class<?>, INBTParser<?>> nbtParserMap = new HashMap<>();
+    private Map<Class<?>, INBTParser<?, ?>> nbtParserMap = new HashMap<>();
 
-    public <T> void registerNBTParser(Class<T> type, INBTParser<T> nbtParser) {
+    public <V, T extends NBTBase> void registerNBTParser(Class<V> type, INBTParser<V, T> nbtParser) {
         this.nbtParserMap.put(type, nbtParser);
     }
 
@@ -83,50 +83,50 @@ public enum NBTHandler {
         } while ((clazz = clazz.getSuperclass()) != null);
     }
 
-    public <T> INBTParser<T> getParserForType(Class<T> type) {
-        INBTParser<T> nbtParser = NBTParsers.getBuiltinParser(type);
+    public <V, T extends NBTBase> INBTParser<V, T> getParserForType(Class<V> type) {
+        INBTParser<V, T> nbtParser = NBTParsers.getBuiltinParser(type);
         if (nbtParser != null) {
             return nbtParser;
         } else if (this.nbtParserMap.containsKey(type)) {
-            return (INBTParser<T>) this.nbtParserMap.get(type);
+            return (INBTParser<V, T>) this.nbtParserMap.get(type);
         } else {
             return null;
         }
     }
 
-    private <T> NBTBase writeFieldToNBT(T object, Field field) {
-        T value;
+    private <V, T extends NBTBase> T writeFieldToNBT(V object, Field field) {
+        V value;
         try {
-            value = (T) field.get(object);
+            value = (V) field.get(object);
         } catch (Exception e) {
             LLibrary.LOGGER.fatal(CrashReport.makeCrashReport(e.getCause(), e.getCause().getLocalizedMessage()).getCompleteReport());
             return null;
         }
-        return this.writeToNBT((Class<T>) field.getType(), value);
+        return this.writeToNBT((Class<V>) field.getType(), value);
     }
 
-    private <T> NBTBase writeGetterValueToNBT(T object, Method getter) {
-        T value;
+    private <V, T extends NBTBase> T writeGetterValueToNBT(V object, Method getter) {
+        V value;
         try {
-            value = (T) getter.invoke(object);
+            value = (V) getter.invoke(object);
         } catch (Exception e) {
             LLibrary.LOGGER.fatal(CrashReport.makeCrashReport(e.getCause(), e.getCause().getLocalizedMessage()).getCompleteReport());
             return null;
         }
-        return this.writeToNBT((Class<T>) getter.getReturnType(), value);
+        return this.writeToNBT((Class<V>) getter.getReturnType(), value);
     }
 
-    private <T> NBTBase writeToNBT(Class<T> type, T value) {
+    private <V, T extends NBTBase> T writeToNBT(Class<V> type, V value) {
         if (value == null) {
             return null;
         }
-        INBTParser<T> nbtParser = this.getParserForType(type);
+        INBTParser<V, T> nbtParser = this.getParserForType(type);
         if (nbtParser != null) {
             return nbtParser.parseValue(value);
         } else {
             NBTTagCompound compound = new NBTTagCompound();
             this.saveNBTData(value, compound);
-            return compound;
+            return (T) compound;
         }
     }
 
@@ -156,8 +156,8 @@ public enum NBTHandler {
         }
     }
 
-    private <T> T readFromNBT(Class<T> type, NBTBase tag) {
-        INBTParser<T> nbtParser = this.getParserForType(type);
+    private <V, T extends NBTBase> V readFromNBT(Class<V> type, T tag) {
+        INBTParser<V, T> nbtParser = this.getParserForType(type);
         if (nbtParser != null) {
             return nbtParser.parseTag(tag);
         } else {
