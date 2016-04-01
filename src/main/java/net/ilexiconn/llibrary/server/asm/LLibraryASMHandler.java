@@ -37,4 +37,10 @@ public class LLibraryASMHandler {
     public static void renderModel(ModelPlayer model, Entity entity, float limbSwing, float limbSwingAmount, float rotation, float rotationYaw, float rotationPitch, float scale) {
         MinecraftForge.EVENT_BUS.post(new PlayerModelEvent.Render(model, (EntityPlayer) entity, limbSwing, limbSwingAmount, rotation, rotationYaw, rotationPitch, scale));
     }
+
+    public static ModelPlayer assign(RenderPlayer renderPlayer, ModelPlayer model, boolean smallArms) {
+        PlayerModelEvent.Assign event = new PlayerModelEvent.Assign(renderPlayer, model, smallArms);
+        MinecraftForge.EVENT_BUS.post(event);
+        return event.getModel();
+    }
 }

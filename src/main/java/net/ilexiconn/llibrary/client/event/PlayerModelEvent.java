@@ -1,6 +1,7 @@
 package net.ilexiconn.llibrary.client.event;
 
 import net.minecraft.client.model.ModelPlayer;
+import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.relauncher.Side;
@@ -14,13 +15,32 @@ public class PlayerModelEvent extends Event {
         this.model = model;
     }
 
-    public static class Construct extends PlayerModelEvent {
-        public Construct(ModelPlayer model) {
+    public static class Assign extends PlayerModelEvent {
+        protected RenderPlayer renderPlayer;
+        protected boolean smallArms;
+
+        public Assign(RenderPlayer renderPlayer, ModelPlayer model, boolean smallArms) {
             super(model);
+            this.renderPlayer = renderPlayer;
+            this.smallArms = smallArms;
+        }
+
+        public RenderPlayer getRenderPlayer() {
+            return this.renderPlayer;
         }
 
         public void setModel(ModelPlayer model) {
             this.model = model;
+        }
+
+        public boolean hasSmallArms() {
+            return smallArms;
+        }
+    }
+
+    public static class Construct extends PlayerModelEvent {
+        public Construct(ModelPlayer model) {
+            super(model);
         }
     }
 
