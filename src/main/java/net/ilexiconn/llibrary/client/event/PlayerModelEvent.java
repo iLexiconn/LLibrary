@@ -1,5 +1,6 @@
 package net.ilexiconn.llibrary.client.event;
 
+import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,10 +18,12 @@ public class PlayerModelEvent extends Event {
 
     public static class Assign extends PlayerModelEvent {
         protected RenderPlayer renderPlayer;
+        protected boolean smallArms;
 
-        public Assign(RenderPlayer renderPlayer, ModelPlayer model) {
+        public Assign(RenderPlayer renderPlayer, ModelPlayer model, boolean smallArms) {
             super(model);
             this.renderPlayer = renderPlayer;
+            this.smallArms = smallArms;
         }
 
         public RenderPlayer getRenderPlayer() {
@@ -29,6 +32,10 @@ public class PlayerModelEvent extends Event {
 
         public void setModel(ModelPlayer model) {
             this.model = model;
+        }
+
+        public boolean hasSmallArms() {
+            return smallArms;
         }
     }
 

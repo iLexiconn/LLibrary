@@ -1,13 +1,14 @@
 package net.ilexiconn.llibrary.test;
 
 import net.ilexiconn.llibrary.client.event.PlayerModelEvent;
+import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-@Mod(modid = "RenderEvenTest")
+@Mod(modid = "RenderEventTest")
 public class RenderEventTest {
     private ModelRenderer head;
 

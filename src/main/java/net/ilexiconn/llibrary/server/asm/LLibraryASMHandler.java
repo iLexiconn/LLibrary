@@ -3,7 +3,8 @@ package net.ilexiconn.llibrary.server.asm;
 import net.ilexiconn.llibrary.client.event.PlayerModelEvent;
 import net.ilexiconn.llibrary.client.event.RenderArmEvent;
 import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.model.ModelPlayer;
+import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.Entity;
@@ -39,8 +40,8 @@ public class LLibraryASMHandler {
         MinecraftForge.EVENT_BUS.post(new PlayerModelEvent.Render(model, (EntityPlayer) entity, limbSwing, limbSwingAmount, rotation, rotationYaw, rotationPitch, scale));
     }
 
-    public static ModelPlayer assign(RenderPlayer renderPlayer, ModelBase model) {
-        PlayerModelEvent.Assign event = new PlayerModelEvent.Assign(renderPlayer, (ModelPlayer) model);
+    public static ModelPlayer assign(RenderPlayer renderPlayer, ModelPlayer model, boolean smallArms) {
+        PlayerModelEvent.Assign event = new PlayerModelEvent.Assign(renderPlayer, model, smallArms);
         MinecraftForge.EVENT_BUS.post(event);
         return event.getModel();
     }

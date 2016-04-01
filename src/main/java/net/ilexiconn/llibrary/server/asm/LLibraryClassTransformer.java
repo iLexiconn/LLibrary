@@ -27,8 +27,10 @@ public class LLibraryClassTransformer implements IClassTransformer {
         this.mappings.put("render", "a");
         this.mappings.put("net/minecraft/client/entity/AbstractClientPlayer", "bmq");
         this.mappings.put("net/minecraft/entity/Entity", "rr");
-        this.mappings.put("mainModel", "g");
+        this.mappings.put("getMainModel", "b");
         this.mappings.put("net/minecraft/client/renderer/entity/RenderManager", "brm");
+        this.mappings.put("net/minecraft/client/model/ModelBase", "bjc");
+        this.mappings.put("mainModel", "g");
     }
 
     public String getMappingFor(String name) {
@@ -80,16 +82,22 @@ public class LLibraryClassTransformer implements IClassTransformer {
                 methodNode.instructions.clear();
                 methodNode.instructions.add(inject);
             } else if (methodNode.name.equals("<init>") && methodNode.desc.equals("(L" + this.getMappingFor("net/minecraft/client/renderer/entity/RenderManager;Z)V"))) {
-                String modelPlayerFriendlyName = getMappingFor(MODEL_PLAYER).replaceAll("\\.", "/");
-                String desc = "(L" + renderPlayerFriendlyName + ";L" + this.getMappingFor(MODEL_PLAYER).replaceAll("\\.", "/") + ";)L" + modelPlayerFriendlyName + ";";
+                String modelPlayerFriendlyName = this.getMappingFor(MODEL_PLAYER).replaceAll("\\.", "/");
+                String desc = "(L" + renderPlayerFriendlyName + ";L" + modelPlayerFriendlyName + ";Z)L" + modelPlayerFriendlyName + ";";
                 InsnList inject = new InsnList();
                 for (AbstractInsnNode node : methodNode.instructions.toArray()) {
                     if (node.getOpcode() == Opcodes.RETURN) {
                         inject.add(new VarInsnNode(Opcodes.ALOAD, 0));
+                        inject.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, renderPlayerFriendlyName, this.getMappingFor("getMainModel"), "()L" + modelPlayerFriendlyName + ";", false));
+                        inject.add(new VarInsnNode(Opcodes.ASTORE, 4));
                         inject.add(new VarInsnNode(Opcodes.ALOAD, 0));
-                        inject.add(new FieldInsnNode(Opcodes.GETFIELD, renderPlayerFriendlyName, this.getMappingFor("mainModel"), "L" + modelPlayerFriendlyName + ";"));
+                        inject.add(new VarInsnNode(Opcodes.ALOAD, 4));
+                        inject.add(new VarInsnNode(Opcodes.ILOAD, 2));
                         inject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", "assign", desc, false));
-                        inject.add(new FieldInsnNode(Opcodes.PUTFIELD, renderPlayerFriendlyName, this.getMappingFor("mainModel"), "L" + modelPlayerFriendlyName + ";"));
+                        inject.add(new VarInsnNode(Opcodes.ASTORE, 5));
+                        inject.add(new VarInsnNode(Opcodes.ALOAD, 0));
+                        inject.add(new VarInsnNode(Opcodes.ALOAD, 5));
+                        inject.add(new FieldInsnNode(Opcodes.PUTFIELD, renderPlayerFriendlyName, this.getMappingFor("mainModel"), "L" + this.getMappingFor("net/minecraft/client/model/ModelBase") + ";"));
                     }
                     inject.add(node);
                 }
