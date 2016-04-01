@@ -4,21 +4,14 @@ import net.minecraft.launchwrapper.IClassTransformer;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.FieldInsnNode;
-import org.objectweb.asm.tree.InsnList;
-import org.objectweb.asm.tree.InsnNode;
-import org.objectweb.asm.tree.JumpInsnNode;
-import org.objectweb.asm.tree.LabelNode;
-import org.objectweb.asm.tree.MethodInsnNode;
-import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.tree.VarInsnNode;
+import org.objectweb.asm.tree.*;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class LLibraryClassTransformer implements IClassTransformer {
@@ -72,24 +65,52 @@ public class LLibraryClassTransformer implements IClassTransformer {
                 String prefix = "render" + (leftArm ? "Left" : "Right") + "Arm";
                 String desc = "(L" + this.getMappingFor("net/minecraft/client/entity/AbstractClientPlayer") + ";L" + renderPlayerFriendlyName + ";)";
                 InsnList inject = new InsnList();
-                LabelNode label = new LabelNode();
-                inject.add(new VarInsnNode(Opcodes.ALOAD, 1));
-                inject.add(new VarInsnNode(Opcodes.ALOAD, 0));
-                inject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", prefix + "Pre", desc + "Z", false));
-                inject.add(new JumpInsnNode(Opcodes.IFEQ, label));
                 InsnNode returnNode = new InsnNode(Opcodes.RETURN);
-                inject.add(returnNode);
-                inject.add(label);
+                AbstractInsnNode setRotationAngles = null;
+                boolean next = false;
+                List<AbstractInsnNode> nodesForLabel = new ArrayList<>();
+                List<List<AbstractInsnNode>> rotateAngleAssignments = new ArrayList<>();
                 for (AbstractInsnNode node : methodNode.instructions.toArray()) {
                     if (node.getOpcode() == Opcodes.RETURN && node != returnNode) {
                         inject.add(new VarInsnNode(Opcodes.ALOAD, 1));
                         inject.add(new VarInsnNode(Opcodes.ALOAD, 0));
                         inject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", prefix + "Post", desc + "V", false));
+                    } else if (node.getOpcode() == Opcodes.INVOKEVIRTUAL && ((MethodInsnNode) node).desc.equals("(FFFFFFL" + this.getMappingFor("net/minecraft/entity/Entity") + ";)V")) {
+                        next = true;
+                        setRotationAngles = node;
+                    } else if (next) {
+                        LabelNode label = new LabelNode();
+                        inject.add(new VarInsnNode(Opcodes.ALOAD, 1));
+                        inject.add(new VarInsnNode(Opcodes.ALOAD, 0));
+                        inject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", prefix + "Pre", desc + "Z", false));
+                        inject.add(new JumpInsnNode(Opcodes.IFEQ, label));
+                        inject.add(returnNode);
+                        inject.add(label);
+                        next = false;
+                    }
+                    if (node instanceof LabelNode) {
+                        for (AbstractInsnNode nodeForLabel : nodesForLabel) {
+                            if (nodeForLabel.getOpcode() == Opcodes.PUTFIELD && ((FieldInsnNode) nodeForLabel).name.equals(this.getMappingFor("rotateAngleX"))) {
+                                rotateAngleAssignments.add(new ArrayList<>(nodesForLabel));
+                                inject.remove(nodeForLabel);
+                                break;
+                            }
+                        }
+                        nodesForLabel.clear();
+                    } else {
+                        nodesForLabel.add(node);
                     }
                     inject.add(node);
                 }
                 methodNode.instructions.clear();
                 methodNode.instructions.add(inject);
+                if (setRotationAngles != null) {
+                    for (List<AbstractInsnNode> assignment : rotateAngleAssignments) {
+                        InsnList list = new InsnList();
+                        assignment.stream().filter(node -> !(node instanceof LineNumberNode)).forEach(node -> list.add(node.clone(new HashMap<>())));
+                        methodNode.instructions.insertBefore(setRotationAngles.getNext(), list);
+                    }
+                }
             } else if (methodNode.name.equals("<init>") && methodNode.desc.equals("(L" + this.getMappingFor("net/minecraft/client/renderer/entity/RenderManager;Z)V"))) {
                 String modelPlayerFriendlyName = this.getMappingFor(MODEL_PLAYER).replaceAll("\\.", "/");
                 String desc = "(L" + renderPlayerFriendlyName + ";L" + modelPlayerFriendlyName + ";Z)L" + modelPlayerFriendlyName + ";";
