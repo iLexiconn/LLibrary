@@ -4,6 +4,7 @@ import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 
 @SideOnly(Side.CLIENT)
@@ -14,13 +15,26 @@ public class PlayerModelEvent extends Event {
         this.model = model;
     }
 
-    public static class Construct extends PlayerModelEvent {
-        public Construct(ModelBiped model) {
+    public static class Assign extends PlayerModelEvent {
+        protected RenderPlayer renderPlayer;
+
+        public Assign(RenderPlayer renderPlayer, ModelBiped model) {
             super(model);
+            this.renderPlayer = renderPlayer;
+        }
+
+        public RenderPlayer getRenderPlayer() {
+            return this.renderPlayer;
         }
 
         public void setModel(ModelBiped model) {
             this.model = model;
+        }
+    }
+
+    public static class Construct extends PlayerModelEvent {
+        public Construct(ModelBiped model) {
+            super(model);
         }
     }
 

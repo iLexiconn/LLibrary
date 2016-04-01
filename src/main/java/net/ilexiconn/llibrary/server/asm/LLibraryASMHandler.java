@@ -2,6 +2,7 @@ package net.ilexiconn.llibrary.server.asm;
 
 import net.ilexiconn.llibrary.client.event.PlayerModelEvent;
 import net.ilexiconn.llibrary.client.event.RenderArmEvent;
+import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.Entity;
@@ -31,5 +32,11 @@ public class LLibraryASMHandler {
         if (entity instanceof EntityPlayer) {
             MinecraftForge.EVENT_BUS.post(new PlayerModelEvent.Render(model, (EntityPlayer) entity, limbSwing, limbSwingAmount, rotation, rotationYaw, rotationPitch, scale));
         }
+    }
+
+    public static ModelBiped assign(RenderPlayer renderPlayer, ModelBase model) {
+        PlayerModelEvent.Assign event = new PlayerModelEvent.Assign(renderPlayer, (ModelBiped) model);
+        MinecraftForge.EVENT_BUS.post(event);
+        return event.getModel();
     }
 }
