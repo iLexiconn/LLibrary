@@ -11,11 +11,11 @@ import net.minecraftforge.common.MinecraftForge;
 
 public class LLibraryASMHandler {
     public static boolean renderArmPre(EntityPlayer player, RenderPlayer renderPlayer) {
-        return MinecraftForge.EVENT_BUS.post(new RenderArmEvent.Pre(player, renderPlayer));
+        return MinecraftForge.EVENT_BUS.post(new RenderArmEvent.Pre(player, renderPlayer, renderPlayer.modelBipedMain));
     }
 
     public static void renderArmPost(EntityPlayer player, RenderPlayer renderPlayer) {
-        MinecraftForge.EVENT_BUS.post(new RenderArmEvent.Post(player, renderPlayer));
+        MinecraftForge.EVENT_BUS.post(new RenderArmEvent.Post(player, renderPlayer, renderPlayer.modelBipedMain));
     }
 
     public static void setRotationAngles(ModelBiped model, Entity entity, float limbSwing, float limbSwingAmount, float rotation, float rotationYaw, float rotationPitch, float scale) {
