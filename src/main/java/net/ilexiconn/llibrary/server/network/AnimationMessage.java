@@ -4,7 +4,6 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
-import net.ilexiconn.llibrary.server.animation.Animation;
 import net.ilexiconn.llibrary.server.animation.IAnimatedEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,23 +11,23 @@ import net.minecraft.server.MinecraftServer;
 
 public class AnimationMessage extends AbstractMessage<AnimationMessage> {
     private int entityID;
-    private int animationID;
+    private int index;
 
     public AnimationMessage() {
 
     }
 
-    public AnimationMessage(int entityID, Animation animation) {
+    public AnimationMessage(int entityID, int index) {
         this.entityID = entityID;
-        this.animationID = animation.getID();
+        this.index = index;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public void onClientReceived(Minecraft client, AnimationMessage message, EntityPlayer player, MessageContext messageContext) {
         IAnimatedEntity entity = (IAnimatedEntity) player.worldObj.getEntityByID(message.entityID);
-        if (entity != null && message.animationID != 0) {
-            entity.setAnimation(entity.getAnimations()[message.animationID]);
+        if (entity != null) {
+            entity.setAnimation(entity.getAnimations()[message.index]);
             entity.setAnimationTick(0);
         }
     }
@@ -41,12 +40,12 @@ public class AnimationMessage extends AbstractMessage<AnimationMessage> {
     @Override
     public void fromBytes(ByteBuf byteBuf) {
         this.entityID = byteBuf.readInt();
-        this.animationID = byteBuf.readInt();
+        this.index = byteBuf.readInt();
     }
 
     @Override
     public void toBytes(ByteBuf byteBuf) {
         byteBuf.writeInt(this.entityID);
-        byteBuf.writeInt(this.animationID);
+        byteBuf.writeInt(this.index);
     }
 }

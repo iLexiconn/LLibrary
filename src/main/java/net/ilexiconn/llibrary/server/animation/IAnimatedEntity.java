@@ -6,9 +6,9 @@ package net.ilexiconn.llibrary.server.animation;
  */
 public interface IAnimatedEntity {
     /**
-     * An empty animation container. Always use this field as first value in the animation array.
+     * An empty animation container.
      */
-    Animation NO_ANIMATION = Animation.create(0, 0);
+    Animation NO_ANIMATION = Animation.create(0);
 
     /**
      * @return the current animation tick

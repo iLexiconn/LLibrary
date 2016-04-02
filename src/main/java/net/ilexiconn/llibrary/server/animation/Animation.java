@@ -5,11 +5,11 @@ package net.ilexiconn.llibrary.server.animation;
  * @since 1.0.0
  */
 public class Animation {
+    @Deprecated
     private int id;
     private int duration;
 
-    private Animation(int id, int duration) {
-        this.id = id;
+    private Animation(int duration) {
         this.duration = duration;
     }
 
@@ -17,22 +17,37 @@ public class Animation {
      * @param id       the animation id
      * @param duration the animation duration
      * @return an animation with the given id and duration
+     * @deprecated use {@link Animation#create(int)} instead.
      */
+    @Deprecated
     public static Animation create(int id, int duration) {
-        return new Animation(id, duration);
+        Animation animation = Animation.create(duration);
+        animation.id = id;
+        return animation;
+    }
+
+    /**
+     * @param duration the animation duration
+     * @return an animation with the given id and duration
+     * @since 1.1.0
+     */
+    public static Animation create(int duration) {
+        return new Animation(duration);
     }
 
     /**
      * @return the id of this animation
+     * @deprecated IDs aren't used anymore since 1.1.0.
      */
+    @Deprecated
     public int getID() {
-        return id;
+        return this.id;
     }
 
     /**
      * @return the duration of this animation
      */
     public int getDuration() {
-        return duration;
+        return this.duration;
     }
 }

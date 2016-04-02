@@ -66,7 +66,7 @@ public class AnimationTest {
         public void onUpdate() {
             super.onUpdate();
             AnimationHandler.INSTANCE.updateAnimations(this);
-            if (animation.getID() != TEST_ANIMATION.getID()) {
+            if (animation != TEST_ANIMATION) {
                 setAnimation(TEST_ANIMATION);
                 AnimationHandler.INSTANCE.sendAnimationMessage(this, TEST_ANIMATION);
             }
@@ -94,7 +94,7 @@ public class AnimationTest {
 
         @Override
         public Animation[] getAnimations() {
-            return new Animation[]{NO_ANIMATION, TEST_ANIMATION};
+            return new Animation[]{TEST_ANIMATION};
         }
     }
 
