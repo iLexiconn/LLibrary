@@ -45,13 +45,13 @@ public class PlayerModelEvent extends Event {
     }
 
     public static class Render extends PlayerModelEvent {
-        public final EntityPlayer entityPlayer;
-        public final float limbSwing;
-        public final float limbSwingAmount;
-        public final float rotation;
-        public final float rotationYaw;
-        public final float rotationPitch;
-        public final float scale;
+        private EntityPlayer entityPlayer;
+        private float limbSwing;
+        private float limbSwingAmount;
+        private float rotation;
+        private float rotationYaw;
+        private float rotationPitch;
+        private float scale;
 
         public Render(ModelBiped model, EntityPlayer player, float limbSwing, float limbSwingAmount, float rotation, float rotationYaw, float rotationPitch, float scale) {
             super(model);
@@ -62,6 +62,34 @@ public class PlayerModelEvent extends Event {
             this.rotationYaw = rotationYaw;
             this.rotationPitch = rotationPitch;
             this.scale = scale;
+        }
+
+        public EntityPlayer getEntityPlayer() {
+            return entityPlayer;
+        }
+
+        public float getLimbSwing() {
+            return limbSwing;
+        }
+
+        public float getLimbSwingAmount() {
+            return limbSwingAmount;
+        }
+
+        public float getRotation() {
+            return rotation;
+        }
+
+        public float getRotationYaw() {
+            return rotationYaw;
+        }
+
+        public float getRotationPitch() {
+            return rotationPitch;
+        }
+
+        public float getScale() {
+            return scale;
         }
     }
 
