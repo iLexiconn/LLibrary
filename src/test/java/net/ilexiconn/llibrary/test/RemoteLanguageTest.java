@@ -15,7 +15,7 @@ public class RemoteLanguageTest {
     }
 
     @SubscribeEvent
-    public void breakBlock(BlockEvent.BreakEvent event) {
+    public void onBreakBlock(BlockEvent.BreakEvent event) {
         System.out.println(StatCollector.translateToLocal("remote.break.name"));
     }
 }

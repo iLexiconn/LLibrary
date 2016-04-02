@@ -3,6 +3,8 @@ package net.ilexiconn.llibrary.client.lang;
 import com.google.gson.Gson;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.ilexiconn.llibrary.LLibrary;
 import net.minecraft.util.StringTranslate;
 import java.io.File;
@@ -15,13 +17,18 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author gegy1000
+ * @since 1.1.0
+ */
+@SideOnly(Side.CLIENT)
 public enum LanguageHandler {
     INSTANCE;
 
     private Map<String, Map<String, String>> localizations = new HashMap<>();
 
     public RemoteLanguageContainer loadRemoteLocalization(String modId) throws Exception {
-        InputStream in = LanguageHandler.class.getResourceAsStream("/assets/" + modId.toLowerCase() + "/remote_lang.json");
+        InputStream in = LanguageHandler.class.getResourceAsStream("/assets/" + modId.toLowerCase() + "/lang.json");
         if (in != null) {
             return new Gson().fromJson(new InputStreamReader(in), RemoteLanguageContainer.class);
         }
