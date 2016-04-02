@@ -91,7 +91,7 @@ public class ModUpdateGUI extends GuiScreen implements GuiYesNoCallback {
             this.drawScaledString(StatCollector.translateToLocal("gui.llibrary.updated.2"), i, j - 15, 0xFFFFFF, 1.0F);
         } else {
             this.modList.drawScreen(mouseX, mouseY, partialTicks);
-            int x = this.getModList().getWidth()  + 20;
+            int x = this.getModList().getWidth() + 20;
             int y = 35;
             for (String text : this.textList) {
                 y = drawLine(text, x, y);

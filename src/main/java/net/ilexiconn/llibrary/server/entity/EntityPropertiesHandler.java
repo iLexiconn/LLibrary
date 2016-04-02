@@ -25,8 +25,8 @@ public enum EntityPropertiesHandler {
      * Register a new properties class.
      *
      * @param propertiesClass the properties class
-     * @param <E> the entity type
-     * @param <T> the properties type
+     * @param <E>             the entity type
+     * @param <T>             the properties type
      */
     public <E extends Entity, T extends EntityProperties<E>> void registerProperties(Class<T> propertiesClass) {
         T properties;
@@ -53,9 +53,9 @@ public enum EntityPropertiesHandler {
     /**
      * Get the properties from a specific type for an entity.
      *
-     * @param entity the entity instance
+     * @param entity          the entity instance
      * @param propertiesClass the properties class
-     * @param <T> the properties type
+     * @param <T>             the properties type
      * @return the entity properties, null if they don't exist
      */
     public <T extends EntityProperties<?>> T getProperties(Entity entity, Class<T> propertiesClass) {
@@ -70,7 +70,7 @@ public enum EntityPropertiesHandler {
      *
      * @param player the player instance
      * @param entity the entity instance
-     * @param <T> the entity type
+     * @param <T>    the entity type
      */
     public <T extends Entity> void addTracker(EntityPlayerMP player, T entity) {
         List<String> entityProperties = this.entityPropertiesCache.get(entity.getClass());

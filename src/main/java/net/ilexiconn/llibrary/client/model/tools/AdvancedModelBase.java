@@ -112,7 +112,7 @@ public class AdvancedModelBase extends ModelBase {
     public void setMovementScale(float movementScale) {
         this.movementScale = movementScale;
     }
-    
+
     /**
      * @return the current movement scale
      */
@@ -123,7 +123,7 @@ public class AdvancedModelBase extends ModelBase {
     /**
      * Rotates this box back and forth (rotateAngleX). Useful for arms and legs.
      *
-     * @param box the box to animate
+     * @param box        the box to animate
      * @param speed      is how fast the animation runs
      * @param degree     is how far the box will rotate;
      * @param invert     will invert the rotation
@@ -139,7 +139,7 @@ public class AdvancedModelBase extends ModelBase {
     /**
      * Rotates this box up and down (rotateAngleZ). Useful for wing and ears.
      *
-     * @param box the box to animate
+     * @param box        the box to animate
      * @param speed      is how fast the animation runs
      * @param degree     is how far the box will rotate;
      * @param invert     will invert the rotation
@@ -155,7 +155,7 @@ public class AdvancedModelBase extends ModelBase {
     /**
      * Rotates this box side to side (rotateAngleY).
      *
-     * @param box the box to animate
+     * @param box         the box to animate
      * @param speed       is how fast the animation runs
      * @param degree      is how far the box will rotate;
      * @param invert      will invert the rotation
@@ -171,7 +171,7 @@ public class AdvancedModelBase extends ModelBase {
     /**
      * Moves this box up and down (rotationPointY). Useful for bodies.
      *
-     * @param box the box to animate
+     * @param box    the box to animate
      * @param speed  is how fast the animation runs;
      * @param degree is how far the box will move;
      * @param bounce will make the box bounce;
