@@ -1,6 +1,7 @@
 package net.ilexiconn.llibrary.server;
 
 import net.ilexiconn.llibrary.LLibrary;
+import net.ilexiconn.llibrary.client.lang.LanguageHandler;
 import net.ilexiconn.llibrary.server.capability.EntityDataCapabilityImplementation;
 import net.ilexiconn.llibrary.server.capability.EntityDataCapabilityStorage;
 import net.ilexiconn.llibrary.server.capability.IEntityDataCapability;
@@ -25,6 +26,8 @@ public class ServerProxy {
         LLibrary.NETWORK_WRAPPER.registerMessage(AnimationMessage.class, AnimationMessage.class, 0, Side.CLIENT);
         LLibrary.NETWORK_WRAPPER.registerMessage(SnackbarMessage.class, SnackbarMessage.class, 1, Side.CLIENT);
         LLibrary.NETWORK_WRAPPER.registerMessage(PropertiesMessage.class, PropertiesMessage.class, 2, Side.CLIENT);
+
+        LanguageHandler.INSTANCE.load();
     }
 
     public void onInit() {

@@ -1,8 +1,10 @@
 package net.ilexiconn.llibrary.test;
 
+import net.ilexiconn.llibrary.LLibrary;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -24,7 +26,7 @@ public class BakedTabulaTest {
 
     public static class ServerProxy {
         public void onPreInit() {
-            GameRegistry.registerItem(BakedTabulaTest.ITEM = new Item().setUnlocalizedName("tabula_baked_item").setCreativeTab(CreativeTabs.tabMisc), "tabula_baked_item");
+            GameRegistry.register(BakedTabulaTest.ITEM = new Item().setUnlocalizedName("tabula_baked_item").setCreativeTab(CreativeTabs.tabMisc), new ResourceLocation("BakedTabulaTest", "tabula_baked_item"));
         }
     }
 
