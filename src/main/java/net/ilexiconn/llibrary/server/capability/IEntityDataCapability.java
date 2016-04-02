@@ -13,8 +13,8 @@ public interface IEntityDataCapability {
      * Initialize this data handler.
      *
      * @param entity the new entity
-     * @param world the new world
-     * @param init true if all managers should be initialized
+     * @param world  the new world
+     * @param init   true if all managers should be initialized
      */
     void init(Entity entity, World world, boolean init);
 

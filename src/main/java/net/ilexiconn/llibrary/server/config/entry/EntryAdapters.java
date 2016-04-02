@@ -47,7 +47,8 @@ public enum EntryAdapters implements IEntryAdapter {
             double minDouble = entry.minValue().isEmpty() ? Double.MIN_VALUE : Double.parseDouble(entry.minValue());
             double maxDouble = entry.maxValue().isEmpty() ? Double.MAX_VALUE : Double.parseDouble(entry.maxValue());
             Property property = config.get(entry.category(), name, Double.toString((double) defaultValue), name);
-            property.setComment(entry.comment() + " [range: " + minDouble + " ~ " + maxDouble + ", default: " + defaultValue + "]");;
+            property.setComment(entry.comment() + " [range: " + minDouble + " ~ " + maxDouble + ", default: " + defaultValue + "]");
+            ;
             property.setMinValue(minDouble);
             property.setMaxValue(maxDouble);
             try {

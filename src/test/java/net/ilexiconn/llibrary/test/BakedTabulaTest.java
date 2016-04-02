@@ -1,6 +1,5 @@
 package net.ilexiconn.llibrary.test;
 
-import net.ilexiconn.llibrary.LLibrary;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;

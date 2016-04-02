@@ -13,7 +13,7 @@ public interface IEntityData<T extends Entity> {
      * Initialize this data handler.
      *
      * @param entity the new entity
-     * @param world the new world
+     * @param world  the new world
      */
     void init(T entity, World world);
 

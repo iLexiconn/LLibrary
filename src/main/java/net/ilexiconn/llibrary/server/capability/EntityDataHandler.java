@@ -52,7 +52,7 @@ public enum EntityDataHandler {
      * Get a list with all the registered data manager for the specified entity
      *
      * @param entity the entity instance
-     * @param <T> the entity type
+     * @param <T>    the entity type
      * @return a list with all the data managers, never null
      */
     public <T extends Entity> List<IEntityData<T>> getEntityData(T entity) {
