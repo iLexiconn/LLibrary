@@ -40,6 +40,13 @@ public class LLibraryClassTransformer implements IClassTransformer {
         this.mappings.put("net/minecraft/client/renderer/entity/RenderManager", "biu");
         this.mappings.put("net/minecraft/client/model/ModelBase", "bbo");
         this.mappings.put("mainModel", "f");
+        this.mappings.put("net/minecraft/client/model/ModelBiped", "bbj");
+        this.mappings.put("bipedRightArm", "h");
+        this.mappings.put("bipedLeftArm", "i");
+        this.mappings.put("bipedRightArmwear", "b");
+        this.mappings.put("bipedLeftArmwear", "a");
+        this.mappings.put("net/minecraft/client/model/ModelRenderer", "bct");
+        this.mappings.put("rotateAngleX", "f");
     }
 
     public String getMappingFor(String name) {
@@ -80,16 +87,31 @@ public class LLibraryClassTransformer implements IClassTransformer {
                 InsnNode returnNode = new InsnNode(Opcodes.RETURN);
                 inject.add(returnNode);
                 inject.add(label);
+                AbstractInsnNode setRotationAngles = null;
                 for (AbstractInsnNode node : methodNode.instructions.toArray()) {
                     if (node.getOpcode() == Opcodes.RETURN && node != returnNode) {
                         inject.add(new VarInsnNode(Opcodes.ALOAD, 1));
                         inject.add(new VarInsnNode(Opcodes.ALOAD, 0));
                         inject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", prefix + "Post", desc + "V", false));
+                    } else if (node.getOpcode() == Opcodes.INVOKEVIRTUAL && ((MethodInsnNode) node).desc.equals("(FFFFFFL" + this.getMappingFor("net/minecraft/entity/Entity") + ";)V")) {
+                        setRotationAngles = node;
                     }
                     inject.add(node);
                 }
                 methodNode.instructions.clear();
                 methodNode.instructions.add(inject);
+                if (setRotationAngles != null) {
+                    InsnList resetAngleList = new InsnList();
+                    resetAngleList.add(new VarInsnNode(Opcodes.ALOAD, 3));
+                    resetAngleList.add(new FieldInsnNode(Opcodes.GETFIELD, this.getMappingFor("net/minecraft/client/model/ModelBiped"), this.getMappingFor("biped" + (leftArm ? "Left" : "Right") + "Arm"), "L" + this.getMappingFor("net/minecraft/client/model/ModelRenderer") + ";"));
+                    resetAngleList.add(new InsnNode(Opcodes.FCONST_0));
+                    resetAngleList.add(new FieldInsnNode(Opcodes.PUTFIELD, this.getMappingFor("net/minecraft/client/model/ModelRenderer"), this.getMappingFor("rotateAngleX"), "F"));
+                    resetAngleList.add(new VarInsnNode(Opcodes.ALOAD, 3));
+                    resetAngleList.add(new FieldInsnNode(Opcodes.GETFIELD, this.getMappingFor(MODEL_PLAYER).replaceAll("\\.", "/"), this.getMappingFor("biped" + (leftArm ? "Left" : "Right") + "Armwear"), "L" + this.getMappingFor("net/minecraft/client/model/ModelRenderer") + ";"));
+                    resetAngleList.add(new InsnNode(Opcodes.FCONST_0));
+                    resetAngleList.add(new FieldInsnNode(Opcodes.PUTFIELD, this.getMappingFor("net/minecraft/client/model/ModelRenderer"), this.getMappingFor("rotateAngleX"), "F"));
+                    methodNode.instructions.insertBefore(setRotationAngles.getNext(), resetAngleList);
+                }
             } else if (methodNode.name.equals("<init>") && methodNode.desc.equals("(L" + this.getMappingFor("net/minecraft/client/renderer/entity/RenderManager;Z)V"))) {
                 String modelPlayerFriendlyName = this.getMappingFor(MODEL_PLAYER).replaceAll("\\.", "/");
                 String desc = "(L" + renderPlayerFriendlyName + ";L" + modelPlayerFriendlyName + ";Z)L" + modelPlayerFriendlyName + ";";
@@ -114,7 +136,7 @@ public class LLibraryClassTransformer implements IClassTransformer {
                 methodNode.instructions.add(inject);
             }
         }
-        ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_MAXS);
+        ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
         classNode.accept(cw);
         saveBytecode(name, cw);
         return cw.toByteArray();

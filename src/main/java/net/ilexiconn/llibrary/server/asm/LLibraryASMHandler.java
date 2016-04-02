@@ -11,19 +11,19 @@ import net.minecraftforge.common.MinecraftForge;
 
 public class LLibraryASMHandler {
     public static boolean renderLeftArmPre(AbstractClientPlayer player, RenderPlayer renderPlayer) {
-        return MinecraftForge.EVENT_BUS.post(new RenderArmEvent.Left.Pre(player, renderPlayer));
+        return MinecraftForge.EVENT_BUS.post(new RenderArmEvent.Left.Pre(player, renderPlayer, renderPlayer.getMainModel()));
     }
 
     public static void renderLeftArmPost(AbstractClientPlayer player, RenderPlayer renderPlayer) {
-        MinecraftForge.EVENT_BUS.post(new RenderArmEvent.Left.Post(player, renderPlayer));
+        MinecraftForge.EVENT_BUS.post(new RenderArmEvent.Left.Post(player, renderPlayer, renderPlayer.getMainModel()));
     }
 
     public static boolean renderRightArmPre(AbstractClientPlayer player, RenderPlayer renderPlayer) {
-        return MinecraftForge.EVENT_BUS.post(new RenderArmEvent.Right.Pre(player, renderPlayer));
+        return MinecraftForge.EVENT_BUS.post(new RenderArmEvent.Right.Pre(player, renderPlayer, renderPlayer.getMainModel()));
     }
 
     public static void renderRightArmPost(AbstractClientPlayer player, RenderPlayer renderPlayer) {
-        MinecraftForge.EVENT_BUS.post(new RenderArmEvent.Right.Post(player, renderPlayer));
+        MinecraftForge.EVENT_BUS.post(new RenderArmEvent.Right.Post(player, renderPlayer, renderPlayer.getMainModel()));
     }
 
     public static void setRotationAngles(ModelPlayer model, Entity entity, float limbSwing, float limbSwingAmount, float rotation, float rotationYaw, float rotationPitch, float scale) {
