@@ -1,7 +1,7 @@
 package net.ilexiconn.llibrary.test;
 
 import net.ilexiconn.llibrary.client.event.PlayerModelEvent;
-import net.minecraft.client.model.ModelPlayer;
+import net.ilexiconn.llibrary.client.event.RenderArmEvent;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
@@ -26,12 +26,18 @@ public class RenderEventTest {
 
     @SubscribeEvent
     public void onPlayerModelRender(PlayerModelEvent.Render event) {
-        this.head.render(event.scale);
+        this.head.render(event.getScale());
     }
 
     @SubscribeEvent
     public void onSetRotationAngles(PlayerModelEvent.SetRotationAngles event) {
         event.getModel().bipedRightArm.rotateAngleX = (float) Math.toRadians(180.0F);
         event.getModel().bipedRightArmwear.rotateAngleX = (float) Math.toRadians(180.0F);
+    }
+
+    @SubscribeEvent
+    public void onRenderRightArmPre(RenderArmEvent.Right.Pre event) {
+        event.getRenderPlayer().getMainModel().bipedRightArm.rotateAngleZ = (float) Math.toRadians(20.0F);
+        event.getRenderPlayer().getMainModel().bipedRightArmwear.rotateAngleZ = (float) Math.toRadians(20.0F);
     }
 }
