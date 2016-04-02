@@ -27,6 +27,7 @@ public class ChainBuffer {
 
     /**
      * Calculates the swing amounts for the given entity (Y axis)
+     *
      * @param maxAngle       the furthest this ChainBuffer can swing
      * @param bufferTime     the time it takes to swing this buffer in ticks
      * @param angleDecrement the angle to decrement by for each model piece
@@ -62,6 +63,7 @@ public class ChainBuffer {
 
     /**
      * Calculates the wave amounts for the given entity (X axis)
+     *
      * @param maxAngle       the furthest this ChainBuffer can wave
      * @param bufferTime     the time it takes to wave this buffer in ticks
      * @param angleDecrement the angle to decrement by for each model piece
@@ -97,6 +99,7 @@ public class ChainBuffer {
 
     /**
      * Calculates the swing amounts for the given entity (Y axis)
+     *
      * @param maxAngle       the furthest this ChainBuffer can swing
      * @param bufferTime     the time it takes to swing this buffer in ticks
      * @param angleDecrement the angle to decrement by for each model piece
@@ -108,6 +111,7 @@ public class ChainBuffer {
 
     /**
      * Calculates the wave amounts for the given entity (X axis)
+     *
      * @param maxAngle       the furthest this ChainBuffer can wave
      * @param bufferTime     the time it takes to wave this buffer in ticks
      * @param angleDecrement the angle to decrement by for each model piece

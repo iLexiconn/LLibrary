@@ -1,3 +1,12 @@
 {
-	"languages": [ { "locale": "en_US", "downloadURL": "http://pastebin.com/raw/Gzsq9RZb" }, { "locale": "af_ZA", "downloadURL": "http://pastebin.com/raw/DEpbhZ1V" } ]
+  "languages": [
+    {
+      "locale": "en_US",
+      "downloadURL": "http://pastebin.com/raw/Gzsq9RZb"
+    },
+    {
+      "locale": "af_ZA",
+      "downloadURL": "http://pastebin.com/raw/DEpbhZ1V"
+    }
+  ]
 }

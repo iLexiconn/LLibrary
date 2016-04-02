@@ -97,7 +97,7 @@ public class AdvancedModelBase extends ModelBase {
             boxes[index].rotateAngleZ += calculateChainRotation(speed, degree, swing, swingAmount, offset, index);
         }
     }
-    
+
     private float calculateChainRotation(float speed, float degree, float swing, float swingAmount, float offset, int boxIndex) {
         return MathHelper.cos(swing * (speed * movementScale) + offset * boxIndex) * swingAmount * (degree * movementScale);
     }
@@ -123,7 +123,7 @@ public class AdvancedModelBase extends ModelBase {
     /**
      * Rotates this box back and forth (rotateAngleX). Useful for arms and legs.
      *
-     * @param box the box to animate
+     * @param box        the box to animate
      * @param speed      is how fast the animation runs
      * @param degree     is how far the box will rotate;
      * @param invert     will invert the rotation
@@ -139,7 +139,7 @@ public class AdvancedModelBase extends ModelBase {
     /**
      * Rotates this box up and down (rotateAngleZ). Useful for wing and ears.
      *
-     * @param box the box to animate
+     * @param box        the box to animate
      * @param speed      is how fast the animation runs
      * @param degree     is how far the box will rotate;
      * @param invert     will invert the rotation
@@ -155,7 +155,7 @@ public class AdvancedModelBase extends ModelBase {
     /**
      * Rotates this box side to side (rotateAngleY).
      *
-     * @param box the box to animate
+     * @param box         the box to animate
      * @param speed       is how fast the animation runs
      * @param degree      is how far the box will rotate;
      * @param invert      will invert the rotation
@@ -171,7 +171,7 @@ public class AdvancedModelBase extends ModelBase {
     /**
      * Moves this box up and down (rotationPointY). Useful for bodies.
      *
-     * @param box the box to animate
+     * @param box    the box to animate
      * @param speed  is how fast the animation runs;
      * @param degree is how far the box will move;
      * @param bounce will make the box bounce;

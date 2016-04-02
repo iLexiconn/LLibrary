@@ -13,7 +13,7 @@ public class LLibraryPlugin implements IFMLLoadingPlugin, IFMLCallHook {
 
     @Override
     public String[] getASMTransformerClass() {
-        return new String[] { LLibraryClassTransformer.class.getName() };
+        return new String[]{LLibraryClassTransformer.class.getName()};
     }
 
     @Override
