@@ -56,8 +56,8 @@ public enum ClientEventHandler {
 
                 Rectangle rectangle = new Rectangle(buttonX, buttonY, 20, 20);
                 boolean intersects = false;
-                for (int i = 0; i < event.getGui().buttonList.size(); i++) {
-                    GuiButton button = event.getGui().buttonList.get(i);
+                for (int i = 0; i < event.getButtonList().size(); i++) {
+                    GuiButton button = event.getButtonList().get(i);
                     if (!intersects) {
                         intersects = rectangle.intersects(new Rectangle(button.xPosition, button.yPosition, button.width, button.height));
                     }
@@ -70,7 +70,7 @@ public enum ClientEventHandler {
                 buttonX -= 24;
             }
 
-            event.getGui().buttonList.add(new GuiButton(ClientProxy.UPDATE_BUTTON_ID, buttonX, buttonY, 20, 20, "U"));
+            event.getButtonList().add(new GuiButton(ClientProxy.UPDATE_BUTTON_ID, buttonX, buttonY, 20, 20, "U"));
 
             if (!this.checkedForUpdates && !UpdateHandler.INSTANCE.getOutdatedModList().isEmpty()) {
                 this.checkedForUpdates = true;

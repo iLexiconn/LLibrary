@@ -57,17 +57,13 @@ processResources {
 
 jar {
     manifest {
-        attributes "FMLAT": "llibrary_at.cfg"
-		attributes 'FMLCorePlugin': 'net.ilexiconn.llibrary.server.asm.LLibraryPlugin', 'FMLCorePluginContainsFMLMod': 'false'
+        attributes "FMLCorePlugin": "net.ilexiconn.llibrary.server.asm.LLibraryPlugin"
     }
 }
 
 task devJar(type: Jar) {
     classifier = "dev"
     from sourceSets.main.output
-    manifest {
-        attributes "FMLAT": "llibrary_at.cfg"
-    }
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
