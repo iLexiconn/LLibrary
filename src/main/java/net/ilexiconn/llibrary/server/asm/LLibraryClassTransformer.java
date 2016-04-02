@@ -24,12 +24,14 @@ import java.util.Map;
 public class LLibraryClassTransformer implements IClassTransformer {
     private static final String RENDER_PLAYER = "net.minecraft.client.renderer.entity.RenderPlayer";
     private static final String MODEL_PLAYER = "net.minecraft.client.model.ModelPlayer";
+    private static final String LOCALE = "net.minecraft.client.resources.Locale";
 
     private Map<String, String> mappings = new HashMap<>();
 
     public LLibraryClassTransformer() {
         this.mappings.put(RENDER_PLAYER, "bln");
         this.mappings.put(MODEL_PLAYER, "bjf");
+        this.mappings.put(LOCALE, "bnt");
         this.mappings.put("renderLeftArm", "c");
         this.mappings.put("renderRightArm", "b");
         this.mappings.put("setRotationAngles", "a");
@@ -47,6 +49,9 @@ public class LLibraryClassTransformer implements IClassTransformer {
         this.mappings.put("bipedLeftArmwear", "a");
         this.mappings.put("net/minecraft/client/model/ModelRenderer", "bct");
         this.mappings.put("rotateAngleX", "f");
+        this.mappings.put("net/minecraft/client/resources/IResourceManager", "bni");
+        this.mappings.put("loadLocaleDataFiles", "a");
+        this.mappings.put("properties", "a");
     }
 
     public String getMappingFor(String name) {
@@ -63,8 +68,35 @@ public class LLibraryClassTransformer implements IClassTransformer {
             return transformRenderPlayer(bytes, name);
         } else if (name.equals(this.getMappingFor(MODEL_PLAYER))) {
             return transformModelPlayer(bytes, name);
+        } else if (name.equals(this.getMappingFor(LOCALE))) {
+            return transformLocale(bytes, name);
         }
         return bytes;
+    }
+
+    private byte[] transformLocale(byte[] bytes, String name) {
+        ClassReader cr = new ClassReader(bytes);
+        ClassNode classNode = new ClassNode();
+        cr.accept(classNode, 0);
+        for (MethodNode methodNode : classNode.methods) {
+            if (methodNode.name.equals(this.getMappingFor("loadLocaleDataFiles")) && methodNode.desc.equals("(L" + this.getMappingFor("net/minecraft/client/resources/IResourceManager") + ";Ljava/util/List;)V")) {
+                for (AbstractInsnNode node : methodNode.instructions.toArray()) {
+                    if (node.getOpcode() == Opcodes.INVOKESTATIC && ((MethodInsnNode) node).name.equals("format")) {
+                        InsnList insert = new InsnList();
+                        insert.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/ilexiconn/llibrary/client/lang/LanguageHandler", "INSTANCE", "Lnet/ilexiconn/llibrary/client/lang/LanguageHandler;"));
+                        insert.add(new VarInsnNode(Opcodes.ALOAD, 4));
+                        insert.add(new VarInsnNode(Opcodes.ALOAD, 0));
+                        insert.add(new FieldInsnNode(Opcodes.GETFIELD, this.getMappingFor(LOCALE).replaceAll("\\.", "/"), this.getMappingFor("properties"), "Ljava/util/Map;"));
+                        insert.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "net/ilexiconn/llibrary/client/lang/LanguageHandler", "addRemoteLocalizations", "(Ljava/lang/String;Ljava/util/Map;)V", false));
+                        methodNode.instructions.insertBefore(node, insert);
+                    }
+                }
+            }
+        }
+        ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_MAXS);
+        classNode.accept(cw);
+        saveBytecode(name, cw);
+        return cw.toByteArray();
     }
 
     private byte[] transformRenderPlayer(byte[] bytes, String name) {
@@ -207,7 +239,7 @@ public class LLibraryClassTransformer implements IClassTransformer {
 
     private void saveBytecode(String name, ClassWriter cw) {
         try {
-            File debugDir = new File("debug/");
+            File debugDir = new File("llibrary/debug/");
             debugDir.mkdirs();
             FileOutputStream out = new FileOutputStream(new File(debugDir, name + ".class"));
             out.write(cw.toByteArray());
