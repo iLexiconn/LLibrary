@@ -34,6 +34,7 @@ public class LLibraryClassTransformer implements IClassTransformer {
         this.mappings.put("net/minecraft/client/model/ModelBase", "bjc");
         this.mappings.put("mainModel", "g");
         this.mappings.put("rotateAngleX", "f");
+        this.mappings.put("enableBlend", "m");
     }
 
     public String getMappingFor(String name) {
@@ -68,9 +69,11 @@ public class LLibraryClassTransformer implements IClassTransformer {
                 InsnList inject = new InsnList();
                 InsnNode returnNode = new InsnNode(Opcodes.RETURN);
                 AbstractInsnNode setRotationAngles = null;
+                LabelNode label = null;
                 boolean next = false;
                 List<AbstractInsnNode> nodesForLabel = new ArrayList<>();
                 List<List<AbstractInsnNode>> rotateAngleAssignments = new ArrayList<>();
+                InsnList enableBlend = new InsnList();
                 for (AbstractInsnNode node : methodNode.instructions.toArray()) {
                     if (node.getOpcode() == Opcodes.RETURN && node != returnNode) {
                         inject.add(new VarInsnNode(Opcodes.ALOAD, 1));
@@ -80,7 +83,7 @@ public class LLibraryClassTransformer implements IClassTransformer {
                         next = true;
                         setRotationAngles = node;
                     } else if (next) {
-                        LabelNode label = new LabelNode();
+                        label = new LabelNode();
                         inject.add(new VarInsnNode(Opcodes.ALOAD, 1));
                         inject.add(new VarInsnNode(Opcodes.ALOAD, 0));
                         inject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", prefix + "Pre", desc + "Z", false));
@@ -95,6 +98,13 @@ public class LLibraryClassTransformer implements IClassTransformer {
                                 rotateAngleAssignments.add(new ArrayList<>(nodesForLabel));
                                 inject.remove(nodeForLabel);
                                 break;
+                            } else if (nodeForLabel.getOpcode() == Opcodes.INVOKESTATIC && ((MethodInsnNode) nodeForLabel).name.equals(this.getMappingFor("enableBlend"))) {
+                                for (AbstractInsnNode nodeForLabelC : nodesForLabel) {
+                                    if (!(nodeForLabelC instanceof LineNumberNode)) {
+                                        enableBlend.add(nodeForLabelC.clone(new HashMap<>()));
+                                    }
+                                    inject.remove(nodeForLabelC);
+                                }
                             }
                         }
                         nodesForLabel.clear();
@@ -105,7 +115,8 @@ public class LLibraryClassTransformer implements IClassTransformer {
                 }
                 methodNode.instructions.clear();
                 methodNode.instructions.add(inject);
-                if (setRotationAngles != null) {
+                if (setRotationAngles != null && label != null) {
+                    methodNode.instructions.insertBefore(label.getNext(), enableBlend);
                     for (List<AbstractInsnNode> assignment : rotateAngleAssignments) {
                         InsnList list = new InsnList();
                         for (AbstractInsnNode node : assignment) {
