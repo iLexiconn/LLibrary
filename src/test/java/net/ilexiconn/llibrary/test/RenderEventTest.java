@@ -25,7 +25,7 @@ public class RenderEventTest {
 
     @SubscribeEvent
     public void onPlayerModelRender(PlayerModelEvent.Render event) {
-        this.head.render(event.scale);
+        this.head.render(event.getScale());
     }
 
     @SubscribeEvent
