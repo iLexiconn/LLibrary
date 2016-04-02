@@ -80,13 +80,7 @@ public class LLibraryClassTransformer implements IClassTransformer {
                 String desc = "(L" + this.getMappingFor("net/minecraft/client/entity/AbstractClientPlayer") + ";L" + renderPlayerFriendlyName + ";)";
                 InsnList inject = new InsnList();
                 LabelNode label = new LabelNode();
-                inject.add(new VarInsnNode(Opcodes.ALOAD, 1));
-                inject.add(new VarInsnNode(Opcodes.ALOAD, 0));
-                inject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", prefix + "Pre", desc + "Z", false));
-                inject.add(new JumpInsnNode(Opcodes.IFEQ, label));
                 InsnNode returnNode = new InsnNode(Opcodes.RETURN);
-                inject.add(returnNode);
-                inject.add(label);
                 AbstractInsnNode setRotationAngles = null;
                 for (AbstractInsnNode node : methodNode.instructions.toArray()) {
                     if (node.getOpcode() == Opcodes.RETURN && node != returnNode) {
@@ -101,16 +95,22 @@ public class LLibraryClassTransformer implements IClassTransformer {
                 methodNode.instructions.clear();
                 methodNode.instructions.add(inject);
                 if (setRotationAngles != null) {
-                    InsnList resetAngleList = new InsnList();
-                    resetAngleList.add(new VarInsnNode(Opcodes.ALOAD, 3));
-                    resetAngleList.add(new FieldInsnNode(Opcodes.GETFIELD, this.getMappingFor("net/minecraft/client/model/ModelBiped"), this.getMappingFor("biped" + (leftArm ? "Left" : "Right") + "Arm"), "L" + this.getMappingFor("net/minecraft/client/model/ModelRenderer") + ";"));
-                    resetAngleList.add(new InsnNode(Opcodes.FCONST_0));
-                    resetAngleList.add(new FieldInsnNode(Opcodes.PUTFIELD, this.getMappingFor("net/minecraft/client/model/ModelRenderer"), this.getMappingFor("rotateAngleX"), "F"));
-                    resetAngleList.add(new VarInsnNode(Opcodes.ALOAD, 3));
-                    resetAngleList.add(new FieldInsnNode(Opcodes.GETFIELD, this.getMappingFor(MODEL_PLAYER).replaceAll("\\.", "/"), this.getMappingFor("biped" + (leftArm ? "Left" : "Right") + "Armwear"), "L" + this.getMappingFor("net/minecraft/client/model/ModelRenderer") + ";"));
-                    resetAngleList.add(new InsnNode(Opcodes.FCONST_0));
-                    resetAngleList.add(new FieldInsnNode(Opcodes.PUTFIELD, this.getMappingFor("net/minecraft/client/model/ModelRenderer"), this.getMappingFor("rotateAngleX"), "F"));
-                    methodNode.instructions.insertBefore(setRotationAngles.getNext(), resetAngleList);
+                    InsnList insert = new InsnList();
+                    insert.add(new VarInsnNode(Opcodes.ALOAD, 3));
+                    insert.add(new FieldInsnNode(Opcodes.GETFIELD, this.getMappingFor("net/minecraft/client/model/ModelBiped"), this.getMappingFor("biped" + (leftArm ? "Left" : "Right") + "Arm"), "L" + this.getMappingFor("net/minecraft/client/model/ModelRenderer") + ";"));
+                    insert.add(new InsnNode(Opcodes.FCONST_0));
+                    insert.add(new FieldInsnNode(Opcodes.PUTFIELD, this.getMappingFor("net/minecraft/client/model/ModelRenderer"), this.getMappingFor("rotateAngleX"), "F"));
+                    insert.add(new VarInsnNode(Opcodes.ALOAD, 3));
+                    insert.add(new FieldInsnNode(Opcodes.GETFIELD, this.getMappingFor(MODEL_PLAYER).replaceAll("\\.", "/"), this.getMappingFor("biped" + (leftArm ? "Left" : "Right") + "Armwear"), "L" + this.getMappingFor("net/minecraft/client/model/ModelRenderer") + ";"));
+                    insert.add(new InsnNode(Opcodes.FCONST_0));
+                    insert.add(new FieldInsnNode(Opcodes.PUTFIELD, this.getMappingFor("net/minecraft/client/model/ModelRenderer"), this.getMappingFor("rotateAngleX"), "F"));
+                    insert.add(new VarInsnNode(Opcodes.ALOAD, 1));
+                    insert.add(new VarInsnNode(Opcodes.ALOAD, 0));
+                    insert.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", prefix + "Pre", desc + "Z", false));
+                    insert.add(new JumpInsnNode(Opcodes.IFEQ, label));
+                    insert.add(returnNode);
+                    insert.add(label);
+                    methodNode.instructions.insertBefore(setRotationAngles.getNext(), insert);
                 }
             } else if (methodNode.name.equals("<init>") && methodNode.desc.equals("(L" + this.getMappingFor("net/minecraft/client/renderer/entity/RenderManager;Z)V"))) {
                 String modelPlayerFriendlyName = this.getMappingFor(MODEL_PLAYER).replaceAll("\\.", "/");
