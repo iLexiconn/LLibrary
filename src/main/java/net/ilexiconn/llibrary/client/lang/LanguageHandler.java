@@ -5,6 +5,8 @@ import net.ilexiconn.llibrary.LLibrary;
 import net.minecraft.util.text.translation.LanguageMap;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,13 +18,18 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author gegy1000
+ * @since 1.1.0
+ */
+@SideOnly(Side.CLIENT)
 public enum LanguageHandler {
     INSTANCE;
 
     private Map<String, Map<String, String>> localizations = new HashMap<>();
 
     public RemoteLanguageContainer loadRemoteLocalization(String modId) throws Exception {
-        InputStream in = LanguageHandler.class.getResourceAsStream("/assets/" + modId.toLowerCase() + "/remote_lang.json");
+        InputStream in = LanguageHandler.class.getResourceAsStream("/assets/" + modId.toLowerCase() + "/lang.json");
         if (in != null) {
             return new Gson().fromJson(new InputStreamReader(in), RemoteLanguageContainer.class);
         }
