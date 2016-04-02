@@ -9,8 +9,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.*;
@@ -104,7 +104,7 @@ public class StructureBuilder extends StructureGenerator {
                 IBlockState[] states = newList.getStates();
                 for (int i = 0; i < states.length; i++) {
                     IBlockState state = states[i];
-                    Collection<IProperty<?>> properties = state.getPropertyNames();
+                    Collection<IProperty> properties = state.getPropertyNames();
                     for (IProperty prop : properties) {
                         if (prop instanceof PropertyDirection) {
                             PropertyDirection dir = (PropertyDirection) prop;
