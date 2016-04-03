@@ -69,21 +69,19 @@ public class LLibraryClassTransformer implements IClassTransformer {
         ClassReader cr = new ClassReader(bytes);
         ClassNode classNode = new ClassNode();
         cr.accept(classNode, 0);
-        for (MethodNode methodNode : classNode.methods) {
-            if (methodNode.name.equals(this.getMappingFor("loadLocaleDataFiles")) && methodNode.desc.equals("(L" + this.getMappingFor("net/minecraft/client/resources/IResourceManager") + ";Ljava/util/List;)V")) {
-                for (AbstractInsnNode node : methodNode.instructions.toArray()) {
-                    if (node.getOpcode() == Opcodes.INVOKESTATIC && ((MethodInsnNode) node).name.equals("format")) {
-                        InsnList insert = new InsnList();
-                        insert.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/ilexiconn/llibrary/client/lang/LanguageHandler", "INSTANCE", "Lnet/ilexiconn/llibrary/client/lang/LanguageHandler;"));
-                        insert.add(new VarInsnNode(Opcodes.ALOAD, 4));
-                        insert.add(new VarInsnNode(Opcodes.ALOAD, 0));
-                        insert.add(new FieldInsnNode(Opcodes.GETFIELD, this.getMappingFor(LOCALE).replaceAll("\\.", "/"), this.getMappingFor("properties"), "Ljava/util/Map;"));
-                        insert.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "net/ilexiconn/llibrary/client/lang/LanguageHandler", "addRemoteLocalizations", "(Ljava/lang/String;Ljava/util/Map;)V", false));
-                        methodNode.instructions.insertBefore(node, insert);
-                    }
+        classNode.methods.stream().filter(methodNode -> methodNode.name.equals(this.getMappingFor("loadLocaleDataFiles")) && methodNode.desc.equals("(L" + this.getMappingFor("net/minecraft/client/resources/IResourceManager") + ";Ljava/util/List;)V")).forEach(methodNode -> {
+            for (AbstractInsnNode node : methodNode.instructions.toArray()) {
+                if (node.getOpcode() == Opcodes.INVOKESTATIC && ((MethodInsnNode) node).name.equals("format")) {
+                    InsnList insert = new InsnList();
+                    insert.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/ilexiconn/llibrary/client/lang/LanguageHandler", "INSTANCE", "Lnet/ilexiconn/llibrary/client/lang/LanguageHandler;"));
+                    insert.add(new VarInsnNode(Opcodes.ALOAD, 4));
+                    insert.add(new VarInsnNode(Opcodes.ALOAD, 0));
+                    insert.add(new FieldInsnNode(Opcodes.GETFIELD, this.getMappingFor(LOCALE).replaceAll("\\.", "/"), this.getMappingFor("properties"), "Ljava/util/Map;"));
+                    insert.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "net/ilexiconn/llibrary/client/lang/LanguageHandler", "addRemoteLocalizations", "(Ljava/lang/String;Ljava/util/Map;)V", false));
+                    methodNode.instructions.insertBefore(node, insert);
                 }
             }
-        }
+        });
         ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_MAXS);
         classNode.accept(cw);
         saveBytecode(name, cw);
