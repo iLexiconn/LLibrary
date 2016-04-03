@@ -56,10 +56,12 @@ public class AdvancedModelBase extends ModelBase {
     /**
      * Swings (rotates on the Y axis) the given model parts in a chain-like manner.
      *
-     * @param boxes      the boxes to swing
-     * @param speed      the speed to swing this at
-     * @param degree     the amount to rotate this by
-     * @param rootOffset the root rotation offset
+     * @param boxes       the boxes to swing
+     * @param speed       the speed to swing this at
+     * @param degree      the amount to rotate this by
+     * @param rootOffset  the root rotation offset
+     * @param swing       the swing rotation
+     * @param swingAmount the swing amount
      */
     public void chainSwing(AdvancedModelRenderer[] boxes, float speed, float degree, double rootOffset, float swing, float swingAmount) {
         float offset = calculateChainOffset(rootOffset, boxes);
@@ -71,10 +73,12 @@ public class AdvancedModelBase extends ModelBase {
     /**
      * Waves (rotates on the X axis) the given model parts in a chain-like manner.
      *
-     * @param boxes      the boxes to wave
-     * @param speed      the speed to wave this at
-     * @param degree     the amount to rotate this by
-     * @param rootOffset the root rotation offset
+     * @param boxes       the boxes to wave
+     * @param speed       the speed to wave this at
+     * @param degree      the amount to rotate this by
+     * @param rootOffset  the root rotation offset
+     * @param swing       the swing rotation
+     * @param swingAmount the swing amount
      */
     public void chainWave(AdvancedModelRenderer[] boxes, float speed, float degree, double rootOffset, float swing, float swingAmount) {
         float offset = calculateChainOffset(rootOffset, boxes);
@@ -86,10 +90,12 @@ public class AdvancedModelBase extends ModelBase {
     /**
      * Flaps (rotates on the Z axis) the given model parts in a chain-like manner.
      *
-     * @param boxes      the boxes to flap
-     * @param speed      the speed to flap this at
-     * @param degree     the amount to rotate this by
-     * @param rootOffset the root rotation offset
+     * @param boxes       the boxes to flap
+     * @param speed       the speed to flap this at
+     * @param degree      the amount to rotate this by
+     * @param rootOffset  the root rotation offset
+     * @param swing       the swing rotation
+     * @param swingAmount the swing amount
      */
     public void chainFlap(AdvancedModelRenderer[] boxes, float speed, float degree, double rootOffset, float swing, float swingAmount) {
         float offset = calculateChainOffset(rootOffset, boxes);
@@ -108,6 +114,8 @@ public class AdvancedModelBase extends ModelBase {
 
     /**
      * Multiplies all rotation and position changes by this value
+     *
+     * @param movementScale the movement scale
      */
     public void setMovementScale(float movementScale) {
         this.movementScale = movementScale;

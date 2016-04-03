@@ -50,6 +50,7 @@ public class AdvancedModelRenderer extends ModelRenderer {
     /**
      * If true, when using setScale, the children of this model part will be scaled as well as just this part. If false, just this part will be scaled.
      *
+     * @param scaleChildren true if this parent should scale the children
      * @since 1.1.0
      */
     public void setShouldScaleChildren(boolean scaleChildren) {
@@ -59,6 +60,9 @@ public class AdvancedModelRenderer extends ModelRenderer {
     /**
      * Sets the scale for this AdvancedModelRenderer to be rendered at. (Performs a call to GLStateManager.scale()).
      *
+     * @param scaleX the x scale
+     * @param scaleY the y scale
+     * @param scaleZ the z scale
      * @since 1.1.0
      */
     public void setScale(float scaleX, float scaleY, float scaleZ) {
@@ -67,6 +71,9 @@ public class AdvancedModelRenderer extends ModelRenderer {
         this.scaleZ = scaleZ;
     }
 
+    /**
+     * Sets this ModelRenderer's default pose to the current pose.
+     */
     public void updateDefaultPose() {
         this.defaultRotationX = this.rotateAngleX;
         this.defaultRotationY = this.rotateAngleY;
@@ -81,6 +88,9 @@ public class AdvancedModelRenderer extends ModelRenderer {
         this.defaultPositionZ = this.rotationPointZ;
     }
 
+    /**
+     * Sets the current pose to the previously set default pose.
+     */
     public void resetToDefaultPose() {
         this.rotateAngleX = this.defaultRotationX;
         this.rotateAngleY = this.defaultRotationY;
@@ -104,14 +114,23 @@ public class AdvancedModelRenderer extends ModelRenderer {
         }
     }
 
+    /**
+     * Sets the parent of this box
+     */
     public void setParent(AdvancedModelRenderer parent) {
         this.parent = parent;
     }
 
+    /**
+     * @return the parent of this box
+     */
     public AdvancedModelRenderer getParent() {
         return this.parent;
     }
 
+    /**
+     * Post renders this box with all it's parents
+     */
     public void parentedPostRender(float scale) {
         if (this.parent != null) {
             this.parent.parentedPostRender(scale);
@@ -119,6 +138,9 @@ public class AdvancedModelRenderer extends ModelRenderer {
         this.postRender(scale);
     }
 
+    /**
+     * Renders this box with all it's parents
+     */
     public void renderWithParents(float scale) {
         if (this.parent != null) {
             this.parent.renderWithParents(scale);

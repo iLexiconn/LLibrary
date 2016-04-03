@@ -63,6 +63,7 @@ public class Command extends CommandBase {
      *
      * @param argument the argument name
      * @param type     the type for this argument
+     * @param <T>      the argument type
      * @return this command instance
      */
     public <T> Command addRequiredArgument(String argument, Class<T> type) {
@@ -84,6 +85,7 @@ public class Command extends CommandBase {
      *
      * @param argument the argument name
      * @param type     the type for this argument
+     * @param <T>      the argument type
      * @return this command instance
      */
     public <T> Command addOptionalArgument(String argument, Class<T> type) {

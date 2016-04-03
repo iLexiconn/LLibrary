@@ -21,6 +21,7 @@ public enum EntityDataHandler {
      *
      * @param entity     the entity to add data to
      * @param entityData the data manager
+     * @param <T>        the entity type
      */
     public <T extends Entity> void registerExtendedEntityData(T entity, IEntityData<T> entityData) {
         List<IEntityData<?>> registered = this.registeredEntityData.get(entity);
@@ -34,6 +35,9 @@ public enum EntityDataHandler {
     }
 
     /**
+     * @param entity     the entity
+     * @param identifier the string identifier
+     * @param <T>        the entity type
      * @return an IEntityData instance on the given entity with the given identifier
      */
     public <T extends Entity> IEntityData<T> getEntityData(T entity, String identifier) {
