@@ -1,15 +1,16 @@
 package net.ilexiconn.llibrary.server.animation;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.EntityAIBase;
 
 /**
  * @author iLexiconn
  * @since 1.0.0
  */
-public abstract class AnimationAI extends EntityAIBase {
-    protected IAnimatedEntity entity;
+public abstract class AnimationAI<T extends Entity & IAnimatedEntity> extends EntityAIBase {
+    protected T entity;
 
-    public AnimationAI(IAnimatedEntity entity) {
+    public AnimationAI(T entity) {
         this.entity = entity;
         this.setMutexBits(7);
     }

@@ -1,22 +1,23 @@
 package net.ilexiconn.llibrary.server.event;
 
 import net.ilexiconn.llibrary.server.animation.Animation;
+import net.ilexiconn.llibrary.server.animation.IAnimatedEntity;
 import net.minecraft.entity.Entity;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
-public class AnimationEvent extends Event {
-    protected Entity entity;
+public class AnimationEvent<T extends Entity & IAnimatedEntity> extends Event {
+    protected T entity;
     protected Animation animation;
 
-    public AnimationEvent(Entity entity, Animation animation) {
+    public AnimationEvent(T entity, Animation animation) {
         this.entity = entity;
         this.animation = animation;
     }
 
     @Cancelable
-    public static class Start extends AnimationEvent {
-        public Start(Entity entity, Animation animation) {
+    public static class Start<T extends Entity & IAnimatedEntity> extends AnimationEvent {
+        public Start(T entity, Animation animation) {
             super(entity, animation);
         }
 
@@ -25,10 +26,10 @@ public class AnimationEvent extends Event {
         }
     }
 
-    public static class Tick extends AnimationEvent {
+    public static class Tick<T extends Entity & IAnimatedEntity> extends AnimationEvent {
         protected int tick;
 
-        public Tick(Entity entity, Animation animation, int tick) {
+        public Tick(T entity, Animation animation, int tick) {
             super(entity, animation);
             this.tick = tick;
         }
@@ -38,7 +39,7 @@ public class AnimationEvent extends Event {
         }
     }
 
-    public Entity getEntity() {
+    public T getEntity() {
         return entity;
     }
 

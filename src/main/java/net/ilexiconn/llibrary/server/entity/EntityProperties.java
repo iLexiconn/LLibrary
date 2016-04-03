@@ -22,7 +22,7 @@ import java.util.WeakHashMap;
 public abstract class EntityProperties<T extends Entity> implements IEntityData<T> {
     private World world;
     private T entity;
-    private Set<PropertiesTracker<?>> trackers = Collections.newSetFromMap(new WeakHashMap<PropertiesTracker<?>, Boolean>());
+    private Set<PropertiesTracker<?>> trackers = Collections.newSetFromMap(new WeakHashMap<>());
 
     @Override
     public final void init(T entity, World world) {
