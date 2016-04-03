@@ -30,15 +30,15 @@ public class StructureTest {
                 .cube(-width / 2, height + 1, -depth / 2, width, 1, depth, Blocks.fence)
 
                 .fillCube(0, 1, -depth / 2, 1, 2, 1, Blocks.air)
-                .setBlock(0, 0, -depth / 2 - 1, BlockState.create(Blocks.stone_stairs, 2))
+                .setBlock(0, 0, -depth / 2 - 1, BlockState.create(Blocks.stone_stairs, 3))
 
                 .setBlock(-width / 2, 2, 0, Blocks.glass_pane)
                 .setBlock(width / 2, 2, 0, Blocks.glass_pane)
                 .setBlock(0, 2, depth / 2, Blocks.glass_pane)
 
-                .setBlock(0, 1, 0, Blocks.furnace)
+                .setBlock(0, 1, 0, BlockState.create(Blocks.furnace, 3))
 
-                .fillCube(-1, 1, 1, 1, height, 1, Blocks.ladder)
+                .fillCube(-1, 1, 1, 1, height, 1, BlockState.create(Blocks.ladder, 3))
                 .endComponent();
 
         StructureHandler.INSTANCE.registerStructure("testStructure", builder);
