@@ -60,12 +60,12 @@ public class StructureTest {
         @Override
         public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
             if (world.isRemote) {
-                return false;
+                return true;
             }
 
             StructureGenerator gen = StructureHandler.INSTANCE.getStructure("testStructure").rotateClockwise(RotationAngle.DEGREES_180);
             gen.generate(world, pos.getX(), pos.getY() + 1, pos.getZ(), world.rand);
-            return false;
+            return true;
         }
     }
 }
