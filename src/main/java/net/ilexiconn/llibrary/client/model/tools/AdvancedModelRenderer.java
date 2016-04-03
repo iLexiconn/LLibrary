@@ -51,6 +51,7 @@ public class AdvancedModelRenderer extends ModelRenderer {
     /**
      * If true, when using setScale, the children of this model part will be scaled as well as just this part. If false, just this part will be scaled.
      *
+     * @param scaleChildren true if this parent should scale the children
      * @since 1.1.0
      */
     public void setShouldScaleChildren(boolean scaleChildren) {
@@ -60,6 +61,9 @@ public class AdvancedModelRenderer extends ModelRenderer {
     /**
      * Sets the scale for this AdvancedModelRenderer to be rendered at. (Performs a call to GLStateManager.scale()).
      *
+     * @param scaleX the x scale
+     * @param scaleY the y scale
+     * @param scaleZ the z scale
      * @since 1.1.0
      */
     public void setScale(float scaleX, float scaleY, float scaleZ) {
