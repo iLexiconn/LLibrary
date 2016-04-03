@@ -21,6 +21,7 @@ public enum AnimationHandler {
      *
      * @param entity    the entity with an animation to be updated
      * @param animation the animation to be updated
+     * @param <T>       the animated entity type
      */
     public <T extends Entity & IAnimatedEntity> void sendAnimationMessage(T entity, Animation animation) {
         if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
@@ -32,6 +33,9 @@ public enum AnimationHandler {
 
     /**
      * Updates all animations for a given entity
+     *
+     * @param entity the entity with an animation to be updated
+     * @param <T>    the animated entity type
      */
     public <T extends Entity & IAnimatedEntity> void updateAnimations(T entity) {
         if (entity.getAnimation() == null) {

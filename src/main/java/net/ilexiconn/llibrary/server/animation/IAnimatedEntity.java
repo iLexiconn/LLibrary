@@ -17,6 +17,8 @@ public interface IAnimatedEntity {
 
     /**
      * Sets the current animation tick to the given value
+     *
+     * @param tick the new tick
      */
     void setAnimationTick(int tick);
 
@@ -27,6 +29,8 @@ public interface IAnimatedEntity {
 
     /**
      * Sets the currently playing animation
+     *
+     * @param animation the new animation
      */
     void setAnimation(Animation animation);
 

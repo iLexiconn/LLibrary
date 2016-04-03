@@ -123,6 +123,8 @@ public class ChainBuffer {
 
     /**
      * Applies this buffer on the Y axis to the given array of model boxes.
+     *
+     * @param boxes the box array
      */
     public void applyChainSwingBuffer(ModelRenderer... boxes) {
         for (ModelRenderer box : boxes) {
@@ -132,6 +134,8 @@ public class ChainBuffer {
 
     /**
      * Applies this buffer on the X axis to the given array of model boxes.
+     *
+     * @param boxes the box array
      */
     public void applyChainWaveBuffer(ModelRenderer... boxes) {
         for (ModelRenderer box : boxes) {
