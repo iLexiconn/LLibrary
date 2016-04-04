@@ -27,7 +27,11 @@ public class AnimationMessage extends AbstractMessage<AnimationMessage> {
     public void onClientReceived(Minecraft client, AnimationMessage message, EntityPlayer player, MessageContext messageContext) {
         IAnimatedEntity entity = (IAnimatedEntity) player.worldObj.getEntityByID(message.entityID);
         if (entity != null) {
-            entity.setAnimation(entity.getAnimations()[message.index]);
+            if (message.index == -1) {
+                entity.setAnimation(IAnimatedEntity.NO_ANIMATION);
+            } else {
+                entity.setAnimation(entity.getAnimations()[message.index]);
+            }
             entity.setAnimationTick(0);
         }
     }
