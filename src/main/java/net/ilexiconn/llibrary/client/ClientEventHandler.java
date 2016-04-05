@@ -26,6 +26,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.Rectangle;
 
 @SideOnly(Side.CLIENT)
@@ -139,23 +140,37 @@ public enum ClientEventHandler {
 
     @SubscribeEvent
     public void onRenderModel(PlayerModelEvent.Render event) {
-        if (ClientProxy.PATRONS != null && ClientProxy.MINECRAFT.gameSettings.thirdPersonView != 0) {
+        if (ClientProxy.PATRONS != null && (ClientProxy.MINECRAFT.gameSettings.thirdPersonView != 0 || event.getEntityPlayer() != ClientProxy.MINECRAFT.thePlayer)) {
             for (String name : ClientProxy.PATRONS) {
                 if (event.getEntityPlayer().getGameProfile().getId().toString().equals(name)) {
                     GlStateManager.pushMatrix();
-                    GlStateManager.disableTexture2D();
-                    GlStateManager.rotate(-ClientUtils.interpolateRotation(event.getEntityPlayer().prevRenderYawOffset, event.getEntityPlayer().renderYawOffset, LLibrary.PROXY.getPartialTicks()), 0, 1.0F, 0);
-                    GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-                    float bob = MathHelper.sin(((float) event.getEntityPlayer().ticksExisted + LLibrary.PROXY.getPartialTicks()) / 15.0F) * 0.1F;
-                    GlStateManager.translate(0.0F, -2.0F + bob, 0.0F);
-                    GlStateManager.rotate(ClientUtils.interpolateRotation((event.getEntityPlayer().ticksExisted - 1) % 360, event.getEntityPlayer().ticksExisted % 360, LLibrary.PROXY.getPartialTicks()), 0.0F, 1.0F, 0.0F);
-                    GlStateManager.translate(0.75F, 0.0F, 0.0F);
-                    GlStateManager.rotate(ClientUtils.interpolateRotation((event.getEntityPlayer().ticksExisted - 1) % 360, event.getEntityPlayer().ticksExisted % 360, LLibrary.PROXY.getPartialTicks()), 0.0F, 1.0F, 0.0F);
-                    voxelModel.render(event.getEntityPlayer(), event.getLimbSwing(), event.getLimbSwingAmount(), event.getRotation(), event.getRotationYaw(), event.getRotationPitch(), event.getScale());
-                    GlStateManager.enableTexture2D();
+                    GL11.glDepthMask(false);
+                    GlStateManager.disableLighting();
+                    GlStateManager.translate(0.0F, -1.37F, 0.0F);
+                    this.renderVoxel(event, 1.1F, 0.23F);
+                    GL11.glDepthMask(true);
+                    GlStateManager.enableLighting();
+                    GlStateManager.translate(0.0F, 0.128F, 0.0F);
+                    this.renderVoxel(event, 1.0F, 1.0F);
                     GlStateManager.popMatrix();
                 }
             }
         }
+    }
+
+    private void renderVoxel(PlayerModelEvent.Render event, float scale, float color) {
+        float bob = MathHelper.sin(((float) event.getEntityPlayer().ticksExisted + LLibrary.PROXY.getPartialTicks()) / 15.0F) * 0.1F;
+        GlStateManager.pushMatrix();
+        GlStateManager.disableTexture2D();
+        GlStateManager.rotate(-ClientUtils.interpolate(event.getEntityPlayer().prevRenderYawOffset, event.getEntityPlayer().renderYawOffset, LLibrary.PROXY.getPartialTicks()), 0, 1.0F, 0);
+        GlStateManager.color(color, color, color, 1.0F);
+        GlStateManager.translate(0.0F, -1.0F + bob, 0.0F);
+        GlStateManager.rotate(ClientUtils.interpolate((event.getEntityPlayer().ticksExisted - 1) % 360, event.getEntityPlayer().ticksExisted % 360, LLibrary.PROXY.getPartialTicks()), 0.0F, 1.0F, 0.0F);
+        GlStateManager.translate(0.75F, 0.0F, 0.0F);
+        GlStateManager.rotate(ClientUtils.interpolate((event.getEntityPlayer().ticksExisted - 1) % 360, event.getEntityPlayer().ticksExisted % 360, LLibrary.PROXY.getPartialTicks()), 0.0F, 1.0F, 0.0F);
+        GlStateManager.scale(scale, scale, scale);
+        this.voxelModel.render(event.getEntityPlayer(), event.getLimbSwing(), event.getLimbSwingAmount(), event.getRotation(), event.getRotationYaw(), event.getRotationPitch(), event.getScale());
+        GlStateManager.enableTexture2D();
+        GlStateManager.popMatrix();
     }
 }
