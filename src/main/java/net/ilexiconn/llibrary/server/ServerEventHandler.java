@@ -6,6 +6,7 @@ import net.ilexiconn.llibrary.server.entity.EntityProperties;
 import net.ilexiconn.llibrary.server.entity.EntityPropertiesHandler;
 import net.ilexiconn.llibrary.server.entity.PropertiesTracker;
 import net.ilexiconn.llibrary.server.network.PropertiesMessage;
+import net.ilexiconn.llibrary.server.world.WorldDataHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.WorldServer;
@@ -14,6 +15,7 @@ import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -136,6 +138,20 @@ public enum ServerEventHandler {
                     }
                 }
             }
+        }
+    }
+
+    @SubscribeEvent
+    public void onWorldLoad(WorldEvent.Load event) {
+        if (!event.world.isRemote) {
+            WorldDataHandler.INSTANCE.loadWorldData(event.world.getSaveHandler(), event.world);
+        }
+    }
+
+    @SubscribeEvent
+    public void onWorldSave(WorldEvent.Save event) {
+        if (!event.world.isRemote) {
+            WorldDataHandler.INSTANCE.saveWorldData(event.world.getSaveHandler(), event.world);
         }
     }
 }
