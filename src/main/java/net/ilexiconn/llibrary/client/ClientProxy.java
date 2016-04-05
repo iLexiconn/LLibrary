@@ -9,6 +9,7 @@ import net.ilexiconn.llibrary.client.gui.SnackbarGUI;
 import net.ilexiconn.llibrary.server.ServerProxy;
 import net.ilexiconn.llibrary.server.network.AbstractMessage;
 import net.ilexiconn.llibrary.server.snackbar.Snackbar;
+import net.ilexiconn.llibrary.server.util.TickRateHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Timer;
 import net.minecraftforge.common.MinecraftForge;
@@ -61,5 +62,10 @@ public class ClientProxy extends ServerProxy {
     @Override
     public void showSnackbar(Snackbar snackbar) {
         ClientProxy.SNACKBAR_LIST.add(new SnackbarGUI(snackbar));
+    }
+
+    @Override
+    public void setTickRate(long tickRate) {
+        this.timer.timerSpeed = (float) TickRateHandler.DEFAULT_TICK_RATE / tickRate;
     }
 }
