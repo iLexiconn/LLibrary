@@ -68,21 +68,19 @@ public class LLibraryClassTransformer implements IClassTransformer {
         ClassReader cr = new ClassReader(bytes);
         ClassNode classNode = new ClassNode();
         cr.accept(classNode, 0);
-        for (MethodNode methodNode : classNode.methods) {
-            if (methodNode.name.equals("run")) {
-                InsnList insert = new InsnList();
-                for (AbstractInsnNode node : methodNode.instructions.toArray()) {
-                    if (node.getOpcode() == Opcodes.LDC && ((LdcInsnNode) node).cst instanceof Long && (Long) ((LdcInsnNode) node).cst == 50) {
-                        insert.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", "INSTANCE", "Lnet/ilexiconn/llibrary/server/asm/LLibraryASMHandler;"));
-                        insert.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", "getTickRate", "()J", false));
-                    } else {
-                        insert.add(node);
-                    }
+        classNode.methods.stream().filter(methodNode -> methodNode.name.equals("run")).forEach(methodNode -> {
+            InsnList insert = new InsnList();
+            for (AbstractInsnNode node : methodNode.instructions.toArray()) {
+                if (node.getOpcode() == Opcodes.LDC && ((LdcInsnNode) node).cst instanceof Long && (Long) ((LdcInsnNode) node).cst == 50) {
+                    insert.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/ilexiconn/llibrary/server/world/TickRateHandler", "INSTANCE", "Lnet/ilexiconn/llibrary/server/world/TickRateHandler;"));
+                    insert.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "net/ilexiconn/llibrary/server/world/TickRateHandler", "getTickRate", "()J", false));
+                } else {
+                    insert.add(node);
                 }
-                methodNode.instructions.clear();
-                methodNode.instructions.add(insert);
             }
-        }
+            methodNode.instructions.clear();
+            methodNode.instructions.add(insert);
+        });
         ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_MAXS);
         classNode.accept(cw);
         saveBytecode(name, cw);

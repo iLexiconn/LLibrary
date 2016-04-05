@@ -2,7 +2,6 @@ package net.ilexiconn.llibrary.server.asm;
 
 import net.ilexiconn.llibrary.client.event.PlayerModelEvent;
 import net.ilexiconn.llibrary.client.event.RenderArmEvent;
-import net.ilexiconn.llibrary.server.world.TickRateHandler;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.entity.RenderPlayer;
@@ -45,9 +44,5 @@ public enum LLibraryASMHandler {
         PlayerModelEvent.Assign event = new PlayerModelEvent.Assign(renderPlayer, model, smallArms);
         MinecraftForge.EVENT_BUS.post(event);
         return event.getModel();
-    }
-
-    public long getTickRate() {
-        return TickRateHandler.INSTANCE.getTickRate();
     }
 }
