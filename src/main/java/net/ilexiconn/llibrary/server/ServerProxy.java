@@ -45,4 +45,7 @@ public class ServerProxy {
     public void showSnackbar(Snackbar snackbar) {
         LLibrary.NETWORK_WRAPPER.sendToAll(new SnackbarMessage(snackbar));
     }
+
+    public void setTickRate(long tickRate) {
+    }
 }
