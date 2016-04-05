@@ -106,17 +106,19 @@ public class LLibraryClassTransformer implements IClassTransformer {
                 InsnList enableBlend = new InsnList();
                 for (AbstractInsnNode node : methodNode.instructions.toArray()) {
                     if (node.getOpcode() == Opcodes.RETURN && node != returnNode) {
+                        inject.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", "INSTANCE", "Lnet/ilexiconn/llibrary/server/asm/LLibraryASMHandler;"));
                         inject.add(new VarInsnNode(Opcodes.ALOAD, 1));
                         inject.add(new VarInsnNode(Opcodes.ALOAD, 0));
-                        inject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", prefix + "Post", desc + "V", false));
+                        inject.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", prefix + "Post", desc + "V", false));
                     } else if (node.getOpcode() == Opcodes.INVOKEVIRTUAL && ((MethodInsnNode) node).desc.equals("(FFFFFFL" + this.getMappingFor("net/minecraft/entity/Entity") + ";)V")) {
                         next = true;
                         setRotationAngles = node;
                     } else if (next) {
                         label = new LabelNode();
+                        inject.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", "INSTANCE", "Lnet/ilexiconn/llibrary/server/asm/LLibraryASMHandler;"));
                         inject.add(new VarInsnNode(Opcodes.ALOAD, 1));
                         inject.add(new VarInsnNode(Opcodes.ALOAD, 0));
-                        inject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", prefix + "Pre", desc + "Z", false));
+                        inject.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", prefix + "Pre", desc + "Z", false));
                         inject.add(new JumpInsnNode(Opcodes.IFEQ, label));
                         inject.add(returnNode);
                         inject.add(label);
@@ -159,13 +161,14 @@ public class LLibraryClassTransformer implements IClassTransformer {
                 InsnList inject = new InsnList();
                 for (AbstractInsnNode node : methodNode.instructions.toArray()) {
                     if (node.getOpcode() == Opcodes.RETURN) {
+                        inject.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", "INSTANCE", "Lnet/ilexiconn/llibrary/server/asm/LLibraryASMHandler;"));
                         inject.add(new VarInsnNode(Opcodes.ALOAD, 0));
                         inject.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, renderPlayerFriendlyName, this.getMappingFor("getMainModel"), "()L" + modelPlayerFriendlyName + ";", false));
                         inject.add(new VarInsnNode(Opcodes.ASTORE, 4));
                         inject.add(new VarInsnNode(Opcodes.ALOAD, 0));
                         inject.add(new VarInsnNode(Opcodes.ALOAD, 4));
                         inject.add(new VarInsnNode(Opcodes.ILOAD, 2));
-                        inject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", "assign", desc, false));
+                        inject.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", "assign", desc, false));
                         inject.add(new VarInsnNode(Opcodes.ASTORE, 5));
                         inject.add(new VarInsnNode(Opcodes.ALOAD, 0));
                         inject.add(new VarInsnNode(Opcodes.ALOAD, 5));
@@ -193,6 +196,7 @@ public class LLibraryClassTransformer implements IClassTransformer {
                 InsnList inject = new InsnList();
                 for (AbstractInsnNode node : methodNode.instructions.toArray()) {
                     if (node.getOpcode() == Opcodes.RETURN) {
+                        inject.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", "INSTANCE", "Lnet/ilexiconn/llibrary/server/asm/LLibraryASMHandler;"));
                         inject.add(new VarInsnNode(Opcodes.ALOAD, 0));
                         inject.add(new VarInsnNode(Opcodes.ALOAD, 7));
                         inject.add(new VarInsnNode(Opcodes.FLOAD, 1));
@@ -201,7 +205,7 @@ public class LLibraryClassTransformer implements IClassTransformer {
                         inject.add(new VarInsnNode(Opcodes.FLOAD, 4));
                         inject.add(new VarInsnNode(Opcodes.FLOAD, 5));
                         inject.add(new VarInsnNode(Opcodes.FLOAD, 6));
-                        inject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", "setRotationAngles", desc, false));
+                        inject.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", "setRotationAngles", desc, false));
                     }
                     inject.add(node);
                 }
@@ -212,6 +216,7 @@ public class LLibraryClassTransformer implements IClassTransformer {
                 InsnList inject = new InsnList();
                 for (AbstractInsnNode node : methodNode.instructions.toArray()) {
                     if (node.getOpcode() == Opcodes.RETURN) {
+                        inject.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", "INSTANCE", "Lnet/ilexiconn/llibrary/server/asm/LLibraryASMHandler;"));
                         inject.add(new VarInsnNode(Opcodes.ALOAD, 0));
                         inject.add(new VarInsnNode(Opcodes.ALOAD, 1));
                         inject.add(new VarInsnNode(Opcodes.FLOAD, 2));
@@ -220,7 +225,7 @@ public class LLibraryClassTransformer implements IClassTransformer {
                         inject.add(new VarInsnNode(Opcodes.FLOAD, 5));
                         inject.add(new VarInsnNode(Opcodes.FLOAD, 6));
                         inject.add(new VarInsnNode(Opcodes.FLOAD, 7));
-                        inject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", "renderModel", desc, false));
+                        inject.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", "renderModel", desc, false));
                     }
                     inject.add(node);
                 }
@@ -231,8 +236,9 @@ public class LLibraryClassTransformer implements IClassTransformer {
                 InsnList inject = new InsnList();
                 for (AbstractInsnNode node : methodNode.instructions.toArray()) {
                     if (node.getOpcode() == Opcodes.RETURN) {
+                        inject.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", "INSTANCE", "Lnet/ilexiconn/llibrary/server/asm/LLibraryASMHandler;"));
                         inject.add(new VarInsnNode(Opcodes.ALOAD, 0));
-                        inject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", "constructModel", desc, false));
+                        inject.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", "constructModel", desc, false));
                     }
                     inject.add(node);
                 }
