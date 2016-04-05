@@ -143,23 +143,37 @@ public enum ClientEventHandler {
 
     @SubscribeEvent
     public void onRenderModel(PlayerModelEvent.Render event) {
-        if (ClientProxy.PATRONS != null && ClientProxy.MINECRAFT.gameSettings.thirdPersonView != 0) {
+        if (ClientProxy.PATRONS != null && (ClientProxy.MINECRAFT.gameSettings.thirdPersonView != 0 || event.getEntityPlayer() != ClientProxy.MINECRAFT.thePlayer)) {
             for (String name : ClientProxy.PATRONS) {
                 if (event.getEntityPlayer().getGameProfile().getId().toString().equals(name)) {
                     GL11.glPushMatrix();
-                    GL11.glDisable(GL11.GL_TEXTURE_2D);
-                    GL11.glRotatef(-ClientUtils.interpolateRotation(event.getEntityPlayer().prevRenderYawOffset, event.getEntityPlayer().renderYawOffset, LLibrary.PROXY.getPartialTicks()), 0, 1.0F, 0);
-                    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-                    float bob = MathHelper.sin(((float) event.getEntityPlayer().ticksExisted + LLibrary.PROXY.getPartialTicks()) / 15.0F) * 0.1F;
-                    GL11.glTranslatef(0.0F, -2.0F + bob, 0.0F);
-                    GL11.glRotatef(ClientUtils.interpolateRotation((event.getEntityPlayer().ticksExisted - 1) % 360, event.getEntityPlayer().ticksExisted % 360, LLibrary.PROXY.getPartialTicks()), 0.0F, 1.0F, 0.0F);
-                    GL11.glTranslatef(0.75F, 0.0F, 0.0F);
-                    GL11.glRotatef(ClientUtils.interpolateRotation((event.getEntityPlayer().ticksExisted - 1) % 360, event.getEntityPlayer().ticksExisted % 360, LLibrary.PROXY.getPartialTicks()), 0.0F, 1.0F, 0.0F);
-                    voxelModel.render(event.getEntityPlayer(), event.getLimbSwing(), event.getLimbSwingAmount(), event.getRotation(), event.getRotationYaw(), event.getRotationPitch(), event.getScale());
-                    GL11.glEnable(GL11.GL_TEXTURE_2D);
+                    GL11.glDepthMask(false);
+                    GL11.glDisable(GL11.GL_LIGHTING);
+                    GL11.glTranslatef(0.0F, -1.37F, 0.0F);
+                    this.renderVoxel(event, 1.1F, 0.23F);
+                    GL11.glDepthMask(true);
+                    GL11.glEnable(GL11.GL_LIGHTING);
+                    GL11.glTranslatef(0.0F, 0.128F, 0.0F);
+                    this.renderVoxel(event, 1.0F, 1.0F);
                     GL11.glPopMatrix();
                 }
             }
         }
+    }
+
+    private void renderVoxel(PlayerModelEvent.Render event, float scale, float color) {
+        float bob = MathHelper.sin(((float) event.getEntityPlayer().ticksExisted + LLibrary.PROXY.getPartialTicks()) / 15.0F) * 0.1F;
+        GL11.glPushMatrix();
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glRotatef(-ClientUtils.interpolate(event.getEntityPlayer().prevRenderYawOffset, event.getEntityPlayer().renderYawOffset, LLibrary.PROXY.getPartialTicks()), 0, 1.0F, 0);
+        GL11.glColor4f(color, color, color, 1.0F);
+        GL11.glTranslatef(0.0F, -1.0F + bob, 0.0F);
+        GL11.glRotatef(ClientUtils.interpolate((event.getEntityPlayer().ticksExisted - 1) % 360, event.getEntityPlayer().ticksExisted % 360, LLibrary.PROXY.getPartialTicks()), 0.0F, 1.0F, 0.0F);
+        GL11.glTranslatef(0.75F, 0.0F, 0.0F);
+        GL11.glRotatef(ClientUtils.interpolate((event.getEntityPlayer().ticksExisted - 1) % 360, event.getEntityPlayer().ticksExisted % 360, LLibrary.PROXY.getPartialTicks()), 0.0F, 1.0F, 0.0F);
+        GL11.glScalef(scale, scale, scale);
+        this.voxelModel.render(event.getEntityPlayer(), event.getLimbSwing(), event.getLimbSwingAmount(), event.getRotation(), event.getRotationYaw(), event.getRotationPitch(), event.getScale());
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glPopMatrix();
     }
 }
