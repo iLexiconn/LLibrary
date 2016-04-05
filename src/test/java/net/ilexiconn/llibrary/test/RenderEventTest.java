@@ -4,6 +4,7 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.ilexiconn.llibrary.client.event.PlayerModelEvent;
+import net.ilexiconn.llibrary.client.event.RenderArmEvent;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -31,5 +32,10 @@ public class RenderEventTest {
     @SubscribeEvent
     public void onSetRotationAngles(PlayerModelEvent.SetRotationAngles event) {
         event.getModel().bipedRightArm.rotateAngleX = (float) Math.toRadians(180.0F);
+    }
+
+    @SubscribeEvent
+    public void onRenderRightArmPre(RenderArmEvent.Pre event) {
+        event.getModel().bipedRightArm.rotateAngleZ = (float) Math.toRadians(20.0F);
     }
 }
