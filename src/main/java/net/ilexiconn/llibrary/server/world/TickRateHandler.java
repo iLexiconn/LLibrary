@@ -1,9 +1,12 @@
-package net.ilexiconn.llibrary.server.util;
+package net.ilexiconn.llibrary.server.world;
 
 import net.ilexiconn.llibrary.LLibrary;
 
-public enum TickRateHandler
-{
+/**
+ * @author gegy1000
+ * @since 1.1.1
+ */
+public enum TickRateHandler {
     INSTANCE;
 
     public static final long DEFAULT_TICK_RATE = 50L;

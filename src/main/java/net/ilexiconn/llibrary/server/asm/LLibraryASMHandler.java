@@ -2,7 +2,7 @@ package net.ilexiconn.llibrary.server.asm;
 
 import net.ilexiconn.llibrary.client.event.PlayerModelEvent;
 import net.ilexiconn.llibrary.client.event.RenderArmEvent;
-import net.ilexiconn.llibrary.server.util.TickRateHandler;
+import net.ilexiconn.llibrary.server.world.TickRateHandler;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.entity.RenderPlayer;
