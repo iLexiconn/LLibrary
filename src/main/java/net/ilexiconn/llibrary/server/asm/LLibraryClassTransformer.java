@@ -58,8 +58,35 @@ public class LLibraryClassTransformer implements IClassTransformer {
             return transformModelPlayer(bytes, name);
         } else if (name.equals(this.getMappingFor(LOCALE))) {
             return transformLocale(bytes, name);
+        } else if (name.equals("net.minecraft.server.MinecraftServer")) {
+            return transformMinecraftServer(bytes, name);
         }
         return bytes;
+    }
+
+    private byte[] transformMinecraftServer(byte[] bytes, String name) {
+        ClassReader cr = new ClassReader(bytes);
+        ClassNode classNode = new ClassNode();
+        cr.accept(classNode, 0);
+        for (MethodNode methodNode : classNode.methods) {
+            if (methodNode.name.equals("run")) {
+                InsnList insert = new InsnList();
+                for (AbstractInsnNode node : methodNode.instructions.toArray()) {
+                    if (node.getOpcode() == Opcodes.LDC && ((LdcInsnNode) node).cst instanceof Long && (Long) ((LdcInsnNode) node).cst == 50) {
+                        insert.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", "INSTANCE", "Lnet/ilexiconn/llibrary/server/asm/LLibraryASMHandler;"));
+                        insert.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", "getTickRate", "()J", false));
+                    } else {
+                        insert.add(node);
+                    }
+                }
+                methodNode.instructions.clear();
+                methodNode.instructions.add(insert);
+            }
+        }
+        ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_MAXS);
+        classNode.accept(cw);
+        saveBytecode(name, cw);
+        return cw.toByteArray();
     }
 
     private byte[] transformLocale(byte[] bytes, String name) {
