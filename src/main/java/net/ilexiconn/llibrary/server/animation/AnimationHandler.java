@@ -21,36 +21,34 @@ public enum AnimationHandler {
      *
      * @param entity    the entity with an animation to be updated
      * @param animation the animation to be updated
-     * @param <T>       the animated entity type
      */
-    public <T extends Entity & IAnimatedEntity> void sendAnimationMessage(T entity, Animation animation) {
+    public void sendAnimationMessage(IAnimatedEntity entity, Animation animation) {
         if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
             return;
         }
         entity.setAnimation(animation);
-        LLibrary.NETWORK_WRAPPER.sendToAll(new AnimationMessage(entity.getEntityId(), Arrays.asList(entity.getAnimations()).indexOf(animation)));
+        LLibrary.NETWORK_WRAPPER.sendToAll(new AnimationMessage(((Entity) entity).getEntityId(), Arrays.asList(entity.getAnimations()).indexOf(animation)));
     }
 
     /**
      * Updates all animations for a given entity
      *
      * @param entity the entity with an animation to be updated
-     * @param <T>    the animated entity type
      */
-    public <T extends Entity & IAnimatedEntity> void updateAnimations(T entity) {
+    public void updateAnimations(IAnimatedEntity entity) {
         if (entity.getAnimation() == null) {
             entity.setAnimation(IAnimatedEntity.NO_ANIMATION);
         } else {
             if (entity.getAnimation() != IAnimatedEntity.NO_ANIMATION) {
                 if (entity.getAnimationTick() == 0) {
-                    AnimationEvent event = new AnimationEvent.Start(entity, entity.getAnimation());
+                    AnimationEvent event = new AnimationEvent.Start((Entity) entity, entity.getAnimation());
                     if (!MinecraftForge.EVENT_BUS.post(event)) {
                         sendAnimationMessage(entity, event.getAnimation());
                     }
                 }
                 if (entity.getAnimationTick() < entity.getAnimation().getDuration()) {
                     entity.setAnimationTick(entity.getAnimationTick() + 1);
-                    MinecraftForge.EVENT_BUS.post(new AnimationEvent.Tick(entity, entity.getAnimation(), entity.getAnimationTick()));
+                    MinecraftForge.EVENT_BUS.post(new AnimationEvent.Tick((Entity) entity, entity.getAnimation(), entity.getAnimationTick()));
                 }
                 if (entity.getAnimationTick() == entity.getAnimation().getDuration()) {
                     entity.setAnimationTick(0);
