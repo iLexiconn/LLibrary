@@ -43,4 +43,14 @@ public class ClientUtils {
         float off = (off = target - current) > 0.01F || off < -0.01F ? off * (float) Math.pow(factor, times) : 0.0F;
         return target - off;
     }
+
+    public static float interpolateRotation(float prev, float current, float partialTicks) {
+        float f;
+        for (f = current - prev; f < -180.0F; f += 360.0F) {
+        }
+        while (f >= 180.0F) {
+            f -= 360.0F;
+        }
+        return prev + partialTicks * f;
+    }
 }

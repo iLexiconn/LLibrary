@@ -5,8 +5,11 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.ilexiconn.llibrary.LLibrary;
+import net.ilexiconn.llibrary.client.event.PlayerModelEvent;
 import net.ilexiconn.llibrary.client.gui.ModUpdateGUI;
 import net.ilexiconn.llibrary.client.gui.SnackbarGUI;
+import net.ilexiconn.llibrary.client.model.VoxelModel;
 import net.ilexiconn.llibrary.client.util.ClientUtils;
 import net.ilexiconn.llibrary.server.snackbar.Snackbar;
 import net.ilexiconn.llibrary.server.snackbar.SnackbarHandler;
@@ -14,13 +17,16 @@ import net.ilexiconn.llibrary.server.update.UpdateHandler;
 import net.ilexiconn.llibrary.server.util.ModUtils;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
+import net.minecraft.client.model.ModelBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.Rectangle;
 
 @SideOnly(Side.CLIENT)
@@ -29,6 +35,7 @@ public enum ClientEventHandler {
 
     private SnackbarGUI snackbarGUI;
     private boolean checkedForUpdates;
+    private ModelBase voxelModel = new VoxelModel();
 
     public void setOpenSnackbar(SnackbarGUI snackbarGUI) {
         this.snackbarGUI = snackbarGUI;
@@ -131,6 +138,28 @@ public enum ClientEventHandler {
     public void onDrawScreenPost(GuiScreenEvent.DrawScreenEvent.Post event) {
         if (this.snackbarGUI != null) {
             this.snackbarGUI.drawSnackbar();
+        }
+    }
+
+    @SubscribeEvent
+    public void onRenderModel(PlayerModelEvent.Render event) {
+        if (ClientProxy.PATRONS != null && ClientProxy.MINECRAFT.gameSettings.thirdPersonView != 0) {
+            for (String name : ClientProxy.PATRONS) {
+                if (event.getEntityPlayer().getGameProfile().getId().toString().equals(name)) {
+                    GL11.glPushMatrix();
+                    GL11.glDisable(GL11.GL_TEXTURE_2D);
+                    GL11.glRotatef(-ClientUtils.interpolateRotation(event.getEntityPlayer().prevRenderYawOffset, event.getEntityPlayer().renderYawOffset, LLibrary.PROXY.getPartialTicks()), 0, 1.0F, 0);
+                    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+                    float bob = MathHelper.sin(((float) event.getEntityPlayer().ticksExisted + LLibrary.PROXY.getPartialTicks()) / 15.0F) * 0.1F;
+                    GL11.glTranslatef(0.0F, -2.0F + bob, 0.0F);
+                    GL11.glRotatef(ClientUtils.interpolateRotation((event.getEntityPlayer().ticksExisted - 1) % 360, event.getEntityPlayer().ticksExisted % 360, LLibrary.PROXY.getPartialTicks()), 0.0F, 1.0F, 0.0F);
+                    GL11.glTranslatef(0.75F, 0.0F, 0.0F);
+                    GL11.glRotatef(ClientUtils.interpolateRotation((event.getEntityPlayer().ticksExisted - 1) % 360, event.getEntityPlayer().ticksExisted % 360, LLibrary.PROXY.getPartialTicks()), 0.0F, 1.0F, 0.0F);
+                    voxelModel.render(event.getEntityPlayer(), event.getLimbSwing(), event.getLimbSwingAmount(), event.getRotation(), event.getRotationYaw(), event.getRotationPitch(), event.getScale());
+                    GL11.glEnable(GL11.GL_TEXTURE_2D);
+                    GL11.glPopMatrix();
+                }
+            }
         }
     }
 }
