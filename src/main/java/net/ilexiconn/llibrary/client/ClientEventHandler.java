@@ -143,20 +143,18 @@ public enum ClientEventHandler {
         if (ClientProxy.PATRONS != null && (ClientProxy.MINECRAFT.gameSettings.thirdPersonView != 0 || event.getEntityPlayer() != ClientProxy.MINECRAFT.thePlayer)) {
             for (String name : ClientProxy.PATRONS) {
                 if (event.getEntityPlayer().getGameProfile().getId().toString().equals(name)) {
-                    GL11.glDisable(GL11.GL_DEPTH_TEST);
+                    GL11.glDepthMask(false);
                     GlStateManager.disableLighting();
-                    renderVoxel(event, 1.1F, 0.23F);
+                    this.renderVoxel(event, 1.1F, 0.23F);
+                    GL11.glDepthMask(true);
                     GlStateManager.enableLighting();
-                    GL11.glEnable(GL11.GL_DEPTH_TEST);
-
-                    renderVoxel(event, 1.0F, 1.0F);
+                    this.renderVoxel(event, 1.0F, 1.0F);
                 }
             }
         }
     }
 
-    private void renderVoxel(PlayerModelEvent.Render event, float scale, float color)
-    {
+    private void renderVoxel(PlayerModelEvent.Render event, float scale, float color) {
         float bob = MathHelper.sin(((float) event.getEntityPlayer().ticksExisted + LLibrary.PROXY.getPartialTicks()) / 15.0F) * 0.1F;
         GlStateManager.pushMatrix();
         GlStateManager.disableTexture2D();
@@ -167,7 +165,7 @@ public enum ClientEventHandler {
         GlStateManager.translate(0.75F, 0.0F, 0.0F);
         GlStateManager.rotate(ClientUtils.interpolate((event.getEntityPlayer().ticksExisted - 1) % 360, event.getEntityPlayer().ticksExisted % 360, LLibrary.PROXY.getPartialTicks()), 0.0F, 1.0F, 0.0F);
         GlStateManager.scale(scale, scale, scale);
-        voxelModel.render(event.getEntityPlayer(), event.getLimbSwing(), event.getLimbSwingAmount(), event.getRotation(), event.getRotationYaw(), event.getRotationPitch(), event.getScale());
+        this.voxelModel.render(event.getEntityPlayer(), event.getLimbSwing(), event.getLimbSwingAmount(), event.getRotation(), event.getRotationYaw(), event.getRotationPitch(), event.getScale());
         GlStateManager.enableTexture2D();
         GlStateManager.popMatrix();
     }
