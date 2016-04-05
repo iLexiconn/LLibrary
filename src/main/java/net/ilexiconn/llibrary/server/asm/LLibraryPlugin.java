@@ -3,6 +3,7 @@ package net.ilexiconn.llibrary.server.asm;
 import cpw.mods.fml.relauncher.IFMLCallHook;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 
+import java.io.File;
 import java.util.Map;
 
 @IFMLLoadingPlugin.Name(value = "llibrary")
@@ -10,6 +11,7 @@ import java.util.Map;
 @IFMLLoadingPlugin.TransformerExclusions(value = "net.ilexiconn.llibrary.server.plugin")
 public class LLibraryPlugin implements IFMLLoadingPlugin, IFMLCallHook {
     private static boolean isObfuscated;
+    private static File minecraftDir;
 
     @Override
     public String[] getASMTransformerClass() {
@@ -29,6 +31,7 @@ public class LLibraryPlugin implements IFMLLoadingPlugin, IFMLCallHook {
     @Override
     public void injectData(Map<String, Object> data) {
         LLibraryPlugin.isObfuscated = (boolean) data.get("runtimeDeobfuscationEnabled");
+        LLibraryPlugin.minecraftDir = (File) data.get("mcLocation");
     }
 
     @Override
@@ -43,5 +46,9 @@ public class LLibraryPlugin implements IFMLLoadingPlugin, IFMLCallHook {
 
     public static boolean isObfuscated() {
         return isObfuscated;
+    }
+
+    public static File getMinecraftDir() {
+        return minecraftDir;
     }
 }

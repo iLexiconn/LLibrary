@@ -31,7 +31,9 @@ public class ServerProxy {
     }
 
     public void onPostInit() {
-        UpdateHandler.INSTANCE.searchForUpdates();
+        if (LLibrary.CONFIG.versionCheck) {
+            UpdateHandler.INSTANCE.searchForUpdates();
+        }
     }
 
     public <T extends AbstractMessage<T>> void handleMessage(final T message, final MessageContext messageContext) {
