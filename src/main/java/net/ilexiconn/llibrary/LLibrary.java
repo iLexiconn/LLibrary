@@ -5,11 +5,11 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.ilexiconn.llibrary.server.ServerProxy;
-import net.ilexiconn.llibrary.server.config.ConfigHandler;
+import net.ilexiconn.llibrary.server.config.Config;
 import net.ilexiconn.llibrary.server.config.LLibraryConfig;
+import net.ilexiconn.llibrary.server.network.NetworkWrapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -21,14 +21,15 @@ public class LLibrary {
     public static ServerProxy PROXY;
     @Mod.Instance("llibrary")
     public static LLibrary INSTANCE;
+    @Config
     public static LLibraryConfig CONFIG;
+    @NetworkWrapper
+    public static SimpleNetworkWrapper NETWORK_WRAPPER;
 
-    public static final SimpleNetworkWrapper NETWORK_WRAPPER = NetworkRegistry.INSTANCE.newSimpleChannel("llibrary");
     public static final Logger LOGGER = LogManager.getLogger("LLibrary");
 
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent event) {
-        LLibrary.CONFIG = ConfigHandler.INSTANCE.registerConfig(this, event.getSuggestedConfigurationFile(), new LLibraryConfig());
         LLibrary.PROXY.onPreInit();
     }
 

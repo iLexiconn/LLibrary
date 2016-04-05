@@ -56,7 +56,7 @@ public class LLibraryClassTransformer implements IClassTransformer {
             return transformLocale(bytes, name);
         } else if (name.equals("net.minecraft.server.MinecraftServer")) {
             return transformMinecraftServer(bytes, name);
-        } else if (name.equals("net.minecraftforge.fml.common.FMLModContainer")) {
+        } else if (name.equals("cpw.mods.fml.common.FMLModContainer")) {
             return transformFMLModContainer(bytes, name);
         }
         return bytes;
