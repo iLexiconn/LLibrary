@@ -140,7 +140,7 @@ public enum ClientEventHandler {
 
     @SubscribeEvent
     public void onRenderModel(PlayerModelEvent.Render event) {
-        if (ClientProxy.PATRONS != null && (ClientProxy.MINECRAFT.gameSettings.thirdPersonView != 0 || event.getEntityPlayer() != ClientProxy.MINECRAFT.thePlayer)) {
+        if (LLibrary.CONFIG.patreonEffects && ClientProxy.PATRONS != null && (ClientProxy.MINECRAFT.gameSettings.thirdPersonView != 0 || event.getEntityPlayer() != ClientProxy.MINECRAFT.thePlayer)) {
             for (String name : ClientProxy.PATRONS) {
                 if (event.getEntityPlayer().getGameProfile().getId().toString().equals(name)) {
                     GL11.glDepthMask(false);

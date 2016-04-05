@@ -7,9 +7,13 @@ import net.ilexiconn.llibrary.server.util.Tuple3;
 import net.minecraft.crash.CrashReport;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.ModContainer;
+import net.minecraftforge.fml.common.discovery.ASMDataTable;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.*;
 
 /**
@@ -137,5 +141,23 @@ public enum ConfigHandler {
             }
         });
         config.save();
+    }
+
+    public void injectConfig(ModContainer mod, ASMDataTable data, File minecraftDir) {
+        Set<ASMDataTable.ASMData> targetList = data.getAnnotationsFor(mod).get(Config.class.getName());
+        ClassLoader classLoader = Loader.instance().getModClassLoader();
+
+        for (ASMDataTable.ASMData target : targetList) {
+            try {
+                Class<?> targetClass = Class.forName(target.getClassName(), true, classLoader);
+                Field field = targetClass.getDeclaredField(target.getObjectName());
+                field.setAccessible(true);
+                Class<?> configClass = field.getType();
+                File configFile = new File(minecraftDir, "config" + File.separator + mod.getModId() + ".cfg");
+                field.set(mod.getMod(), ConfigHandler.INSTANCE.registerConfig(mod.getMod(), configFile, configClass.newInstance()));
+            } catch (Exception e) {
+                LLibrary.LOGGER.fatal("Failed to inject config for mod container " + mod, e);
+            }
+        }
     }
 }
