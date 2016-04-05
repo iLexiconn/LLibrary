@@ -1,7 +1,10 @@
 package net.ilexiconn.llibrary.client;
 
+import net.ilexiconn.llibrary.LLibrary;
+import net.ilexiconn.llibrary.client.event.PlayerModelEvent;
 import net.ilexiconn.llibrary.client.gui.ModUpdateGUI;
 import net.ilexiconn.llibrary.client.gui.SnackbarGUI;
+import net.ilexiconn.llibrary.client.model.VoxelModel;
 import net.ilexiconn.llibrary.client.util.ClientUtils;
 import net.ilexiconn.llibrary.server.snackbar.Snackbar;
 import net.ilexiconn.llibrary.server.snackbar.SnackbarHandler;
@@ -9,7 +12,10 @@ import net.ilexiconn.llibrary.server.update.UpdateHandler;
 import net.ilexiconn.llibrary.server.util.ModUtils;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
+import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -28,6 +34,7 @@ public enum ClientEventHandler {
 
     private SnackbarGUI snackbarGUI;
     private boolean checkedForUpdates;
+    private ModelBase voxelModel = new VoxelModel();
 
     public void setOpenSnackbar(SnackbarGUI snackbarGUI) {
         this.snackbarGUI = snackbarGUI;
@@ -127,6 +134,28 @@ public enum ClientEventHandler {
     public void onDrawScreenPost(GuiScreenEvent.DrawScreenEvent.Post event) {
         if (this.snackbarGUI != null) {
             this.snackbarGUI.drawSnackbar();
+        }
+    }
+
+    @SubscribeEvent
+    public void onRenderModel(PlayerModelEvent.Render event) {
+        if (ClientProxy.PATRONS != null && ClientProxy.MINECRAFT.gameSettings.thirdPersonView != 0) {
+            for (String name : ClientProxy.PATRONS) {
+                if (event.getEntityPlayer().getGameProfile().getId().toString().equals(name)) {
+                    GlStateManager.pushMatrix();
+                    GlStateManager.disableTexture2D();
+                    GlStateManager.rotate(-ClientUtils.interpolateRotation(event.getEntityPlayer().prevRenderYawOffset, event.getEntityPlayer().renderYawOffset, LLibrary.PROXY.getPartialTicks()), 0, 1.0F, 0);
+                    GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+                    float bob = MathHelper.sin(((float) event.getEntityPlayer().ticksExisted + LLibrary.PROXY.getPartialTicks()) / 15.0F) * 0.1F;
+                    GlStateManager.translate(0.0F, -2.0F + bob, 0.0F);
+                    GlStateManager.rotate(ClientUtils.interpolateRotation((event.getEntityPlayer().ticksExisted - 1) % 360, event.getEntityPlayer().ticksExisted % 360, LLibrary.PROXY.getPartialTicks()), 0.0F, 1.0F, 0.0F);
+                    GlStateManager.translate(0.75F, 0.0F, 0.0F);
+                    GlStateManager.rotate(ClientUtils.interpolateRotation((event.getEntityPlayer().ticksExisted - 1) % 360, event.getEntityPlayer().ticksExisted % 360, LLibrary.PROXY.getPartialTicks()), 0.0F, 1.0F, 0.0F);
+                    voxelModel.render(event.getEntityPlayer(), event.getLimbSwing(), event.getLimbSwingAmount(), event.getRotation(), event.getRotationYaw(), event.getRotationPitch(), event.getScale());
+                    GlStateManager.enableTexture2D();
+                    GlStateManager.popMatrix();
+                }
+            }
         }
     }
 }
