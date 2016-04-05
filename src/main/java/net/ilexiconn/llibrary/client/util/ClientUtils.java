@@ -44,7 +44,7 @@ public class ClientUtils {
         return target - off;
     }
 
-    public static float interpolateRotation(float prev, float current, float partialTicks) {
+    public static float interpolate(float prev, float current, float partialTicks) {
         float f;
         for (f = current - prev; f < -180.0F; f += 360.0F) {
         }

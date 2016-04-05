@@ -11,8 +11,8 @@ public class VoxelModel extends ModelBase {
         this.textureWidth = 16;
         this.textureHeight = 16;
         this.voxel = new ModelRenderer(this, 0, 0);
-        this.voxel.setRotationPoint(-3.0F, 18.0F, -3.0F);
-        this.voxel.addBox(0.0F, 0.0F, 0.0F, 6, 6, 6, 0.0F);
+        this.voxel.setRotationPoint(0.0F, 0.0F, 0.0F);
+        this.voxel.addBox(-3.0F, -3.0F, -3.0F, 6, 6, 6, 0.0F);
     }
 
     @Override
