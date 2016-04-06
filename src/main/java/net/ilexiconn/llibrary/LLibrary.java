@@ -15,7 +15,7 @@ import org.apache.logging.log4j.Logger;
 
 @Mod(modid = "llibrary", name = "LLibrary", version = LLibrary.VERSION)
 public class LLibrary {
-    public static final String VERSION = "1.1.1-develop";
+    public static final String VERSION = "1.2.0-develop";
 
     @SidedProxy(serverSide = "net.ilexiconn.llibrary.server.ServerProxy", clientSide = "net.ilexiconn.llibrary.client.ClientProxy")
     public static ServerProxy PROXY;
@@ -23,7 +23,7 @@ public class LLibrary {
     public static LLibrary INSTANCE;
     @Config
     public static LLibraryConfig CONFIG;
-    @NetworkWrapper
+    @NetworkWrapper(messages = {"net.ilexiconn.llibrary.server.network.AnimationMessage", "net.ilexiconn.llibrary.server.network.PropertiesMessage", "net.ilexiconn.llibrary.server.network.SnackbarMessage"})
     public static SimpleNetworkWrapper NETWORK_WRAPPER;
 
     public static final Logger LOGGER = LogManager.getLogger("LLibrary");
