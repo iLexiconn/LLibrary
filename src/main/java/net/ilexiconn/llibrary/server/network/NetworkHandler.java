@@ -16,16 +16,37 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Handler class for message IDs.
+ *
+ * @author iLexiconn
+ * @since 1.2.0
+ */
 public enum NetworkHandler {
     INSTANCE;
 
     private Map<SimpleNetworkWrapper, Integer> idMap = new HashMap<>();
 
+    /**
+     * Register a message to both sides.
+     *
+     * @param networkWrapper the network wrapper
+     * @param clazz          the message class
+     * @param <T>            the message type
+     */
     public <T extends AbstractMessage<T> & IMessageHandler<T, IMessage>> void registerMessage(SimpleNetworkWrapper networkWrapper, Class<T> clazz) {
         this.registerMessage(networkWrapper, clazz, Side.CLIENT);
         this.registerMessage(networkWrapper, clazz, Side.SERVER);
     }
 
+    /**
+     * Register a message to a specific side.
+     *
+     * @param networkWrapper the network wrapper
+     * @param clazz          the message class
+     * @param side           the side
+     * @param <T>            the message type
+     */
     public <T extends AbstractMessage<T> & IMessageHandler<T, IMessage>> void registerMessage(SimpleNetworkWrapper networkWrapper, Class<T> clazz, Side side) {
         int id = 0;
         if (this.idMap.containsKey(networkWrapper)) {
@@ -47,6 +68,19 @@ public enum NetworkHandler {
                 NetworkWrapper annotation = field.getAnnotation(NetworkWrapper.class);
                 String channelName = Strings.isNullOrEmpty(annotation.name()) ? mod.getModId() : annotation.name();
                 field.set(mod.getMod(), NetworkRegistry.INSTANCE.newSimpleChannel(channelName));
+                SimpleNetworkWrapper networkWrapper = (SimpleNetworkWrapper) field.get(mod.getMod());
+                for (String message : annotation.messages()) {
+                    try {
+                        Class messageClass = Class.forName(message);
+                        if (AbstractMessage.class.isAssignableFrom(messageClass)) {
+                            registerMessage(networkWrapper, messageClass);
+                        } else {
+                            LLibrary.LOGGER.error("Class " + message + " doesn't extend AbstractMessage!");
+                        }
+                    } catch (ClassNotFoundException e) {
+                        LLibrary.LOGGER.error("Couldn't find message class " + message, e);
+                    }
+                }
             } catch (Exception e) {
                 LLibrary.LOGGER.fatal("Failed to inject network wrapper for mod container " + mod, e);
             }
