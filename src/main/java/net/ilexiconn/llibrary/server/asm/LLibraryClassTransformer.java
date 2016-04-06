@@ -162,7 +162,7 @@ public class LLibraryClassTransformer implements IClassTransformer {
                     insert.add(label);
                     methodNode.instructions.insertBefore(setRotationAngles.getNext(), insert);
                 }
-            } else if (methodNode.name.equals("<init>") && methodNode.desc.equals("(L" + this.getMappingFor("net/minecraft/client/renderer/entity/RenderManager;Z)V"))) {
+            } else if (methodNode.name.equals("<init>") && methodNode.desc.equals("(L" + this.getMappingFor("net/minecraft/client/renderer/entity/RenderManager") + ";Z)V")) {
                 String modelPlayerFriendlyName = this.getMappingFor(MODEL_PLAYER).replaceAll("\\.", "/");
                 String desc = "(L" + renderPlayerFriendlyName + ";L" + modelPlayerFriendlyName + ";Z)L" + modelPlayerFriendlyName + ";";
                 InsnList inject = new InsnList();
