@@ -131,10 +131,21 @@ public enum ServerEventHandler {
                 while (iterator.hasNext()) {
                     Map.Entry<EntityPlayerMP, List<PropertiesTracker<?>>> trackerEntry = iterator.next();
                     EntityPlayerMP player = trackerEntry.getKey();
-                    WorldServer world = DimensionManager.getWorld(player.dimension);
-                    if (player.isDead || world == null || !world.loadedEntityList.contains(player)) {
+                    WorldServer playerWorld = DimensionManager.getWorld(player.dimension);
+                    if (player == null || player.isDead || playerWorld == null || !playerWorld.loadedEntityList.contains(player)) {
                         iterator.remove();
                         trackerEntry.getValue().forEach(PropertiesTracker::removeTracker);
+                    } else {
+                        Iterator<PropertiesTracker<?>> it = trackerEntry.getValue().iterator();
+                        while (it.hasNext()) {
+                            PropertiesTracker tracker = it.next();
+                            Entity entity = tracker.getEntity();
+                            WorldServer entityWorld = DimensionManager.getWorld(entity.dimension);
+                            if (entity == null || entity.isDead || entityWorld == null || !entityWorld.loadedEntityList.contains(entity)) {
+                                it.remove();
+                                tracker.removeTracker();
+                            }
+                        }
                     }
                 }
             }
