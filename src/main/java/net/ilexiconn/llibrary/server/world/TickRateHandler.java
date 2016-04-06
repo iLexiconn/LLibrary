@@ -4,7 +4,7 @@ import net.ilexiconn.llibrary.LLibrary;
 
 /**
  * @author gegy1000
- * @since 1.1.1
+ * @since 1.2.0
  */
 public enum TickRateHandler {
     INSTANCE;
