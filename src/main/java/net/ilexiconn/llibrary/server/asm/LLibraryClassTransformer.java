@@ -36,6 +36,8 @@ public class LLibraryClassTransformer implements IClassTransformer {
         this.mappings.put("net/minecraft/client/resources/IResourceManager", "bqy");
         this.mappings.put("loadLocaleDataFiles", "a");
         this.mappings.put("field_135032_a", "a");
+        this.mappings.put("bipedRightArm", "f");
+        this.mappings.put("bipedLeftArm", "g");
     }
 
     public String getMappingFor(String name) {
