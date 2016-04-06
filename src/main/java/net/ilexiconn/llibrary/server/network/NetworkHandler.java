@@ -1,6 +1,5 @@
 package net.ilexiconn.llibrary.server.network;
 
-import com.google.common.base.Strings;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.discovery.ASMDataTable;
@@ -66,20 +65,10 @@ public enum NetworkHandler {
                 Field field = targetClass.getDeclaredField(target.getObjectName());
                 field.setAccessible(true);
                 NetworkWrapper annotation = field.getAnnotation(NetworkWrapper.class);
-                String channelName = Strings.isNullOrEmpty(annotation.name()) ? mod.getModId() : annotation.name();
-                field.set(mod.getMod(), NetworkRegistry.INSTANCE.newSimpleChannel(channelName));
+                field.set(mod.getMod(), NetworkRegistry.INSTANCE.newSimpleChannel(mod.getModId()));
                 SimpleNetworkWrapper networkWrapper = (SimpleNetworkWrapper) field.get(mod.getMod());
-                for (String message : annotation.messages()) {
-                    try {
-                        Class messageClass = Class.forName(message);
-                        if (AbstractMessage.class.isAssignableFrom(messageClass)) {
-                            registerMessage(networkWrapper, messageClass);
-                        } else {
-                            LLibrary.LOGGER.error("Class " + message + " doesn't extend AbstractMessage!");
-                        }
-                    } catch (ClassNotFoundException e) {
-                        LLibrary.LOGGER.error("Couldn't find message class " + message, e);
-                    }
+                for (Class messageClass : annotation.value()) {
+                    registerMessage(networkWrapper, messageClass);
                 }
             } catch (Exception e) {
                 LLibrary.LOGGER.fatal("Failed to inject network wrapper for mod container " + mod, e);

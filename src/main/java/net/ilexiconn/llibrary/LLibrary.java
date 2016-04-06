@@ -9,7 +9,10 @@ import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.ilexiconn.llibrary.server.ServerProxy;
 import net.ilexiconn.llibrary.server.config.Config;
 import net.ilexiconn.llibrary.server.config.LLibraryConfig;
+import net.ilexiconn.llibrary.server.network.AnimationMessage;
 import net.ilexiconn.llibrary.server.network.NetworkWrapper;
+import net.ilexiconn.llibrary.server.network.PropertiesMessage;
+import net.ilexiconn.llibrary.server.network.SnackbarMessage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -23,7 +26,7 @@ public class LLibrary {
     public static LLibrary INSTANCE;
     @Config
     public static LLibraryConfig CONFIG;
-    @NetworkWrapper(messages = {"net.ilexiconn.llibrary.server.network.AnimationMessage", "net.ilexiconn.llibrary.server.network.PropertiesMessage", "net.ilexiconn.llibrary.server.network.SnackbarMessage"})
+    @NetworkWrapper({AnimationMessage.class, PropertiesMessage.class, SnackbarMessage.class})
     public static SimpleNetworkWrapper NETWORK_WRAPPER;
 
     public static final Logger LOGGER = LogManager.getLogger("LLibrary");
