@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Assign a new network wrapper instance to the field.
+ * Assign a new network wrapper instance to the field. The channel name will be the mod id.
  *
  * @author iLexiconn
  * @since 1.2.0
@@ -15,12 +15,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface NetworkWrapper {
     /**
-     * @return the channel name. If null, the modid will be used
+     * @return an array of classes of abstract messages to be registered
      */
-    String name() default "";
-
-    /**
-     * @return an array of class names of abstract messages to be registered
-     */
-    String[] messages() default {};
+    Class<? extends AbstractMessage<?>>[] value();
 }
