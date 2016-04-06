@@ -130,16 +130,7 @@ public enum ServerEventHandler {
             if (!hasPlayer) {
                 EntityPropertiesHandler.INSTANCE.addTracker(player, player);
             }
-            Iterator<PropertiesTracker<?>> it = trackers.iterator();
-            while (it.hasNext()) {
-                PropertiesTracker tracker = it.next();
-                Entity entity = tracker.getEntity();
-                WorldServer entityWorld = DimensionManager.getWorld(entity.dimension);
-                if (entity.isDead || entityWorld == null || !entityWorld.loadedEntityList.contains(entity)) {
-                    it.remove();
-                    tracker.removeTracker();
-                    continue;
-                }
+            for (PropertiesTracker<?> tracker : trackers) {
                 tracker.updateTracker();
                 if (tracker.isTrackerReady()) {
                     tracker.onSync();
