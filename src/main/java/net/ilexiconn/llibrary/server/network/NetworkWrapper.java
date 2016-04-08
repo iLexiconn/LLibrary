@@ -17,5 +17,5 @@ public @interface NetworkWrapper {
     /**
      * @return an array of classes of abstract messages to be registered
      */
-    Class<? extends AbstractMessage<?>>[] value();
+    Class<? extends AbstractMessage<?>>[] value() default {};
 }
