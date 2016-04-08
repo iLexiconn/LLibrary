@@ -64,6 +64,10 @@ jar {
 task sourceJar(type: Jar, dependsOn: classes) {
     classifier = "sources"
     from sourceSets.main.allSource
+    manifest {
+        attributes "FMLAT": "llibrary_at.cfg"
+        attributes "FMLCorePlugin": "net.ilexiconn.llibrary.server.asm.LLibraryPlugin"
+    }
 }
 
 task devJar(type: Jar) {
