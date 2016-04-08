@@ -7,6 +7,7 @@ import net.ilexiconn.llibrary.server.network.AnimationMessage;
 import net.ilexiconn.llibrary.server.network.NetworkWrapper;
 import net.ilexiconn.llibrary.server.network.PropertiesMessage;
 import net.ilexiconn.llibrary.server.network.SnackbarMessage;
+import net.ilexiconn.llibrary.server.network.TileTrackMessage;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -26,7 +27,7 @@ public class LLibrary {
     public static LLibrary INSTANCE;
     @Config
     public static LLibraryConfig CONFIG;
-    @NetworkWrapper({AnimationMessage.class, PropertiesMessage.class, SnackbarMessage.class})
+    @NetworkWrapper({AnimationMessage.class, PropertiesMessage.class, SnackbarMessage.class, TileTrackMessage.class})
     public static SimpleNetworkWrapper NETWORK_WRAPPER;
 
     public static final Logger LOGGER = LogManager.getLogger("LLibrary");
