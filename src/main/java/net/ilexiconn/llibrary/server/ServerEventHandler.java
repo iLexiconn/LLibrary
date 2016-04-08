@@ -8,6 +8,7 @@ import net.ilexiconn.llibrary.server.config.ConfigHandler;
 import net.ilexiconn.llibrary.server.entity.EntityProperties;
 import net.ilexiconn.llibrary.server.entity.EntityPropertiesHandler;
 import net.ilexiconn.llibrary.server.entity.PropertiesTracker;
+import net.ilexiconn.llibrary.server.entity.block.TileTrackingHandler;
 import net.ilexiconn.llibrary.server.network.PropertiesMessage;
 import net.ilexiconn.llibrary.server.world.WorldDataHandler;
 import net.minecraft.entity.Entity;
@@ -206,5 +207,10 @@ public enum ServerEventHandler {
         if (!event.getWorld().isRemote) {
             WorldDataHandler.INSTANCE.saveWorldData(event.getWorld().getSaveHandler(), event.getWorld());
         }
+    }
+
+    @SubscribeEvent
+    public void onWorldTick(TickEvent.WorldTickEvent event) {
+        TileTrackingHandler.INSTANCE.updateTrackers(event.world);
     }
 }
