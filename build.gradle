@@ -64,6 +64,9 @@ jar {
 task devJar(type: Jar) {
     classifier = "dev"
     from sourceSets.main.output
+    manifest {
+        attributes "FMLCorePlugin": "net.ilexiconn.llibrary.server.asm.LLibraryPlugin"
+    }
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
