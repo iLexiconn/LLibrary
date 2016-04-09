@@ -18,6 +18,7 @@ public class LLibraryClassTransformer implements IClassTransformer {
     private static final String RENDER_PLAYER = "net.minecraft.client.renderer.entity.RenderPlayer";
     private static final String MODEL_PLAYER = "net.minecraft.client.model.ModelPlayer";
     private static final String LOCALE = "net.minecraft.client.resources.Locale";
+    private static final String WORLD = "net.minecraft.world.World";
 
     private Map<String, String> mappings = new HashMap<>();
 
@@ -62,9 +63,12 @@ public class LLibraryClassTransformer implements IClassTransformer {
             return transformMinecraftServer(bytes, name);
         } else if (name.equals("net.minecraftforge.fml.common.FMLModContainer")) {
             return transformFMLModContainer(bytes, name);
+        } else if (name.equals(this.getMappingFor(WORLD))) {
+            return transformWorld(bytes, name);
         }
         return bytes;
     }
+
 
     private byte[] transformMinecraftServer(byte[] bytes, String name) {
         ClassReader cr = new ClassReader(bytes);
@@ -305,6 +309,34 @@ public class LLibraryClassTransformer implements IClassTransformer {
             methodNode.instructions.add(inject);
         });
         ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_MAXS);
+        classNode.accept(cw);
+        saveBytecode(name, cw);
+        return cw.toByteArray();
+    }
+
+    private byte[] transformWorld(byte[] bytes, String name) {
+        ClassReader cr = new ClassReader(bytes);
+        ClassNode classNode = new ClassNode();
+        cr.accept(classNode, ClassReader.SKIP_FRAMES);
+        classNode.methods.stream().filter(methodNode -> methodNode.name.equals(this.getMappingFor("updateEntities"))).forEach(methodNode -> {
+            InsnList inject = new InsnList();
+            for (AbstractInsnNode node : methodNode.instructions.toArray()) {
+                if (node.getOpcode() == Opcodes.INVOKEINTERFACE && ((MethodInsnNode) node).name.equals(this.getMappingFor("update"))) {
+                    LabelNode label = new LabelNode();
+                    inject.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", "INSTANCE", "Lnet/ilexiconn/llibrary/server/asm/LLibraryASMHandler;"));
+                    inject.add(new VarInsnNode(Opcodes.ALOAD, 2));
+                    inject.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "net/ilexiconn/llibrary/server/asm/LLibraryASMHandler", "updateBlockEntity", "(L" + this.getMappingFor("net.minecraft.tileentity.TileEntity").replaceAll("\\.", "/") + ";)Z", false));
+                    inject.add(new JumpInsnNode(Opcodes.IFEQ, label));
+                    inject.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "net/minecraft/util/ITickable", "update", "()V", false));
+                    inject.add(label);
+                } else {
+                    inject.add(node);
+                }
+            }
+            methodNode.instructions.clear();
+            methodNode.instructions.add(inject);
+        });
+        ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
         classNode.accept(cw);
         saveBytecode(name, cw);
         return cw.toByteArray();
