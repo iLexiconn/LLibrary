@@ -32,7 +32,7 @@ public class LLibraryClassTransformer implements IClassTransformer {
         this.mappings.put("render", "a");
         this.mappings.put("net/minecraft/client/entity/AbstractClientPlayer", "bmq");
         this.mappings.put("net/minecraft/entity/Entity", "rr");
-        this.mappings.put("getMainModel", "b");
+        this.mappings.put("getMainModel", "h");
         this.mappings.put("net/minecraft/client/renderer/entity/RenderManager", "brm");
         this.mappings.put("net/minecraft/client/model/ModelBase", "bjc");
         this.mappings.put("mainModel", "g");
