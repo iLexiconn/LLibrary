@@ -57,8 +57,8 @@ processResources {
 
 jar {
     manifest {
-        attributes "FMLCorePlugin": "net.ilexiconn.llibrary.server.asm.LLibraryPlugin",
-		'FMLCorePluginContainsFMLMod': 'true'
+        attributes "FMLCorePlugin": "net.ilexiconn.llibrary.server.asm.LLibraryPlugin"
+        attributes "FMLCorePluginContainsFMLMod": "true"
     }
 }
 
@@ -66,8 +66,8 @@ task devJar(type: Jar) {
     classifier = "dev"
     from sourceSets.main.output
     manifest {
-        attributes "FMLCorePlugin": "net.ilexiconn.llibrary.server.asm.LLibraryPlugin",
-		'FMLCorePluginContainsFMLMod': 'true'
+        attributes "FMLCorePlugin": "net.ilexiconn.llibrary.server.asm.LLibraryPlugin"
+        attributes "FMLCorePluginContainsFMLMod": "true"
     }
 }
 
