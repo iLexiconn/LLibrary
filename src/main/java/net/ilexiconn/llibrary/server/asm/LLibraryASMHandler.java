@@ -2,13 +2,11 @@ package net.ilexiconn.llibrary.server.asm;
 
 import net.ilexiconn.llibrary.client.event.PlayerModelEvent;
 import net.ilexiconn.llibrary.client.event.RenderArmEvent;
-import net.ilexiconn.llibrary.server.event.BlockEntityUpdateEvent;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 
 public enum LLibraryASMHandler {
@@ -46,9 +44,5 @@ public enum LLibraryASMHandler {
         PlayerModelEvent.Assign event = new PlayerModelEvent.Assign(renderPlayer, model, smallArms);
         MinecraftForge.EVENT_BUS.post(event);
         return event.getModel();
-    }
-
-    public boolean updateBlockEntity(TileEntity entity) {
-        return MinecraftForge.EVENT_BUS.post(new BlockEntityUpdateEvent(entity));
     }
 }

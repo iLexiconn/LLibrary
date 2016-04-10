@@ -2,43 +2,21 @@ package net.ilexiconn.llibrary.test;
 
 import net.ilexiconn.llibrary.server.entity.EntityProperties;
 import net.ilexiconn.llibrary.server.entity.EntityPropertiesHandler;
-import net.ilexiconn.llibrary.server.entity.block.ITrackableTile;
-import net.ilexiconn.llibrary.server.entity.block.TileTrackingHandler;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ITickable;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 @Mod(modid = "PropertiesTest")
 public class PropertiesTest {
-    public static final Block TRACKABLE_BLOCK = new BlockContainer(Material.rock) {
-        @Override
-        public TileEntity createNewTileEntity(World world, int meta) {
-            return new TrackableTile();
-        }
-    }.setUnlocalizedName("trackable_block");
-
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
         EntityPropertiesHandler.INSTANCE.registerProperties(TestEntityProperties.class);
-        ResourceLocation resourceLocation = new ResourceLocation("propertiestest:trackable_block");
-        GameRegistry.register(TRACKABLE_BLOCK, resourceLocation);
-        GameRegistry.register(new ItemBlock(TRACKABLE_BLOCK), resourceLocation);
-        GameRegistry.registerTileEntity(TrackableTile.class, "propertiestest:trackable_block");
     }
 
     @SubscribeEvent
@@ -80,45 +58,6 @@ public class PropertiesTest {
         @Override
         public int getTrackingTime() {
             return 0;
-        }
-    }
-
-    public static class TrackableTile extends TileEntity implements ITrackableTile, ITickable {
-        private int value;
-
-        public TrackableTile() {
-            super();
-        }
-
-        @Override
-        public void onLoad() {
-            super.onLoad();
-            TileTrackingHandler.INSTANCE.trackTile(this);
-        }
-
-        @Override
-        public int getTrackingFrequency() {
-            return 10;
-        }
-
-        @Override
-        public void saveTrackingData(NBTTagCompound compound) {
-            compound.setInteger("value", this.value);
-        }
-
-        @Override
-        public void readTrackingData(NBTTagCompound compound) {
-            this.value = compound.getInteger("value");
-            System.out.println("Loaded tracked value " + this.value);
-        }
-
-        @Override
-        public void onSync() {
-        }
-
-        @Override
-        public void update() {
-            this.value++;
         }
     }
 }
