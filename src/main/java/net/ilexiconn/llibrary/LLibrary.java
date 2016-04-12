@@ -3,10 +3,7 @@ package net.ilexiconn.llibrary;
 import net.ilexiconn.llibrary.server.ServerProxy;
 import net.ilexiconn.llibrary.server.config.Config;
 import net.ilexiconn.llibrary.server.config.LLibraryConfig;
-import net.ilexiconn.llibrary.server.network.AnimationMessage;
-import net.ilexiconn.llibrary.server.network.NetworkWrapper;
-import net.ilexiconn.llibrary.server.network.PropertiesMessage;
-import net.ilexiconn.llibrary.server.network.SnackbarMessage;
+import net.ilexiconn.llibrary.server.network.*;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -18,7 +15,7 @@ import org.apache.logging.log4j.Logger;
 
 @Mod(modid = "llibrary", name = "LLibrary", version = LLibrary.VERSION)
 public class LLibrary {
-    public static final String VERSION = "1.2.1";
+    public static final String VERSION = "1.3.0-develop";
 
     @SidedProxy(serverSide = "net.ilexiconn.llibrary.server.ServerProxy", clientSide = "net.ilexiconn.llibrary.client.ClientProxy")
     public static ServerProxy PROXY;
@@ -26,7 +23,7 @@ public class LLibrary {
     public static LLibrary INSTANCE;
     @Config
     public static LLibraryConfig CONFIG;
-    @NetworkWrapper({AnimationMessage.class, PropertiesMessage.class, SnackbarMessage.class})
+    @NetworkWrapper({AnimationMessage.class, PropertiesMessage.class, SnackbarMessage.class, BlockEntityMessage.class})
     public static SimpleNetworkWrapper NETWORK_WRAPPER;
 
     public static final Logger LOGGER = LogManager.getLogger("LLibrary");
