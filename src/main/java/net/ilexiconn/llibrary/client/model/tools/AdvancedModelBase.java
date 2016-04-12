@@ -44,7 +44,7 @@ public class AdvancedModelBase extends ModelBase {
      * @param boxes           the boxes to face the given target
      */
     public void faceTarget(float yaw, float pitch, float rotationDivisor, AdvancedModelRenderer... boxes) {
-        float actualRotationDivisor = rotationDivisor / boxes.length;
+        float actualRotationDivisor = rotationDivisor * boxes.length;
         float yawAmount = yaw / (180.0F / (float) Math.PI) / actualRotationDivisor;
         float pitchAmount = pitch / (180.0F / (float) Math.PI) / actualRotationDivisor;
         for (AdvancedModelRenderer box : boxes) {
