@@ -1,7 +1,6 @@
 package net.ilexiconn.llibrary.server;
 
 import net.ilexiconn.llibrary.LLibrary;
-import net.ilexiconn.llibrary.client.lang.LanguageHandler;
 import net.ilexiconn.llibrary.server.capability.EntityDataCapabilityImplementation;
 import net.ilexiconn.llibrary.server.capability.EntityDataCapabilityStorage;
 import net.ilexiconn.llibrary.server.capability.IEntityDataCapability;
@@ -19,7 +18,6 @@ public class ServerProxy {
     public void onPreInit() {
         MinecraftForge.EVENT_BUS.register(ServerEventHandler.INSTANCE);
         CapabilityManager.INSTANCE.register(IEntityDataCapability.class, new EntityDataCapabilityStorage(), EntityDataCapabilityImplementation.class);
-        LanguageHandler.INSTANCE.load();
     }
 
     public void onInit() {

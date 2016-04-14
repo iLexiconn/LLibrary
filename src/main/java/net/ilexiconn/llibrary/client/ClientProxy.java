@@ -2,6 +2,7 @@ package net.ilexiconn.llibrary.client;
 
 import com.google.gson.Gson;
 import net.ilexiconn.llibrary.client.gui.SnackbarGUI;
+import net.ilexiconn.llibrary.client.lang.LanguageHandler;
 import net.ilexiconn.llibrary.client.model.tabula.TabulaModelHandler;
 import net.ilexiconn.llibrary.server.ServerProxy;
 import net.ilexiconn.llibrary.server.network.AbstractMessage;
@@ -31,9 +32,9 @@ public class ClientProxy extends ServerProxy {
     @Override
     public void onPreInit() {
         super.onPreInit();
-
         MinecraftForge.EVENT_BUS.register(ClientEventHandler.INSTANCE);
         ModelLoaderRegistry.registerLoader(TabulaModelHandler.INSTANCE);
+        LanguageHandler.INSTANCE.load();
     }
 
     @Override
