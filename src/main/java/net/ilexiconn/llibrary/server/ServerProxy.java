@@ -1,7 +1,6 @@
 package net.ilexiconn.llibrary.server;
 
 import net.ilexiconn.llibrary.LLibrary;
-import net.ilexiconn.llibrary.client.lang.LanguageHandler;
 import net.ilexiconn.llibrary.server.network.AbstractMessage;
 import net.ilexiconn.llibrary.server.network.SnackbarMessage;
 import net.ilexiconn.llibrary.server.snackbar.Snackbar;
@@ -14,7 +13,6 @@ import net.minecraftforge.fml.server.FMLServerHandler;
 public class ServerProxy {
     public void onPreInit() {
         MinecraftForge.EVENT_BUS.register(ServerEventHandler.INSTANCE);
-        LanguageHandler.INSTANCE.load();
     }
 
     public void onInit() {
