@@ -7,6 +7,7 @@ import cpw.mods.fml.relauncher.ReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.ilexiconn.llibrary.client.gui.SnackbarGUI;
+import net.ilexiconn.llibrary.client.lang.LanguageHandler;
 import net.ilexiconn.llibrary.server.ServerProxy;
 import net.ilexiconn.llibrary.server.network.AbstractMessage;
 import net.ilexiconn.llibrary.server.snackbar.Snackbar;
@@ -30,9 +31,9 @@ public class ClientProxy extends ServerProxy {
     @Override
     public void onPreInit() {
         super.onPreInit();
-
         MinecraftForge.EVENT_BUS.register(ClientEventHandler.INSTANCE);
         FMLCommonHandler.instance().bus().register(ClientEventHandler.INSTANCE);
+        LanguageHandler.INSTANCE.load();
     }
 
     @Override

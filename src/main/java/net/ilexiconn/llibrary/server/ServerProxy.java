@@ -4,7 +4,6 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.server.FMLServerHandler;
 import net.ilexiconn.llibrary.LLibrary;
-import net.ilexiconn.llibrary.client.lang.LanguageHandler;
 import net.ilexiconn.llibrary.server.network.AbstractMessage;
 import net.ilexiconn.llibrary.server.network.SnackbarMessage;
 import net.ilexiconn.llibrary.server.snackbar.Snackbar;
@@ -15,7 +14,6 @@ public class ServerProxy {
     public void onPreInit() {
         MinecraftForge.EVENT_BUS.register(ServerEventHandler.INSTANCE);
         FMLCommonHandler.instance().bus().register(ServerEventHandler.INSTANCE);
-        LanguageHandler.INSTANCE.load();
     }
 
     public void onInit() {
