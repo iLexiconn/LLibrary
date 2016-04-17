@@ -45,12 +45,6 @@ public class ClientUtils {
     }
 
     public static float interpolate(float prev, float current, float partialTicks) {
-        float f;
-        for (f = current - prev; f < -180.0F; f += 360.0F) {
-        }
-        while (f >= 180.0F) {
-            f -= 360.0F;
-        }
-        return prev + partialTicks * f;
+        return prev + partialTicks * (current - prev);
     }
 }
