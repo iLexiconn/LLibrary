@@ -14,6 +14,7 @@ import net.minecraft.util.StringUtils;
 import net.minecraftforge.fml.client.GuiScrollingList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 
 import java.awt.image.BufferedImage;
@@ -97,7 +98,7 @@ public class ModUpdateListGUI extends GuiScrollingList {
             float iconHeight = this.cachedLogoDimensions.get(idx).getY() * scale;
             int offset = 12;
             WorldRenderer worldRenderer = tess.getWorldRenderer();
-            worldRenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
+            worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
             worldRenderer.pos(offset, top + iconHeight, 0).tex(0, 1).endVertex();
             worldRenderer.pos(offset + iconWidth, top + iconHeight, 0).tex(1, 1).endVertex();
             worldRenderer.pos(offset + iconWidth, top, 0).tex(1, 0).endVertex();
