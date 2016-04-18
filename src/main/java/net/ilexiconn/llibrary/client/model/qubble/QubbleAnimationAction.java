@@ -1,13 +1,12 @@
 package net.ilexiconn.llibrary.client.model.qubble;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.INBTSerializable;
 
 /**
  * @author iLexiconn
  * @since 1.3.0
  */
-public class QubbleAnimationAction implements INBTSerializable<NBTTagCompound> {
+public class QubbleAnimationAction {
     private String cube;
     private Action action;
     private float valueX;
@@ -31,7 +30,6 @@ public class QubbleAnimationAction implements INBTSerializable<NBTTagCompound> {
         return animation;
     }
 
-    @Override
     public NBTTagCompound serializeNBT() {
         NBTTagCompound compound = new NBTTagCompound();
         compound.setString("cube", this.cube);
@@ -44,7 +42,6 @@ public class QubbleAnimationAction implements INBTSerializable<NBTTagCompound> {
         return compound;
     }
 
-    @Override
     public void deserializeNBT(NBTTagCompound compound) {
         this.cube = compound.getString("cube");
         this.action = Action.valueOf(compound.getString("action"));

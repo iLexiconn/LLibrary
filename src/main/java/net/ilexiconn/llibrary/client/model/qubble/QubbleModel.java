@@ -4,7 +4,6 @@ import net.ilexiconn.llibrary.LLibrary;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Vector3d;
@@ -16,7 +15,7 @@ import java.util.stream.Collectors;
  * @author iLexiconn
  * @since 1.3.0
  */
-public class QubbleModel implements INBTSerializable<NBTTagCompound> {
+public class QubbleModel {
     private String name;
     private String author;
     private int version;
@@ -46,7 +45,6 @@ public class QubbleModel implements INBTSerializable<NBTTagCompound> {
         return model;
     }
 
-    @Override
     public NBTTagCompound serializeNBT() {
         NBTTagCompound compound = new NBTTagCompound();
         compound.setString("name", this.name);
@@ -69,7 +67,6 @@ public class QubbleModel implements INBTSerializable<NBTTagCompound> {
         return compound;
     }
 
-    @Override
     public void deserializeNBT(NBTTagCompound compound) {
         this.name = compound.getString("name");
         this.author = compound.getString("author");

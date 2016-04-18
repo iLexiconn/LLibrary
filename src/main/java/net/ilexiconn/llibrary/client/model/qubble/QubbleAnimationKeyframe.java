@@ -3,7 +3,6 @@ package net.ilexiconn.llibrary.client.model.qubble;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +12,7 @@ import java.util.stream.Collectors;
  * @author iLexiconn
  * @since 1.3.0
  */
-public class QubbleAnimationKeyframe implements INBTSerializable<NBTTagCompound> {
+public class QubbleAnimationKeyframe {
     private int duration;
     private Type type;
     private List<QubbleAnimationAction> actions = new ArrayList<>();
@@ -35,7 +34,6 @@ public class QubbleAnimationKeyframe implements INBTSerializable<NBTTagCompound>
         return keyframe;
     }
 
-    @Override
     public NBTTagCompound serializeNBT() {
         NBTTagCompound compound = new NBTTagCompound();
         compound.setInteger("duration", this.duration);
@@ -48,7 +46,6 @@ public class QubbleAnimationKeyframe implements INBTSerializable<NBTTagCompound>
         return compound;
     }
 
-    @Override
     public void deserializeNBT(NBTTagCompound compound) {
         this.duration = compound.getInteger("duration");
         this.type = Type.valueOf(compound.getString("type"));
