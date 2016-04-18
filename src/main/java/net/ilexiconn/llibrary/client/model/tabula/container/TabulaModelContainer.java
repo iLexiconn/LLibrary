@@ -14,7 +14,7 @@ public class TabulaModelContainer {
     private int projVersion;
     private String[] metadata;
 
-    private double[] scale = new double[3];
+    private double[] scale = new double[]{1.0, 1.0, 1.0};
 
     private int textureWidth;
     private int textureHeight;
@@ -23,6 +23,21 @@ public class TabulaModelContainer {
     private List<TabulaCubeContainer> cubes = new ArrayList<>();
     private List<TabulaAnimationContainer> anims = new ArrayList<>();
     private int cubeCount;
+
+    public TabulaModelContainer(String name, String author, int textureWidth, int textureHeight, List<TabulaCubeContainer> cubes, int projectVersion) {
+        this.modelName = name;
+        this.authorName = author;
+        this.textureWidth = textureWidth;
+        this.textureHeight = textureHeight;
+        this.cubes = cubes;
+        this.cubes.forEach(this::incrementCubeCount);
+        this.projVersion = projectVersion;
+    }
+
+    private void incrementCubeCount(TabulaCubeContainer cube) {
+        this.cubeCount++;
+        cube.getChildren().forEach(this::incrementCubeCount);
+    }
 
     public String getName() {
         return this.modelName;
