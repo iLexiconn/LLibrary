@@ -27,6 +27,22 @@ public class TabulaCubeContainer {
 
     private List<TabulaCubeContainer> children = new ArrayList<>();
 
+    public TabulaCubeContainer(String name, String identifier, String parentIdentifier, int[] dimensions, double[] position, double[] offset, double[] rotation, double[] scale, int[] textureOffset, boolean textureMirror, double opacity, double mcScale, boolean hidden) {
+        this.name = name;
+        this.identifier = identifier;
+        this.parentIdentifier = parentIdentifier;
+        this.dimensions = dimensions;
+        this.position = position;
+        this.offset = offset;
+        this.rotation = rotation;
+        this.scale = scale;
+        this.txOffset = textureOffset;
+        this.txMirror = textureMirror;
+        this.opacity = opacity;
+        this.mcScale = mcScale;
+        this.hidden = hidden;
+    }
+
     public String getName() {
         return this.name;
     }
