@@ -25,6 +25,7 @@ public class LLibrary {
     public static LLibraryConfig CONFIG;
     @NetworkWrapper({AnimationMessage.class, PropertiesMessage.class, SnackbarMessage.class, BlockEntityMessage.class})
     public static SimpleNetworkWrapper NETWORK_WRAPPER;
+    public static int QUBBLE_VERSION = 1;
 
     public static final Logger LOGGER = LogManager.getLogger("LLibrary");
 
