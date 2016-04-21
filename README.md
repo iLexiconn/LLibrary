@@ -27,9 +27,6 @@ Compiling from source
 
 Contributors
 ==========
-iLexiconn  
-gegy1000  
-pau101  
-BobMowzie  
-FiskFille  
-TheCyberBrick
+|![iLexiconn](https://avatars0.githubusercontent.com/u/5201999?v=3&s=125)|![gegy1000](https://avatars0.githubusercontent.com/u/5172118?v=3&s=125)|![pau101](https://avatars0.githubusercontent.com/u/5201207?v=3&s=125)|![BobMowzie](https://avatars0.githubusercontent.com/u/7550579?v=3&s=125)|![FiskFille](https://avatars0.githubusercontent.com/u/10811084?v=3&s=125)|![TheCyberBrick](https://avatars0.githubusercontent.com/u/2338519?v=3&s=125)
+|:--------:|:--------:|:--------:|:--------:|:--------:|:--------:|
+| [@iLexiconn](https://github.com/iLexiconn) | [@gegy1000](https://github.com/gegy1000) | [@pau101](https://github.com/pau101) | [@BobMowzie](https://github.com/BobMowzie) | [@FiskFille](https://github.com/FiskFille) | [@TheCyberBrick](https://github.com/TheCyberBrick) |
