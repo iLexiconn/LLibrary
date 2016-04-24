@@ -18,7 +18,6 @@ public class LLibraryClassTransformer implements IClassTransformer {
     private static final String RENDER_PLAYER = "net.minecraft.client.renderer.entity.RenderPlayer";
     private static final String MODEL_PLAYER = "net.minecraft.client.model.ModelPlayer";
     private static final String LOCALE = "net.minecraft.client.resources.Locale";
-    private static final String WORLD = "net.minecraft.world.World";
 
     private Map<String, String> mappings = new HashMap<>();
 
@@ -61,8 +60,6 @@ public class LLibraryClassTransformer implements IClassTransformer {
             return transformLocale(bytes, name);
         } else if (name.equals("net.minecraft.server.MinecraftServer")) {
             return transformMinecraftServer(bytes, name);
-        } else if (name.equals("net.minecraftforge.fml.common.FMLModContainer")) {
-            return transformFMLModContainer(bytes, name);
         }
         return bytes;
     }
@@ -275,37 +272,6 @@ public class LLibraryClassTransformer implements IClassTransformer {
                 methodNode.instructions.add(inject);
             }
         }
-        ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_MAXS);
-        classNode.accept(cw);
-        saveBytecode(name, cw);
-        return cw.toByteArray();
-    }
-
-    public byte[] transformFMLModContainer(byte[] bytes, String name) {
-        ClassReader cr = new ClassReader(bytes);
-        ClassNode classNode = new ClassNode();
-        cr.accept(classNode, 0);
-        classNode.methods.stream().filter(methodNode -> methodNode.name.equals("constructMod")).forEach(methodNode -> {
-            InsnList inject = new InsnList();
-            for (AbstractInsnNode node : methodNode.instructions.toArray()) {
-                inject.add(node);
-                if (node.getOpcode() == Opcodes.INVOKESTATIC && ((MethodInsnNode) node).name.equals("inject")) {
-                    inject.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/ilexiconn/llibrary/server/config/ConfigHandler", "INSTANCE", "Lnet/ilexiconn/llibrary/server/config/ConfigHandler;"));
-                    inject.add(new VarInsnNode(Opcodes.ALOAD, 0));
-                    inject.add(new VarInsnNode(Opcodes.ALOAD, 1));
-                    inject.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "net/minecraftforge/fml/common/event/FMLConstructionEvent", "getASMHarvestedData", "()Lnet/minecraftforge/fml/common/discovery/ASMDataTable;", false));
-                    inject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "net/ilexiconn/llibrary/server/asm/LLibraryPlugin", "getMinecraftDir", "()Ljava/io/File;", false));
-                    inject.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "net/ilexiconn/llibrary/server/config/ConfigHandler", "injectConfig", "(Lnet/minecraftforge/fml/common/ModContainer;Lnet/minecraftforge/fml/common/discovery/ASMDataTable;Ljava/io/File;)V", false));
-                    inject.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/ilexiconn/llibrary/server/network/NetworkHandler", "INSTANCE", "Lnet/ilexiconn/llibrary/server/network/NetworkHandler;"));
-                    inject.add(new VarInsnNode(Opcodes.ALOAD, 0));
-                    inject.add(new VarInsnNode(Opcodes.ALOAD, 1));
-                    inject.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "net/minecraftforge/fml/common/event/FMLConstructionEvent", "getASMHarvestedData", "()Lnet/minecraftforge/fml/common/discovery/ASMDataTable;", false));
-                    inject.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "net/ilexiconn/llibrary/server/network/NetworkHandler", "injectNetworkWrapper", "(Lnet/minecraftforge/fml/common/ModContainer;Lnet/minecraftforge/fml/common/discovery/ASMDataTable;)V", false));
-                }
-            }
-            methodNode.instructions.clear();
-            methodNode.instructions.add(inject);
-        });
         ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_MAXS);
         classNode.accept(cw);
         saveBytecode(name, cw);
