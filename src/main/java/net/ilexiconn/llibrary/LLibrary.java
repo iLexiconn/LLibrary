@@ -1,13 +1,18 @@
 package net.ilexiconn.llibrary;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLConstructionEvent;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.ilexiconn.llibrary.server.ServerProxy;
+import net.ilexiconn.llibrary.server.asm.LLibraryPlugin;
 import net.ilexiconn.llibrary.server.config.Config;
+import net.ilexiconn.llibrary.server.config.ConfigHandler;
 import net.ilexiconn.llibrary.server.config.LLibraryConfig;
 import net.ilexiconn.llibrary.server.network.*;
 import org.apache.logging.log4j.LogManager;
@@ -42,5 +47,13 @@ public class LLibrary {
     @Mod.EventHandler
     public void onPostInit(FMLPostInitializationEvent event) {
         LLibrary.PROXY.onPostInit();
+    }
+
+    @Mod.EventHandler
+    public void onModConstruct(FMLConstructionEvent event) {
+        for (ModContainer mod : Loader.instance().getModList()) {
+            ConfigHandler.INSTANCE.injectConfig(mod, event.getASMHarvestedData(), LLibraryPlugin.getMinecraftDir());
+            NetworkHandler.INSTANCE.injectNetworkWrapper(mod, event.getASMHarvestedData());
+        }
     }
 }
