@@ -44,4 +44,11 @@ public abstract class AbstractMessage<T extends AbstractMessage<T>> implements I
      * @param messageContext the message context.
      */
     public abstract void onServerReceived(MinecraftServer server, T message, EntityPlayer player, MessageContext messageContext);
+
+    /**
+     * @return whether this message should be registered on the given side. Only used for messages registered with the @NetworkWrapper annotation
+     */
+    public boolean registerOnSide(Side side) {
+        return true;
+    }
 }

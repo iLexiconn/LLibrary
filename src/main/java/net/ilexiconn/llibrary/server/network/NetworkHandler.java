@@ -1,5 +1,6 @@
 package net.ilexiconn.llibrary.server.network;
 
+import com.google.common.collect.SetMultimap;
 import net.ilexiconn.llibrary.LLibrary;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
@@ -34,8 +35,17 @@ public enum NetworkHandler {
      * @param <T>            the message type
      */
     public <T extends AbstractMessage<T> & IMessageHandler<T, IMessage>> void registerMessage(SimpleNetworkWrapper networkWrapper, Class<T> clazz) {
-        this.registerMessage(networkWrapper, clazz, Side.CLIENT);
-        this.registerMessage(networkWrapper, clazz, Side.SERVER);
+        try {
+            AbstractMessage<T> message = clazz.getDeclaredConstructor().newInstance();
+            if (message.registerOnSide(Side.CLIENT)) {
+                this.registerMessage(networkWrapper, clazz, Side.CLIENT);
+            }
+            if (message.registerOnSide(Side.SERVER)) {
+                this.registerMessage(networkWrapper, clazz, Side.SERVER);
+            }
+        } catch (ReflectiveOperationException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -56,22 +66,24 @@ public enum NetworkHandler {
     }
 
     public void injectNetworkWrapper(ModContainer mod, ASMDataTable data) {
-        Set<ASMDataTable.ASMData> targetList = data.getAnnotationsFor(mod).get(NetworkWrapper.class.getName());
-        ClassLoader classLoader = Loader.instance().getModClassLoader();
-
-        for (ASMDataTable.ASMData target : targetList) {
-            try {
-                Class<?> targetClass = Class.forName(target.getClassName(), true, classLoader);
-                Field field = targetClass.getDeclaredField(target.getObjectName());
-                field.setAccessible(true);
-                NetworkWrapper annotation = field.getAnnotation(NetworkWrapper.class);
-                field.set(mod.getMod(), NetworkRegistry.INSTANCE.newSimpleChannel(mod.getModId()));
-                SimpleNetworkWrapper networkWrapper = (SimpleNetworkWrapper) field.get(mod.getMod());
-                for (Class messageClass : annotation.value()) {
-                    registerMessage(networkWrapper, messageClass);
+        SetMultimap<String, ASMDataTable.ASMData> annotations = data.getAnnotationsFor(mod);
+        if (annotations != null) {
+            Set<ASMDataTable.ASMData> targetList = annotations.get(NetworkWrapper.class.getName());
+            ClassLoader classLoader = Loader.instance().getModClassLoader();
+            for (ASMDataTable.ASMData target : targetList) {
+                try {
+                    Class<?> targetClass = Class.forName(target.getClassName(), true, classLoader);
+                    Field field = targetClass.getDeclaredField(target.getObjectName());
+                    field.setAccessible(true);
+                    NetworkWrapper annotation = field.getAnnotation(NetworkWrapper.class);
+                    field.set(mod.getMod(), NetworkRegistry.INSTANCE.newSimpleChannel(mod.getModId()));
+                    SimpleNetworkWrapper networkWrapper = (SimpleNetworkWrapper) field.get(mod.getMod());
+                    for (Class messageClass : annotation.value()) {
+                        registerMessage(networkWrapper, messageClass);
+                    }
+                } catch (Exception e) {
+                    LLibrary.LOGGER.fatal("Failed to inject network wrapper for mod container " + mod, e);
                 }
-            } catch (Exception e) {
-                LLibrary.LOGGER.fatal("Failed to inject network wrapper for mod container " + mod, e);
             }
         }
     }
