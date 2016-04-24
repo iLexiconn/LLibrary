@@ -38,14 +38,14 @@ public abstract class BlockEntity extends TileEntity {
     }
 
     @Override
-    public final Packet getDescriptionPacket() {
+    public Packet getDescriptionPacket() {
         NBTTagCompound compound = new NBTTagCompound();
         this.writeToNBT(compound);
         return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 0, compound);
     }
 
     @Override
-    public final void onDataPacket(NetworkManager networkManager, S35PacketUpdateTileEntity packet) {
+    public void onDataPacket(NetworkManager networkManager, S35PacketUpdateTileEntity packet) {
         this.readFromNBT(packet.func_148857_g());
     }
 
