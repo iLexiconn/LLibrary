@@ -18,20 +18,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 @SideOnly(Side.CLIENT)
 public class AdvancedModelRenderer extends ModelRenderer {
-    private AdvancedModelBase model;
-
     public float defaultRotationX, defaultRotationY, defaultRotationZ;
     public float defaultOffsetX, defaultOffsetY, defaultOffsetZ;
     public float defaultPositionX, defaultPositionY, defaultPositionZ;
-
+    public float scaleX = 1.0F, scaleY = 1.0F, scaleZ = 1.0F;
+    public boolean scaleChildren;
+    private AdvancedModelBase model;
     private AdvancedModelRenderer parent;
-
     private int displayList;
     private boolean compiled;
-
-    public float scaleX = 1.0F, scaleY = 1.0F, scaleZ = 1.0F;
-
-    public boolean scaleChildren;
 
     public AdvancedModelRenderer(AdvancedModelBase model, String name) {
         super(model, name);
@@ -115,17 +110,17 @@ public class AdvancedModelRenderer extends ModelRenderer {
     }
 
     /**
-     * Sets the parent of this box
-     */
-    public void setParent(AdvancedModelRenderer parent) {
-        this.parent = parent;
-    }
-
-    /**
      * @return the parent of this box
      */
     public AdvancedModelRenderer getParent() {
         return this.parent;
+    }
+
+    /**
+     * Sets the parent of this box
+     */
+    public void setParent(AdvancedModelRenderer parent) {
+        this.parent = parent;
     }
 
     /**
