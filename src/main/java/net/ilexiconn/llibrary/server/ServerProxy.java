@@ -2,7 +2,6 @@ package net.ilexiconn.llibrary.server;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import cpw.mods.fml.server.FMLServerHandler;
 import net.ilexiconn.llibrary.LLibrary;
 import net.ilexiconn.llibrary.server.network.AbstractMessage;
 import net.ilexiconn.llibrary.server.network.SnackbarMessage;
@@ -27,7 +26,7 @@ public class ServerProxy {
     }
 
     public <T extends AbstractMessage<T>> void handleMessage(final T message, final MessageContext messageContext) {
-        message.onServerReceived(FMLServerHandler.instance().getServer(), message, messageContext.getServerHandler().playerEntity, messageContext);
+        message.onServerReceived(FMLCommonHandler.instance().getMinecraftServerInstance(), message, messageContext.getServerHandler().playerEntity, messageContext);
     }
 
     public float getPartialTicks() {
