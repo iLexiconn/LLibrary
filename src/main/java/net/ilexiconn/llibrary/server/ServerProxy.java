@@ -11,6 +11,7 @@ import net.ilexiconn.llibrary.server.update.UpdateHandler;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.server.FMLServerHandler;
 
@@ -32,7 +33,7 @@ public class ServerProxy {
 
     public <T extends AbstractMessage<T>> void handleMessage(final T message, final MessageContext messageContext) {
         WorldServer world = (WorldServer) messageContext.getServerHandler().playerEntity.worldObj;
-        world.addScheduledTask(() -> message.onServerReceived(FMLServerHandler.instance().getServer(), message, messageContext.getServerHandler().playerEntity, messageContext));
+        world.addScheduledTask(() -> message.onServerReceived(FMLCommonHandler.instance().getMinecraftServerInstance(), message, messageContext.getServerHandler().playerEntity, messageContext));
     }
 
     public float getPartialTicks() {
