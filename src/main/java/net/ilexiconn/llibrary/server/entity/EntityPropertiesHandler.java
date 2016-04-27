@@ -20,7 +20,7 @@ public enum EntityPropertiesHandler {
     private Map<Class<? extends EntityProperties>, String> propertiesIDMap = new HashMap<>();
     private Map<Class<? extends Entity>, List<Class<? extends EntityProperties<?>>>> registeredProperties = new HashMap<>();
     private Map<Class<? extends Entity>, List<String>> entityPropertiesCache = new HashMap<>();
-    private Map<EntityPlayerMP, List<PropertiesTracker<?>>> trackerMap = new HashMap<>();
+    private Map<EntityPlayerMP, List<PropertiesTracker<?>>> trackerMap = new WeakHashMap<>();
 
     /**
      * Register a new properties class.

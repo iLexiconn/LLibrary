@@ -2,10 +2,7 @@ package net.ilexiconn.llibrary.server.capability;
 
 import net.minecraft.entity.Entity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author gegy1000
@@ -14,7 +11,7 @@ import java.util.Map;
 public enum EntityDataHandler {
     INSTANCE;
 
-    private Map<Entity, List<IEntityData<?>>> registeredEntityData = new HashMap<>();
+    private Map<Entity, List<IEntityData<?>>> registeredEntityData = new WeakHashMap<>();
 
     /**
      * Registers an Extended Entity Data Manager to the given entity
