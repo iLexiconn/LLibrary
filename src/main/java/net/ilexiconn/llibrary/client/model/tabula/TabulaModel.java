@@ -23,14 +23,13 @@ import java.util.Map;
 public class TabulaModel extends AdvancedModelBase {
     protected Map<String, AdvancedModelRenderer> cubes = new HashMap<>();
     protected List<AdvancedModelRenderer> rootBoxes = new ArrayList<>();
-    protected TabulaModelContainer container;
     protected ITabulaModelAnimator tabulaAnimator;
     protected Map<String, AdvancedModelRenderer> identifierMap = new HashMap<>();
+    protected double[] scale;
 
     public TabulaModel(TabulaModelContainer container, ITabulaModelAnimator tabulaAnimator) {
         this.textureWidth = container.getTextureWidth();
         this.textureHeight = container.getTextureHeight();
-        this.container = container;
         this.tabulaAnimator = tabulaAnimator;
         for (TabulaCubeContainer cube : container.getCubes()) {
             this.parseCube(cube, null);
@@ -85,8 +84,7 @@ public class TabulaModel extends AdvancedModelBase {
     public void render(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float rotationYaw, float rotationPitch, float scale) {
         this.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, rotationYaw, rotationPitch, scale, entity);
         GL11.glPushMatrix();
-        double[] modelScale = this.container.getScale();
-        GL11.glScaled(modelScale[0], modelScale[1], modelScale[2]);
+        GL11.glScaled(this.scale[0], this.scale[1], this.scale[2]);
         for (AdvancedModelRenderer box : this.rootBoxes) {
             box.render(scale);
         }
