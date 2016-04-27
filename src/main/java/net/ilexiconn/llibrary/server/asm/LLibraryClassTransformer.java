@@ -55,14 +55,16 @@ public class LLibraryClassTransformer implements IClassTransformer {
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] bytes) {
-        if (name.equals(this.getMappingFor(RENDER_PLAYER))) {
-            return transformRenderPlayer(bytes, name);
-        } else if (name.equals(this.getMappingFor(MODEL_PLAYER))) {
-            return transformModelPlayer(bytes, name);
-        } else if (name.equals(this.getMappingFor(LOCALE))) {
-            return transformLocale(bytes, name);
-        } else if (name.equals("net.minecraft.server.MinecraftServer")) {
-            return transformMinecraftServer(bytes, name);
+        if (bytes != null) {
+            if (name.equals(this.getMappingFor(RENDER_PLAYER))) {
+                return transformRenderPlayer(bytes, name);
+            } else if (name.equals(this.getMappingFor(MODEL_PLAYER))) {
+                return transformModelPlayer(bytes, name);
+            } else if (name.equals(this.getMappingFor(LOCALE))) {
+                return transformLocale(bytes, name);
+            } else if (name.equals("net.minecraft.server.MinecraftServer")) {
+                return transformMinecraftServer(bytes, name);
+            }
         }
         return bytes;
     }
