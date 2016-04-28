@@ -69,17 +69,16 @@ public class TabulaModel extends AdvancedModelBase {
         double[] rotation = cube.getRotation();
         double[] offset = cube.getOffset();
         int[] dimensions = cube.getDimensions();
-
-        AdvancedModelRenderer box = new AdvancedModelRenderer(this, textureOffset[0], textureOffset[1]);
+        AdvancedModelRenderer box = new AdvancedModelRenderer(this, cube.getName());
+        box.setTextureOffset(textureOffset[0], textureOffset[1]);
         box.setRotationPoint((float) position[0], (float) position[1], (float) position[2]);
         box.addBox((float) offset[0], (float) offset[1], (float) offset[2], dimensions[0], dimensions[1], dimensions[2], 0.0F);
         box.rotateAngleX = (float) Math.toRadians(rotation[0]);
         box.rotateAngleY = (float) Math.toRadians(rotation[1]);
         box.rotateAngleZ = (float) Math.toRadians(rotation[2]);
-
         return box;
     }
-
+    
     @Override
     public void render(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float rotationYaw, float rotationPitch, float scale) {
         this.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, rotationYaw, rotationPitch, scale, entity);
