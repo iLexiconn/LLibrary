@@ -15,9 +15,9 @@ import java.util.stream.Collectors;
 public class QubbleCube {
     private String name;
     private List<QubbleCube> children = new ArrayList<>();
-    private int dimensionX;
-    private int dimensionY;
-    private int dimensionZ;
+    private int dimensionX = 1;
+    private int dimensionY = 1;
+    private int dimensionZ = 1;
     private float positionX;
     private float positionY;
     private float positionZ;
@@ -27,16 +27,15 @@ public class QubbleCube {
     private float rotationX;
     private float rotationY;
     private float rotationZ;
-    private float scaleX;
-    private float scaleY;
-    private float scaleZ;
+    private float scaleX = 1.0F;
+    private float scaleY = 1.0F;
+    private float scaleZ = 1.0F;
     private int textureX;
     private int textureY;
     private boolean textureMirrored;
     private float opacity;
 
     private QubbleCube() {
-
     }
 
     public static QubbleCube create(String name) {
@@ -59,36 +58,48 @@ public class QubbleCube {
             childrenTag.appendTag(cube.serializeNBT());
         }
         compound.setTag("children", childrenTag);
-        NBTTagCompound dimensionTag = new NBTTagCompound();
-        dimensionTag.setInteger("x", this.dimensionX);
-        dimensionTag.setInteger("y", this.dimensionY);
-        dimensionTag.setInteger("z", this.dimensionZ);
-        compound.setTag("dimension", dimensionTag);
-        NBTTagCompound positionTag = new NBTTagCompound();
-        positionTag.setFloat("x", this.positionX);
-        positionTag.setFloat("y", this.positionY);
-        positionTag.setFloat("z", this.positionZ);
-        compound.setTag("position", positionTag);
-        NBTTagCompound offsetTag = new NBTTagCompound();
-        offsetTag.setFloat("x", this.offsetX);
-        offsetTag.setFloat("y", this.offsetY);
-        offsetTag.setFloat("z", this.offsetZ);
-        compound.setTag("offset", offsetTag);
-        NBTTagCompound rotationTag = new NBTTagCompound();
-        rotationTag.setFloat("x", this.rotationX);
-        rotationTag.setFloat("y", this.rotationY);
-        rotationTag.setFloat("z", this.rotationZ);
-        compound.setTag("rotation", rotationTag);
-        NBTTagCompound scaleTag = new NBTTagCompound();
-        scaleTag.setFloat("x", this.scaleX);
-        scaleTag.setFloat("y", this.scaleY);
-        scaleTag.setFloat("z", this.scaleZ);
-        compound.setTag("scale", scaleTag);
-        NBTTagCompound textureTag = new NBTTagCompound();
-        textureTag.setInteger("x", this.textureX);
-        textureTag.setInteger("y", this.textureY);
-        textureTag.setBoolean("mirrored", this.textureMirrored);
-        compound.setTag("texture", textureTag);
+        if (this.dimensionX != 1 || this.dimensionY != 1 || this.dimensionZ != 1) {
+            NBTTagCompound dimensionTag = new NBTTagCompound();
+            dimensionTag.setInteger("x", this.dimensionX);
+            dimensionTag.setInteger("y", this.dimensionY);
+            dimensionTag.setInteger("z", this.dimensionZ);
+            compound.setTag("dimension", dimensionTag);
+        }
+        if (this.positionX != 0.0F || this.positionY != 0.0F || this.positionZ != 0.0F) {
+            NBTTagCompound positionTag = new NBTTagCompound();
+            positionTag.setFloat("x", this.positionX);
+            positionTag.setFloat("y", this.positionY);
+            positionTag.setFloat("z", this.positionZ);
+            compound.setTag("position", positionTag);
+        }
+        if (this.offsetX != 0.0F || this.offsetY != 0.0F || this.offsetZ != 0.0F) {
+            NBTTagCompound offsetTag = new NBTTagCompound();
+            offsetTag.setFloat("x", this.offsetX);
+            offsetTag.setFloat("y", this.offsetY);
+            offsetTag.setFloat("z", this.offsetZ);
+            compound.setTag("offset", offsetTag);
+        }
+        if (this.rotationX != 0.0F || this.rotationY != 0.0F || this.rotationZ != 0.0F) {
+            NBTTagCompound rotationTag = new NBTTagCompound();
+            rotationTag.setFloat("x", this.rotationX);
+            rotationTag.setFloat("y", this.rotationY);
+            rotationTag.setFloat("z", this.rotationZ);
+            compound.setTag("rotation", rotationTag);
+        }
+        if (this.scaleX != 1.0F || this.scaleY != 1.0F || this.scaleZ != 1.0F) {
+            NBTTagCompound scaleTag = new NBTTagCompound();
+            scaleTag.setFloat("x", this.scaleX);
+            scaleTag.setFloat("y", this.scaleY);
+            scaleTag.setFloat("z", this.scaleZ);
+            compound.setTag("scale", scaleTag);
+        }
+        if (this.textureX != 0 || this.textureY != 0 || this.textureMirrored) {
+            NBTTagCompound textureTag = new NBTTagCompound();
+            textureTag.setInteger("x", this.textureX);
+            textureTag.setInteger("y", this.textureY);
+            textureTag.setBoolean("mirrored", this.textureMirrored);
+            compound.setTag("texture", textureTag);
+        }
         compound.setFloat("opacity", this.opacity);
         return compound;
     }
@@ -102,30 +113,42 @@ public class QubbleCube {
             cube.deserializeNBT(childrenTag.getCompoundTagAt(i));
             this.children.add(cube);
         }
-        NBTTagCompound dimensionTag = compound.getCompoundTag("dimension");
-        this.dimensionX = dimensionTag.getInteger("x");
-        this.dimensionY = dimensionTag.getInteger("y");
-        this.dimensionZ = dimensionTag.getInteger("z");
-        NBTTagCompound positionTag = compound.getCompoundTag("position");
-        this.positionX = positionTag.getFloat("x");
-        this.positionY = positionTag.getFloat("y");
-        this.positionZ = positionTag.getFloat("z");
-        NBTTagCompound offsetTag = compound.getCompoundTag("offset");
-        this.offsetX = offsetTag.getFloat("x");
-        this.offsetY = offsetTag.getFloat("y");
-        this.offsetZ = offsetTag.getFloat("z");
-        NBTTagCompound rotationTag = compound.getCompoundTag("rotation");
-        this.rotationX = rotationTag.getFloat("x");
-        this.rotationY = rotationTag.getFloat("y");
-        this.rotationZ = rotationTag.getFloat("z");
-        NBTTagCompound scaleTag = compound.getCompoundTag("scale");
-        this.scaleX = scaleTag.getFloat("x");
-        this.scaleY = scaleTag.getFloat("y");
-        this.scaleZ = scaleTag.getFloat("z");
-        NBTTagCompound textureTag = compound.getCompoundTag("texture");
-        this.textureX = textureTag.getInteger("x");
-        this.textureY = textureTag.getInteger("y");
-        this.textureMirrored = textureTag.getBoolean("mirrored");
+        if (compound.hasKey("dimension")) {
+            NBTTagCompound dimensionTag = compound.getCompoundTag("dimension");
+            this.dimensionX = dimensionTag.getInteger("x");
+            this.dimensionY = dimensionTag.getInteger("y");
+            this.dimensionZ = dimensionTag.getInteger("z");
+        }
+        if (compound.hasKey("position")) {
+            NBTTagCompound positionTag = compound.getCompoundTag("position");
+            this.positionX = positionTag.getFloat("x");
+            this.positionY = positionTag.getFloat("y");
+            this.positionZ = positionTag.getFloat("z");
+        }
+        if (compound.hasKey("offset")) {
+            NBTTagCompound offsetTag = compound.getCompoundTag("offset");
+            this.offsetX = offsetTag.getFloat("x");
+            this.offsetY = offsetTag.getFloat("y");
+            this.offsetZ = offsetTag.getFloat("z");
+        }
+        if (compound.hasKey("rotation")) {
+            NBTTagCompound rotationTag = compound.getCompoundTag("rotation");
+            this.rotationX = rotationTag.getFloat("x");
+            this.rotationY = rotationTag.getFloat("y");
+            this.rotationZ = rotationTag.getFloat("z");
+        }
+        if (compound.hasKey("scale")) {
+            NBTTagCompound scaleTag = compound.getCompoundTag("scale");
+            this.scaleX = scaleTag.getFloat("x");
+            this.scaleY = scaleTag.getFloat("y");
+            this.scaleZ = scaleTag.getFloat("z");
+        }
+        if (compound.hasKey("texture")) {
+            NBTTagCompound textureTag = compound.getCompoundTag("texture");
+            this.textureX = textureTag.getInteger("x");
+            this.textureY = textureTag.getInteger("y");
+            this.textureMirrored = textureTag.getBoolean("mirrored");
+        }
         this.opacity = compound.getFloat("opacity");
     }
 
