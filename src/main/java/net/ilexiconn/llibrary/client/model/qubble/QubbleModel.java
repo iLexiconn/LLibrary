@@ -20,14 +20,13 @@ public class QubbleModel implements INBTSerializable<NBTTagCompound> {
     private String name;
     private String author;
     private int version;
-    private int textureWidth;
-    private int textureHeight;
+    private int textureWidth = 64;
+    private int textureHeight = 32;
     private List<QubbleCube> cubes = new ArrayList<>();
     private List<QubbleAnimation> animations = new ArrayList<>();
     private transient String fileName;
 
     private QubbleModel() {
-
     }
 
     public static QubbleModel create(String name, String author, int textureWidth, int textureHeight) {
@@ -52,10 +51,12 @@ public class QubbleModel implements INBTSerializable<NBTTagCompound> {
         compound.setString("name", this.name);
         compound.setString("author", this.author);
         compound.setInteger("version", this.version);
-        NBTTagCompound textureTag = new NBTTagCompound();
-        textureTag.setInteger("width", this.textureWidth);
-        textureTag.setInteger("height", this.textureHeight);
-        compound.setTag("texture", textureTag);
+        if (this.textureWidth != 64 || this.textureHeight != 32) {
+            NBTTagCompound textureTag = new NBTTagCompound();
+            textureTag.setInteger("width", this.textureWidth);
+            textureTag.setInteger("height", this.textureHeight);
+            compound.setTag("texture", textureTag);
+        }
         NBTTagList cubesTag = new NBTTagList();
         for (QubbleCube cube : this.cubes) {
             cubesTag.appendTag(cube.serializeNBT());
@@ -74,9 +75,11 @@ public class QubbleModel implements INBTSerializable<NBTTagCompound> {
         this.name = compound.getString("name");
         this.author = compound.getString("author");
         this.version = compound.getInteger("version");
-        NBTTagCompound textureTag = compound.getCompoundTag("texture");
-        this.textureWidth = textureTag.getInteger("width");
-        this.textureHeight = textureTag.getInteger("height");
+        if (compound.hasKey("texture")) {
+            NBTTagCompound textureTag = compound.getCompoundTag("texture");
+            this.textureWidth = textureTag.getInteger("width");
+            this.textureHeight = textureTag.getInteger("height");
+        }
         this.cubes = new ArrayList<>();
         NBTTagList cubesTag = compound.getTagList("cubes", Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < cubesTag.tagCount(); i++) {
