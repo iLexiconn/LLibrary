@@ -58,7 +58,7 @@ public class AnimationTest {
         private int animationTick;
         private Animation animation;
 
-        private static final Animation TEST_ANIMATION = Animation.create(1, 30);
+        private static final Animation TEST_ANIMATION = Animation.create(30);
 
         public AnimationTestEntity(World world) {
             super(world);

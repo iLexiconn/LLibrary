@@ -13,9 +13,9 @@ import java.util.stream.Collectors;
  * @author iLexiconn
  * @since 1.3.0
  */
-public class QubbleCube implements INBTSerializable<NBTTagCompound> {
+public class QubbleCuboid implements INBTSerializable<NBTTagCompound> {
     private String name;
-    private List<QubbleCube> children = new ArrayList<>();
+    private List<QubbleCuboid> children = new ArrayList<>();
     private int dimensionX = 1;
     private int dimensionY = 1;
     private int dimensionZ = 1;
@@ -36,19 +36,19 @@ public class QubbleCube implements INBTSerializable<NBTTagCompound> {
     private boolean textureMirrored;
     private float opacity;
 
-    private QubbleCube() {
+    private QubbleCuboid() {
     }
 
-    public static QubbleCube create(String name) {
-        QubbleCube cube = new QubbleCube();
-        cube.setName(name);
-        return cube;
+    public static QubbleCuboid create(String name) {
+        QubbleCuboid cuboid = new QubbleCuboid();
+        cuboid.setName(name);
+        return cuboid;
     }
 
-    public static QubbleCube deserialize(NBTTagCompound compound) {
-        QubbleCube cube = new QubbleCube();
-        cube.deserializeNBT(compound);
-        return cube;
+    public static QubbleCuboid deserialize(NBTTagCompound compound) {
+        QubbleCuboid cuboid = new QubbleCuboid();
+        cuboid.deserializeNBT(compound);
+        return cuboid;
     }
 
     @Override
@@ -56,8 +56,8 @@ public class QubbleCube implements INBTSerializable<NBTTagCompound> {
         NBTTagCompound compound = new NBTTagCompound();
         compound.setString("name", this.name);
         NBTTagList childrenTag = new NBTTagList();
-        for (QubbleCube cube : this.children) {
-            childrenTag.appendTag(cube.serializeNBT());
+        for (QubbleCuboid cuboid : this.children) {
+            childrenTag.appendTag(cuboid.serializeNBT());
         }
         compound.setTag("children", childrenTag);
         if (this.dimensionX != 1 || this.dimensionY != 1 || this.dimensionZ != 1) {
@@ -112,9 +112,9 @@ public class QubbleCube implements INBTSerializable<NBTTagCompound> {
         this.children = new ArrayList<>();
         NBTTagList childrenTag = compound.getTagList("children", Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < childrenTag.tagCount(); i++) {
-            QubbleCube cube = new QubbleCube();
-            cube.deserializeNBT(childrenTag.getCompoundTagAt(i));
-            this.children.add(cube);
+            QubbleCuboid cuboid = new QubbleCuboid();
+            cuboid.deserializeNBT(childrenTag.getCompoundTagAt(i));
+            this.children.add(cuboid);
         }
         if (compound.hasKey("dimension")) {
             NBTTagCompound dimensionTag = compound.getCompoundTag("dimension");
@@ -163,7 +163,7 @@ public class QubbleCube implements INBTSerializable<NBTTagCompound> {
         this.name = name;
     }
 
-    public List<QubbleCube> getChildren() {
+    public List<QubbleCuboid> getChildren() {
         return children;
     }
 
@@ -286,17 +286,17 @@ public class QubbleCube implements INBTSerializable<NBTTagCompound> {
         this.scaleZ = z;
     }
 
-    public QubbleCube copy() {
-        QubbleCube cube = QubbleCube.create(this.getName());
-        cube.getChildren().addAll(this.getChildren().stream().map(QubbleCube::copy).collect(Collectors.toList()));
-        cube.setDimensions(this.getDimensionX(), this.getDimensionY(), this.getDimensionZ());
-        cube.setPosition(this.getPositionX(), this.getPositionY(), this.getPositionZ());
-        cube.setOffset(this.getOffsetX(), this.getOffsetY(), this.getOffsetZ());
-        cube.setRotation(this.getRotationX(), this.getRotationY(), this.getRotationZ());
-        cube.setScale(this.getScaleX(), this.getScaleY(), this.getScaleZ());
-        cube.setTexture(this.getTextureX(), this.getTextureY());
-        cube.setTextureMirrored(this.isTextureMirrored());
-        cube.setOpacity(this.getOpacity());
-        return cube;
+    public QubbleCuboid copy() {
+        QubbleCuboid cuboid = QubbleCuboid.create(this.getName());
+        cuboid.getChildren().addAll(this.getChildren().stream().map(QubbleCuboid::copy).collect(Collectors.toList()));
+        cuboid.setDimensions(this.getDimensionX(), this.getDimensionY(), this.getDimensionZ());
+        cuboid.setPosition(this.getPositionX(), this.getPositionY(), this.getPositionZ());
+        cuboid.setOffset(this.getOffsetX(), this.getOffsetY(), this.getOffsetZ());
+        cuboid.setRotation(this.getRotationX(), this.getRotationY(), this.getRotationZ());
+        cuboid.setScale(this.getScaleX(), this.getScaleY(), this.getScaleZ());
+        cuboid.setTexture(this.getTextureX(), this.getTextureY());
+        cuboid.setTextureMirrored(this.isTextureMirrored());
+        cuboid.setOpacity(this.getOpacity());
+        return cuboid;
     }
 }

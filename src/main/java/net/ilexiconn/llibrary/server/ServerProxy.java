@@ -13,7 +13,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.server.FMLServerHandler;
 
 public class ServerProxy {
     public void onPreInit() {
@@ -26,7 +25,7 @@ public class ServerProxy {
     }
 
     public void onPostInit() {
-        if (LLibrary.CONFIG.versionCheck) {
+        if (LLibrary.CONFIG.hasVersionCheck()) {
             UpdateHandler.INSTANCE.searchForUpdates();
         }
     }
