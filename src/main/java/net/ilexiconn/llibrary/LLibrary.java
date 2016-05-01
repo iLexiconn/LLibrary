@@ -11,7 +11,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.ilexiconn.llibrary.server.ServerProxy;
 import net.ilexiconn.llibrary.server.asm.LLibraryPlugin;
-import net.ilexiconn.llibrary.server.config.Config;
 import net.ilexiconn.llibrary.server.config.ConfigHandler;
 import net.ilexiconn.llibrary.server.config.LLibraryConfig;
 import net.ilexiconn.llibrary.server.network.*;
@@ -20,14 +19,13 @@ import org.apache.logging.log4j.Logger;
 
 @Mod(modid = "llibrary", name = "LLibrary", version = LLibrary.VERSION)
 public class LLibrary {
-    public static final String VERSION = "1.3.0";
+    public static final String VERSION = "1.4.0-develop";
 
     @SidedProxy(serverSide = "net.ilexiconn.llibrary.server.ServerProxy", clientSide = "net.ilexiconn.llibrary.client.ClientProxy")
     public static ServerProxy PROXY;
     @Mod.Instance("llibrary")
     public static LLibrary INSTANCE;
-    @Config
-    public static LLibraryConfig CONFIG;
+    public static LLibraryConfig CONFIG = new LLibraryConfig();
     @NetworkWrapper({AnimationMessage.class, PropertiesMessage.class, SnackbarMessage.class, BlockEntityMessage.class})
     public static SimpleNetworkWrapper NETWORK_WRAPPER;
     public static int QUBBLE_VERSION = 1;
@@ -36,6 +34,7 @@ public class LLibrary {
 
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent event) {
+        LLibrary.CONFIG.load();
         LLibrary.PROXY.onPreInit();
     }
 

@@ -20,7 +20,7 @@ public class ServerProxy {
     }
 
     public void onPostInit() {
-        if (LLibrary.CONFIG.versionCheck) {
+        if (LLibrary.CONFIG.hasVersionCheck()) {
             UpdateHandler.INSTANCE.searchForUpdates();
         }
     }

@@ -7,7 +7,7 @@ import net.minecraft.nbt.NBTTagCompound;
  * @since 1.3.0
  */
 public class QubbleAnimationAction {
-    private String cube;
+    private String cuboid;
     private Action action;
     private float valueX;
     private float valueY;
@@ -17,9 +17,9 @@ public class QubbleAnimationAction {
 
     }
 
-    public static QubbleAnimationAction create(String cube, Action action) {
+    public static QubbleAnimationAction create(String cuboid, Action action) {
         QubbleAnimationAction animation = new QubbleAnimationAction();
-        animation.setCube(cube);
+        animation.setCuboid(cuboid);
         animation.setAction(action);
         return animation;
     }
@@ -32,7 +32,7 @@ public class QubbleAnimationAction {
 
     public NBTTagCompound serializeNBT() {
         NBTTagCompound compound = new NBTTagCompound();
-        compound.setString("cube", this.cube);
+        compound.setString("cuboid", this.cuboid);
         compound.setString("action", this.action.name());
         NBTTagCompound valueTag = new NBTTagCompound();
         valueTag.setFloat("x", this.valueX);
@@ -43,7 +43,7 @@ public class QubbleAnimationAction {
     }
 
     public void deserializeNBT(NBTTagCompound compound) {
-        this.cube = compound.getString("cube");
+        this.cuboid = compound.getString("cuboid");
         this.action = Action.valueOf(compound.getString("action"));
         NBTTagCompound valueTag = compound.getCompoundTag("value");
         this.valueX = valueTag.getFloat("x");
@@ -51,12 +51,12 @@ public class QubbleAnimationAction {
         this.valueZ = valueTag.getFloat("z");
     }
 
-    public String getCube() {
-        return cube;
+    public String getCuboid() {
+        return cuboid;
     }
 
-    public void setCube(String cube) {
-        this.cube = cube;
+    public void setCuboid(String cuboid) {
+        this.cuboid = cuboid;
     }
 
     public Action getAction() {
@@ -86,7 +86,7 @@ public class QubbleAnimationAction {
     }
 
     public QubbleAnimationAction copy() {
-        QubbleAnimationAction animation = QubbleAnimationAction.create(this.getCube(), this.getAction());
+        QubbleAnimationAction animation = QubbleAnimationAction.create(this.getCuboid(), this.getAction());
         animation.setValue(this.getValueX(), this.getValueY(), this.getValueZ());
         return animation;
     }

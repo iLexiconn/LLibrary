@@ -2,6 +2,8 @@ package net.ilexiconn.llibrary.client.util;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.GuiScreen;
+import org.lwjgl.input.Keyboard;
 
 /**
  * @author iLexiconn
@@ -46,5 +48,25 @@ public class ClientUtils {
 
     public static float interpolate(float prev, float current, float partialTicks) {
         return prev + partialTicks * (current - prev);
+    }
+
+    public static boolean isKeyComboCtrlX(int keyID) {
+        return keyID == 45 && GuiScreen.isCtrlKeyDown() && !GuiScreen.isShiftKeyDown() && !ClientUtils.isAltKeyDown();
+    }
+
+    public static boolean isKeyComboCtrlV(int keyID) {
+        return keyID == 47 && GuiScreen.isCtrlKeyDown() && !GuiScreen.isShiftKeyDown() && !ClientUtils.isAltKeyDown();
+    }
+
+    public static boolean isKeyComboCtrlC(int keyID) {
+        return keyID == 46 && GuiScreen.isCtrlKeyDown() && !GuiScreen.isShiftKeyDown() && !ClientUtils.isAltKeyDown();
+    }
+
+    public static boolean isKeyComboCtrlA(int keyID) {
+        return keyID == 30 && GuiScreen.isCtrlKeyDown() && !GuiScreen.isShiftKeyDown() && !ClientUtils.isAltKeyDown();
+    }
+
+    public static boolean isAltKeyDown() {
+        return Keyboard.isKeyDown(56) || Keyboard.isKeyDown(184);
     }
 }
