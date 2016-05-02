@@ -6,9 +6,11 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.SoundEvents;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import java.util.List;
@@ -59,12 +61,20 @@ public class ListElement<T extends GuiScreen> extends Element<T> {
             float entryY = this.getPosY() + y + 2;
             float entryWidth = this.getWidth() - 4;
             boolean selected = this.isSelected(this.getPosX() + 2, this.getPosY() + y + 1, entryWidth, this.entryHeight, mouseX, mouseY) && !this.scrolling;
+            boolean clickSelecting = selected && Mouse.isButtonDown(0);
             if (this.selectedEntry == entryIndex) {
-                this.drawRectangle(entryX, entryY, entryWidth, this.entryHeight, LLibrary.CONFIG.getDarkAccentColor());
+                this.drawRectangle(entryX, entryY, entryWidth, this.entryHeight, clickSelecting ? LLibrary.CONFIG.getAccentColor() : LLibrary.CONFIG.getDarkAccentColor());
             } else {
                 this.drawRectangle(entryX, entryY, entryWidth, this.entryHeight, selected ? LLibrary.CONFIG.getAccentColor() : this.getColorScheme().getSecondaryColor());
             }
-            fontRenderer.drawString(entry, entryX + 2, entryY + this.entryHeight / 2 - fontRenderer.FONT_HEIGHT / 2, LLibrary.CONFIG.getTextColor(), false);
+            GlStateManager.pushMatrix();
+            float scaleY = 1.0F;
+            if (clickSelecting) {
+                scaleY = 0.9F;
+                GlStateManager.scale(1.0F, scaleY, 1.0F);
+            }
+            fontRenderer.drawString(entry, entryX + 2, ((entryY - fontRenderer.FONT_HEIGHT / 2) / scaleY) + (this.entryHeight / 2 / scaleY), clickSelecting ? LLibrary.CONFIG.getInvertedTextColor() : LLibrary.CONFIG.getTextColor(), false);
+            GlStateManager.popMatrix();
             y += this.entryHeight + 1;
             entryIndex++;
         }
