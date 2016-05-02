@@ -8,10 +8,10 @@ import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class ColorMode {
-    public static final ColorMode DARK = ColorMode.create("dark", 0xFF212121, 0xFF363636, 0xFF464646, 0xFF212121, 0xFF1F1F1F, 0xFFFFFFFF);
-    public static final ColorMode LIGHT = ColorMode.create("light", 0xFFCDCDCD, 0xFFACACAC, 0xFFECECEC, 0xFFCDCDCD, 0xFFC2C2C2, 0xFF000000);
-
     private static final List<ColorMode> COLOR_MODE_LIST = new ArrayList<>();
+
+    public static final ColorMode DARK = ColorMode.create("dark", 0xFF212121, 0xFF363636, 0xFF464646, 0xFF212121, 0xFF1F1F1F, 0xFFFFFFFF, 0xFF000000);
+    public static final ColorMode LIGHT = ColorMode.create("light", 0xFFCDCDCD, 0xFFACACAC, 0xFFECECEC, 0xFFCDCDCD, 0xFFC2C2C2, 0xFF000000, 0xFFFFFFFF);
 
     private final String name;
     private final int primaryColor;
@@ -20,8 +20,9 @@ public class ColorMode {
     private final int primarySubcolor;
     private final int secondarySubcolor;
     private final int textColor;
+    private final int invertedTextColor;
 
-    private ColorMode(String name, int primaryColor, int secondaryColor, int tertiaryColor, int primarySubcolor, int secondarySubcolor, int textColor) {
+    private ColorMode(String name, int primaryColor, int secondaryColor, int tertiaryColor, int primarySubcolor, int secondarySubcolor, int textColor, int invertedTextColor) {
         this.name = name;
         this.primaryColor = primaryColor;
         this.secondaryColor = secondaryColor;
@@ -29,11 +30,13 @@ public class ColorMode {
         this.primarySubcolor = primarySubcolor;
         this.secondarySubcolor = secondarySubcolor;
         this.textColor = textColor;
-        ColorMode.COLOR_MODE_LIST.add(this);
+        this.invertedTextColor = invertedTextColor;
     }
 
-    public static ColorMode create(String name, int primaryColor, int secondaryColor, int tertiaryColor, int primarySubcolor, int secondarySubcolor, int textColor) {
-        return new ColorMode(name, primaryColor, secondaryColor, tertiaryColor, primarySubcolor, secondarySubcolor, textColor);
+    public static ColorMode create(String name, int primaryColor, int secondaryColor, int tertiaryColor, int primarySubcolor, int secondarySubcolor, int textColor, int invertedTextColor) {
+        ColorMode colorMode = new ColorMode(name, primaryColor, secondaryColor, tertiaryColor, primarySubcolor, secondarySubcolor, textColor, invertedTextColor);
+        ColorMode.COLOR_MODE_LIST.add(colorMode);
+        return colorMode;
     }
 
     public static ColorMode getColorMode(String name) {
@@ -71,6 +74,10 @@ public class ColorMode {
 
     public int getTextColor() {
         return textColor;
+    }
+
+    public int getInvertedTextColor() {
+        return invertedTextColor;
     }
 }
 

@@ -1,5 +1,6 @@
 package net.ilexiconn.llibrary.client.gui.element;
 
+import net.ilexiconn.llibrary.LLibrary;
 import net.ilexiconn.llibrary.client.ClientProxy;
 import net.ilexiconn.llibrary.client.gui.ColorScheme;
 import net.minecraft.client.gui.GuiScreen;
@@ -14,17 +15,19 @@ import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
 public class Element<T extends GuiScreen> {
+    public static final ColorScheme DEFAULT = ColorScheme.create(() -> LLibrary.CONFIG.getPrimaryColor(), () -> LLibrary.CONFIG.getSecondaryColor());
+
     private final T gui;
     private Element<T> parent;
-    private ColorScheme colorScheme;
+    private ColorScheme colorScheme = Element.DEFAULT;
 
     private float posX;
     private float posY;
     private int width;
     private int height;
 
-    private boolean enabled;
-    private boolean visible;
+    private boolean enabled = true;
+    private boolean visible = true;
 
     public Element(T gui, float posX, float posY, int width, int height) {
         this.gui = gui;
@@ -63,7 +66,7 @@ public class Element<T extends GuiScreen> {
     }
 
     protected boolean isSelected(float mouseX, float mouseY) {
-        return ElementHandler.INSTANCE.isElementOnTop(this.getGUI(), this, mouseX, mouseY) && mouseX >= this.getPosX() && mouseY >= this.getPosY() && mouseX < this.getPosX() + this.getWidth() && mouseY < this.getPosY() + this.getHeight();
+        return ElementHandler.INSTANCE.isElementOnTop(this.getGUI(), this) && mouseX >= this.getPosX() && mouseY >= this.getPosY() && mouseX < this.getPosX() + this.getWidth() && mouseY < this.getPosY() + this.getHeight();
     }
 
     public Element<T> withParent(Element<T> parent) {
