@@ -28,7 +28,7 @@ public class ListElement<T extends GuiScreen> extends Element<T> {
     private float scrollPerEntry;
     private int entryHeight;
 
-    private String selectedEntry;
+    private int selectedEntry;
 
     public ListElement(T gui, float posX, float posY, int width, int height, List<String> entries, Function<ListElement<T>, Boolean> function) {
         this(gui, posX, posY, width, height, entries, 13, function);
@@ -53,18 +53,20 @@ public class ListElement<T extends GuiScreen> extends Element<T> {
         ScaledResolution scaledResolution = new ScaledResolution(ClientProxy.MINECRAFT);
         int scaleFactor = scaledResolution.getScaleFactor();
         GL11.glScissor((int) (this.getPosX() * scaleFactor), (int) ((this.getGUI().height - (this.getPosY() + this.getHeight()) + 2) * scaleFactor), this.getWidth() * scaleFactor, (this.getHeight() - 4) * scaleFactor);
+        int entryIndex = 0;
         for (String entry : this.entries) {
             float entryX = this.getPosX() + 2;
             float entryY = this.getPosY() + y + 2;
             float entryWidth = this.getWidth() - 4;
             boolean selected = this.isSelected(this.getPosX() + 2, this.getPosY() + y + 1, entryWidth, this.entryHeight, mouseX, mouseY) && !this.scrolling;
-            if (Objects.equals(this.selectedEntry, entry)) {
+            if (this.selectedEntry == entryIndex) {
                 this.drawRectangle(entryX, entryY, entryWidth, this.entryHeight, LLibrary.CONFIG.getDarkAccentColor());
             } else {
                 this.drawRectangle(entryX, entryY, entryWidth, this.entryHeight, selected ? LLibrary.CONFIG.getAccentColor() : this.getColorScheme().getSecondaryColor());
             }
             fontRenderer.drawString(entry, entryX + 2, entryY + this.entryHeight / 2 - fontRenderer.FONT_HEIGHT / 2, LLibrary.CONFIG.getTextColor(), false);
             y += this.entryHeight + 1;
+            entryIndex++;
         }
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
         if (this.maxScroll > 0) {
@@ -89,17 +91,17 @@ public class ListElement<T extends GuiScreen> extends Element<T> {
         }
         if (this.isSelected(mouseX, mouseY)) {
             int y = (int) (-this.scroll * this.scrollPerEntry * this.entryHeight);
-            for (String entry : this.entries) {
+            for (int entryIndex = 0; entryIndex < this.entries.size(); entryIndex++) {
                 float entryX = this.getPosX() + 2;
                 float entryY = this.getPosY() + y + 1;
                 float entryWidth = this.getWidth() - this.entryHeight;
                 if (this.isSelected(entryX, entryY, entryWidth, entryHeight, mouseX, mouseY)) {
-                    String oldSelected = this.selectedEntry;
-                    this.selectedEntry = entry;
+                    int previousSelected = this.selectedEntry;
+                    this.selectedEntry = entryIndex;
                     if (this.function.apply(this)) {
                         this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
                     } else {
-                        this.selectedEntry = oldSelected;
+                        this.selectedEntry = previousSelected;
                     }
                     return true;
                 }
@@ -128,6 +130,10 @@ public class ListElement<T extends GuiScreen> extends Element<T> {
     }
 
     public String getSelectedEntry() {
-        return selectedEntry;
+        return this.entries.get(selectedEntry);
+    }
+
+    public void setSelectedIndex(int selectedIndex) {
+        this.selectedEntry = selectedIndex;
     }
 }
