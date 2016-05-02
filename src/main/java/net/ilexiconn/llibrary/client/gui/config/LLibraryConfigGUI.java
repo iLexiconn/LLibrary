@@ -5,7 +5,7 @@ import net.ilexiconn.llibrary.client.gui.ColorMode;
 import net.ilexiconn.llibrary.client.gui.ColorScheme;
 import net.ilexiconn.llibrary.client.gui.ElementGUI;
 import net.ilexiconn.llibrary.client.gui.element.*;
-import net.ilexiconn.llibrary.server.config.LLibraryConfig;
+import net.ilexiconn.llibrary.server.util.IValue;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
@@ -38,10 +38,50 @@ public class LLibraryConfigGUI extends ElementGUI {
 
     static {
         try {
-            GENERAL_PROPERTIES.put("Patreon Effects", new ConfigProperty(LLibraryConfig.class.getDeclaredField("patreonEffects"), ConfigProperty.ConfigPropertyType.CHECK_BOX));
-            GENERAL_PROPERTIES.put("Version Checker", new ConfigProperty(LLibraryConfig.class.getDeclaredField("versionCheck"), ConfigProperty.ConfigPropertyType.CHECK_BOX));
-            APPEARANCE_PROPERTIES.put("Accent Color", new ConfigProperty(LLibraryConfig.class.getDeclaredField("accentColor"), ConfigProperty.ConfigPropertyType.COLOR_SELECTION));
-            APPEARANCE_PROPERTIES.put("Dark Mode", new ConfigProperty(LLibraryConfig.class.getDeclaredField("colorMode"), ConfigProperty.ConfigPropertyType.COLOR_MODE));
+            GENERAL_PROPERTIES.put("Patreon Effects", new ConfigProperty<>(new IValue<Boolean>() {
+                @Override
+                public Boolean get() {
+                    return LLibrary.CONFIG.hasPatreonEffects();
+                }
+
+                @Override
+                public void set(Boolean patreonEffects) {
+                    LLibrary.CONFIG.setPatreonEffects(patreonEffects);
+                }
+            }, ConfigProperty.ConfigPropertyType.CHECK_BOX));
+            GENERAL_PROPERTIES.put("Version Checker", new ConfigProperty<>(new IValue<Boolean>() {
+                @Override
+                public Boolean get() {
+                    return LLibrary.CONFIG.hasVersionCheck();
+                }
+
+                @Override
+                public void set(Boolean versionCheck) {
+                    LLibrary.CONFIG.setVersionCheck(versionCheck);
+                }
+            }, ConfigProperty.ConfigPropertyType.CHECK_BOX));
+            APPEARANCE_PROPERTIES.put("Accent Color", new ConfigProperty<>(new IValue<Integer>() {
+                @Override
+                public Integer get() {
+                    return LLibrary.CONFIG.getAccentColor();
+                }
+
+                @Override
+                public void set(Integer accentColor) {
+                    LLibrary.CONFIG.setAccentColor(accentColor);
+                }
+            }, ConfigProperty.ConfigPropertyType.COLOR_SELECTION));
+            APPEARANCE_PROPERTIES.put("Dark Mode", new ConfigProperty<>(new IValue<Boolean>() {
+                @Override
+                public Boolean get() {
+                    return LLibrary.CONFIG.getColorMode().equals("dark");
+                }
+
+                @Override
+                public void set(Boolean colorMode) {
+                    LLibrary.CONFIG.setColorMode(colorMode ? "dark" : "light");
+                }
+            }, ConfigProperty.ConfigPropertyType.COLOR_MODE));
             CATEGORY_NAMES.add("General");
             CATEGORY_NAMES.add("Appearance");
         } catch (Exception e) {
@@ -97,7 +137,7 @@ public class LLibraryConfigGUI extends ElementGUI {
         int y = 45;
         for (Map.Entry<String, ConfigProperty> propertyEntry : this.selectedCategory.getProperties().entrySet()) {
             String name = propertyEntry.getKey();
-            ConfigProperty property = propertyEntry.getValue();
+            ConfigProperty<?> property = propertyEntry.getValue();
             fontRendererObj.drawString(name, x, y, LLibrary.CONFIG.getTextColor());
             Element<LLibraryConfigGUI> propertyElement = this.propertyElements.get(property);
             if (propertyElement == null) {

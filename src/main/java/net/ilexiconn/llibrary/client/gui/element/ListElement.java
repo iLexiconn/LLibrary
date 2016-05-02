@@ -6,7 +6,6 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.SoundEvents;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -14,7 +13,6 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Function;
 
 @SideOnly(Side.CLIENT)
@@ -67,14 +65,7 @@ public class ListElement<T extends GuiScreen> extends Element<T> {
             } else {
                 this.drawRectangle(entryX, entryY, entryWidth, this.entryHeight, selected ? LLibrary.CONFIG.getAccentColor() : this.getColorScheme().getSecondaryColor());
             }
-            GlStateManager.pushMatrix();
-            float scaleY = 1.0F;
-            if (clickSelecting) {
-                scaleY = 0.9F;
-                GlStateManager.scale(1.0F, scaleY, 1.0F);
-            }
-            fontRenderer.drawString(entry, entryX + 2, ((entryY - fontRenderer.FONT_HEIGHT / 2) / scaleY) + (this.entryHeight / 2 / scaleY), clickSelecting ? LLibrary.CONFIG.getInvertedTextColor() : LLibrary.CONFIG.getTextColor(), false);
-            GlStateManager.popMatrix();
+            fontRenderer.drawString(entry, entryX + 2, (entryY - fontRenderer.FONT_HEIGHT / 2) + (this.entryHeight / 2), LLibrary.CONFIG.getTextColor(), false);
             y += this.entryHeight + 1;
             entryIndex++;
         }

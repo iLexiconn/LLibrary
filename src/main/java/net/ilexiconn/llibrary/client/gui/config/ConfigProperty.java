@@ -1,36 +1,26 @@
 package net.ilexiconn.llibrary.client.gui.config;
 
-import net.ilexiconn.llibrary.LLibrary;
+import net.ilexiconn.llibrary.server.util.IValue;
 
-import java.lang.reflect.Field;
-
-public class ConfigProperty {
-    private Field field;
+public class ConfigProperty<T> {
+    private IValue<T> value;
     private ConfigPropertyType type;
 
-    public ConfigProperty(Field field, ConfigPropertyType type) {
-        this.field = field;
-        this.field.setAccessible(true);
+    public ConfigProperty(IValue<T> value, ConfigPropertyType type) {
+        this.value = value;
         this.type = type;
     }
 
-    public Object get() {
-        try {
-            return this.field.get(LLibrary.CONFIG);
-        } catch (IllegalAccessException e) {
-        }
-        return null;
+    public T get() {
+        return this.value.get();
+    }
+
+    public void set(T value) {
+        this.value.set(value);
     }
 
     public ConfigPropertyType getType() {
         return this.type;
-    }
-
-    public void set(Object value) {
-        try {
-            this.field.set(LLibrary.CONFIG, value);
-        } catch (IllegalAccessException e) {
-        }
     }
 
     public enum ConfigPropertyType {
