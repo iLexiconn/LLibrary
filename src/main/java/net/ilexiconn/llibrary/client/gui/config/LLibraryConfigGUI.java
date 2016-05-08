@@ -5,7 +5,7 @@ import net.ilexiconn.llibrary.client.gui.ColorMode;
 import net.ilexiconn.llibrary.client.gui.ColorScheme;
 import net.ilexiconn.llibrary.client.gui.ElementGUI;
 import net.ilexiconn.llibrary.client.gui.element.*;
-import net.ilexiconn.llibrary.server.util.IValue;
+import net.ilexiconn.llibrary.server.util.IValueAccess;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
@@ -38,7 +38,7 @@ public class LLibraryConfigGUI extends ElementGUI {
 
     static {
         try {
-            GENERAL_PROPERTIES.put("Patreon Effects", new ConfigProperty<>(new IValue<Boolean>() {
+            GENERAL_PROPERTIES.put("Patreon Effects", new ConfigProperty<>(new IValueAccess<Boolean>() {
                 @Override
                 public Boolean get() {
                     return LLibrary.CONFIG.hasPatreonEffects();
@@ -49,7 +49,7 @@ public class LLibraryConfigGUI extends ElementGUI {
                     LLibrary.CONFIG.setPatreonEffects(patreonEffects);
                 }
             }, ConfigProperty.ConfigPropertyType.CHECK_BOX));
-            GENERAL_PROPERTIES.put("Version Checker", new ConfigProperty<>(new IValue<Boolean>() {
+            GENERAL_PROPERTIES.put("Version Checker", new ConfigProperty<>(new IValueAccess<Boolean>() {
                 @Override
                 public Boolean get() {
                     return LLibrary.CONFIG.hasVersionCheck();
@@ -60,7 +60,7 @@ public class LLibraryConfigGUI extends ElementGUI {
                     LLibrary.CONFIG.setVersionCheck(versionCheck);
                 }
             }, ConfigProperty.ConfigPropertyType.CHECK_BOX));
-            APPEARANCE_PROPERTIES.put("Accent Color", new ConfigProperty<>(new IValue<Integer>() {
+            APPEARANCE_PROPERTIES.put("Accent Color", new ConfigProperty<>(new IValueAccess<Integer>() {
                 @Override
                 public Integer get() {
                     return LLibrary.CONFIG.getAccentColor();
@@ -71,7 +71,7 @@ public class LLibraryConfigGUI extends ElementGUI {
                     LLibrary.CONFIG.setAccentColor(accentColor);
                 }
             }, ConfigProperty.ConfigPropertyType.COLOR_SELECTION));
-            APPEARANCE_PROPERTIES.put("Dark Mode", new ConfigProperty<>(new IValue<Boolean>() {
+            APPEARANCE_PROPERTIES.put("Dark Mode", new ConfigProperty<>(new IValueAccess<Boolean>() {
                 @Override
                 public Boolean get() {
                     return LLibrary.CONFIG.getColorMode().equals("dark");
@@ -81,7 +81,7 @@ public class LLibraryConfigGUI extends ElementGUI {
                 public void set(Boolean colorMode) {
                     LLibrary.CONFIG.setColorMode(colorMode ? "dark" : "light");
                 }
-            }, ConfigProperty.ConfigPropertyType.COLOR_MODE));
+            }, ConfigProperty.ConfigPropertyType.CHECK_BOX));
             CATEGORY_NAMES.add("General");
             CATEGORY_NAMES.add("Appearance");
         } catch (Exception e) {
@@ -166,11 +166,6 @@ public class LLibraryConfigGUI extends ElementGUI {
                     property.set(color.getColor());
                    return true;
                 });
-            case COLOR_MODE:
-                return new CheckboxElement<>(this, x, y, (checkbox) -> {
-                    property.set(checkbox.isSelected() ? ColorMode.DARK : ColorMode.LIGHT);
-                    return true;
-                }).withSelection(property.get() == ColorMode.DARK);
         }
         return null;
     }

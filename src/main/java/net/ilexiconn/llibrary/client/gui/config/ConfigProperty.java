@@ -1,12 +1,12 @@
 package net.ilexiconn.llibrary.client.gui.config;
 
-import net.ilexiconn.llibrary.server.util.IValue;
+import net.ilexiconn.llibrary.server.util.IValueAccess;
 
 public class ConfigProperty<T> {
-    private IValue<T> value;
+    private IValueAccess<T> value;
     private ConfigPropertyType type;
 
-    public ConfigProperty(IValue<T> value, ConfigPropertyType type) {
+    public ConfigProperty(IValueAccess<T> value, ConfigPropertyType type) {
         this.value = value;
         this.type = type;
     }
@@ -24,6 +24,6 @@ public class ConfigProperty<T> {
     }
 
     public enum ConfigPropertyType {
-        COLOR_SELECTION, COLOR_MODE, CHECK_BOX;
+        COLOR_SELECTION, CHECK_BOX
     }
 }
