@@ -70,6 +70,5 @@ public abstract class ElementGUI extends GuiScreen {
     @Override
     public void onGuiClosed() {
         ElementHandler.INSTANCE.clearElements(this);
-        this.elementList.clear();
     }
 }

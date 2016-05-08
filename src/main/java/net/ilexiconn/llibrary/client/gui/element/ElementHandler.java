@@ -37,7 +37,7 @@ public enum ElementHandler {
 
     public <T extends GuiScreen> void clearElements(T gui) {
         if (this.elementMap.containsKey(gui)) {
-            this.elementMap.get(gui).clear();
+            this.elementMap.remove(gui);
         }
     }
 
