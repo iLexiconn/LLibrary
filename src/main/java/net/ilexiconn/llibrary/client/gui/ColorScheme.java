@@ -1,17 +1,17 @@
 package net.ilexiconn.llibrary.client.gui;
 
-import net.ilexiconn.llibrary.server.util.IGetter;
+import java.util.function.Supplier;
 
 public class ColorScheme {
-    private IGetter<Integer> primaryColor;
-    private IGetter<Integer> secondaryColor;
+    private Supplier<Integer> primaryColor;
+    private Supplier<Integer> secondaryColor;
 
-    private ColorScheme(IGetter<Integer> primaryColor, IGetter<Integer> secondaryColor) {
+    private ColorScheme(Supplier<Integer> primaryColor, Supplier<Integer> secondaryColor) {
         this.primaryColor = primaryColor;
         this.secondaryColor = secondaryColor;
     }
 
-    public static ColorScheme create(IGetter<Integer> primaryColor, IGetter<Integer> secondaryColor) {
+    public static ColorScheme create(Supplier<Integer> primaryColor, Supplier<Integer> secondaryColor) {
         return new ColorScheme(primaryColor, secondaryColor);
     }
 

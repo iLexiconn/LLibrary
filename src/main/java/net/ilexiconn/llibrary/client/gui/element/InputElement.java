@@ -13,6 +13,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
+import java.util.function.Function;
+
 @SideOnly(Side.CLIENT)
 public class InputElement<T extends GuiScreen> extends Element<T> {
     private String text;
@@ -21,10 +23,17 @@ public class InputElement<T extends GuiScreen> extends Element<T> {
     private int cursorPosition;
     private int selectionEnd;
     private int cursorCounter;
+    private String newText;
+    private Function<InputElement<T>, Boolean> function;
 
     public InputElement(T gui, String text, float posX, float posY, int width) {
+        this(gui, text, posX, posY, width, null);
+    }
+
+    public InputElement(T gui, String text, float posX, float posY, int width, Function<InputElement<T>, Boolean> function) {
         super(gui, posX, posY, width, 12);
         this.text = text != null ? text : "";
+        this.function = function;
     }
 
     @Override
@@ -179,6 +188,10 @@ public class InputElement<T extends GuiScreen> extends Element<T> {
         return this.text;
     }
 
+    public String getNewText() {
+        return this.newText;
+    }
+
     public String getSelectedText() {
         int start = this.cursorPosition < this.selectionEnd ? this.cursorPosition : this.selectionEnd;
         int end = this.cursorPosition < this.selectionEnd ? this.selectionEnd : this.cursorPosition;
@@ -201,8 +214,13 @@ public class InputElement<T extends GuiScreen> extends Element<T> {
             newText = newText + this.text.substring(end);
         }
 
-        this.text = newText;
-        this.moveCursorBy(start - this.selectionEnd + allowedText.length());
+        this.newText = text;
+        if (this.function == null || this.function.apply(this)) {
+            this.text = newText;
+            this.moveCursorBy(start - this.selectionEnd + allowedText.length());
+        } else {
+            this.newText = text;
+        }
     }
 
     public void deleteWords(int amount) {
@@ -233,7 +251,12 @@ public class InputElement<T extends GuiScreen> extends Element<T> {
                     nextText = nextText + this.text.substring(end);
                 }
 
-                this.text = nextText;
+                this.newText = text;
+                if (this.function == null || this.function.apply(this)) {
+                    this.text = nextText;
+                } else {
+                    this.newText = text;
+                }
 
                 if (delete) {
                     this.moveCursorBy(amount);
@@ -330,7 +353,12 @@ public class InputElement<T extends GuiScreen> extends Element<T> {
 
     public void clearText() {
         this.setCursorPositionStart();
-        this.text = "";
+        this.newText = "";
+        if (this.function == null || this.function.apply(this)) {
+            this.text = this.newText;
+        } else {
+            this.newText = text;
+        }
     }
 
     private void drawCursorVertical(float startX, float startY, float endX, float endY) {

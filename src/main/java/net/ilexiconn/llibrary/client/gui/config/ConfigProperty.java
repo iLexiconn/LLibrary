@@ -16,7 +16,7 @@ public class ConfigProperty<T> {
     }
 
     public void set(T value) {
-        this.value.set(value);
+        this.value.accept(value);
     }
 
     public ConfigPropertyType getType() {
@@ -24,6 +24,6 @@ public class ConfigProperty<T> {
     }
 
     public enum ConfigPropertyType {
-        COLOR_SELECTION, CHECK_BOX
+        COLOR_SELECTION, CHECK_BOX, INPUT
     }
 }
