@@ -31,7 +31,6 @@ public class ConfigGUI extends ElementGUI {
     protected Map<ConfigProperty<?>, Element<ConfigGUI>> propertyElements = new HashMap<>();
     protected ConfigCategory selectedCategory;
 
-    private Configuration config;
     private Mod mod;
 
     public ConfigGUI(GuiScreen parent, Object mod, Configuration config) {
@@ -41,7 +40,6 @@ public class ConfigGUI extends ElementGUI {
         }
         this.mod = mod.getClass().getAnnotation(Mod.class);
         if (config != null) {
-            this.config = config;
             this.categories.addAll(config.getCategoryNames().stream().map(name -> {
                 Map<String, ConfigProperty<?>> propertyMap = new LinkedHashMap<>();
                 net.minecraftforge.common.config.ConfigCategory configCategory = config.getCategory(name);
@@ -56,13 +54,11 @@ public class ConfigGUI extends ElementGUI {
                         public Object get() {
                             return configCategory.get(entry.getKey()).getString();
                         }
-                    }, entry.getValue().getType() == Property.Type.COLOR ? ConfigProperty.ConfigPropertyType.COLOR_SELECTION : entry.getValue().getType() == Property.Type.BOOLEAN ? ConfigProperty.ConfigPropertyType.CHECK_BOX : ConfigProperty.ConfigPropertyType.INPUT);
+                    }, entry.getValue().getType());
                     propertyMap.put(entry.getKey(), configProperty);
                 }
                 return new ConfigCategory(name, propertyMap);
             }).collect(Collectors.toList()));
-        } else {
-            LLibrary.LOGGER.info("Config for " + this.mod.modid() + " is null. Errors may occur.");
         }
     }
 
@@ -128,21 +124,31 @@ public class ConfigGUI extends ElementGUI {
 
     private Element<ConfigGUI> createPropertyElement(ConfigProperty property, int x, int y) {
         switch (property.getType()) {
-            case CHECK_BOX:
+            case BOOLEAN:
                 return new CheckboxElement<>(this, x, y, (checkbox) -> {
                     property.set(checkbox.isSelected());
                     return true;
                 }).withSelection(property.get() instanceof Boolean ? (Boolean) property.get() : (Boolean.parseBoolean((String) property.get())));
-            case COLOR_SELECTION:
+            case COLOR:
                 return new ColorElement<>(this, x, y, 195, 149, (color) -> {
                     property.set(color.getColor());
                     return true;
                 });
-            case INPUT:
+            case STRING:
                 return new InputElement<>(this, (String) property.get(), x, y, 192, (input) -> {
                     property.set(input.getNewText());
                     return true;
                 });
+            case DOUBLE:
+                return new SliderElement<>(this, x, y, (slider) -> {
+                    property.set(slider.getNewValue());
+                    return true;
+                }).withValue((float) property.get());
+            case INTEGER:
+                return new SliderElement<>(this, x, y, true, (slider) -> {
+                    property.set(slider.getNewValue());
+                    return true;
+                }).withValue((int) property.get());
         }
         return null;
     }

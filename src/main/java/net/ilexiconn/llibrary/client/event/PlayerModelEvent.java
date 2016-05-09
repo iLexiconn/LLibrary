@@ -16,8 +16,8 @@ public class PlayerModelEvent extends Event {
     }
 
     public static class Assign extends PlayerModelEvent {
-        protected RenderPlayer renderPlayer;
-        protected boolean smallArms;
+        private RenderPlayer renderPlayer;
+        private boolean smallArms;
 
         public Assign(RenderPlayer renderPlayer, ModelPlayer model, boolean smallArms) {
             super(model);

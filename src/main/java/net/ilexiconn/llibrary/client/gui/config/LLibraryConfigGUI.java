@@ -3,6 +3,7 @@ package net.ilexiconn.llibrary.client.gui.config;
 import net.ilexiconn.llibrary.LLibrary;
 import net.ilexiconn.llibrary.server.util.IValueAccess;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -25,7 +26,7 @@ public class LLibraryConfigGUI extends ConfigGUI {
             public void accept(Boolean patreonEffects) {
                 LLibrary.CONFIG.setPatreonEffects(patreonEffects);
             }
-        }, ConfigProperty.ConfigPropertyType.CHECK_BOX));
+        }, Property.Type.BOOLEAN));
         LLibraryConfigGUI.GENERAL_PROPERTIES.put("Version Checker", new ConfigProperty<>(new IValueAccess<Boolean>() {
             @Override
             public Boolean get() {
@@ -36,7 +37,7 @@ public class LLibraryConfigGUI extends ConfigGUI {
             public void accept(Boolean versionCheck) {
                 LLibrary.CONFIG.setVersionCheck(versionCheck);
             }
-        }, ConfigProperty.ConfigPropertyType.CHECK_BOX));
+        }, Property.Type.BOOLEAN));
         LLibraryConfigGUI.APPEARANCE_PROPERTIES.put("Accent Color", new ConfigProperty<>(new IValueAccess<Integer>() {
             @Override
             public Integer get() {
@@ -47,7 +48,7 @@ public class LLibraryConfigGUI extends ConfigGUI {
             public void accept(Integer accentColor) {
                 LLibrary.CONFIG.setAccentColor(accentColor);
             }
-        }, ConfigProperty.ConfigPropertyType.COLOR_SELECTION));
+        }, Property.Type.COLOR));
         LLibraryConfigGUI.APPEARANCE_PROPERTIES.put("Dark Mode", new ConfigProperty<>(new IValueAccess<Boolean>() {
             @Override
             public Boolean get() {
@@ -58,7 +59,7 @@ public class LLibraryConfigGUI extends ConfigGUI {
             public void accept(Boolean colorMode) {
                 LLibrary.CONFIG.setColorMode(colorMode ? "dark" : "light");
             }
-        }, ConfigProperty.ConfigPropertyType.CHECK_BOX));
+        }, Property.Type.BOOLEAN));
     }
 
     public LLibraryConfigGUI(GuiScreen parent) {
