@@ -152,6 +152,30 @@ public class QubbleModel implements INBTSerializable<NBTTagCompound> {
         this.textureHeight = height;
     }
 
+    public void removeCuboid(QubbleCuboid cuboid) {
+        for (QubbleCuboid currentCuboid : this.getCuboids()) {
+            this.removeChildCuboid(currentCuboid, cuboid);
+        }
+    }
+
+    private boolean removeChildCuboid(QubbleCuboid parent, QubbleCuboid cuboid) {
+        boolean isChild = false;
+        for (QubbleCuboid currentCuboid : parent.getChildren()) {
+            if (currentCuboid.equals(cuboid)) {
+                isChild = true;
+                break;
+            }
+            if (this.removeChildCuboid(currentCuboid, cuboid)) {
+                return true;
+            }
+        }
+        if (isChild) {
+            parent.getChildren().remove(cuboid);
+            return true;
+        }
+        return false;
+    }
+
     public QubbleModel unparent() {
         List<QubbleCuboid> unparentedCuboids = new ArrayList<>();
         for (QubbleCuboid cuboid : this.cuboids) {
