@@ -28,7 +28,7 @@ public class ConfigGUI extends ElementGUI {
 
     protected GuiScreen parent;
     protected List<ConfigCategory> categories = new ArrayList<>();
-    protected Map<ConfigProperty, Element<ConfigGUI>> propertyElements = new HashMap<>();
+    protected Map<ConfigProperty<?>, Element<ConfigGUI>> propertyElements = new HashMap<>();
     protected ConfigCategory selectedCategory;
 
     private Configuration config;
@@ -43,10 +43,10 @@ public class ConfigGUI extends ElementGUI {
         if (config != null) {
             this.config = config;
             this.categories.addAll(config.getCategoryNames().stream().map(name -> {
-                Map<String, ConfigProperty> propertyMap = new LinkedHashMap<>();
+                Map<String, ConfigProperty<?>> propertyMap = new LinkedHashMap<>();
                 net.minecraftforge.common.config.ConfigCategory configCategory = config.getCategory(name);
                 for (Map.Entry<String, Property> entry : configCategory.entrySet()) {
-                    ConfigProperty configProperty = new ConfigProperty(new IValueAccess() {
+                    ConfigProperty<?> configProperty = new ConfigProperty<>(new IValueAccess() {
                         @Override
                         public void accept(Object string) {
                             configCategory.put(entry.getKey(), new Property(entry.getKey(), String.valueOf(string), null));
@@ -76,7 +76,7 @@ public class ConfigGUI extends ElementGUI {
         this.elementList.add(new LabelElement<>(this, this.mod.name().toUpperCase() + " SETTINGS", 35, 26));
         ListElement<ConfigGUI> categoryList = (ListElement<ConfigGUI>) new ListElement<>(this, 0, 40, 120, this.height - 40, this.categories.stream().map(ConfigCategory::getName).collect(Collectors.toList()), 20, list -> {
             this.selectedCategory = this.categories.get(list.getSelectedIndex());
-            for (Map.Entry<ConfigProperty, Element<ConfigGUI>> element : this.propertyElements.entrySet()) {
+            for (Map.Entry<ConfigProperty<?>, Element<ConfigGUI>> element : this.propertyElements.entrySet()) {
                 ElementHandler.INSTANCE.removeElement(this, element.getValue());
             }
             this.propertyElements.clear();
@@ -107,9 +107,9 @@ public class ConfigGUI extends ElementGUI {
         GlStateManager.popMatrix();
         int x = 125;
         int y = 45;
-        for (Map.Entry<String, ConfigProperty> propertyEntry : this.selectedCategory.getProperties().entrySet()) {
+        for (Map.Entry<String, ConfigProperty<?>> propertyEntry : this.selectedCategory.getProperties().entrySet()) {
             String name = propertyEntry.getKey();
-            ConfigProperty<ConfigGUI> property = propertyEntry.getValue();
+            ConfigProperty<?> property = propertyEntry.getValue();
             fontRendererObj.drawString(name, x, y, LLibrary.CONFIG.getTextColor());
             Element<ConfigGUI> propertyElement = this.propertyElements.get(property);
             if (propertyElement == null) {

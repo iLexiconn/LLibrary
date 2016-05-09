@@ -4,9 +4,9 @@ import java.util.Map;
 
 public class ConfigCategory {
     private String name;
-    private Map<String, ConfigProperty> properties;
+    private Map<String, ConfigProperty<?>> properties;
 
-    public ConfigCategory(String name, Map<String, ConfigProperty> properties) {
+    public ConfigCategory(String name, Map<String, ConfigProperty<?>> properties) {
         this.name = name;
         this.properties = properties;
     }
@@ -15,7 +15,7 @@ public class ConfigCategory {
         return this.name;
     }
 
-    public Map<String, ConfigProperty> getProperties() {
+    public Map<String, ConfigProperty<?>> getProperties() {
         return this.properties;
     }
 }

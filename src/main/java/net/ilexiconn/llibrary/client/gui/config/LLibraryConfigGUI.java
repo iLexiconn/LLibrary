@@ -11,8 +11,8 @@ import java.util.Map;
 
 @SideOnly(Side.CLIENT)
 public class LLibraryConfigGUI extends ConfigGUI {
-    private static final Map<String, ConfigProperty> GENERAL_PROPERTIES = new HashMap<>();
-    private static final Map<String, ConfigProperty> APPEARANCE_PROPERTIES = new HashMap<>();
+    private static final Map<String, ConfigProperty<?>> GENERAL_PROPERTIES = new HashMap<>();
+    private static final Map<String, ConfigProperty<?>> APPEARANCE_PROPERTIES = new HashMap<>();
 
     static {
         LLibraryConfigGUI.GENERAL_PROPERTIES.put("Patreon Effects", new ConfigProperty<>(new IValueAccess<Boolean>() {
