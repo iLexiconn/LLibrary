@@ -132,7 +132,7 @@ public class ConfigGUI extends ElementGUI {
                 return new CheckboxElement<>(this, x, y, (checkbox) -> {
                     property.set(checkbox.isSelected());
                     return true;
-                }).withSelection((Boolean.parseBoolean((String) property.get())));
+                }).withSelection(property.get() instanceof Boolean ? (Boolean) property.get() : (Boolean.parseBoolean((String) property.get())));
             case COLOR_SELECTION:
                 return new ColorElement<>(this, x, y, 195, 149, (color) -> {
                     property.set(color.getColor());
