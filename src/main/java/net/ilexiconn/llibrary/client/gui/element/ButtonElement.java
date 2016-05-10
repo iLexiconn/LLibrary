@@ -1,7 +1,7 @@
 package net.ilexiconn.llibrary.client.gui.element;
 
 import net.ilexiconn.llibrary.LLibrary;
-import net.ilexiconn.llibrary.client.gui.ColorScheme;
+import net.ilexiconn.llibrary.client.gui.element.color.ColorScheme;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;

@@ -31,7 +31,7 @@ public class LLibrary {
     @CapabilityInject(IEntityDataCapability.class)
     public static Capability<IEntityDataCapability> ENTITY_DATA_CAPABILITY;
     public static LLibraryConfig CONFIG = new LLibraryConfig();
-    @NetworkWrapper({AnimationMessage.class, PropertiesMessage.class, SnackbarMessage.class, BlockEntityMessage.class})
+    @NetworkWrapper({AnimationMessage.class, PropertiesMessage.class, SnackbarMessage.class, BlockEntityMessage.class, SurvivalTabMessage.class})
     public static SimpleNetworkWrapper NETWORK_WRAPPER;
     public static int QUBBLE_VERSION = 1;
 

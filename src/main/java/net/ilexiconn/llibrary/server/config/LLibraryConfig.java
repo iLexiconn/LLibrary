@@ -1,6 +1,6 @@
 package net.ilexiconn.llibrary.server.config;
 
-import net.ilexiconn.llibrary.client.gui.ColorMode;
+import net.ilexiconn.llibrary.client.gui.element.color.ColorMode;
 import net.ilexiconn.llibrary.server.nbt.NBTHandler;
 import net.ilexiconn.llibrary.server.nbt.NBTMutatorProperty;
 import net.ilexiconn.llibrary.server.nbt.NBTProperty;
@@ -20,6 +20,10 @@ public class LLibraryConfig implements INBTSerializable<NBTTagCompound> {
     private boolean patreonEffects = true;
     @NBTProperty
     private boolean versionCheck = true;
+    @NBTProperty
+    private boolean tabsAlwaysVisible = false;
+    @NBTProperty
+    private boolean tabsLeftSide = false;
 
     public int getPrimaryColor() {
         return colorMode.getPrimaryColor();
@@ -88,6 +92,22 @@ public class LLibraryConfig implements INBTSerializable<NBTTagCompound> {
 
     public void setVersionCheck(boolean versionCheck) {
         this.versionCheck = versionCheck;
+    }
+
+    public boolean areTabsAlwaysVisible() {
+        return tabsAlwaysVisible;
+    }
+
+    public void setTabsAlwaysVisible(boolean tabsAlwaysVisible) {
+        this.tabsAlwaysVisible = tabsAlwaysVisible;
+    }
+
+    public boolean areTabsLeftSide() {
+        return tabsLeftSide;
+    }
+
+    public void setTabsLeftSide(boolean tabsLeftSide) {
+        this.tabsLeftSide = tabsLeftSide;
     }
 
     @Override

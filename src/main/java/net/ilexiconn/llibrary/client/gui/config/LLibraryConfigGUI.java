@@ -38,6 +38,28 @@ public class LLibraryConfigGUI extends ConfigGUI {
                 LLibrary.CONFIG.setVersionCheck(versionCheck);
             }
         }, Property.Type.BOOLEAN));
+        LLibraryConfigGUI.GENERAL_PROPERTIES.put("Survival Tabs Always Visible", new ConfigProperty<>(new IValueAccess<Boolean>() {
+            @Override
+            public Boolean get() {
+                return LLibrary.CONFIG.areTabsAlwaysVisible();
+            }
+
+            @Override
+            public void accept(Boolean tabsAlwaysVisible) {
+                LLibrary.CONFIG.setTabsAlwaysVisible(tabsAlwaysVisible);
+            }
+        }, Property.Type.BOOLEAN));
+        LLibraryConfigGUI.GENERAL_PROPERTIES.put("Survival Tabs Left Side", new ConfigProperty<>(new IValueAccess<Boolean>() {
+            @Override
+            public void accept(Boolean tabsLeftSide) {
+                LLibrary.CONFIG.setTabsLeftSide(tabsLeftSide);
+            }
+
+            @Override
+            public Boolean get() {
+                return LLibrary.CONFIG.areTabsLeftSide();
+            }
+        }, Property.Type.BOOLEAN));
         LLibraryConfigGUI.APPEARANCE_PROPERTIES.put("Accent Color", new ConfigProperty<>(new IValueAccess<Integer>() {
             @Override
             public Integer get() {
@@ -66,5 +88,11 @@ public class LLibraryConfigGUI extends ConfigGUI {
         super(parent, LLibrary.INSTANCE, null);
         this.categories.add(new ConfigCategory("General", LLibraryConfigGUI.GENERAL_PROPERTIES));
         this.categories.add(new ConfigCategory("Appearance", LLibraryConfigGUI.APPEARANCE_PROPERTIES));
+    }
+
+    @Override
+    public void onGuiClosed() {
+        LLibrary.CONFIG.save();
+        super.onGuiClosed();
     }
 }

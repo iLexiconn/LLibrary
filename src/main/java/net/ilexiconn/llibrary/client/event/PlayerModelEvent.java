@@ -11,7 +11,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class PlayerModelEvent extends Event {
     protected ModelPlayer model;
 
-    public PlayerModelEvent(ModelPlayer model) {
+    PlayerModelEvent(ModelPlayer model) {
         this.model = model;
     }
 

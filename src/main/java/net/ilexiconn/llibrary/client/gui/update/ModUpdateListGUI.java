@@ -1,4 +1,4 @@
-package net.ilexiconn.llibrary.client.gui;
+package net.ilexiconn.llibrary.client.gui.update;
 
 import net.ilexiconn.llibrary.client.ClientProxy;
 import net.ilexiconn.llibrary.server.update.UpdateContainer;

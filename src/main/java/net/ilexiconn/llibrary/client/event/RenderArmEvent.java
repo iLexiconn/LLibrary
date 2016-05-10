@@ -14,7 +14,7 @@ public class RenderArmEvent extends Event {
     private RenderPlayer renderPlayer;
     private ModelPlayer model;
 
-    public RenderArmEvent(AbstractClientPlayer player, RenderPlayer renderPlayer, ModelPlayer model) {
+    RenderArmEvent(AbstractClientPlayer player, RenderPlayer renderPlayer, ModelPlayer model) {
         this.player = player;
         this.renderPlayer = renderPlayer;
         this.model = model;

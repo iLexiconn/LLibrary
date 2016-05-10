@@ -2,7 +2,7 @@ package net.ilexiconn.llibrary.client.gui.element;
 
 import net.ilexiconn.llibrary.LLibrary;
 import net.ilexiconn.llibrary.client.ClientProxy;
-import net.ilexiconn.llibrary.client.gui.ColorScheme;
+import net.ilexiconn.llibrary.client.gui.element.color.ColorScheme;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;

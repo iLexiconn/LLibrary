@@ -1,4 +1,4 @@
-package net.ilexiconn.llibrary.client.gui;
+package net.ilexiconn.llibrary.client.gui.element.color;
 
 import java.util.function.Supplier;
 

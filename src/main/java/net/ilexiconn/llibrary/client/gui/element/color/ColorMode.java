@@ -1,4 +1,4 @@
-package net.ilexiconn.llibrary.client.gui;
+package net.ilexiconn.llibrary.client.gui.element.color;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;

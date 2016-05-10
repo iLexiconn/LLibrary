@@ -4,7 +4,6 @@ import net.ilexiconn.llibrary.LLibrary;
 import net.ilexiconn.llibrary.server.capability.EntityDataCapabilityImplementation;
 import net.ilexiconn.llibrary.server.capability.EntityDataHandler;
 import net.ilexiconn.llibrary.server.capability.IEntityDataCapability;
-import net.ilexiconn.llibrary.server.config.ConfigHandler;
 import net.ilexiconn.llibrary.server.entity.EntityProperties;
 import net.ilexiconn.llibrary.server.entity.EntityPropertiesHandler;
 import net.ilexiconn.llibrary.server.entity.PropertiesTracker;
@@ -26,7 +25,6 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -79,13 +77,6 @@ public enum ServerEventHandler {
             NBTTagCompound compound = new NBTTagCompound();
             EntityDataCapabilityImplementation.getCapability(event.getOriginal()).saveToNBT(compound);
             EntityDataCapabilityImplementation.getCapability(event.getEntityPlayer()).loadFromNBT(compound);
-        }
-    }
-
-    @SubscribeEvent
-    public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-        if (ConfigHandler.INSTANCE.hasConfigForID(event.getModID())) {
-            ConfigHandler.INSTANCE.saveConfigForID(event.getModID());
         }
     }
 
