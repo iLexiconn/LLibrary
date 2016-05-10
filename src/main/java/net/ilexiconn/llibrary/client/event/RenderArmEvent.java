@@ -10,9 +10,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class RenderArmEvent extends Event {
-    protected AbstractClientPlayer player;
-    protected RenderPlayer renderPlayer;
-    protected ModelPlayer model;
+    private AbstractClientPlayer player;
+    private RenderPlayer renderPlayer;
+    private ModelPlayer model;
 
     public RenderArmEvent(AbstractClientPlayer player, RenderPlayer renderPlayer, ModelPlayer model) {
         this.player = player;

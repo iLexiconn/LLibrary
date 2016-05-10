@@ -130,6 +130,10 @@ public class ListElement<T extends GuiScreen> extends Element<T> {
         return ElementHandler.INSTANCE.isElementOnTop(this.getGUI(), this) && mouseX > entryX && mouseX < entryX + entryWidth && mouseY > entryY && mouseY < entryY + entryHeight;
     }
 
+    public int getSelectedIndex() {
+        return this.selectedEntry;
+    }
+
     public String getSelectedEntry() {
         return this.entries.get(selectedEntry);
     }
