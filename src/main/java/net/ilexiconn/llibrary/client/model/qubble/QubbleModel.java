@@ -176,6 +176,29 @@ public class QubbleModel implements INBTSerializable<NBTTagCompound> {
         return false;
     }
 
+    public QubbleCuboid getParent(QubbleCuboid cuboid) {
+        for (QubbleCuboid currentCuboid : this.getCuboids()) {
+            QubbleCuboid foundParent = this.getParent(currentCuboid, cuboid);
+            if (foundParent != null) {
+                return foundParent;
+            }
+        }
+        return null;
+    }
+
+    private QubbleCuboid getParent(QubbleCuboid parent, QubbleCuboid cuboid) {
+        if (parent.getChildren().contains(cuboid)) {
+            return parent;
+        }
+        for (QubbleCuboid child : parent.getChildren()) {
+            QubbleCuboid foundParent = this.getParent(child, cuboid);
+            if (foundParent != null) {
+                return foundParent;
+            }
+        }
+        return null;
+    }
+
     public QubbleModel unparent() {
         List<QubbleCuboid> unparentedCuboids = new ArrayList<>();
         for (QubbleCuboid cuboid : this.cuboids) {
@@ -188,7 +211,6 @@ public class QubbleModel implements INBTSerializable<NBTTagCompound> {
         this.cuboids.addAll(unparentedCuboids);
         return this;
     }
-
 
     private void unparentCuboids(List<QubbleCuboid> cuboids, List<QubbleCuboid> childCuboids, List<QubbleCuboid> parentCuboids) {
         for (QubbleCuboid cuboid : cuboids) {
