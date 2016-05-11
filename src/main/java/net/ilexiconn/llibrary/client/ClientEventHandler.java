@@ -2,16 +2,24 @@ package net.ilexiconn.llibrary.client;
 
 import net.ilexiconn.llibrary.LLibrary;
 import net.ilexiconn.llibrary.client.event.PlayerModelEvent;
-import net.ilexiconn.llibrary.client.gui.ModUpdateGUI;
 import net.ilexiconn.llibrary.client.gui.SnackbarGUI;
+import net.ilexiconn.llibrary.client.gui.survivaltab.PageButtonGUI;
+import net.ilexiconn.llibrary.client.gui.survivaltab.SurvivalTab;
+import net.ilexiconn.llibrary.client.gui.survivaltab.SurvivalTabGUI;
+import net.ilexiconn.llibrary.client.gui.survivaltab.SurvivalTabHandler;
+import net.ilexiconn.llibrary.client.gui.update.ModUpdateGUI;
 import net.ilexiconn.llibrary.client.model.VoxelModel;
 import net.ilexiconn.llibrary.client.util.ClientUtils;
+import net.ilexiconn.llibrary.server.config.ConfigHandler;
+import net.ilexiconn.llibrary.server.event.SurvivalTabClickEvent;
 import net.ilexiconn.llibrary.server.snackbar.Snackbar;
 import net.ilexiconn.llibrary.server.snackbar.SnackbarHandler;
 import net.ilexiconn.llibrary.server.update.UpdateHandler;
 import net.ilexiconn.llibrary.server.util.ModUtils;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
@@ -21,6 +29,7 @@ import net.minecraft.util.StatCollector;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -78,11 +87,41 @@ public enum ClientEventHandler {
                 buttonX -= 24;
             }
 
-            event.buttonList.add(new GuiButton(ClientProxy.UPDATE_BUTTON_ID, buttonX, buttonY, 20, 20, "U"));
+            if (LLibrary.CONFIG.hasVersionCheck()) {
+                event.buttonList.add(new GuiButton(ClientProxy.UPDATE_BUTTON_ID, buttonX, buttonY, 20, 20, "U"));
+            }
 
             if (!this.checkedForUpdates && !UpdateHandler.INSTANCE.getOutdatedModList().isEmpty()) {
                 this.checkedForUpdates = true;
                 SnackbarHandler.INSTANCE.showSnackbar(Snackbar.create(StatCollector.translateToLocal("snackbar.llibrary.updates_found")));
+            }
+        } else if (event.gui instanceof GuiContainer && (LLibrary.CONFIG.areTabsAlwaysVisible() || SurvivalTabHandler.INSTANCE.getSurvivalTabList().size() > 1)) {
+            GuiContainer container = (GuiContainer) event.gui;
+            boolean flag = false;
+            for (SurvivalTab survivalTab : SurvivalTabHandler.INSTANCE.getSurvivalTabList()) {
+                if (survivalTab.getContainer() != null && survivalTab.getContainer().isInstance(event.gui)) {
+                    flag = true;
+                    break;
+                }
+            }
+            if (flag) {
+                int count = 2;
+                for (SurvivalTab tab : SurvivalTabHandler.INSTANCE.getSurvivalTabList()) {
+                    if (tab.getPage() == SurvivalTabHandler.INSTANCE.getCurrentPage()) {
+                        event.buttonList.add(new SurvivalTabGUI(count, tab));
+                    }
+                    count++;
+                }
+                if (count > 7) {
+                    int offsetY = (container.ySize - 136) / 2 - 10;
+                    if (LLibrary.CONFIG.areTabsLeftSide()) {
+                        event.buttonList.add(new PageButtonGUI(-1, container.guiLeft - 82, container.guiTop + 136 + offsetY, container));
+                        event.buttonList.add(new PageButtonGUI(-2, container.guiLeft - 22, container.guiTop + 136 + offsetY, container));
+                    } else {
+                        event.buttonList.add(new PageButtonGUI(-1, container.guiLeft + container.xSize + 2, container.guiTop + 136 + offsetY, container));
+                        event.buttonList.add(new PageButtonGUI(-2, container.guiLeft + container.xSize + 62, container.guiTop + 136 + offsetY, container));
+                    }
+                }
             }
         }
     }
@@ -151,6 +190,20 @@ public enum ClientEventHandler {
                     this.renderVoxel(event, 1.0F, 1.0F);
                 }
             }
+        }
+    }
+
+    @SubscribeEvent
+    public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
+        if (ConfigHandler.INSTANCE.hasConfigForID(event.modID)) {
+            ConfigHandler.INSTANCE.saveConfigForID(event.modID);
+        }
+    }
+
+    @SubscribeEvent
+    public void onSurvivalTabClick(SurvivalTabClickEvent event) {
+        if (event.getLabel().equals("container.inventory")) {
+            ClientProxy.MINECRAFT.displayGuiScreen(new GuiInventory(ClientProxy.MINECRAFT.thePlayer));
         }
     }
 

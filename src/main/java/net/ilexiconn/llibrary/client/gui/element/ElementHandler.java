@@ -1,9 +1,12 @@
 package net.ilexiconn.llibrary.client.gui.element;
 
 import com.google.common.collect.Lists;
+import net.ilexiconn.llibrary.client.ClientProxy;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.input.Mouse;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,13 +37,15 @@ public enum ElementHandler {
 
     public <T extends GuiScreen> void clearElements(T gui) {
         if (this.elementMap.containsKey(gui)) {
-            this.elementMap.get(gui).clear();
+            this.elementMap.remove(gui);
         }
     }
 
-    public <T extends GuiScreen> boolean isElementOnTop(T gui, Element<T> element, float mouseX, float mouseY) {
+    public <T extends GuiScreen> boolean isElementOnTop(T gui, Element<T> element) {
         if (this.elementMap.containsKey(gui)) {
             List<Element<T>> elementList = (List<Element<T>>) ((List<?>) this.elementMap.get(gui));
+            float mouseX = this.getPreciseMouseX(gui);
+            float mouseY = this.getPreciseMouseY(gui);
             for (Element<T> e : Lists.reverse(elementList)) {
                 if (e.isVisible() && mouseX >= e.getPosX() && mouseY >= e.getPosY() && mouseX < e.getPosX() + e.getWidth() && mouseY < e.getPosY() + e.getHeight()) {
                     return element == e || (element.getParent() != null && element.getParent() == e);
@@ -66,17 +71,21 @@ public enum ElementHandler {
         }
     }
 
-    public <T extends GuiScreen> void render(T gui, float mouseX, float mouseY, float partialTicks) {
+    public <T extends GuiScreen> void render(T gui, float partialTicks) {
         if (this.elementMap.containsKey(gui)) {
             List<Element<T>> elementList = (List<Element<T>>) ((List<?>) this.elementMap.get(gui));
+            float mouseX = this.getPreciseMouseX(gui);
+            float mouseY = this.getPreciseMouseY(gui);
             elementList.stream().filter(element -> !(element instanceof WindowElement)).filter(Element::isVisible).forEach(element -> element.render(mouseX, mouseY, partialTicks));
             elementList.stream().filter(element -> element instanceof WindowElement).filter(Element::isVisible).forEach(element -> element.render(mouseX, mouseY, partialTicks));
         }
     }
 
-    public <T extends GuiScreen> void mouseClicked(T gui, float mouseX, float mouseY, int button) {
+    public <T extends GuiScreen> void mouseClicked(T gui, int button) {
         if (this.elementMap.containsKey(gui)) {
             List<Element<T>> elementList = (List<Element<T>>) ((List<?>) this.elementMap.get(gui));
+            float mouseX = this.getPreciseMouseX(gui);
+            float mouseY = this.getPreciseMouseY(gui);
             for (Element<T> element : Lists.reverse(elementList)) {
                 if (element.isVisible() && element.isEnabled()) {
                     if (element.mouseClicked(mouseX, mouseY, button)) {
@@ -87,9 +96,11 @@ public enum ElementHandler {
         }
     }
 
-    public <T extends GuiScreen> void mouseDragged(T gui, float mouseX, float mouseY, int button, long timeSinceClick) {
+    public <T extends GuiScreen> void mouseDragged(T gui, int button, long timeSinceClick) {
         if (this.elementMap.containsKey(gui)) {
             List<Element<T>> elementList = (List<Element<T>>) ((List<?>) this.elementMap.get(gui));
+            float mouseX = this.getPreciseMouseX(gui);
+            float mouseY = this.getPreciseMouseY(gui);
             for (Element<T> element : Lists.reverse(elementList)) {
                 if (element.isVisible() && element.isEnabled()) {
                     if (element.mouseDragged(mouseX, mouseY, button, timeSinceClick)) {
@@ -100,9 +111,11 @@ public enum ElementHandler {
         }
     }
 
-    public <T extends GuiScreen> void mouseReleased(T gui, float mouseX, float mouseY, int button) {
+    public <T extends GuiScreen> void mouseReleased(T gui, int button) {
         if (this.elementMap.containsKey(gui)) {
             List<Element<T>> elementList = (List<Element<T>>) ((List<?>) this.elementMap.get(gui));
+            float mouseX = this.getPreciseMouseX(gui);
+            float mouseY = this.getPreciseMouseY(gui);
             for (Element<T> element : Lists.reverse(elementList)) {
                 if (element.isVisible() && element.isEnabled()) {
                     if (element.mouseReleased(mouseX, mouseY, button)) {
@@ -124,5 +137,14 @@ public enum ElementHandler {
                 }
             }
         }
+    }
+
+    public <T extends GuiScreen> float getPreciseMouseX(T gui) {
+        ScaledResolution scaledResolution = new ScaledResolution(ClientProxy.MINECRAFT);
+        return (float) Mouse.getX() / scaledResolution.getScaleFactor();
+    }
+
+    public <T extends GuiScreen> float getPreciseMouseY(T gui) {
+        return gui.height - (float) Mouse.getY() * gui.height / (float) gui.mc.displayHeight - 1.0F;
     }
 }

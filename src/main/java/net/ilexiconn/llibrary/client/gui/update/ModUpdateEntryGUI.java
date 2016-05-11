@@ -1,4 +1,4 @@
-package net.ilexiconn.llibrary.client.gui;
+package net.ilexiconn.llibrary.client.gui.update;
 
 import net.minecraft.client.gui.GuiUtilRenderComponents;
 import net.minecraft.client.renderer.GlStateManager;

@@ -57,6 +57,7 @@ processResources {
 
 jar {
     manifest {
+        attributes "FMLAT": "llibrary_at.cfg"
         attributes "FMLCorePlugin": "net.ilexiconn.llibrary.server.asm.LLibraryPlugin"
         attributes "FMLCorePluginContainsFMLMod": "true"
     }
@@ -66,6 +67,7 @@ task devJar(type: Jar) {
     classifier = "dev"
     from sourceSets.main.output
     manifest {
+        attributes "FMLAT": "llibrary_at.cfg"
         attributes "FMLCorePlugin": "net.ilexiconn.llibrary.server.asm.LLibraryPlugin"
         attributes "FMLCorePluginContainsFMLMod": "true"
     }
@@ -137,7 +139,12 @@ curseforge {
         id = "243298"
 
         releaseType = "release"
-        changelog = versions.versions[project.version].join("\n")
+        def remoteChangelog = versions.versions[project.version];
+        if (remoteChangelog) {
+            changelog = remoteChangelog.join("\n")
+        } else {
+            changelog = ""
+        }
 
         addGameVersion("1.8.9")
 

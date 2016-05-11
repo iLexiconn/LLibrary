@@ -1,7 +1,6 @@
 package net.ilexiconn.llibrary.server;
 
 import net.ilexiconn.llibrary.LLibrary;
-import net.ilexiconn.llibrary.server.config.ConfigHandler;
 import net.ilexiconn.llibrary.server.entity.EntityProperties;
 import net.ilexiconn.llibrary.server.entity.EntityPropertiesHandler;
 import net.ilexiconn.llibrary.server.entity.PropertiesTracker;
@@ -16,7 +15,6 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
@@ -30,13 +28,6 @@ public enum ServerEventHandler {
     INSTANCE;
 
     private int updateTimer;
-
-    @SubscribeEvent
-    public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-        if (ConfigHandler.INSTANCE.hasConfigForID(event.modID)) {
-            ConfigHandler.INSTANCE.saveConfigForID(event.modID);
-        }
-    }
 
     @SubscribeEvent
     public void onEntityConstructing(EntityEvent.EntityConstructing event) {

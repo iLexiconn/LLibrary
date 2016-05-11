@@ -1,7 +1,8 @@
 package net.ilexiconn.llibrary.client.gui.element;
 
+import net.ilexiconn.llibrary.LLibrary;
 import net.ilexiconn.llibrary.client.ClientProxy;
-import net.ilexiconn.llibrary.client.gui.ColorScheme;
+import net.ilexiconn.llibrary.client.gui.element.color.ColorScheme;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
@@ -14,17 +15,19 @@ import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
 public class Element<T extends GuiScreen> {
+    public static final ColorScheme DEFAULT = ColorScheme.create(() -> LLibrary.CONFIG.getPrimaryColor(), () -> LLibrary.CONFIG.getSecondaryColor());
+
     private final T gui;
     private Element<T> parent;
-    private ColorScheme colorScheme;
+    private ColorScheme colorScheme = Element.DEFAULT;
 
     private float posX;
     private float posY;
     private int width;
     private int height;
 
-    private boolean enabled;
-    private boolean visible;
+    private boolean enabled = true;
+    private boolean visible = true;
 
     public Element(T gui, float posX, float posY, int width, int height) {
         this.gui = gui;
@@ -63,7 +66,7 @@ public class Element<T extends GuiScreen> {
     }
 
     protected boolean isSelected(float mouseX, float mouseY) {
-        return ElementHandler.INSTANCE.isElementOnTop(this.getGUI(), this, mouseX, mouseY) && mouseX >= this.getPosX() && mouseY >= this.getPosY() && mouseX < this.getPosX() + this.getWidth() && mouseY < this.getPosY() + this.getHeight();
+        return ElementHandler.INSTANCE.isElementOnTop(this.getGUI(), this) && mouseX >= this.getPosX() && mouseY >= this.getPosY() && mouseX < this.getPosX() + this.getWidth() && mouseY < this.getPosY() + this.getHeight();
     }
 
     public Element<T> withParent(Element<T> parent) {
@@ -145,12 +148,12 @@ public class Element<T extends GuiScreen> {
         float g = (float) (color >> 8 & 0xFF) / 255.0F;
         float b = (float) (color & 0xFF) / 255.0F;
         Tessellator tessellator = Tessellator.getInstance();
-        WorldRenderer vertexBuffer = tessellator.getWorldRenderer();
-        vertexBuffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
-        vertexBuffer.pos(x, y + height, 0.0).color(r, g, b, a).endVertex();
-        vertexBuffer.pos(x + width, y + height, 0.0).color(r, g, b, a).endVertex();
-        vertexBuffer.pos(x + width, y, 0.0).color(r, g, b, a).endVertex();
-        vertexBuffer.pos(x, y, 0.0).color(r, g, b, a).endVertex();
+        WorldRenderer worldRenderer = tessellator.getWorldRenderer();
+        worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+        worldRenderer.pos(x, y + height, 0.0).color(r, g, b, a).endVertex();
+        worldRenderer.pos(x + width, y + height, 0.0).color(r, g, b, a).endVertex();
+        worldRenderer.pos(x + width, y, 0.0).color(r, g, b, a).endVertex();
+        worldRenderer.pos(x, y, 0.0).color(r, g, b, a).endVertex();
         tessellator.draw();
         GlStateManager.disableBlend();
         GlStateManager.enableAlpha();

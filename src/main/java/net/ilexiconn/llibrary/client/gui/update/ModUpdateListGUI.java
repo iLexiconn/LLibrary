@@ -1,4 +1,4 @@
-package net.ilexiconn.llibrary.client.gui;
+package net.ilexiconn.llibrary.client.gui.update;
 
 import net.ilexiconn.llibrary.client.ClientProxy;
 import net.ilexiconn.llibrary.server.update.UpdateContainer;
@@ -97,12 +97,12 @@ public class ModUpdateListGUI extends GuiScrollingList {
             float iconWidth = this.cachedLogoDimensions.get(idx).getX() * scale;
             float iconHeight = this.cachedLogoDimensions.get(idx).getY() * scale;
             int offset = 12;
-            WorldRenderer worldRenderer = tess.getWorldRenderer();
-            worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-            worldRenderer.pos(offset, top + iconHeight, 0).tex(0, 1).endVertex();
-            worldRenderer.pos(offset + iconWidth, top + iconHeight, 0).tex(1, 1).endVertex();
-            worldRenderer.pos(offset + iconWidth, top, 0).tex(1, 0).endVertex();
-            worldRenderer.pos(offset, top, 0).tex(0, 0).endVertex();
+            WorldRenderer renderer = tess.getWorldRenderer();
+            renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+            renderer.pos(offset, top + iconHeight, 0).tex(0, 1).endVertex();
+            renderer.pos(offset + iconWidth, top + iconHeight, 0).tex(1, 1).endVertex();
+            renderer.pos(offset + iconWidth, top, 0).tex(1, 0).endVertex();
+            renderer.pos(offset, top, 0).tex(0, 0).endVertex();
             tess.draw();
         }
     }
