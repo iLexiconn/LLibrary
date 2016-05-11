@@ -23,7 +23,7 @@ public class LLibraryConfig implements INBTSerializable<NBTTagCompound> {
     @NBTProperty
     private boolean tabsAlwaysVisible = false;
     @NBTProperty
-    private boolean tabsLeftSide = false;
+    private boolean tabsLeftSide = true;
 
     public int getPrimaryColor() {
         return colorMode.getPrimaryColor();
