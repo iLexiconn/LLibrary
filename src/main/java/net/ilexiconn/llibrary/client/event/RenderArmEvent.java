@@ -10,11 +10,11 @@ import net.minecraft.entity.player.EntityPlayer;
 
 @SideOnly(Side.CLIENT)
 public class RenderArmEvent extends Event {
-    protected EntityPlayer player;
-    protected RenderPlayer renderPlayer;
-    protected ModelBiped model;
+    private EntityPlayer player;
+    private RenderPlayer renderPlayer;
+    private ModelBiped model;
 
-    public RenderArmEvent(EntityPlayer player, RenderPlayer renderPlayer, ModelBiped model) {
+    RenderArmEvent(EntityPlayer player, RenderPlayer renderPlayer, ModelBiped model) {
         this.player = player;
         this.renderPlayer = renderPlayer;
         this.model = model;

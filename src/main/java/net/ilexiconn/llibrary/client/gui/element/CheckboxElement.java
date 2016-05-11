@@ -38,16 +38,18 @@ public class CheckboxElement<T extends GuiScreen> extends Element<T> {
     @Override
     public boolean mouseClicked(float mouseX, float mouseY, int button) {
         if (button == 0 && super.isSelected(mouseX, mouseY)) {
+            this.selected = !this.selected;
             if (this.function != null && this.function.apply(this)) {
-                this.selected = !this.selected;
                 this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
+            } else {
+                this.selected = !this.selected;
             }
             return true;
         }
         return false;
     }
 
-    public CheckboxElement withSelection(boolean selected) {
+    public CheckboxElement<T> withSelection(boolean selected) {
         this.selected = selected;
         return this;
     }

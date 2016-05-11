@@ -7,10 +7,10 @@ import net.ilexiconn.llibrary.server.animation.IAnimatedEntity;
 import net.minecraft.entity.Entity;
 
 public class AnimationEvent<T extends Entity & IAnimatedEntity> extends Event {
-    protected T entity;
+    private T entity;
     protected Animation animation;
 
-    public AnimationEvent(T entity, Animation animation) {
+    AnimationEvent(T entity, Animation animation) {
         this.entity = entity;
         this.animation = animation;
     }

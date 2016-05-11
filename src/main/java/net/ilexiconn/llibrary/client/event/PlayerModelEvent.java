@@ -11,7 +11,7 @@ import net.minecraft.entity.player.EntityPlayer;
 public class PlayerModelEvent extends Event {
     protected ModelBiped model;
 
-    public PlayerModelEvent(ModelBiped model) {
+    PlayerModelEvent(ModelBiped model) {
         this.model = model;
     }
 

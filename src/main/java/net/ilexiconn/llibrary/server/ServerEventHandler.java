@@ -1,10 +1,8 @@
 package net.ilexiconn.llibrary.server;
 
-import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import net.ilexiconn.llibrary.LLibrary;
-import net.ilexiconn.llibrary.server.config.ConfigHandler;
 import net.ilexiconn.llibrary.server.entity.EntityProperties;
 import net.ilexiconn.llibrary.server.entity.EntityPropertiesHandler;
 import net.ilexiconn.llibrary.server.entity.PropertiesTracker;
@@ -30,13 +28,6 @@ public enum ServerEventHandler {
     INSTANCE;
 
     private int updateTimer;
-
-    @SubscribeEvent
-    public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-        if (ConfigHandler.INSTANCE.hasConfigForID(event.modID)) {
-            ConfigHandler.INSTANCE.saveConfigForID(event.modID);
-        }
-    }
 
     @SubscribeEvent
     public void onEntityConstructing(EntityEvent.EntityConstructing event) {

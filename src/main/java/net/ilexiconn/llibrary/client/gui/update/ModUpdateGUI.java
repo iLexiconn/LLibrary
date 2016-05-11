@@ -1,4 +1,4 @@
-package net.ilexiconn.llibrary.client.gui;
+package net.ilexiconn.llibrary.client.gui.update;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

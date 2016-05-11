@@ -1,6 +1,6 @@
 package net.ilexiconn.llibrary.server.config;
 
-import net.ilexiconn.llibrary.client.gui.ColorMode;
+import net.ilexiconn.llibrary.client.gui.element.color.ColorMode;
 import net.ilexiconn.llibrary.server.nbt.NBTHandler;
 import net.ilexiconn.llibrary.server.nbt.NBTMutatorProperty;
 import net.ilexiconn.llibrary.server.nbt.NBTProperty;
@@ -9,7 +9,6 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import java.awt.*;
 import java.io.File;
-import java.io.IOException;
 
 public class LLibraryConfig {
     @NBTProperty
@@ -20,6 +19,10 @@ public class LLibraryConfig {
     private boolean patreonEffects = true;
     @NBTProperty
     private boolean versionCheck = true;
+    @NBTProperty
+    private boolean tabsAlwaysVisible = false;
+    @NBTProperty
+    private boolean tabsLeftSide = true;
 
     public int getPrimaryColor() {
         return colorMode.getPrimaryColor();
@@ -43,6 +46,10 @@ public class LLibraryConfig {
 
     public int getTextColor() {
         return colorMode.getTextColor();
+    }
+
+    public int getInvertedTextColor() {
+        return colorMode.getInvertedTextColor();
     }
 
     public int getAccentColor() {
@@ -86,6 +93,22 @@ public class LLibraryConfig {
         this.versionCheck = versionCheck;
     }
 
+    public boolean areTabsAlwaysVisible() {
+        return tabsAlwaysVisible;
+    }
+
+    public void setTabsAlwaysVisible(boolean tabsAlwaysVisible) {
+        this.tabsAlwaysVisible = tabsAlwaysVisible;
+    }
+
+    public boolean areTabsLeftSide() {
+        return tabsLeftSide;
+    }
+
+    public void setTabsLeftSide(boolean tabsLeftSide) {
+        this.tabsLeftSide = tabsLeftSide;
+    }
+
     public NBTTagCompound serializeNBT() {
         NBTTagCompound compound = new NBTTagCompound();
         NBTHandler.INSTANCE.saveNBTData(this, compound);
@@ -99,16 +122,20 @@ public class LLibraryConfig {
     public void load() {
         try {
             this.deserializeNBT(CompressedStreamTools.read(new File(".", "llibrary" + File.separator + "config.dat")));
-        } catch (IOException e) {
-            //Meh
+        } catch (Exception e) {
+            if (!(e instanceof NullPointerException)) {
+                e.printStackTrace();
+            } else {
+                this.save(); //Don't bother to check for the file first, just make it if the input is null... :^)
+            }
         }
     }
 
     public void save() {
         try {
             CompressedStreamTools.write(this.serializeNBT(), new File(".", "llibrary" + File.separator + "config.dat"));
-        } catch (IOException e) {
-            //Meh
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

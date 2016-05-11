@@ -7,6 +7,8 @@ import cpw.mods.fml.relauncher.ReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.ilexiconn.llibrary.client.gui.SnackbarGUI;
+import net.ilexiconn.llibrary.client.gui.survivaltab.SurvivalTab;
+import net.ilexiconn.llibrary.client.gui.survivaltab.SurvivalTabHandler;
 import net.ilexiconn.llibrary.client.lang.LanguageHandler;
 import net.ilexiconn.llibrary.server.ServerProxy;
 import net.ilexiconn.llibrary.server.network.AbstractMessage;
@@ -14,6 +16,7 @@ import net.ilexiconn.llibrary.server.snackbar.Snackbar;
 import net.ilexiconn.llibrary.server.util.WebUtils;
 import net.ilexiconn.llibrary.server.world.TickRateHandler;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.util.Timer;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -26,7 +29,8 @@ public class ClientProxy extends ServerProxy {
     public static final int UPDATE_BUTTON_ID = "UPDATE_BUTTON_ID".hashCode();
     public static final List<SnackbarGUI> SNACKBAR_LIST = new ArrayList<>();
     public static final String[] PATRONS = new Gson().fromJson(WebUtils.readPastebin("aLjMgBAV"), String[].class);
-    public static final Timer TIMER = ReflectionHelper.getPrivateValue(Minecraft.class, ClientProxy.MINECRAFT, "timer", "field_71428_T", "Q");;
+    public static final Timer TIMER = ReflectionHelper.getPrivateValue(Minecraft.class, ClientProxy.MINECRAFT, "timer", "field_71428_T", "Q");
+    public static final SurvivalTab INVENTORY_TAB = SurvivalTabHandler.INSTANCE.create("container.inventory").setContainer(GuiInventory.class);
 
     @Override
     public void onPreInit() {

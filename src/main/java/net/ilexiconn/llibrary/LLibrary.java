@@ -26,7 +26,7 @@ public class LLibrary {
     @Mod.Instance("llibrary")
     public static LLibrary INSTANCE;
     public static LLibraryConfig CONFIG = new LLibraryConfig();
-    @NetworkWrapper({AnimationMessage.class, PropertiesMessage.class, SnackbarMessage.class, BlockEntityMessage.class})
+    @NetworkWrapper({AnimationMessage.class, PropertiesMessage.class, SnackbarMessage.class, BlockEntityMessage.class, SurvivalTabMessage.class})
     public static SimpleNetworkWrapper NETWORK_WRAPPER;
     public static int QUBBLE_VERSION = 1;
 
