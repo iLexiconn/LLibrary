@@ -89,5 +89,4 @@ public class SurvivalTabGUI extends GuiButton {
     public void playPressSound(SoundHandler soundHandler) {
 
     }
-
 }

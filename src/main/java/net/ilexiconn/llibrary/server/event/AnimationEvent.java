@@ -7,7 +7,7 @@ import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class AnimationEvent<T extends Entity & IAnimatedEntity> extends Event {
-    protected T entity;
+    private T entity;
     protected Animation animation;
 
     AnimationEvent(T entity, Animation animation) {

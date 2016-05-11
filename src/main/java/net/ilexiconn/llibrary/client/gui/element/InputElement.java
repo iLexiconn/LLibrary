@@ -254,12 +254,11 @@ public class InputElement<T extends GuiScreen> extends Element<T> {
                 this.newText = text;
                 if (this.function == null || this.function.apply(this)) {
                     this.text = nextText;
+                    if (delete) {
+                        this.moveCursorBy(amount);
+                    }
                 } else {
                     this.newText = text;
-                }
-
-                if (delete) {
-                    this.moveCursorBy(amount);
                 }
             }
         }
