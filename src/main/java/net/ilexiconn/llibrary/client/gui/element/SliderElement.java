@@ -2,6 +2,7 @@ package net.ilexiconn.llibrary.client.gui.element;
 
 import net.ilexiconn.llibrary.LLibrary;
 import net.ilexiconn.llibrary.client.ClientProxy;
+import net.ilexiconn.llibrary.client.util.ClientUtils;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
@@ -27,6 +28,7 @@ public class SliderElement<T extends GuiScreen> extends Element<T> {
     private boolean editable = true;
     private boolean dragging;
     private float newValue;
+    private float sliderX;
 
     public SliderElement(T gui, float posX, float posY, Function<SliderElement<T>, Boolean> function) {
         this(gui, posX, posY, false, function);
@@ -45,6 +47,7 @@ public class SliderElement<T extends GuiScreen> extends Element<T> {
         this.sliderWidth = sliderWidth;
         this.minValue = minValue;
         this.maxValue = maxValue;
+        this.sliderX = posX + 38 + ((this.sliderWidth - 4) * (this.value - this.minValue) / (this.maxValue - this.minValue));
     }
 
     @Override
@@ -75,7 +78,8 @@ public class SliderElement<T extends GuiScreen> extends Element<T> {
         if (this.hasSlider) {
             float offsetX = ((this.sliderWidth - 4) * (this.value - this.minValue) / (this.maxValue - this.minValue));
             boolean indicatorSelected = this.dragging || this.editable && selected && mouseX >= this.getPosX() + 38 + offsetX && mouseX <= this.getPosX() + 38 + offsetX + 4;
-            this.drawRectangle(this.getPosX() + 38 + offsetX, this.getPosY(), 4, this.getHeight(), this.editable ? indicatorSelected ? LLibrary.CONFIG.getDarkAccentColor() : LLibrary.CONFIG.getAccentColor() : LLibrary.CONFIG.getTertiaryColor());
+            this.sliderX = ClientUtils.interpolate(this.sliderX, this.getPosX() + 38 + offsetX, partialTicks);
+            this.drawRectangle(this.sliderX, this.getPosY(), 4, this.getHeight(), this.editable ? indicatorSelected ? LLibrary.CONFIG.getDarkAccentColor() : LLibrary.CONFIG.getAccentColor() : LLibrary.CONFIG.getTertiaryColor());
         }
     }
 
@@ -147,9 +151,6 @@ public class SliderElement<T extends GuiScreen> extends Element<T> {
 
     @Override
     public boolean mouseReleased(float mouseX, float mouseY, int button) {
-        if (this.dragging) {
-            this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
-        }
         this.dragging = false;
         return false;
     }
