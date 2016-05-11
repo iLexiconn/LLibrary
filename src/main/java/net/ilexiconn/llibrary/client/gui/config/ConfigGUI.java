@@ -140,15 +140,15 @@ public class ConfigGUI extends ElementGUI {
                     return true;
                 });
             case DOUBLE:
-                return new SliderElement<>(this, x, y, (slider) -> {
+                return new SliderElement<>(this, x, y, false, 100, 0, 10000, (slider) -> {
                     property.set(slider.getNewValue());
                     return true;
-                }).withValue((float) property.get());
+                }).withValue(Float.valueOf(String.valueOf(property.get())));
             case INTEGER:
                 return new SliderElement<>(this, x, y, true, (slider) -> {
                     property.set(slider.getNewValue());
                     return true;
-                }).withValue((int) property.get());
+                }).withValue((Integer.valueOf(String.valueOf(property.get()))));
         }
         return null;
     }

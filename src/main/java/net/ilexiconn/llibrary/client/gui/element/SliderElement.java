@@ -21,6 +21,7 @@ public class SliderElement<T extends GuiScreen> extends Element<T> {
     private DecimalFormat decimalFormat;
     private boolean hasSlider;
     private float sliderWidth;
+    private float sliderOffset;
     private float minValue;
     private float maxValue;
     private boolean editable = true;
@@ -54,8 +55,8 @@ public class SliderElement<T extends GuiScreen> extends Element<T> {
         int height = this.getHeight();
         this.drawRectangle(posX, posY, width, height, this.editable ? LLibrary.CONFIG.getSecondaryColor() : LLibrary.CONFIG.getSecondarySubcolor());
         boolean selected = this.isSelected(mouseX, mouseY);
-        boolean upperSelected = this.editable && selected && mouseX >= posX + width - this.sliderWidth - 11 && mouseY < posY + 6 && mouseX < posX + width - this.sliderWidth;
-        boolean lowerSelected = this.editable && selected && mouseX >= posX + width - this.sliderWidth - 11 && mouseY > posY + 6 && mouseX < posX + width - this.sliderWidth;
+        boolean upperSelected = this.editable && !this.dragging && selected && mouseX >= posX + width - this.sliderWidth - 11 && mouseY < posY + 6 && mouseX < posX + width - this.sliderWidth;
+        boolean lowerSelected = this.editable && !this.dragging && selected && mouseX >= posX + width - this.sliderWidth - 11 && mouseY > posY + 6 && mouseX < posX + width - this.sliderWidth;
         this.drawRectangle(posX + width - 11 - this.sliderWidth, posY, 11, 6, this.editable ? upperSelected ? LLibrary.CONFIG.getDarkAccentColor() : LLibrary.CONFIG.getAccentColor() : LLibrary.CONFIG.getTertiaryColor());
         this.drawRectangle(posX + width - 11 - this.sliderWidth, posY + 6, 11, 6, this.editable ? lowerSelected ? LLibrary.CONFIG.getDarkAccentColor() : LLibrary.CONFIG.getAccentColor() : LLibrary.CONFIG.getTertiaryColor());
         int textColor = LLibrary.CONFIG.getTextColor();
@@ -73,7 +74,7 @@ public class SliderElement<T extends GuiScreen> extends Element<T> {
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
         if (this.hasSlider) {
             float offsetX = ((this.sliderWidth - 4) * (this.value - this.minValue) / (this.maxValue - this.minValue));
-            boolean indicatorSelected = this.editable && selected && mouseX >= this.getPosX() + 38 + offsetX && mouseX <= this.getPosX() + 38 + offsetX + 4;
+            boolean indicatorSelected = this.dragging || this.editable && selected && mouseX >= this.getPosX() + 38 + offsetX && mouseX <= this.getPosX() + 38 + offsetX + 4;
             this.drawRectangle(this.getPosX() + 38 + offsetX, this.getPosY(), 4, this.getHeight(), this.editable ? indicatorSelected ? LLibrary.CONFIG.getDarkAccentColor() : LLibrary.CONFIG.getAccentColor() : LLibrary.CONFIG.getTertiaryColor());
         }
     }
@@ -123,6 +124,7 @@ public class SliderElement<T extends GuiScreen> extends Element<T> {
             }
         } else if (indicatorSelected) {
             this.dragging = true;
+            this.sliderOffset = mouseX - this.getPosX() - 38 - offsetX;
             this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
         }
         return super.mouseClicked(mouseX, mouseY, button);
@@ -131,7 +133,7 @@ public class SliderElement<T extends GuiScreen> extends Element<T> {
     @Override
     public boolean mouseDragged(float mouseX, float mouseY, int button, long timeSinceClick) {
         if (this.dragging) {
-            float newValue = value = Math.max(minValue, Math.min(maxValue, (((mouseX - (this.getPosX() + 38.0F)) / ((this.getWidth() - 38.0F) - 4.0F)) * (maxValue - minValue)) + minValue));
+            float newValue = Math.max(minValue, Math.min(maxValue, (((mouseX - sliderOffset - (this.getPosX() + 38.0F)) / ((this.getWidth() - 38.0F) - 4.0F)) * (maxValue - minValue)) + minValue));
             this.newValue = newValue;
             if (this.function.apply(this)) {
                 this.value = newValue;
