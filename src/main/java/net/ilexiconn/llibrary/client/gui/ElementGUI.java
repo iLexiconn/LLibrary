@@ -11,6 +11,12 @@ import net.minecraft.client.gui.GuiScreen;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Basic GUI that supports elements. You don't have to extend this class to use the element API, it just makes it easier.
+ *
+ * @author iLexiconn
+ * @since 1.4.0
+ */
 @SideOnly(Side.CLIENT)
 public abstract class ElementGUI extends GuiScreen {
     protected List<Element> elementList = new ArrayList<>();

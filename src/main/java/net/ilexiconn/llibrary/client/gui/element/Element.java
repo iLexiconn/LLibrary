@@ -14,6 +14,10 @@ import org.lwjgl.opengl.GL11;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author iLexiconn
+ * @since 1.4.0
+ */
 @SideOnly(Side.CLIENT)
 public class Element<T extends GuiScreen> {
     public static final ColorScheme DEFAULT = ColorScheme.create(() -> LLibrary.CONFIG.getPrimaryColor(), () -> LLibrary.CONFIG.getSecondaryColor());

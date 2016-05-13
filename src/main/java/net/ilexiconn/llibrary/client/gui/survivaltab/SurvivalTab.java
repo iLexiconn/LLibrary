@@ -10,9 +10,10 @@ public class SurvivalTab {
     private String label;
     private Class<? extends GuiContainer> container;
 
-    SurvivalTab(int index, String label) {
+    SurvivalTab(int index, String label, Class<? extends GuiContainer> container) {
         this.index = index;
         this.label = label;
+        this.container = container;
     }
 
     public int getIndex() {
@@ -41,11 +42,6 @@ public class SurvivalTab {
 
     public Class<? extends GuiContainer> getContainer() {
         return this.container;
-    }
-
-    public SurvivalTab setContainer(Class<? extends GuiContainer> container) {
-        this.container = container;
-        return this;
     }
 }
 
