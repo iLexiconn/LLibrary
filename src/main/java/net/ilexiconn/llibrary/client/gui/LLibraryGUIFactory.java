@@ -3,6 +3,7 @@ package net.ilexiconn.llibrary.client.gui;
 import cpw.mods.fml.client.IModGuiFactory;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.ilexiconn.llibrary.client.gui.config.LLibraryConfigGUI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 

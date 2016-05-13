@@ -157,7 +157,7 @@ public class Element<T extends GuiScreen> {
     protected void drawRectangle(double x, double y, double width, double height, int color) {
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glEnable(GL11.GL_BLEND);
-        GL11.glDisable(GL11.GL_ALPHA);
+        GL11.glDisable(GL11.GL_ALPHA_TEST);
         float a = (float) (color >> 24 & 0xFF) / 255.0F;
         float r = (float) (color >> 16 & 0xFF) / 255.0F;
         float g = (float) (color >> 8 & 0xFF) / 255.0F;
@@ -172,7 +172,7 @@ public class Element<T extends GuiScreen> {
         tessellator.draw();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glDisable(GL11.GL_BLEND);
-        GL11.glEnable(GL11.GL_ALPHA);
+        GL11.glEnable(GL11.GL_ALPHA_TEST);
     }
 
     protected void drawOutline(double x, double y, double width, double height, int color, double outlineSize) {
