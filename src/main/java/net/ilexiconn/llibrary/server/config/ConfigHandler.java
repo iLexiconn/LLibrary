@@ -7,7 +7,10 @@ import net.ilexiconn.llibrary.server.config.entry.IEntryAdapter;
 import net.ilexiconn.llibrary.server.util.Tuple3;
 import net.minecraft.crash.CrashReport;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.common.*;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
 
 import java.io.File;

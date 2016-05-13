@@ -78,7 +78,7 @@ public class TabulaModel extends AdvancedModelBase {
         box.rotateAngleZ = (float) Math.toRadians(rotation[2]);
         return box;
     }
-    
+
     @Override
     public void render(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float rotationYaw, float rotationPitch, float scale) {
         this.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, rotationYaw, rotationPitch, scale, entity);

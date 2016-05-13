@@ -2,7 +2,6 @@ package net.ilexiconn.llibrary.client.gui.element;
 
 import net.ilexiconn.llibrary.LLibrary;
 import net.ilexiconn.llibrary.client.ClientProxy;
-import net.ilexiconn.llibrary.client.util.ClientUtils;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
@@ -16,38 +15,57 @@ import java.util.function.Function;
 
 @SideOnly(Side.CLIENT)
 public class SliderElement<T extends GuiScreen> extends Element<T> {
-    private float value;
-    private Function<SliderElement<T>, Boolean> function;
-    private boolean intValue;
+    private Function<Float, Boolean> onEnter;
+    private Function<Integer, Boolean> allowKey;
+    private boolean isInteger;
     private DecimalFormat decimalFormat;
     private boolean hasSlider;
     private float sliderWidth;
-    private float sliderOffset;
     private float minValue;
     private float maxValue;
     private boolean editable = true;
     private boolean dragging;
-    private float newValue;
-    private float sliderX;
+    private InputElement value;
 
-    public SliderElement(T gui, float posX, float posY, Function<SliderElement<T>, Boolean> function) {
-        this(gui, posX, posY, false, function);
+    public SliderElement(T gui, float posX, float posY, Function<Float, Boolean> onEnter) {
+        this(gui, posX, posY, false, onEnter);
     }
 
-    public SliderElement(T gui, float posX, float posY, boolean intValue, Function<SliderElement<T>, Boolean> function) {
-        this(gui, posX, posY, intValue, 0.0F, -1.0F, -1.0F, function);
+    public SliderElement(T gui, float posX, float posY, boolean isInteger, Function<Float, Boolean> onEnter) {
+        this(gui, posX, posY, isInteger, 0.0F, -1.0F, -1.0F, onEnter, (key) -> true);
     }
 
-    public SliderElement(T gui, float posX, float posY, boolean intValue, float sliderWidth, float minValue, float maxValue, Function<SliderElement<T>, Boolean> function) {
+    public SliderElement(T gui, float posX, float posY, boolean isInteger, float sliderWidth, float minValue, float maxValue, Function<Float, Boolean> onEnter, Function<Integer, Boolean> allowKey) {
         super(gui, posX, posY, (int) (38 + sliderWidth), 12);
-        this.function = function;
-        this.intValue = intValue;
+        this.onEnter = onEnter;
+        this.isInteger = isInteger;
         this.decimalFormat = new DecimalFormat("#.#");
         this.hasSlider = sliderWidth > 0.0F;
         this.sliderWidth = sliderWidth;
         this.minValue = minValue;
         this.maxValue = maxValue;
-        this.sliderX = posX + 38 + ((this.sliderWidth - 4) * (this.value - this.minValue) / (this.maxValue - this.minValue));
+        this.allowKey = allowKey;
+    }
+
+    @Override
+    public void init() {
+        this.value = (InputElement) new InputElement(this.getGUI(), "0.0", -1.0F, 0.0F, 28, true, input -> {
+            float value1 = 0.0F;
+            String text = input.getText();
+            if (!this.isInteger) {
+                if (text.endsWith("\\.")) {
+                    text += "0";
+                } else if (text.startsWith("\\.")) {
+                    text = "0" + text;
+                }
+            }
+            if (text.length() == 0) {
+                text = "0";
+            }
+            value1 = Float.parseFloat(text);
+            this.withValue(value1);
+            onEnter.apply(value1);
+        }, allowKey).withParent(this);
     }
 
     @Override
@@ -58,8 +76,8 @@ public class SliderElement<T extends GuiScreen> extends Element<T> {
         int height = this.getHeight();
         this.drawRectangle(posX, posY, width, height, this.editable ? LLibrary.CONFIG.getSecondaryColor() : LLibrary.CONFIG.getSecondarySubcolor());
         boolean selected = this.isSelected(mouseX, mouseY);
-        boolean upperSelected = this.editable && !this.dragging && selected && mouseX >= posX + width - this.sliderWidth - 11 && mouseY < posY + 6 && mouseX < posX + width - this.sliderWidth;
-        boolean lowerSelected = this.editable && !this.dragging && selected && mouseX >= posX + width - this.sliderWidth - 11 && mouseY > posY + 6 && mouseX < posX + width - this.sliderWidth;
+        boolean upperSelected = this.editable && selected && mouseX >= posX + width - this.sliderWidth - 11 && mouseY < posY + 6 && mouseX < posX + width - this.sliderWidth;
+        boolean lowerSelected = this.editable && selected && mouseX >= posX + width - this.sliderWidth - 11 && mouseY > posY + 6 && mouseX < posX + width - this.sliderWidth;
         this.drawRectangle(posX + width - 11 - this.sliderWidth, posY, 11, 6, this.editable ? upperSelected ? LLibrary.CONFIG.getDarkAccentColor() : LLibrary.CONFIG.getAccentColor() : LLibrary.CONFIG.getTertiaryColor());
         this.drawRectangle(posX + width - 11 - this.sliderWidth, posY + 6, 11, 6, this.editable ? lowerSelected ? LLibrary.CONFIG.getDarkAccentColor() : LLibrary.CONFIG.getAccentColor() : LLibrary.CONFIG.getTertiaryColor());
         int textColor = LLibrary.CONFIG.getTextColor();
@@ -72,24 +90,26 @@ public class SliderElement<T extends GuiScreen> extends Element<T> {
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
         float scaleFactor = new ScaledResolution(ClientProxy.MINECRAFT).getScaleFactor();
         GL11.glScissor((int) (posX * scaleFactor), (int) ((this.getGUI().height - (posY + height)) * scaleFactor), (int) ((width - 11) * scaleFactor), (int) (height * scaleFactor));
-        String text = String.valueOf(this.intValue ? (int) this.value : Float.parseFloat(this.decimalFormat.format(this.value)) + 0.0F);
-        this.getGUI().mc.fontRendererObj.drawString(text, posX + 2, posY + 3.0F, textColor, false);
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
         if (this.hasSlider) {
-            float offsetX = ((this.sliderWidth - 4) * (this.value - this.minValue) / (this.maxValue - this.minValue));
-            boolean indicatorSelected = this.dragging || this.editable && selected && mouseX >= this.getPosX() + 38 + offsetX && mouseX <= this.getPosX() + 38 + offsetX + 4;
-            this.sliderX = ClientUtils.interpolate(this.sliderX, this.getPosX() + 38 + offsetX, partialTicks);
-            this.drawRectangle(this.sliderX, this.getPosY(), 4, this.getHeight(), this.editable ? indicatorSelected ? LLibrary.CONFIG.getDarkAccentColor() : LLibrary.CONFIG.getAccentColor() : LLibrary.CONFIG.getTertiaryColor());
+            float offsetX = ((this.sliderWidth - 4) * (this.getValue() - this.minValue) / (this.maxValue - this.minValue));
+            boolean indicatorSelected = this.editable && selected && mouseX >= this.getPosX() + 38 + offsetX && mouseX <= this.getPosX() + 38 + offsetX + 4;
+            this.drawRectangle(this.getPosX() + 38 + offsetX, this.getPosY(), 4, this.getHeight(), this.editable ? indicatorSelected ? LLibrary.CONFIG.getDarkAccentColor() : LLibrary.CONFIG.getAccentColor() : LLibrary.CONFIG.getTertiaryColor());
         }
     }
 
-    public SliderElement<T> setEditable(boolean editable) {
+    public void setEditable(boolean editable) {
         this.editable = editable;
-        return this;
+        this.value.setEditable(editable);
     }
 
     public SliderElement<T> withValue(float value) {
-        this.value = value;
+        this.value.clearText();
+        if (this.isInteger) {
+            this.value.writeText(String.valueOf((int) value));
+        } else {
+            this.value.writeText(String.valueOf(Float.parseFloat(this.decimalFormat.format(value)) + 0.0F));
+        }
         return this;
     }
 
@@ -98,52 +118,46 @@ public class SliderElement<T extends GuiScreen> extends Element<T> {
         if (!this.editable) {
             return super.mouseClicked(mouseX, mouseY, button);
         }
-        float offsetX = ((this.sliderWidth - 4) * (this.value - this.minValue) / (this.maxValue - this.minValue));
+        float offsetX = ((this.sliderWidth - 4) * (this.getValue() - this.minValue) / (this.maxValue - this.minValue));
         boolean indicatorSelected = this.isSelected(mouseX, mouseY) && mouseX >= this.getPosX() + 38 + offsetX && mouseX <= this.getPosX() + 38 + offsetX + 4;
         boolean upperSelected = this.isSelected(mouseX, mouseY) && mouseX >= this.getPosX() + this.getWidth() - this.sliderWidth - 11 && mouseY < this.getPosY() + 6 && mouseX < this.getPosX() + this.getWidth() - this.sliderWidth;
         boolean lowerSelected = this.isSelected(mouseX, mouseY) && mouseX >= this.getPosX() + this.getWidth() - this.sliderWidth - 11 && mouseY > this.getPosY() + 6 && mouseX < this.getPosX() + this.getWidth() - this.sliderWidth;
         if (upperSelected) {
-            float newValue = GuiScreen.isShiftKeyDown() ? this.intValue ? this.value + 10 : this.value + 1 : this.intValue ? this.value + 1 : this.value + 0.1F;
+            float newValue = GuiScreen.isShiftKeyDown() ? this.isInteger ? this.getValue() + 10 : this.getValue() + 1 : this.isInteger ? this.getValue() + 1 : this.getValue() + 0.1F;
             if (this.maxValue == -1.0F || newValue <= this.maxValue) {
-                this.newValue = newValue;
-                if (this.function.apply(this)) {
+                if (this.onEnter.apply(newValue)) {
                     this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
-                    this.value = newValue;
+                    this.withValue(newValue);
                     return true;
-                } else {
-                    this.newValue = this.value;
                 }
             }
         } else if (lowerSelected) {
-            float newValue = GuiScreen.isShiftKeyDown() ? this.intValue ? this.value - 10 : this.value - 1 : this.intValue ? this.value - 1 : this.value - 0.1F;
+            float newValue = GuiScreen.isShiftKeyDown() ? this.isInteger ? this.getValue() - 10 : this.getValue() - 1 : this.isInteger ? this.getValue() - 1 : this.getValue() - 0.1F;
             if (this.minValue == -1.0F || newValue >= this.minValue) {
-                this.newValue = newValue;
-                if (this.function.apply(this)) {
+                if (this.onEnter.apply(newValue)) {
                     this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
-                    this.value = newValue;
+                    this.withValue(newValue);
                     return true;
-                } else {
-                    this.newValue = this.value;
                 }
             }
         } else if (indicatorSelected) {
             this.dragging = true;
-            this.sliderOffset = mouseX - this.getPosX() - 38 - offsetX;
             this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
         }
-        return super.mouseClicked(mouseX, mouseY, button);
+        return false;
+    }
+
+    private float getValue() {
+        return Float.parseFloat(this.value.getText());
     }
 
     @Override
     public boolean mouseDragged(float mouseX, float mouseY, int button, long timeSinceClick) {
         if (this.dragging) {
-            float newValue = Math.max(minValue, Math.min(maxValue, (((mouseX - sliderOffset - (this.getPosX() + 38.0F)) / ((this.getWidth() - 38.0F) - 4.0F)) * (maxValue - minValue)) + minValue));
-            this.newValue = newValue;
-            if (this.function.apply(this)) {
-                this.value = newValue;
+            float newValue = Math.max(minValue, Math.min(maxValue, (((mouseX - (this.getPosX() + 38.0F)) / ((this.getWidth() - 38.0F) - 4.0F)) * (maxValue - minValue)) + minValue));
+            if (this.onEnter.apply(newValue)) {
+                this.withValue(newValue);
                 return true;
-            } else {
-                this.newValue = this.value;
             }
         }
         return this.dragging;
@@ -151,24 +165,14 @@ public class SliderElement<T extends GuiScreen> extends Element<T> {
 
     @Override
     public boolean mouseReleased(float mouseX, float mouseY, int button) {
+        if (this.dragging) {
+            this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
+        }
         this.dragging = false;
         return false;
     }
 
-    public float getNewValue() {
-        return newValue;
-    }
-
-    public float getMinValue() {
-        return minValue;
-    }
-
-    public float getMaxValue() {
-        return maxValue;
-    }
-
-    public float getValue() {
+    public InputElement getValueInput() {
         return value;
     }
 }
-

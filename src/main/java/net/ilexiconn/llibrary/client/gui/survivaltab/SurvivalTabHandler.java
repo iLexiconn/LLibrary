@@ -28,6 +28,6 @@ public enum SurvivalTabHandler {
     }
 
     public void setCurrentPage(int page) {
-       this.currentPage = page;
+        this.currentPage = page;
     }
 }

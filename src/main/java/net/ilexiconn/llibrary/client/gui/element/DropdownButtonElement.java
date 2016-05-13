@@ -5,7 +5,6 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -14,10 +13,10 @@ import java.util.function.Function;
 
 @SideOnly(Side.CLIENT)
 public class DropdownButtonElement<T extends GuiScreen> extends Element<T> {
+    private final List<String> entries;
     private String text;
     private boolean dropped;
     private Function<DropdownButtonElement<T>, Boolean> function;
-    private final List<String> entries;
     private int dropdownWidth;
     private String selected;
 

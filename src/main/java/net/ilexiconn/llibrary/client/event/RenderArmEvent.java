@@ -20,6 +20,18 @@ public class RenderArmEvent extends Event {
         this.model = model;
     }
 
+    public AbstractClientPlayer getPlayer() {
+        return this.player;
+    }
+
+    public RenderPlayer getRenderPlayer() {
+        return this.renderPlayer;
+    }
+
+    public ModelPlayer getModel() {
+        return this.model;
+    }
+
     public static class Left extends RenderArmEvent {
         public Left(AbstractClientPlayer player, RenderPlayer renderPlayer, ModelPlayer model) {
             super(player, renderPlayer, model);
@@ -56,17 +68,5 @@ public class RenderArmEvent extends Event {
                 super(player, renderPlayer, model);
             }
         }
-    }
-
-    public AbstractClientPlayer getPlayer() {
-        return this.player;
-    }
-
-    public RenderPlayer getRenderPlayer() {
-        return this.renderPlayer;
-    }
-
-    public ModelPlayer getModel() {
-        return this.model;
     }
 }
