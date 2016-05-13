@@ -26,11 +26,7 @@ public class ButtonElement<T extends GuiScreen> extends Element<T> {
 
     @Override
     public void render(float mouseX, float mouseY, float partialTicks) {
-        if (this.isEnabled() && this.isSelected(mouseX, mouseY)) {
-            this.drawRectangle(this.getPosX(), this.getPosY(), this.getWidth(), getHeight(), this.getColorScheme().getSecondaryColor());
-        } else {
-            this.drawRectangle(this.getPosX(), this.getPosY(), this.getWidth(), getHeight(), this.getColorScheme().getPrimaryColor());
-        }
+        this.drawRectangle(this.getPosX(), this.getPosY(), this.getWidth(), this.getHeight(), this.isEnabled() && this.isSelected(mouseX, mouseY) ? this.getColorScheme().getPrimaryColor() : this.getColorScheme().getSecondaryColor());
         FontRenderer fontRenderer = this.getGUI().mc.fontRendererObj;
         fontRenderer.drawString(this.text, this.getPosX() + (this.getWidth() / 2) - (fontRenderer.getStringWidth(this.text) / 2), this.getPosY() + (this.getHeight() / 2) - (fontRenderer.FONT_HEIGHT / 2), LLibrary.CONFIG.getTextColor(), false);
     }
