@@ -21,8 +21,8 @@ public class ScrollbarElement<T extends GuiScreen> extends Element<T> {
     private int scrollYOffset;
     private boolean scrolling;
 
-    public ScrollbarElement(T gui, Element<T> parent, Supplier<Float> posX, Supplier<Float> posY, Supplier<Float> displayHeight, int entryHeight, Supplier<Integer> entryCount) {
-        super(gui, posX.get(), posY.get(), 4, 0);
+    public ScrollbarElement(Element<T> parent, Supplier<Float> posX, Supplier<Float> posY, Supplier<Float> displayHeight, int entryHeight, Supplier<Integer> entryCount) {
+        super(parent.getGUI(), posX.get(), posY.get(), 4, 0);
         this.withParent(parent);
         this.offsetX = posX;
         this.offsetY = posY;
