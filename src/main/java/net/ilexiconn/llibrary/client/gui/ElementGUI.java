@@ -25,12 +25,12 @@ public abstract class ElementGUI extends GuiScreen {
         for (Element element : this.elementList) {
             ElementHandler.INSTANCE.addElement(this, element);
         }
-        ElementHandler.INSTANCE.init(this);
+        ElementHandler.INSTANCE.onInit(this);
     }
 
     @Override
     public void updateScreen() {
-        ElementHandler.INSTANCE.update(this);
+        ElementHandler.INSTANCE.onUpdate(this);
     }
 
     public abstract void drawScreen(float mouseX, float mouseY, float partialTicks);
@@ -39,30 +39,30 @@ public abstract class ElementGUI extends GuiScreen {
     public final void drawScreen(int mouseX, int mouseY, float partialTicks) {
         Gui.drawRect(0, 0, this.width, this.height, LLibrary.CONFIG.getTertiaryColor());
         this.drawScreen(ElementHandler.INSTANCE.getPreciseMouseX(this), ElementHandler.INSTANCE.getPreciseMouseY(this), partialTicks);
-        ElementHandler.INSTANCE.render(this, partialTicks);
+        ElementHandler.INSTANCE.onRender(this, partialTicks);
     }
 
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        ElementHandler.INSTANCE.mouseClicked(this, mouseButton);
+        ElementHandler.INSTANCE.onMouseClicked(this, mouseButton);
         super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
     @Override
     protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
-        ElementHandler.INSTANCE.mouseDragged(this, clickedMouseButton, timeSinceLastClick);
+        ElementHandler.INSTANCE.onMouseDragged(this, clickedMouseButton, timeSinceLastClick);
         super.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
     }
 
     @Override
     protected void mouseMovedOrUp(int mouseX, int mouseY, int state) {
-        ElementHandler.INSTANCE.mouseReleased(this, state);
+        ElementHandler.INSTANCE.onMouseReleased(this, state);
         super.mouseMovedOrUp(mouseX, mouseY, state);
     }
 
     @Override
     protected void keyTyped(char typedChar, int keyCode) {
-        ElementHandler.INSTANCE.keyPressed(this, typedChar, keyCode);
+        ElementHandler.INSTANCE.onKeyPressed(this, typedChar, keyCode);
         super.keyTyped(typedChar, keyCode);
     }
 

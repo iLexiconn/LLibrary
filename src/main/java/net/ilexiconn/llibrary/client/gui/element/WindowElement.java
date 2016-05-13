@@ -32,12 +32,7 @@ public class WindowElement<T extends GuiScreen> extends Element<T> {
     }
 
     public void addElement(Element<T> element) {
-        this.elementList.add(element.withParent(this));
-    }
-
-    @Override
-    public void update() {
-        this.elementList.forEach(Element::update);
+        element.withParent(this);
     }
 
     @Override
@@ -65,13 +60,9 @@ public class WindowElement<T extends GuiScreen> extends Element<T> {
             this.isDragging = true;
             ElementHandler.INSTANCE.removeElement(this.getGUI(), this);
             ElementHandler.INSTANCE.addElement(this.getGUI(), this);
+            return true;
         }
-        for (Element<T> element : this.elementList) {
-            if (element.mouseClicked(mouseX, mouseY, button)) {
-                return true;
-            }
-        }
-        return true;
+        return false;
     }
 
     @Override
@@ -81,32 +72,17 @@ public class WindowElement<T extends GuiScreen> extends Element<T> {
             this.setPosY(Math.min(Math.max(mouseY - this.dragOffsetY, 0), this.getGUI().height - this.getHeight()));
             return true;
         }
-        for (Element<T> element : this.elementList) {
-            if (element.mouseDragged(mouseX, mouseY, button, timeSinceClick)) {
-                return true;
-            }
-        }
         return false;
     }
 
     @Override
     public boolean mouseReleased(float mouseX, float mouseY, int button) {
         this.isDragging = false;
-        for (Element<T> element : this.elementList) {
-            if (element.mouseReleased(mouseX, mouseY, button)) {
-                return true;
-            }
-        }
         return false;
     }
 
     @Override
     public boolean keyPressed(char character, int keyCode) {
-        for (Element<T> element : this.elementList) {
-            if (element.keyPressed(character, keyCode)) {
-                return true;
-            }
-        }
         return false;
     }
 }

@@ -43,10 +43,11 @@ public enum ElementHandler {
 
     public <T extends GuiScreen> boolean isElementOnTop(T gui, Element<T> element) {
         if (this.elementMap.containsKey(gui)) {
-            List<Element<T>> elementList = (List<Element<T>>) ((List<?>) this.elementMap.get(gui));
+            List<Element<T>> elementList = Lists.reverse(new ArrayList<>((List<Element<T>>) ((List<?>) this.elementMap.get(gui))));
+            this.addChildren(elementList);
             float mouseX = this.getPreciseMouseX(gui);
             float mouseY = this.getPreciseMouseY(gui);
-            for (Element<T> e : Lists.reverse(elementList)) {
+            for (Element<T> e : elementList) {
                 if (e.isVisible() && mouseX >= e.getPosX() && mouseY >= e.getPosY() && mouseX < e.getPosX() + e.getWidth() && mouseY < e.getPosY() + e.getHeight()) {
                     return element == e || (element.getParent() != null && element.getParent() == e);
                 }
@@ -57,36 +58,40 @@ public enum ElementHandler {
         }
     }
 
-    public <T extends GuiScreen> void init(T gui) {
+    public <T extends GuiScreen> void onInit(T gui) {
         if (this.elementMap.containsKey(gui)) {
-            List<Element<T>> elementList = (List<Element<T>>) ((List<?>) this.elementMap.get(gui));
-            new ArrayList<>(elementList).stream().filter(Element::isVisible).forEach(Element::init);
+            List<Element<T>> elementList = new ArrayList<>((List<Element<T>>) ((List<?>) this.elementMap.get(gui)));
+            this.addChildren(elementList);
+            new ArrayList<>(elementList).stream().forEach(Element::init);
         }
     }
 
-    public <T extends GuiScreen> void update(T gui) {
+    public <T extends GuiScreen> void onUpdate(T gui) {
         if (this.elementMap.containsKey(gui)) {
-            List<Element<T>> elementList = (List<Element<T>>) ((List<?>) this.elementMap.get(gui));
-            elementList.stream().filter(Element::isVisible).forEach(Element::update);
+            List<Element<T>> elementList = new ArrayList<>((List<Element<T>>) ((List<?>) this.elementMap.get(gui)));
+            this.addChildren(elementList);
+            elementList.stream().forEach(Element::update);
         }
     }
 
-    public <T extends GuiScreen> void render(T gui, float partialTicks) {
+    public <T extends GuiScreen> void onRender(T gui, float partialTicks) {
         if (this.elementMap.containsKey(gui)) {
-            List<Element<T>> elementList = (List<Element<T>>) ((List<?>) this.elementMap.get(gui));
+            List<Element<T>> elementList = Lists.reverse(new ArrayList<>(new ArrayList<>((List<Element<T>>) ((List<?>) this.elementMap.get(gui)))));
+            this.addChildren(elementList);
             float mouseX = this.getPreciseMouseX(gui);
             float mouseY = this.getPreciseMouseY(gui);
-            elementList.stream().filter(element -> !(element instanceof WindowElement)).filter(Element::isVisible).forEach(element -> element.render(mouseX, mouseY, partialTicks));
-            elementList.stream().filter(element -> element instanceof WindowElement).filter(Element::isVisible).forEach(element -> element.render(mouseX, mouseY, partialTicks));
+            Lists.reverse(elementList).stream().filter(element -> !(element instanceof WindowElement)).forEach(element -> element.render(mouseX, mouseY, partialTicks));
+            Lists.reverse(elementList).stream().filter(element -> element instanceof WindowElement).forEach(element -> element.render(mouseX, mouseY, partialTicks));
         }
     }
 
-    public <T extends GuiScreen> void mouseClicked(T gui, int button) {
+    public <T extends GuiScreen> void onMouseClicked(T gui, int button) {
         if (this.elementMap.containsKey(gui)) {
-            List<Element<T>> elementList = (List<Element<T>>) ((List<?>) this.elementMap.get(gui));
+            List<Element<T>> elementList = Lists.reverse(new ArrayList<>(new ArrayList<>((List<Element<T>>) ((List<?>) this.elementMap.get(gui)))));
+            this.addChildren(elementList);
             float mouseX = this.getPreciseMouseX(gui);
             float mouseY = this.getPreciseMouseY(gui);
-            for (Element<T> element : Lists.reverse(elementList)) {
+            for (Element<T> element : elementList) {
                 if (element.isVisible() && element.isEnabled()) {
                     if (element.mouseClicked(mouseX, mouseY, button)) {
                         return;
@@ -96,12 +101,13 @@ public enum ElementHandler {
         }
     }
 
-    public <T extends GuiScreen> void mouseDragged(T gui, int button, long timeSinceClick) {
+    public <T extends GuiScreen> void onMouseDragged(T gui, int button, long timeSinceClick) {
         if (this.elementMap.containsKey(gui)) {
-            List<Element<T>> elementList = (List<Element<T>>) ((List<?>) this.elementMap.get(gui));
+            List<Element<T>> elementList = Lists.reverse(new ArrayList<>(new ArrayList<>((List<Element<T>>) ((List<?>) this.elementMap.get(gui)))));
+            this.addChildren(elementList);
             float mouseX = this.getPreciseMouseX(gui);
             float mouseY = this.getPreciseMouseY(gui);
-            for (Element<T> element : Lists.reverse(elementList)) {
+            for (Element<T> element : elementList) {
                 if (element.isVisible() && element.isEnabled()) {
                     if (element.mouseDragged(mouseX, mouseY, button, timeSinceClick)) {
                         return;
@@ -111,12 +117,13 @@ public enum ElementHandler {
         }
     }
 
-    public <T extends GuiScreen> void mouseReleased(T gui, int button) {
+    public <T extends GuiScreen> void onMouseReleased(T gui, int button) {
         if (this.elementMap.containsKey(gui)) {
-            List<Element<T>> elementList = (List<Element<T>>) ((List<?>) this.elementMap.get(gui));
+            List<Element<T>> elementList = Lists.reverse(new ArrayList<>(new ArrayList<>((List<Element<T>>) ((List<?>) this.elementMap.get(gui)))));
+            this.addChildren(elementList);
             float mouseX = this.getPreciseMouseX(gui);
             float mouseY = this.getPreciseMouseY(gui);
-            for (Element<T> element : Lists.reverse(elementList)) {
+            for (Element<T> element : elementList) {
                 if (element.isVisible() && element.isEnabled()) {
                     if (element.mouseReleased(mouseX, mouseY, button)) {
                         return;
@@ -126,10 +133,11 @@ public enum ElementHandler {
         }
     }
 
-    public <T extends GuiScreen> void keyPressed(T gui, char character, int key) {
+    public <T extends GuiScreen> void onKeyPressed(T gui, char character, int key) {
         if (this.elementMap.containsKey(gui)) {
-            List<Element<T>> elementList = (List<Element<T>>) ((List<?>) this.elementMap.get(gui));
-            for (Element<T> element : Lists.reverse(elementList)) {
+            List<Element<T>> elementList = Lists.reverse(new ArrayList<>(new ArrayList<>((List<Element<T>>) ((List<?>) this.elementMap.get(gui)))));
+            this.addChildren(elementList);
+            for (Element<T> element : elementList) {
                 if (element.isVisible() && element.isEnabled()) {
                     if (element.keyPressed(character, key)) {
                         return;
@@ -146,5 +154,22 @@ public enum ElementHandler {
 
     public <T extends GuiScreen> float getPreciseMouseY(T gui) {
         return gui.height - (float) Mouse.getY() * gui.height / (float) gui.mc.displayHeight - 1.0F;
+    }
+
+    private <T extends GuiScreen> void addChildren(List<Element<T>> elements) {
+        for (Element<T> element : new ArrayList<>(elements)) {
+            List<Element<T>> children = new ArrayList<>();
+            int index = elements.indexOf(element);
+            for (Element<T> child : element.getChildren()) {
+                children.add(child);
+                List<Element<T>> nextChildren = new ArrayList<>();
+                nextChildren.add(child);
+                this.addChildren(nextChildren);
+                children.addAll(nextChildren);
+            }
+            for (Element<T> child : children) {
+                elements.add(index, child);
+            }
+        }
     }
 }
