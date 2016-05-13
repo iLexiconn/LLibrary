@@ -57,6 +57,10 @@ public class LLibraryConfig implements INBTSerializable<NBTTagCompound> {
         return accentColor;
     }
 
+    public void setAccentColor(int accentColor) {
+        this.accentColor = accentColor;
+    }
+
     public int getDarkAccentColor() {
         int r = this.accentColor >> 16 & 255;
         int g = this.accentColor >> 8 & 255;
@@ -68,10 +72,6 @@ public class LLibraryConfig implements INBTSerializable<NBTTagCompound> {
 
     public String getColorMode() {
         return colorMode.getName();
-    }
-
-    public void setAccentColor(int accentColor) {
-        this.accentColor = accentColor;
     }
 
     public void setColorMode(String colorMode) {

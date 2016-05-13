@@ -11,7 +11,7 @@ import net.minecraftforge.common.MinecraftForge;
 
 public enum LLibraryASMHandler {
     INSTANCE;
-    
+
     public boolean renderLeftArmPre(AbstractClientPlayer player, RenderPlayer renderPlayer) {
         return MinecraftForge.EVENT_BUS.post(new RenderArmEvent.Left.Pre(player, renderPlayer, renderPlayer.getMainModel()));
     }

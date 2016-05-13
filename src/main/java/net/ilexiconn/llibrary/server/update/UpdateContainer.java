@@ -17,6 +17,10 @@ public class UpdateContainer {
     private transient ModContainer modContainer;
     private transient BufferedImage icon;
     private transient ArtifactVersion latestVersion;
+    private String version;
+    private String updateURL;
+    private String iconURL;
+    private Map<String, String[]> versions;
 
     /**
      * @return the mod container of this update checker
@@ -59,11 +63,6 @@ public class UpdateContainer {
         }
         return this.latestVersion;
     }
-
-    private String version;
-    private String updateURL;
-    private String iconURL;
-    private Map<String, String[]> versions;
 
     /**
      * @return the latest version as String

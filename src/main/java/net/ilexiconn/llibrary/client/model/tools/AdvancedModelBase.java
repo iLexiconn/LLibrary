@@ -113,17 +113,17 @@ public class AdvancedModelBase extends ModelBase {
     }
 
     /**
-     * Multiplies all rotation and position changes by this value
-     */
-    public void setMovementScale(float movementScale) {
-        this.movementScale = movementScale;
-    }
-
-    /**
      * @return the current movement scale
      */
     public float getMovementScale() {
         return this.movementScale;
+    }
+
+    /**
+     * Multiplies all rotation and position changes by this value
+     */
+    public void setMovementScale(float movementScale) {
+        this.movementScale = movementScale;
     }
 
     /**

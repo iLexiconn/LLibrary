@@ -13,6 +13,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 @SideOnly(Side.CLIENT)
@@ -23,17 +24,20 @@ public class InputElement<T extends GuiScreen> extends Element<T> {
     private int cursorPosition;
     private int selectionEnd;
     private int cursorCounter;
-    private String newText;
-    private Function<InputElement<T>, Boolean> function;
+    private boolean editable = true;
+    private Function<Integer, Boolean> allowKey;
+    private Consumer<InputElement<T>> onEnter;
 
-    public InputElement(T gui, String text, float posX, float posY, int width) {
-        this(gui, text, posX, posY, width, null);
+    public InputElement(T gui, String text, float posX, float posY, int width, Consumer<InputElement<T>> onEnter) {
+        this(gui, text, posX, posY, width, true, onEnter, (key) -> true);
     }
 
-    public InputElement(T gui, String text, float posX, float posY, int width, Function<InputElement<T>, Boolean> function) {
+    public InputElement(T gui, String text, float posX, float posY, int width, boolean editable, Consumer<InputElement<T>> onEnter, Function<Integer, Boolean> allowKey) {
         super(gui, posX, posY, width, 12);
         this.text = text != null ? text : "";
-        this.function = function;
+        this.editable = editable;
+        this.onEnter = onEnter;
+        this.allowKey = allowKey;
     }
 
     @Override
@@ -43,7 +47,7 @@ public class InputElement<T extends GuiScreen> extends Element<T> {
 
     @Override
     public void render(float mouseX, float mouseY, float partialTicks) {
-        this.drawRectangle(this.getPosX(), this.getPosY(), this.getWidth(), this.getHeight(), this.isEnabled() ? LLibrary.CONFIG.getSecondaryColor() : LLibrary.CONFIG.getSecondarySubcolor());
+        this.drawRectangle(this.getPosX(), this.getPosY(), this.getWidth(), this.getHeight(), this.editable ? LLibrary.CONFIG.getSecondaryColor() : LLibrary.CONFIG.getSecondarySubcolor());
         int cursor = this.cursorPosition - this.lineScrollOffset;
         int cursorEnd = this.selectionEnd - this.lineScrollOffset;
         String displayString = this.getGUI().mc.fontRendererObj.trimStringToWidth(this.text.substring(this.lineScrollOffset), this.getWidth());
@@ -52,24 +56,30 @@ public class InputElement<T extends GuiScreen> extends Element<T> {
         float x = this.getPosX();
         float y = this.getPosY();
         float line = x;
+
         if (cursorEnd > displayString.length()) {
             cursorEnd = displayString.length();
         }
+
         if (!displayString.isEmpty()) {
             String s = verticalCursor ? displayString.substring(0, cursor) : displayString;
             line = this.getGUI().mc.fontRendererObj.drawString(s, x + 3, y + 1 + getHeight() / 2 - this.getGUI().mc.fontRendererObj.FONT_HEIGHT / 2, LLibrary.CONFIG.getTextColor(), false);
         }
+
         boolean renderVerticalCursor = this.cursorPosition < this.text.length();
         float lineX = line;
+
         if (!verticalCursor) {
             lineX = cursor > 0 ? x + this.getWidth() : x;
         } else if (renderVerticalCursor) {
             lineX = line - 1;
             --line;
         }
+
         if (!displayString.isEmpty() && verticalCursor && cursor < displayString.length()) {
             this.getGUI().mc.fontRendererObj.drawString(displayString.substring(cursor), line + 1, y + 1 + this.getHeight() / 2 - this.getGUI().mc.fontRendererObj.FONT_HEIGHT / 2, LLibrary.CONFIG.getTextColor(), false);
         }
+
         if (renderCursor) {
             if (renderVerticalCursor) {
                 this.drawRectangle(lineX, y, 1, this.getHeight() / 2 - this.getGUI().mc.fontRendererObj.FONT_HEIGHT / 2 + 1 + this.getGUI().mc.fontRendererObj.FONT_HEIGHT, LLibrary.CONFIG.getPrimaryColor());
@@ -77,6 +87,7 @@ public class InputElement<T extends GuiScreen> extends Element<T> {
                 this.getGUI().mc.fontRendererObj.drawString("_", cursor == 0 ? lineX + 3 : lineX, y + 1 + this.getHeight() / 2 - this.getGUI().mc.fontRendererObj.FONT_HEIGHT / 2, LLibrary.CONFIG.getPrimaryColor(), false);
             }
         }
+
         if (cursorEnd != cursor) {
             float selectionWidth = x + this.getGUI().mc.fontRendererObj.getStringWidth(displayString.substring(0, cursorEnd));
             this.drawCursorVertical(lineX + (selectionEnd > cursorPosition ? 0 : 1), y, selectionWidth + (selectionEnd < cursorPosition ? 2 : 3), y + getHeight() / 2 - this.getGUI().mc.fontRendererObj.FONT_HEIGHT / 2 + 1 + this.getGUI().mc.fontRendererObj.FONT_HEIGHT);
@@ -85,8 +96,12 @@ public class InputElement<T extends GuiScreen> extends Element<T> {
 
     @Override
     public boolean mouseClicked(float mouseX, float mouseY, int button) {
-        this.selected = this.isMouseSelecting(mouseX, mouseY);
-        if (this.selected && button == 0 && this.isEnabled()) {
+        boolean newSelected = this.isMouseSelecting(mouseX, mouseY);
+        if (!newSelected && this.selected) {
+            this.onEnter.accept(this);
+        }
+        this.selected = newSelected;
+        if (this.selected && button == 0 && this.editable) {
             int width = (int) (mouseX - this.getPosX() - 1);
             String displayString = this.getGUI().mc.fontRendererObj.trimStringToWidth(this.text.substring(this.lineScrollOffset), this.getWidth());
             this.setCursorPosition(this.getGUI().mc.fontRendererObj.trimStringToWidth(displayString, width).length() + this.lineScrollOffset);
@@ -113,6 +128,9 @@ public class InputElement<T extends GuiScreen> extends Element<T> {
             GuiScreen.setClipboardString(this.getSelectedText());
             this.writeText("");
             return true;
+        } else if (key == Keyboard.KEY_RETURN) {
+            this.onEnter.accept(this);
+            return true;
         } else {
             switch (key) {
                 case Keyboard.KEY_BACK:
@@ -126,7 +144,7 @@ public class InputElement<T extends GuiScreen> extends Element<T> {
                     if (GuiScreen.isShiftKeyDown()) {
                         this.setSelectionPos(0);
                     } else {
-                        this.setCursorPositionStart();
+                        this.setCursorPositionZero();
                     }
                     return true;
                 case Keyboard.KEY_LEFT:
@@ -170,7 +188,7 @@ public class InputElement<T extends GuiScreen> extends Element<T> {
                     }
                     return true;
                 default:
-                    if (ChatAllowedCharacters.isAllowedCharacter(character)) {
+                    if (ChatAllowedCharacters.isAllowedCharacter(character) && this.allowKey.apply(key)) {
                         this.writeText(Character.toString(character));
                         return true;
                     } else {
@@ -186,10 +204,6 @@ public class InputElement<T extends GuiScreen> extends Element<T> {
 
     public String getText() {
         return this.text;
-    }
-
-    public String getNewText() {
-        return this.newText;
     }
 
     public String getSelectedText() {
@@ -214,13 +228,8 @@ public class InputElement<T extends GuiScreen> extends Element<T> {
             newText = newText + this.text.substring(end);
         }
 
-        this.newText = text;
-        if (this.function == null || this.function.apply(this)) {
-            this.text = newText;
-            this.moveCursorBy(start - this.selectionEnd + allowedText.length());
-        } else {
-            this.newText = text;
-        }
+        this.text = newText;
+        this.moveCursorBy(start - this.selectionEnd + allowedText.length());
     }
 
     public void deleteWords(int amount) {
@@ -251,28 +260,24 @@ public class InputElement<T extends GuiScreen> extends Element<T> {
                     nextText = nextText + this.text.substring(end);
                 }
 
-                this.newText = text;
-                if (this.function == null || this.function.apply(this)) {
-                    this.text = nextText;
-                    if (delete) {
-                        this.moveCursorBy(amount);
-                    }
-                } else {
-                    this.newText = text;
+                this.text = nextText;
+
+                if (delete) {
+                    this.moveCursorBy(amount);
                 }
             }
         }
     }
 
-    private int getNthWordFromCursor(int numWords) {
+    public int getNthWordFromCursor(int numWords) {
         return this.getNthWordFromPos(numWords, this.cursorPosition);
     }
 
-    private int getNthWordFromPos(int n, int position) {
+    public int getNthWordFromPos(int n, int position) {
         return this.getNthWordFromPosWhitespace(n, position, true);
     }
 
-    private int getNthWordFromPosWhitespace(int n, int position, boolean skipWhitespace) {
+    public int getNthWordFromPosWhitespace(int n, int position, boolean skipWhitespace) {
         int currentPos = position;
         boolean flag = n < 0;
         int j = Math.abs(n);
@@ -311,7 +316,7 @@ public class InputElement<T extends GuiScreen> extends Element<T> {
         this.setSelectionPos(this.cursorPosition);
     }
 
-    public void setCursorPositionStart() {
+    public void setCursorPositionZero() {
         this.setCursorPosition(0);
     }
 
@@ -351,13 +356,12 @@ public class InputElement<T extends GuiScreen> extends Element<T> {
     }
 
     public void clearText() {
-        this.setCursorPositionStart();
-        this.newText = "";
-        if (this.function == null || this.function.apply(this)) {
-            this.text = this.newText;
-        } else {
-            this.newText = text;
-        }
+        this.setCursorPositionZero();
+        this.text = "";
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
     }
 
     private void drawCursorVertical(float startX, float startY, float endX, float endY) {
@@ -397,4 +401,3 @@ public class InputElement<T extends GuiScreen> extends Element<T> {
         GlStateManager.enableTexture2D();
     }
 }
-

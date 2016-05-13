@@ -13,10 +13,10 @@ import java.util.function.Function;
 
 @SideOnly(Side.CLIENT)
 public class DropdownButtonElement<T extends GuiScreen> extends Element<T> {
+    private final List<String> entries;
     private String text;
     private boolean dropped;
     private Function<DropdownButtonElement<T>, Boolean> function;
-    private final List<String> entries;
     private int dropdownWidth;
     private String selected;
 

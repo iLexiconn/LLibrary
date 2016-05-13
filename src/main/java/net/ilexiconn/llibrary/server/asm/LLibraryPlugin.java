@@ -13,6 +13,14 @@ public class LLibraryPlugin implements IFMLLoadingPlugin, IFMLCallHook {
     private static boolean isObfuscated;
     private static File minecraftDir;
 
+    public static boolean isObfuscated() {
+        return isObfuscated;
+    }
+
+    public static File getMinecraftDir() {
+        return minecraftDir;
+    }
+
     @Override
     public String[] getASMTransformerClass() {
         return new String[]{LLibraryClassTransformer.class.getName()};
@@ -42,13 +50,5 @@ public class LLibraryPlugin implements IFMLLoadingPlugin, IFMLCallHook {
     @Override
     public Void call() throws Exception {
         return null;
-    }
-
-    public static boolean isObfuscated() {
-        return isObfuscated;
-    }
-
-    public static File getMinecraftDir() {
-        return minecraftDir;
     }
 }

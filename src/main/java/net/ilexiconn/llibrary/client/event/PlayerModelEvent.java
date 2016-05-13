@@ -15,6 +15,10 @@ public class PlayerModelEvent extends Event {
         this.model = model;
     }
 
+    public ModelPlayer getModel() {
+        return this.model;
+    }
+
     public static class Assign extends PlayerModelEvent {
         protected RenderPlayer renderPlayer;
         protected boolean smallArms;
@@ -97,9 +101,5 @@ public class PlayerModelEvent extends Event {
         public float getScale() {
             return scale;
         }
-    }
-
-    public ModelPlayer getModel() {
-        return this.model;
     }
 }

@@ -83,6 +83,7 @@ public class Element<T extends GuiScreen> {
                 this.parent.children.add(this);
             }
         }
+        this.children.clear();
         this.init();
         return this;
     }
@@ -90,30 +91,6 @@ public class Element<T extends GuiScreen> {
     public Element<T> withColorScheme(ColorScheme colorScheme) {
         this.colorScheme = colorScheme;
         return this;
-    }
-
-    public void setPosX(float posX) {
-        this.posX = posX;
-    }
-
-    public void setPosY(float posY) {
-        this.posY = posY;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public void setVisible(boolean visible) {
-        this.visible = visible;
     }
 
     public T getGUI() {
@@ -136,24 +113,48 @@ public class Element<T extends GuiScreen> {
         return posX + (this.getParent() != null ? this.getParent().getPosX() : 0);
     }
 
+    public void setPosX(float posX) {
+        this.posX = posX;
+    }
+
     public float getPosY() {
         return posY + (this.getParent() != null ? this.getParent().getPosY() : 0);
+    }
+
+    public void setPosY(float posY) {
+        this.posY = posY;
     }
 
     public int getWidth() {
         return width;
     }
 
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
     public int getHeight() {
         return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
     }
 
     public boolean isEnabled() {
         return enabled;
     }
 
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     public boolean isVisible() {
         return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 
     protected void drawRectangle(double x, double y, double width, double height, int color) {

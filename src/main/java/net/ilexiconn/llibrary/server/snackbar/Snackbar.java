@@ -31,6 +31,13 @@ public class Snackbar {
     }
 
     /**
+     * @return this snackbar's duration
+     */
+    public int getDuration() {
+        return this.duration;
+    }
+
+    /**
      * Set a custom duration for this snackbar. If it's 0 (default), the text length * 3 will be used.
      *
      * @param duration the custom duration
@@ -39,12 +46,5 @@ public class Snackbar {
     public Snackbar setDuration(int duration) {
         this.duration = duration;
         return this;
-    }
-
-    /**
-     * @return this snackbar's duration
-     */
-    public int getDuration() {
-        return this.duration;
     }
 }

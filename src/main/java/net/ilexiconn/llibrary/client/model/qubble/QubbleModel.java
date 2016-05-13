@@ -127,12 +127,12 @@ public class QubbleModel implements INBTSerializable<NBTTagCompound> {
         return textureWidth;
     }
 
-    public int getTextureHeight() {
-        return textureHeight;
-    }
-
     public void setTextureWidth(int textureWidth) {
         this.textureWidth = textureWidth;
+    }
+
+    public int getTextureHeight() {
+        return textureHeight;
     }
 
     public void setTextureHeight(int textureHeight) {
