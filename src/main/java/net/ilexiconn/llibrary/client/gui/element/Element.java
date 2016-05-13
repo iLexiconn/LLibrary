@@ -13,12 +13,16 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @SideOnly(Side.CLIENT)
 public class Element<T extends GuiScreen> {
     public static final ColorScheme DEFAULT = ColorScheme.create(() -> LLibrary.CONFIG.getPrimaryColor(), () -> LLibrary.CONFIG.getSecondaryColor());
 
     private final T gui;
     private Element<T> parent;
+    private List<Element<T>> children = new ArrayList<>();
     private ColorScheme colorScheme = Element.DEFAULT;
 
     private float posX;
@@ -70,7 +74,16 @@ public class Element<T extends GuiScreen> {
     }
 
     public Element<T> withParent(Element<T> parent) {
+        if (this.parent != null) {
+            this.parent.children.remove(this);
+        }
         this.parent = parent;
+        if (this.parent != null) {
+            if (!this.parent.children.contains(this)) {
+                this.parent.children.add(this);
+            }
+        }
+        this.init();
         return this;
     }
 
@@ -109,6 +122,10 @@ public class Element<T extends GuiScreen> {
 
     public Element<T> getParent() {
         return parent;
+    }
+
+    public List<Element<T>> getChildren() {
+        return children;
     }
 
     public ColorScheme getColorScheme() {
