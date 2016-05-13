@@ -6,7 +6,6 @@ import cpw.mods.fml.common.registry.GameData;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 
 import java.util.HashMap;
 import java.util.Locale;

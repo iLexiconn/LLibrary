@@ -20,6 +20,18 @@ public class RenderArmEvent extends Event {
         this.model = model;
     }
 
+    public EntityPlayer getPlayer() {
+        return this.player;
+    }
+
+    public RenderPlayer getRenderPlayer() {
+        return this.renderPlayer;
+    }
+
+    public ModelBiped getModel() {
+        return this.model;
+    }
+
     @Cancelable
     public static class Pre extends RenderArmEvent {
         public Pre(EntityPlayer player, RenderPlayer renderPlayer, ModelBiped model) {
@@ -31,17 +43,5 @@ public class RenderArmEvent extends Event {
         public Post(EntityPlayer player, RenderPlayer renderPlayer, ModelBiped model) {
             super(player, renderPlayer, model);
         }
-    }
-
-    public EntityPlayer getPlayer() {
-        return this.player;
-    }
-
-    public RenderPlayer getRenderPlayer() {
-        return this.renderPlayer;
-    }
-
-    public ModelBiped getModel() {
-        return this.model;
     }
 }

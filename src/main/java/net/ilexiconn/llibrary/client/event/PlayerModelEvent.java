@@ -15,6 +15,10 @@ public class PlayerModelEvent extends Event {
         this.model = model;
     }
 
+    public ModelBiped getModel() {
+        return this.model;
+    }
+
     public static class Assign extends PlayerModelEvent {
         protected RenderPlayer renderPlayer;
 
@@ -91,9 +95,5 @@ public class PlayerModelEvent extends Event {
         public float getScale() {
             return scale;
         }
-    }
-
-    public ModelBiped getModel() {
-        return this.model;
     }
 }

@@ -101,11 +101,11 @@ public class ListElement<T extends GuiScreen> extends Element<T> {
         return this.selectedEntry;
     }
 
-    public String getSelectedEntry() {
-        return this.entries.get(selectedEntry);
-    }
-
     public void setSelectedIndex(int selectedIndex) {
         this.selectedEntry = selectedIndex;
+    }
+
+    public String getSelectedEntry() {
+        return this.entries.get(selectedEntry);
     }
 }

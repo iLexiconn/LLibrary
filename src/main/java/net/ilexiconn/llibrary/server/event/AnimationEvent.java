@@ -7,12 +7,20 @@ import net.ilexiconn.llibrary.server.animation.IAnimatedEntity;
 import net.minecraft.entity.Entity;
 
 public class AnimationEvent<T extends Entity & IAnimatedEntity> extends Event {
-    private T entity;
     protected Animation animation;
+    private T entity;
 
     AnimationEvent(T entity, Animation animation) {
         this.entity = entity;
         this.animation = animation;
+    }
+
+    public T getEntity() {
+        return entity;
+    }
+
+    public Animation getAnimation() {
+        return animation;
     }
 
     @Cancelable
@@ -37,13 +45,5 @@ public class AnimationEvent<T extends Entity & IAnimatedEntity> extends Event {
         public int getTick() {
             return tick;
         }
-    }
-
-    public T getEntity() {
-        return entity;
-    }
-
-    public Animation getAnimation() {
-        return animation;
     }
 }

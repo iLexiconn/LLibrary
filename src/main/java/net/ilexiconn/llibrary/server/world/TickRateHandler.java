@@ -17,14 +17,14 @@ public enum TickRateHandler {
         return tickRate;
     }
 
+    public void setTickRate(float tickRate) {
+        this.setTickRate((long) (DEFAULT_TICK_RATE / tickRate));
+    }
+
     public void setTickRate(long tickRate) {
         if (this.tickRate != tickRate) {
             LLibrary.PROXY.setTickRate(tickRate);
         }
         this.tickRate = tickRate;
-    }
-
-    public void setTickRate(float tickRate) {
-        this.setTickRate((long) (DEFAULT_TICK_RATE / tickRate));
     }
 }
