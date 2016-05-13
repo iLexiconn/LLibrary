@@ -37,7 +37,7 @@ public class ListElement<T extends GuiScreen> extends Element<T> {
 
     @Override
     public void init() {
-        this.scrollbar = new ScrollbarElement<>(this.getGUI(), this, () -> this.getWidth() - 8.0F, () -> 2.0F, () -> this.getHeight() - 2.0F, this.entryHeight, () -> this.entries.size());
+        this.scrollbar = new ScrollbarElement<>(this, () -> this.getWidth() - 8.0F, () -> 2.0F, () -> this.getHeight() - 2.0F, this.entryHeight, () -> this.entries.size());
     }
 
     @Override
