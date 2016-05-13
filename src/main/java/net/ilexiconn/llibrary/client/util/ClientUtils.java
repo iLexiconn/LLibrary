@@ -1,8 +1,11 @@
 package net.ilexiconn.llibrary.client.util;
 
+import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 
 /**
@@ -48,6 +51,22 @@ public class ClientUtils {
 
     public static float interpolate(float prev, float current, float partialTicks) {
         return prev + partialTicks * (current - prev);
+    }
+
+    /**
+     * Sets a player specific texture. This can be used to change the skin, cape or elytra texture.
+     *
+     * @param player  the player to set the texture to
+     * @param type    the type of texture to apply
+     * @param texture the texture to apply
+     * @return true if the texture was successfully applied
+     */
+    public static boolean setPlayerTexture(AbstractClientPlayer player, MinecraftProfileTexture.Type type, ResourceLocation texture) {
+        if (texture != null) {
+            player.func_152121_a(type, texture);
+            return true;
+        }
+        return false;
     }
 
     public static boolean isKeyComboCtrlX(int keyID) {
