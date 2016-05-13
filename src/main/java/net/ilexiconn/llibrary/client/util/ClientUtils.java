@@ -1,5 +1,10 @@
 package net.ilexiconn.llibrary.client.util;
 
+import com.mojang.authlib.minecraft.MinecraftProfileTexture;
+import net.ilexiconn.llibrary.client.ClientProxy;
+import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -46,5 +51,26 @@ public class ClientUtils {
 
     public static float interpolate(float prev, float current, float partialTicks) {
         return prev + partialTicks * (current - prev);
+    }
+
+    /**
+     * Sets a player specific texture. This can be used to change the skin or cape texture.
+     *
+     * @param player  the player to set the texture to
+     * @param type    the type of texture to apply
+     * @param texture the texture to apply
+     */
+    public static void setPlayerTexture(AbstractClientPlayer player, MinecraftProfileTexture.Type type, ResourceLocation texture) {
+        if (player.hasPlayerInfo() && texture != null) {
+            player.getPlayerInfo().playerTextures.put(type, texture);
+        }
+    }
+
+    public static void setPlayerSkinType(AbstractClientPlayer player, String type) {
+        player.getPlayerInfo().skinType = type;
+    }
+
+    public static void addPlayerSkinTypeRenderer(String type, RenderPlayer renderPlayer) {
+        ClientProxy.MINECRAFT.getRenderManager().getSkinMap().put(type, renderPlayer);
     }
 }
