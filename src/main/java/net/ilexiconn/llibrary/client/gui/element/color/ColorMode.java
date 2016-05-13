@@ -6,6 +6,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author iLexiconn
+ * @since 1.4.0
+ */
 @SideOnly(Side.CLIENT)
 public class ColorMode {
     private static final List<ColorMode> COLOR_MODE_LIST = new ArrayList<>();
@@ -33,6 +37,19 @@ public class ColorMode {
         this.invertedTextColor = invertedTextColor;
     }
 
+    /**
+     * Create a new color mode that can be used by elements.
+     *
+     * @param name the color mode name
+     * @param primaryColor the primary color
+     * @param secondaryColor the secondary color
+     * @param tertiaryColor the tertiary color
+     * @param primarySubcolor the primary subcolor
+     * @param secondarySubcolor the secondary subcolor
+     * @param textColor the text color
+     * @param invertedTextColor the inverted text color
+     * @return the new color mode instance
+     */
     public static ColorMode create(String name, int primaryColor, int secondaryColor, int tertiaryColor, int primarySubcolor, int secondarySubcolor, int textColor, int invertedTextColor) {
         ColorMode colorMode = new ColorMode(name, primaryColor, secondaryColor, tertiaryColor, primarySubcolor, secondarySubcolor, textColor, invertedTextColor);
         ColorMode.COLOR_MODE_LIST.add(colorMode);

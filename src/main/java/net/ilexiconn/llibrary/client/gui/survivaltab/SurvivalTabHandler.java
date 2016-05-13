@@ -1,11 +1,16 @@
 package net.ilexiconn.llibrary.client.gui.survivaltab;
 
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author iLexiconn
+ * @since 1.4.0
+ */
 @SideOnly(Side.CLIENT)
 public enum SurvivalTabHandler {
     INSTANCE;
@@ -13,8 +18,15 @@ public enum SurvivalTabHandler {
     private List<SurvivalTab> survivalTabList = new ArrayList<>();
     private int currentPage;
 
-    public SurvivalTab create(String label) {
-        SurvivalTab survivalTab = new SurvivalTab(this.survivalTabList.size(), label);
+    /**
+     * Create a new survival tab instance and register it.
+     *
+     * @param label     the unlocalized survival tab label
+     * @param container the container class
+     * @return the new survival tab instance
+     */
+    public SurvivalTab create(String label, Class<? extends GuiContainer> container) {
+        SurvivalTab survivalTab = new SurvivalTab(this.survivalTabList.size(), label, container);
         this.survivalTabList.add(survivalTab);
         return survivalTab;
     }
