@@ -9,7 +9,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.MinecraftForge;
 
-import java.util.Arrays;
+import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * @author iLexiconn
@@ -30,7 +30,7 @@ public enum AnimationHandler {
         }
         entity.setAnimation(animation);
         for (EntityPlayer trackingPlayer : ((WorldServer) entity.worldObj).getEntityTracker().getTrackingPlayers(entity)) {
-            LLibrary.NETWORK_WRAPPER.sendTo(new AnimationMessage(entity.getEntityId(), Arrays.asList(entity.getAnimations()).indexOf(animation)), (EntityPlayerMP) trackingPlayer);
+            LLibrary.NETWORK_WRAPPER.sendTo(new AnimationMessage(entity.getEntityId(), ArrayUtils.indexOf(entity.getAnimations(), animation)), (EntityPlayerMP) trackingPlayer);
         }
     }
 
