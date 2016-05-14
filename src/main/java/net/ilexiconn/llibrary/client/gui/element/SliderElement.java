@@ -49,7 +49,7 @@ public class SliderElement<T extends GuiScreen> extends Element<T> {
 
     @Override
     public void init() {
-        this.value = (InputElement) new InputElement(this.getGUI(), "0.0", -1.0F, 0.0F, 28, true, input -> {
+        this.value = (InputElement) new InputElement<>(this.getGUI(), "0.0", -1.0F, 0.0F, 28, true, input -> {
             float value1 = 0.0F;
             String text = input.getText();
             if (!this.isInteger) {
