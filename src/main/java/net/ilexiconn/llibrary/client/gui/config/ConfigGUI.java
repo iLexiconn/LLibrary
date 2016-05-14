@@ -137,7 +137,6 @@ public class ConfigGUI extends ElementGUI {
             case STRING:
                 return new InputElement<>(this, (String) property.get(), x, y, 192, (input) -> {
                     property.set(input.getText());
-                    return null;
                 });
             case DOUBLE:
                 return new SliderElement<>(this, x, y, false, (slider) -> {
