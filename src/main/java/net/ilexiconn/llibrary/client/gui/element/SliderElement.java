@@ -64,8 +64,8 @@ public class SliderElement<T extends GuiScreen> extends Element<T> {
             }
             value1 = Float.parseFloat(text);
             this.withValue(value1);
-            onEnter.apply(value1);
-        }, allowKey).withParent(this);
+            this.onEnter.apply(value1);
+        }, this.allowKey).withParent(this);
     }
 
     @Override
