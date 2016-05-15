@@ -118,13 +118,17 @@ public class AdvancedModelRenderer extends ModelRenderer {
 
     /**
      * Sets the parent of this box
+     *
+     * @param parent the new parent
      */
     public void setParent(AdvancedModelRenderer parent) {
         this.parent = parent;
     }
 
     /**
-     * Post renders this box with all it's parents
+     * Post renders this box with all its parents
+     *
+     * @param scale the render scale
      */
     public void parentedPostRender(float scale) {
         if (this.parent != null) {
@@ -135,6 +139,8 @@ public class AdvancedModelRenderer extends ModelRenderer {
 
     /**
      * Renders this box with all it's parents
+     *
+     * @param scale the render scale
      */
     public void renderWithParents(float scale) {
         if (this.parent != null) {
