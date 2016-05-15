@@ -156,6 +156,22 @@ public enum ElementHandler {
         }
     }
 
+    public <T extends GuiScreen> void onMouseScrolled(T gui, int amount) {
+        if (this.elementMap.containsKey(gui)) {
+            List<Element<T>> elementList = Lists.reverse(new ArrayList<>(new ArrayList<>((List<Element<T>>) ((List<?>) this.elementMap.get(gui)))));
+            this.addChildren(elementList);
+            float mouseX = this.getPreciseMouseX(gui);
+            float mouseY = this.getPreciseMouseY(gui);
+            for (Element<T> element : elementList) {
+                if (element.isVisible() && element.isEnabled()) {
+                    if (element.mouseScrolled(mouseX, mouseY, amount)) {
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
     public <T extends GuiScreen> float getPreciseMouseX(T gui) {
         ScaledResolution scaledResolution = new ScaledResolution(ClientProxy.MINECRAFT, ClientProxy.MINECRAFT.displayWidth, ClientProxy.MINECRAFT.displayHeight);
         return (float) Mouse.getX() / scaledResolution.getScaleFactor();
