@@ -18,6 +18,7 @@ public enum ElementHandler {
     INSTANCE;
 
     private Map<GuiScreen, List<Element<?>>> elementMap = new HashMap<>();
+    private Element<?> currentlyClicking;
 
     public <T extends GuiScreen> void addElement(T gui, Element<T> element) {
         if (this.elementMap.containsKey(gui)) {
@@ -101,6 +102,7 @@ public enum ElementHandler {
             for (Element<T> element : Lists.reverse(elementList)) {
                 if (element.isVisible() && element.isEnabled()) {
                     if (element.mouseClicked(mouseX, mouseY, button)) {
+                        this.currentlyClicking = element;
                         return;
                     }
                 }
@@ -115,7 +117,7 @@ public enum ElementHandler {
             float mouseX = this.getPreciseMouseX(gui);
             float mouseY = this.getPreciseMouseY(gui);
             for (Element<T> element : Lists.reverse(elementList)) {
-                if (element.isVisible() && element.isEnabled()) {
+                if (element.isVisible() && element.isEnabled() && this.currentlyClicking == element) {
                     if (element.mouseDragged(mouseX, mouseY, button, timeSinceClick)) {
                         return;
                     }
@@ -131,7 +133,7 @@ public enum ElementHandler {
             float mouseX = this.getPreciseMouseX(gui);
             float mouseY = this.getPreciseMouseY(gui);
             for (Element<T> element : Lists.reverse(elementList)) {
-                if (element.isVisible() && element.isEnabled()) {
+                if (element.isVisible() && element.isEnabled() &&this.currentlyClicking == element) {
                     if (element.mouseReleased(mouseX, mouseY, button)) {
                         return;
                     }
