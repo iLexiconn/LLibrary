@@ -22,7 +22,7 @@ public class ListElement<T extends GuiScreen> extends Element<T> {
     private ScrollbarElement<T> scrollbar;
 
     private int entryHeight;
-    private int selectedEntry;
+    private int selectedEntry = -1;
 
     public ListElement(T gui, float posX, float posY, int width, int height, List<String> entries, Function<ListElement<T>, Boolean> function) {
         this(gui, posX, posY, width, height, entries, 13, function);
@@ -37,7 +37,7 @@ public class ListElement<T extends GuiScreen> extends Element<T> {
 
     @Override
     public void init() {
-        this.scrollbar = new ScrollbarElement<>(this, () -> this.getWidth() - 8.0F, () -> 2.0F, () -> this.getHeight() - 2.0F, this.entryHeight, () -> this.entries.size());
+        this.scrollbar = new ScrollbarElement<>(this, () -> this.getWidth() - 8.0F, () -> 2.0F, () -> this.getHeight() - 3.0F, this.entryHeight, () -> this.entries.size());
     }
 
     @Override
@@ -52,7 +52,7 @@ public class ListElement<T extends GuiScreen> extends Element<T> {
         int entryIndex = 0;
         for (String entry : this.entries) {
             float entryX = this.getPosX() + 2;
-            float entryY = this.getPosY() + y;
+            float entryY = this.getPosY() + y + 1;
             float entryWidth = this.getWidth() - 6;
             boolean selected = this.isSelected(this.getPosX(), this.getPosY() + y, entryWidth, this.entryHeight, mouseX, mouseY) && !this.scrollbar.isScrolling();
             boolean clickSelecting = selected && Mouse.isButtonDown(0);
@@ -75,7 +75,7 @@ public class ListElement<T extends GuiScreen> extends Element<T> {
             float y = -this.scrollbar.getScrollOffset();
             for (int entryIndex = 0; entryIndex < this.entries.size(); entryIndex++) {
                 float entryX = this.getPosX() + 2;
-                float entryY = this.getPosY() + y;
+                float entryY = this.getPosY() + y + 1;
                 float entryWidth = this.getWidth() - this.entryHeight;
                 if (this.isSelected(entryX, entryY, entryWidth, entryHeight, mouseX, mouseY)) {
                     int previousSelected = this.selectedEntry;
@@ -107,5 +107,10 @@ public class ListElement<T extends GuiScreen> extends Element<T> {
 
     public String getSelectedEntry() {
         return this.entries.get(selectedEntry);
+    }
+
+    public ListElement<T> withPersistence(boolean persistent) {
+        this.selectedEntry = 0;
+        return this;
     }
 }
