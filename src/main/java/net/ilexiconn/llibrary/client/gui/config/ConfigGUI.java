@@ -77,7 +77,7 @@ public class ConfigGUI extends ElementGUI {
             }
             this.propertyElements.clear();
             return true;
-        }).withColorScheme(ConfigGUI.SIDEBAR);
+        }).withPersistence(true).withColorScheme(ConfigGUI.SIDEBAR);
         categoryList.setSelectedIndex(0);
         this.selectedCategory = this.categories.get(0);
         this.elementList.add(categoryList);
