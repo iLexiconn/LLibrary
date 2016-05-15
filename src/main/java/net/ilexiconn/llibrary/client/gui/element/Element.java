@@ -170,10 +170,31 @@ public class Element<T extends GuiScreen> {
         Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawingQuads();
         tessellator.setColorRGBA_F(r, g, b, a);
-        tessellator.addVertex(x, y + height, 0.0);
-        tessellator.addVertex(x + width, y + height, 0.0);
-        tessellator.addVertex(x + width, y, 0.0);
-        tessellator.addVertex(x, y, 0.0);
+        tessellator.addVertex(x, y + height, 0.0F);
+        tessellator.addVertex(x + width, y + height, 0.0F);
+        tessellator.addVertex(x + width, y, 0.0F);
+        tessellator.addVertex(x, y, 0.0F);
+        tessellator.draw();
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glDisable(GL11.GL_BLEND);
+        GL11.glEnable(GL11.GL_ALPHA_TEST);
+    }
+
+    protected void drawTexturedRectangle(double x, double y, double width, double height, int color) {
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glDisable(GL11.GL_ALPHA_TEST);
+        float a = (float) (color >> 24 & 0xFF) / 255.0F;
+        float r = (float) (color >> 16 & 0xFF) / 255.0F;
+        float g = (float) (color >> 8 & 0xFF) / 255.0F;
+        float b = (float) (color & 0xFF) / 255.0F;
+        Tessellator tessellator = Tessellator.instance;
+        tessellator.startDrawingQuads();
+        tessellator.setColorRGBA_F(r, g, b, a);
+        tessellator.addVertexWithUV(x, y + height, 0.0F, 0.0F, 1.0F);
+        tessellator.addVertexWithUV(x + width, y + height, 0.0F, 1.0F, 1.0F);
+        tessellator.addVertexWithUV(x + width, y, 0.0F, 1.0F, 0.0F);
+        tessellator.addVertexWithUV(x, y, 0.0F, 0.0F, 0.0F);
         tessellator.draw();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glDisable(GL11.GL_BLEND);
