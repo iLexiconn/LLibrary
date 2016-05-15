@@ -76,11 +76,10 @@ public enum ElementHandler {
 
     public <T extends GuiScreen> void onRender(T gui, float partialTicks) {
         if (this.elementMap.containsKey(gui)) {
-            List<Element<T>> elementList = new ArrayList<>(new ArrayList<>((List<Element<T>>) ((List<?>) this.elementMap.get(gui))));
+            List<Element<T>> elementList = new ArrayList<>((List<Element<T>>) ((List<?>) this.elementMap.get(gui)));
             float mouseX = this.getPreciseMouseX(gui);
             float mouseY = this.getPreciseMouseY(gui);
-            elementList.stream().filter(element -> !(element instanceof WindowElement)).forEach(element -> this.onRenderElement(element, mouseX, mouseY, partialTicks));
-            elementList.stream().filter(element -> element instanceof WindowElement).forEach(element -> this.onRenderElement(element, mouseX, mouseY, partialTicks));
+            elementList.stream().forEach(element -> this.onRenderElement(element, mouseX, mouseY, partialTicks));
         }
     }
 
@@ -95,11 +94,11 @@ public enum ElementHandler {
 
     public <T extends GuiScreen> void onMouseClicked(T gui, int button) {
         if (this.elementMap.containsKey(gui)) {
-            List<Element<T>> elementList = Lists.reverse(new ArrayList<>(new ArrayList<>((List<Element<T>>) ((List<?>) this.elementMap.get(gui)))));
+            List<Element<T>> elementList = new ArrayList<>((List<Element<T>>) ((List<?>) this.elementMap.get(gui)));
             this.addChildren(elementList);
             float mouseX = this.getPreciseMouseX(gui);
             float mouseY = this.getPreciseMouseY(gui);
-            for (Element<T> element : elementList) {
+            for (Element<T> element : Lists.reverse(elementList)) {
                 if (element.isVisible() && element.isEnabled()) {
                     if (element.mouseClicked(mouseX, mouseY, button)) {
                         return;
@@ -111,11 +110,11 @@ public enum ElementHandler {
 
     public <T extends GuiScreen> void onMouseDragged(T gui, int button, long timeSinceClick) {
         if (this.elementMap.containsKey(gui)) {
-            List<Element<T>> elementList = Lists.reverse(new ArrayList<>(new ArrayList<>((List<Element<T>>) ((List<?>) this.elementMap.get(gui)))));
+            List<Element<T>> elementList = new ArrayList<>((List<Element<T>>) ((List<?>) this.elementMap.get(gui)));
             this.addChildren(elementList);
             float mouseX = this.getPreciseMouseX(gui);
             float mouseY = this.getPreciseMouseY(gui);
-            for (Element<T> element : elementList) {
+            for (Element<T> element : Lists.reverse(elementList)) {
                 if (element.isVisible() && element.isEnabled()) {
                     if (element.mouseDragged(mouseX, mouseY, button, timeSinceClick)) {
                         return;
@@ -127,11 +126,11 @@ public enum ElementHandler {
 
     public <T extends GuiScreen> void onMouseReleased(T gui, int button) {
         if (this.elementMap.containsKey(gui)) {
-            List<Element<T>> elementList = Lists.reverse(new ArrayList<>(new ArrayList<>((List<Element<T>>) ((List<?>) this.elementMap.get(gui)))));
+            List<Element<T>> elementList = new ArrayList<>((List<Element<T>>) ((List<?>) this.elementMap.get(gui)));
             this.addChildren(elementList);
             float mouseX = this.getPreciseMouseX(gui);
             float mouseY = this.getPreciseMouseY(gui);
-            for (Element<T> element : elementList) {
+            for (Element<T> element : Lists.reverse(elementList)) {
                 if (element.isVisible() && element.isEnabled()) {
                     if (element.mouseReleased(mouseX, mouseY, button)) {
                         return;
@@ -169,11 +168,10 @@ public enum ElementHandler {
             List<Element<T>> children = new ArrayList<>();
             int index = elements.indexOf(element);
             for (Element<T> child : element.getChildren()) {
-                children.add(child);
-                List<Element<T>> nextChildren = new ArrayList<>();
-                nextChildren.add(child);
-                this.addChildren(nextChildren);
-                children.addAll(nextChildren);
+                List<Element<T>> newChildren = new ArrayList<>();
+                newChildren.add(child);
+                this.addChildren(newChildren);
+                children.addAll(newChildren);
             }
             for (Element<T> child : children) {
                 elements.add(index, child);
