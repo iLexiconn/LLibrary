@@ -80,8 +80,8 @@ public enum ElementHandler {
             this.addChildren(elementList);
             float mouseX = this.getPreciseMouseX(gui);
             float mouseY = this.getPreciseMouseY(gui);
-            Lists.reverse(elementList).stream().filter(element -> !(element instanceof WindowElement)).forEach(element -> element.render(mouseX, mouseY, partialTicks));
-            Lists.reverse(elementList).stream().filter(element -> element instanceof WindowElement).forEach(element -> element.render(mouseX, mouseY, partialTicks));
+            elementList.stream().filter(element -> !(element instanceof WindowElement)).forEach(element -> element.render(mouseX, mouseY, partialTicks));
+            elementList.stream().filter(element -> element instanceof WindowElement).forEach(element -> element.render(mouseX, mouseY, partialTicks));
         }
     }
 
