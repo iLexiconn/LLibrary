@@ -46,7 +46,12 @@ public abstract class AbstractMessage<T extends AbstractMessage<T>> implements I
     public abstract void onServerReceived(MinecraftServer server, T message, EntityPlayer player, MessageContext messageContext);
 
     /**
+<<<<<<< HEAD
      * @return whether this message should be registered on the given side. Only used for messages registered with the @NetworkWrapper annotation
+=======
+     * @param side the current side
+     * @return whether this message should be registered on the given side. Only used for messages registered with {@link net.ilexiconn.llibrary.server.network.NetworkHandler#registerMessage(SimpleNetworkWrapper, Class)}
+>>>>>>> 1fd6a43... Fix javadoc errors
      */
     public boolean registerOnSide(Side side) {
         return true;
