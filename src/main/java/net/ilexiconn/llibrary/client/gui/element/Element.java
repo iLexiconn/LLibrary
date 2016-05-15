@@ -182,6 +182,27 @@ public class Element<T extends GuiScreen> {
         GlStateManager.enableTexture2D();
     }
 
+    protected void drawTexturedRectangle(double x, double y, double width, double height, int color) {
+        GlStateManager.enableTexture2D();
+        GlStateManager.enableBlend();
+        GlStateManager.disableAlpha();
+        float a = (float) (color >> 24 & 0xFF) / 255.0F;
+        float r = (float) (color >> 16 & 0xFF) / 255.0F;
+        float g = (float) (color >> 8 & 0xFF) / 255.0F;
+        float b = (float) (color & 0xFF) / 255.0F;
+        Tessellator tessellator = Tessellator.getInstance();
+        WorldRenderer worldRenderer = tessellator.getWorldRenderer();
+        worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+        worldRenderer.pos(x, y + height, 0.0).tex(0.0F, 1.0F).color(r, g, b, a).endVertex();
+        worldRenderer.pos(x + width, y + height, 0.0).tex(1.0F, 1.0F).color(r, g, b, a).endVertex();
+        worldRenderer.pos(x + width, y, 0.0).tex(1.0F, 0.0F).color(r, g, b, a).endVertex();
+        worldRenderer.pos(x, y, 0.0).tex(0.0F, 0.0F).color(r, g, b, a).endVertex();
+        tessellator.draw();
+        GlStateManager.disableBlend();
+        GlStateManager.enableAlpha();
+        GlStateManager.disableTexture2D();
+    }
+
     protected void drawOutline(double x, double y, double width, double height, int color, double outlineSize) {
         this.drawRectangle(x, y, width - outlineSize, outlineSize, color);
         this.drawRectangle(x + width - outlineSize, y, outlineSize, height - outlineSize, color);
