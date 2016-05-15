@@ -16,20 +16,28 @@ public class WindowElement<T extends GuiScreen> extends Element<T> {
     private float dragOffsetX;
     private float dragOffsetY;
     private boolean isDragging;
+    private boolean hasTopbar;
 
     private List<Element<T>> elementList = new ArrayList<>();
 
     public WindowElement(T gui, String name, int width, int height) {
-        this(gui, name, width, height, gui.width / 2 - width / 2, gui.height / 2 - height / 2);
+        this(gui, name, width, height, gui.width / 2 - width / 2, gui.height / 2 - height / 2, true);
     }
 
-    public WindowElement(T gui, String name, int width, int height, int posX, int posY) {
+    public WindowElement(T gui, String name, int width, int height, boolean hasTopbar) {
+        this(gui, name, width, height, gui.width / 2 - width / 2, gui.height / 2 - height / 2, hasTopbar);
+    }
+
+    public WindowElement(T gui, String name, int width, int height, int posX, int posY, boolean hasTopbar) {
         super(gui, posX, posY, width, height);
         this.name = name;
-        this.addElement(new ButtonElement<>(gui, "x", this.getWidth() - 14, 0, 14, 14, (v) -> {
-            ElementHandler.INSTANCE.removeElement(this.getGUI(), this);
-            return true;
-        }).withColorScheme(ButtonElement.CLOSE));
+        this.hasTopbar = hasTopbar;
+        if (hasTopbar) {
+            this.addElement(new ButtonElement<>(gui, "x", this.getWidth() - 14, 0, 14, 14, (v) -> {
+                ElementHandler.INSTANCE.removeElement(this.getGUI(), this);
+                return true;
+            }).withColorScheme(ButtonElement.CLOSE));
+        }
     }
 
     public void addElement(Element<T> element) {
@@ -41,7 +49,9 @@ public class WindowElement<T extends GuiScreen> extends Element<T> {
         GlStateManager.pushMatrix();
         this.startScissor();
         this.drawRectangle(this.getPosX(), this.getPosY(), this.getWidth(), this.getHeight(), LLibrary.CONFIG.getPrimaryColor());
-        this.drawRectangle(this.getPosX(), this.getPosY(), this.getWidth(), 14, LLibrary.CONFIG.getAccentColor());
+        if (this.hasTopbar) {
+            this.drawRectangle(this.getPosX(), this.getPosY(), this.getWidth(), 14, LLibrary.CONFIG.getAccentColor());
+        }
         FontRenderer fontRenderer = this.getGUI().mc.fontRendererObj;
         fontRenderer.drawString(this.name, this.getPosX() + 2.0F, this.getPosY() + 3.0F, LLibrary.CONFIG.getTextColor(), false);
         for (Element<T> element : this.elementList) {
