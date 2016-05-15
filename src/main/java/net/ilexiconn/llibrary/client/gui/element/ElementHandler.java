@@ -74,9 +74,11 @@ public enum ElementHandler {
         }
     }
 
-    public <T extends GuiScreen> void onRender(T gui, float mouseX, float mouseY, float partialTicks) {
+    public <T extends GuiScreen> void onRender(T gui, float partialTicks) {
         if (this.elementMap.containsKey(gui)) {
             List<Element<T>> elementList = new ArrayList<>(new ArrayList<>((List<Element<T>>) ((List<?>) this.elementMap.get(gui))));
+            float mouseX = this.getPreciseMouseX(gui);
+            float mouseY = this.getPreciseMouseY(gui);
             elementList.stream().filter(element -> !(element instanceof WindowElement)).forEach(element -> this.onRenderElement(element, mouseX, mouseY, partialTicks));
             elementList.stream().filter(element -> element instanceof WindowElement).forEach(element -> this.onRenderElement(element, mouseX, mouseY, partialTicks));
         }
