@@ -48,9 +48,7 @@ public class WindowElement<T extends GuiScreen> extends Element<T> {
         GL11.glPushMatrix();
         this.startScissor();
         this.drawRectangle(this.getPosX(), this.getPosY(), this.getWidth(), this.getHeight(), LLibrary.CONFIG.getPrimaryColor());
-        if (this.hasTopbar) {
-            this.drawRectangle(this.getPosX(), this.getPosY(), this.getWidth(), 14, LLibrary.CONFIG.getAccentColor());
-        }
+        this.drawRectangle(this.getPosX(), this.getPosY(), this.getWidth(), 14, LLibrary.CONFIG.getAccentColor());
         this.drawString(this.name, this.getPosX() + 2.0F, this.getPosY() + 3.0F, LLibrary.CONFIG.getTextColor(), false);
         for (Element<T> element : this.elementList) {
             element.render(mouseX, mouseY, partialTicks);
