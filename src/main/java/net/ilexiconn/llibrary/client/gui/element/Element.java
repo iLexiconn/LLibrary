@@ -73,6 +73,19 @@ public class Element<T extends GuiScreen> {
         return false;
     }
 
+    public boolean mouseScrolled(float mouseX, float mouseY, int amount) {
+        if (this.isSelected(mouseX, mouseY)) {
+            for (Element<T> child : this.getChildren()) {
+                if (child instanceof ScrollbarElement) {
+                    ((ScrollbarElement<T>) child).setScrollVelocity(((ScrollbarElement<T>) child).getScrollVelocity() + (amount / 120.0F) * 0.5F);
+                    break;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
     protected boolean isSelected(float mouseX, float mouseY) {
         return ElementHandler.INSTANCE.isElementOnTop(this.getGUI(), this) && mouseX >= this.getPosX() && mouseY >= this.getPosY() && mouseX < this.getPosX() + this.getWidth() && mouseY < this.getPosY() + this.getHeight();
     }

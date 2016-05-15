@@ -7,6 +7,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.input.Mouse;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,6 +48,10 @@ public abstract class ElementGUI extends GuiScreen {
         Gui.drawRect(0, 0, this.width, this.height, LLibrary.CONFIG.getTertiaryColor());
         this.drawScreen(ElementHandler.INSTANCE.getPreciseMouseX(this), ElementHandler.INSTANCE.getPreciseMouseY(this), partialTicks);
         ElementHandler.INSTANCE.onRender(this, partialTicks);
+        int scrollAmount = Mouse.getDWheel();
+        if (scrollAmount != 0) {
+            ElementHandler.INSTANCE.onMouseScrolled(this, scrollAmount);
+        }
     }
 
     @Override

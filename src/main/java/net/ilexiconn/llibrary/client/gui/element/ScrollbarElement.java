@@ -20,6 +20,7 @@ public class ScrollbarElement<T extends GuiScreen> extends Element<T> {
     private float scroll;
     private float scrollYOffset;
     private boolean scrolling;
+    private float scrollVelocity;
 
     public ScrollbarElement(Element<T> parent, Supplier<Float> posX, Supplier<Float> posY, Supplier<Float> displayHeight, int entryHeight, Supplier<Integer> entryCount) {
         super(parent.getGUI(), posX.get(), posY.get(), 4, 0);
@@ -35,6 +36,13 @@ public class ScrollbarElement<T extends GuiScreen> extends Element<T> {
     public void render(float mouseX, float mouseY, float partialTicks) {
         if (this.maxScroll > 0) {
             this.drawRectangle(this.getPosX(), this.getPosY(), this.getWidth(), this.getHeight() - 3, this.scrolling ? LLibrary.CONFIG.getAccentColor() : LLibrary.CONFIG.getSecondaryColor());
+        }
+        this.scroll -= this.scrollVelocity;
+        this.scrollVelocity *= 0.6F;
+        if (this.scroll > this.maxScroll / this.scrollPerEntry) {
+            this.scroll = (int) (this.maxScroll / this.scrollPerEntry);
+        } else if (this.scroll < 0) {
+            this.scroll = 0;
         }
     }
 
@@ -74,10 +82,6 @@ public class ScrollbarElement<T extends GuiScreen> extends Element<T> {
         this.maxScroll = Math.max(0, entryCount - maxDisplayEntries);
         this.scrollPerEntry = (float) entryCount / parentHeight;
         this.setHeight((int) (parentHeight / ((float) entryCount / (float) maxDisplayEntries)));
-
-        if (this.scroll > this.maxScroll / this.scrollPerEntry) {
-            this.scroll = (int) (this.maxScroll / this.scrollPerEntry);
-        }
     }
 
     public float getScrollOffset() {
@@ -90,5 +94,13 @@ public class ScrollbarElement<T extends GuiScreen> extends Element<T> {
 
     public int getMaxScroll() {
         return maxScroll;
+    }
+
+    public float getScrollVelocity() {
+        return scrollVelocity;
+    }
+
+    public void setScrollVelocity(float scrollVelocity) {
+        this.scrollVelocity = scrollVelocity;
     }
 }
