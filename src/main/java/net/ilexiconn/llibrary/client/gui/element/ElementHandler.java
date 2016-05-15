@@ -74,14 +74,20 @@ public enum ElementHandler {
         }
     }
 
-    public <T extends GuiScreen> void onRender(T gui, float partialTicks) {
+    public <T extends GuiScreen> void onRender(T gui, float mouseX, float mouseY, float partialTicks) {
         if (this.elementMap.containsKey(gui)) {
-            List<Element<T>> elementList = Lists.reverse(new ArrayList<>(new ArrayList<>((List<Element<T>>) ((List<?>) this.elementMap.get(gui)))));
-            this.addChildren(elementList);
-            float mouseX = this.getPreciseMouseX(gui);
-            float mouseY = this.getPreciseMouseY(gui);
-            elementList.stream().filter(element -> !(element instanceof WindowElement)).forEach(element -> element.render(mouseX, mouseY, partialTicks));
-            elementList.stream().filter(element -> element instanceof WindowElement).forEach(element -> element.render(mouseX, mouseY, partialTicks));
+            List<Element<T>> elementList = new ArrayList<>(new ArrayList<>((List<Element<T>>) ((List<?>) this.elementMap.get(gui))));
+            elementList.stream().filter(element -> !(element instanceof WindowElement)).forEach(element -> this.onRenderElement(element, mouseX, mouseY, partialTicks));
+            elementList.stream().filter(element -> element instanceof WindowElement).forEach(element -> this.onRenderElement(element, mouseX, mouseY, partialTicks));
+        }
+    }
+
+    private <T extends GuiScreen> void onRenderElement(Element<T> element, float mouseX, float mouseY, float partialTicks) {
+        if (element.isVisible()) {
+            element.render(mouseX, mouseY, partialTicks);
+            for (Element<T> child : element.getChildren()) {
+                this.onRenderElement(child, mouseX, mouseY, partialTicks);
+            }
         }
     }
 
