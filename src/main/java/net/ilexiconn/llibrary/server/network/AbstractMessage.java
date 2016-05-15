@@ -3,6 +3,7 @@ package net.ilexiconn.llibrary.server.network;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.ilexiconn.llibrary.LLibrary;
@@ -46,12 +47,8 @@ public abstract class AbstractMessage<T extends AbstractMessage<T>> implements I
     public abstract void onServerReceived(MinecraftServer server, T message, EntityPlayer player, MessageContext messageContext);
 
     /**
-<<<<<<< HEAD
-     * @return whether this message should be registered on the given side. Only used for messages registered with the @NetworkWrapper annotation
-=======
      * @param side the current side
-     * @return whether this message should be registered on the given side. Only used for messages registered with {@link net.ilexiconn.llibrary.server.network.NetworkHandler#registerMessage(SimpleNetworkWrapper, Class)}
->>>>>>> 1fd6a43... Fix javadoc errors
+     * @return whether this message should be registered on the given side. Only used for messages registered with {@link net.ilexiconn.llibrary.server.network.NetworkHandler#registerMessage(SimpleNetworkWrapper, Class)}}
      */
     public boolean registerOnSide(Side side) {
         return true;
