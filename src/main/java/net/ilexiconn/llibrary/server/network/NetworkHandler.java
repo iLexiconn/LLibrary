@@ -55,7 +55,9 @@ public enum NetworkHandler {
      * @param clazz          the message class
      * @param side           the side
      * @param <T>            the message type
+     * @deprecated use {@link NetworkHandler#registerMessage(SimpleNetworkWrapper, Class)} in combination with {@link AbstractMessage#registerOnSide(Side)} instead.
      */
+    @Deprecated
     public <T extends AbstractMessage<T> & IMessageHandler<T, IMessage>> void registerMessage(SimpleNetworkWrapper networkWrapper, Class<T> clazz, Side side) {
         int id = 0;
         if (this.idMap.containsKey(networkWrapper)) {
