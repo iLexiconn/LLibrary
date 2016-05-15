@@ -54,6 +54,11 @@ public class CheckboxElement<T extends GuiScreen> extends Element<T> {
         return this;
     }
 
+    public CheckboxElement<T> withFunction(Function<CheckboxElement<T>, Boolean> function) {
+        this.function = function;
+        return this;
+    }
+
     public boolean isSelected() {
         return selected;
     }
