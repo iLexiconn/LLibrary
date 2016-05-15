@@ -8,7 +8,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.MinecraftForge;
-
 import org.apache.commons.lang3.ArrayUtils;
 
 /**
@@ -23,6 +22,7 @@ public enum AnimationHandler {
      *
      * @param entity    the entity with an animation to be updated
      * @param animation the animation to be updated
+     * @param <T>       the entity type
      */
     public <T extends Entity & IAnimatedEntity> void sendAnimationMessage(T entity, Animation animation) {
         if (entity.worldObj.isRemote) {
@@ -38,6 +38,7 @@ public enum AnimationHandler {
      * Updates all animations for a given entity
      *
      * @param entity the entity with an animation to be updated
+     * @param <T>    the entity type
      */
     public <T extends Entity & IAnimatedEntity> void updateAnimations(T entity) {
         if (entity.getAnimation() == null) {
