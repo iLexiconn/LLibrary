@@ -16,7 +16,7 @@ public class WindowElement<T extends GuiScreen> extends Element<T> {
     private float dragOffsetX;
     private float dragOffsetY;
     private boolean isDragging;
-    private boolean hasTopbar;
+    private boolean hasCloseButton;
 
     private List<Element<T>> elementList = new ArrayList<>();
 
@@ -24,15 +24,15 @@ public class WindowElement<T extends GuiScreen> extends Element<T> {
         this(gui, name, width, height, gui.width / 2 - width / 2, gui.height / 2 - height / 2, true);
     }
 
-    public WindowElement(T gui, String name, int width, int height, boolean hasTopbar) {
-        this(gui, name, width, height, gui.width / 2 - width / 2, gui.height / 2 - height / 2, hasTopbar);
+    public WindowElement(T gui, String name, int width, int height, boolean hasCloseButton) {
+        this(gui, name, width, height, gui.width / 2 - width / 2, gui.height / 2 - height / 2, hasCloseButton);
     }
 
-    public WindowElement(T gui, String name, int width, int height, int posX, int posY, boolean hasTopbar) {
+    public WindowElement(T gui, String name, int width, int height, int posX, int posY, boolean hasCloseButton) {
         super(gui, posX, posY, width, height);
         this.name = name;
-        this.hasTopbar = hasTopbar;
-        if (hasTopbar) {
+        this.hasCloseButton = hasCloseButton;
+        if (hasCloseButton) {
             this.addElement(new ButtonElement<>(gui, "x", this.getWidth() - 14, 0, 14, 14, (v) -> {
                 ElementHandler.INSTANCE.removeElement(this.getGUI(), this);
                 return true;
