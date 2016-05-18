@@ -38,6 +38,11 @@ public abstract class BlockEntity extends TileEntity implements ITickable {
     }
 
     @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        return new SPacketUpdateTileEntity(this.pos, 0, this.getUpdateTag());
+    }
+
+    @Override
     public void onDataPacket(NetworkManager networkManager, SPacketUpdateTileEntity packet) {
         this.readFromNBT(packet.getNbtCompound());
     }
