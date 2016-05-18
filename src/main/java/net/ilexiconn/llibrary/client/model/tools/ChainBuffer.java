@@ -1,5 +1,7 @@
 package net.ilexiconn.llibrary.client.model.tools;
 
+import net.ilexiconn.llibrary.LLibrary;
+import net.ilexiconn.llibrary.client.util.ClientUtils;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MathHelper;
@@ -16,6 +18,8 @@ public class ChainBuffer {
     private float yawVariation;
     private int pitchTimer;
     private float pitchVariation;
+    private float prevYawVariation;
+    private float prevPitchVariation;
 
     /**
      * Resets this ChainBuffer's rotations.
@@ -23,6 +27,8 @@ public class ChainBuffer {
     public void resetRotations() {
         this.yawVariation = 0.0F;
         this.pitchVariation = 0.0F;
+        this.prevYawVariation = 0.0F;
+        this.prevPitchVariation = 0.0F;
     }
 
     /**
@@ -35,6 +41,7 @@ public class ChainBuffer {
      * @param entity         the entity with this ChainBuffer
      */
     public void calculateChainSwingBuffer(float maxAngle, int bufferTime, float angleDecrement, float divisor, EntityLivingBase entity) {
+        this.prevYawVariation = this.yawVariation;
         if (entity.renderYawOffset != entity.prevRenderYawOffset && MathHelper.abs(this.yawVariation) < maxAngle) {
             this.yawVariation += (entity.prevRenderYawOffset - entity.renderYawOffset) / divisor;
         }
@@ -71,6 +78,7 @@ public class ChainBuffer {
      * @param entity         the entity with this ChainBuffer
      */
     public void calculateChainWaveBuffer(float maxAngle, int bufferTime, float angleDecrement, float divisor, EntityLivingBase entity) {
+        this.prevPitchVariation = this.pitchVariation;
         if (entity.rotationPitch != entity.prevRotationPitch && MathHelper.abs(pitchVariation) < maxAngle) {
             this.pitchVariation += (entity.prevRotationPitch - entity.rotationPitch) / divisor;
         }
@@ -106,7 +114,7 @@ public class ChainBuffer {
      * @param entity         the entity with this ChainBuffer
      */
     public void calculateChainSwingBuffer(float maxAngle, int bufferTime, float angleDecrement, EntityLivingBase entity) {
-        calculateChainSwingBuffer(maxAngle, bufferTime, angleDecrement, 1.0F, entity);
+        this.calculateChainSwingBuffer(maxAngle, bufferTime, angleDecrement, 1.0F, entity);
     }
 
     /**
@@ -118,7 +126,7 @@ public class ChainBuffer {
      * @param entity         the entity with this ChainBuffer
      */
     public void calculateChainWaveBuffer(float maxAngle, int bufferTime, float angleDecrement, EntityLivingBase entity) {
-        calculateChainWaveBuffer(maxAngle, bufferTime, angleDecrement, 1.0F, entity);
+        this.calculateChainWaveBuffer(maxAngle, bufferTime, angleDecrement, 1.0F, entity);
     }
 
     /**
@@ -127,8 +135,9 @@ public class ChainBuffer {
      * @param boxes the box array
      */
     public void applyChainSwingBuffer(ModelRenderer... boxes) {
+        float rotateAmount = 0.01745329251F * ClientUtils.interpolate(this.prevYawVariation, this.yawVariation, LLibrary.PROXY.getPartialTicks()) / boxes.length;
         for (ModelRenderer box : boxes) {
-            box.rotateAngleY += 0.01745329251F * yawVariation / boxes.length;
+            box.rotateAngleY += rotateAmount;
         }
     }
 
@@ -138,8 +147,9 @@ public class ChainBuffer {
      * @param boxes the box array
      */
     public void applyChainWaveBuffer(ModelRenderer... boxes) {
+        float rotateAmount = 0.01745329251F * ClientUtils.interpolate(this.prevPitchVariation, this.pitchVariation, LLibrary.PROXY.getPartialTicks()) / boxes.length;
         for (ModelRenderer box : boxes) {
-            box.rotateAngleX += 0.01745329251F * pitchVariation / boxes.length;
+            box.rotateAngleX += rotateAmount;
         }
     }
 }
