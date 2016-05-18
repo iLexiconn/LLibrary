@@ -81,7 +81,7 @@ public class ListElement<T extends GuiScreen> extends Element<T> {
                     int previousSelected = this.selectedEntry;
                     this.selectedEntry = entryIndex;
                     if (this.function.apply(this)) {
-                        this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
+                        this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                     } else {
                         this.selectedEntry = previousSelected;
                     }

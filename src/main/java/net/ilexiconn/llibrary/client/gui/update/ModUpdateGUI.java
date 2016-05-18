@@ -5,8 +5,8 @@ import net.ilexiconn.llibrary.server.update.UpdateHandler;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
@@ -53,8 +53,8 @@ public class ModUpdateGUI extends GuiScreen {
         width = Math.min(width, 150);
         this.modList = new ModUpdateListGUI(this, width);
 
-        this.buttonList.add(buttonDone = new GuiButton(6, ((this.modList.getRight() + this.width) / 2) - 100, this.height - 38, I18n.translateToLocal("gui.done")));
-        this.buttonList.add(buttonUpdate = new GuiButton(20, 10, this.height - 38, this.modList.getWidth(), 20, I18n.translateToLocal("gui.llibrary.update")));
+        this.buttonList.add(buttonDone = new GuiButton(6, ((this.modList.getRight() + this.width) / 2) - 100, this.height - 38, I18n.format("gui.done")));
+        this.buttonList.add(buttonUpdate = new GuiButton(20, 10, this.height - 38, this.modList.getWidth(), 20, I18n.format("gui.llibrary.update")));
 
         this.updateModInfo();
     }
@@ -92,8 +92,8 @@ public class ModUpdateGUI extends GuiScreen {
             this.buttonDone.yPosition = height - 38;
             this.buttonList.clear();
             this.buttonList.add(buttonDone);
-            this.drawScaledString(I18n.translateToLocal("gui.llibrary.updated.1"), i, j - 40, 0xFFFFFF, 2.0F);
-            this.drawScaledString(I18n.translateToLocal("gui.llibrary.updated.2"), i, j - 15, 0xFFFFFF, 1.0F);
+            this.drawScaledString(I18n.format("gui.llibrary.updated.1"), i, j - 40, 0xFFFFFF, 2.0F);
+            this.drawScaledString(I18n.format("gui.llibrary.updated.2"), i, j - 15, 0xFFFFFF, 1.0F);
         } else {
             this.modList.drawScreen(mouseX, mouseY, partialTicks);
             if (this.modInfo != null) {
@@ -101,7 +101,7 @@ public class ModUpdateGUI extends GuiScreen {
             }
 
             int left = ((this.width - this.modList.getWidth() - 38) / 2) + this.modList.getWidth() + 30;
-            this.drawCenteredString(this.fontRendererObj, I18n.translateToLocal("gui.llibrary.update.title"), left, 16, 0xFFFFFF);
+            this.drawCenteredString(this.fontRendererObj, I18n.format("gui.llibrary.update.title"), left, 16, 0xFFFFFF);
         }
 
         super.drawScreen(mouseX, mouseY, partialTicks);
@@ -130,12 +130,12 @@ public class ModUpdateGUI extends GuiScreen {
 
         this.buttonUpdate.visible = true;
         this.buttonUpdate.enabled = true;
-        this.buttonUpdate.displayString = I18n.translateToLocal("gui.llibrary.update");
+        this.buttonUpdate.displayString = I18n.format("gui.llibrary.update");
 
         UpdateContainer updateContainer = UpdateHandler.INSTANCE.getOutdatedModList().get(selected);
         textList.add(updateContainer.getModContainer().getName());
-        textList.add(I18n.translateToLocal("gui.llibrary.currentVersion") + String.format(": %s", updateContainer.getModContainer().getVersion()));
-        textList.add(I18n.translateToLocal("gui.llibrary.latestVersion") + String.format(": %s", updateContainer.getLatestVersion().getVersionString()));
+        textList.add(I18n.format("gui.llibrary.currentVersion") + String.format(": %s", updateContainer.getModContainer().getVersion()));
+        textList.add(I18n.format("gui.llibrary.latestVersion") + String.format(": %s", updateContainer.getLatestVersion().getVersionString()));
         textList.add(null);
         Collections.addAll(textList, UpdateHandler.INSTANCE.getChangelog(updateContainer, updateContainer.getLatestVersion()));
 

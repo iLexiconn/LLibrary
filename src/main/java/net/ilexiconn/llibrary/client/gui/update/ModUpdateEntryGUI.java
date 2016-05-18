@@ -109,7 +109,7 @@ public class ModUpdateEntryGUI extends GuiScrollingList {
                 if (!(part instanceof TextComponentString)) {
                     continue;
                 }
-                k += this.parent.mc.fontRendererObj.getStringWidth(((TextComponentString) part).getChatComponentText_TextValue());
+                k += this.parent.mc.fontRendererObj.getStringWidth(((TextComponentString) part).getText());
                 if (k >= x) {
                     this.parent.handleComponentClick(part);
                     break;

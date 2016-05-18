@@ -126,7 +126,7 @@ public class SliderElement<T extends GuiScreen> extends Element<T> {
             float newValue = GuiScreen.isShiftKeyDown() ? this.isInteger ? this.getValue() + 10 : this.getValue() + 1 : this.isInteger ? this.getValue() + 1 : this.getValue() + 0.1F;
             if (this.maxValue == -1.0F || newValue <= this.maxValue) {
                 if (this.onEnter.apply(newValue)) {
-                    this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
+                    this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                     this.withValue(newValue);
                     return true;
                 }
@@ -135,14 +135,14 @@ public class SliderElement<T extends GuiScreen> extends Element<T> {
             float newValue = GuiScreen.isShiftKeyDown() ? this.isInteger ? this.getValue() - 10 : this.getValue() - 1 : this.isInteger ? this.getValue() - 1 : this.getValue() - 0.1F;
             if (this.minValue == -1.0F || newValue >= this.minValue) {
                 if (this.onEnter.apply(newValue)) {
-                    this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
+                    this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                     this.withValue(newValue);
                     return true;
                 }
             }
         } else if (indicatorSelected) {
             this.dragging = true;
-            this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
+            this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
         }
         return false;
     }
@@ -166,7 +166,7 @@ public class SliderElement<T extends GuiScreen> extends Element<T> {
     @Override
     public boolean mouseReleased(float mouseX, float mouseY, int button) {
         if (this.dragging) {
-            this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
+            this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
         }
         this.dragging = false;
         return false;

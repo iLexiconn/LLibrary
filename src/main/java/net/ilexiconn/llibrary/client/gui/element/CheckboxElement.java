@@ -40,7 +40,7 @@ public class CheckboxElement<T extends GuiScreen> extends Element<T> {
         if (button == 0 && super.isSelected(mouseX, mouseY)) {
             this.selected = !this.selected;
             if (this.function != null && this.function.apply(this)) {
-                this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
+                this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             } else {
                 this.selected = !this.selected;
             }

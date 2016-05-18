@@ -152,14 +152,14 @@ public class Command extends CommandBase {
                     try {
                         arguments.add(new Argument<>(entry.getKey(), entry.getValue().parseArgument(server, sender, args[i])));
                     } catch (CommandException e) {
-                        sender.addChatMessage(new TextComponentString(e.getLocalizedMessage()).setChatStyle(new Style().setColor(TextFormatting.RED)));
+                        sender.addChatMessage(new TextComponentString(e.getLocalizedMessage()).setStyle(new Style().setColor(TextFormatting.RED)));
                     }
                 } else {
                     Map.Entry<String, IArgumentParser<?>> entry = this.optionalArguments.getEntry(i - this.requiredArguments.size());
                     try {
                         arguments.add(new Argument<>(entry.getKey(), entry.getValue().parseArgument(server, sender, args[i])));
                     } catch (CommandException e) {
-                        sender.addChatMessage(new TextComponentString(e.getLocalizedMessage()).setChatStyle(new Style().setColor(TextFormatting.RED)));
+                        sender.addChatMessage(new TextComponentString(e.getLocalizedMessage()).setStyle(new Style().setColor(TextFormatting.RED)));
                     }
                 }
             }
