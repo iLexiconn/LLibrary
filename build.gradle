@@ -11,7 +11,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath "net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT"
+        classpath "net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT"
         classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.0.7"
     }
 }
@@ -36,9 +36,9 @@ archivesBaseName = "llibrary"
 sourceCompatibility = targetCompatibility = "1.8"
 
 minecraft {
-    version = "1.9-12.16.0.1824-1.9"
+    version = "1908"
     runDir = "minecraft"
-    mappings = "snapshot_20160312"
+    mappings = "snapshot_20160518"
 }
 
 processResources {
@@ -88,7 +88,7 @@ publishing {
         mavenJava(MavenPublication) {
             groupId "net.ilexiconn"
             artifactId "llibrary"
-            version project.version + "-1.9"
+            version project.version + "-1.9.4"
 
             from components.java
 
@@ -146,7 +146,7 @@ curseforge {
             changelog = ""
         }
 
-        addGameVersion("1.9")
+        addGameVersion("1.9.4")
 
         mainArtifact(jar) {
             displayName = "LLibrary $project.version"
