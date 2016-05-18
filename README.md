@@ -16,7 +16,7 @@ repositories {
 }
 
 dependencies {
-    compile "net.ilexiconn:llibrary:1.0.0-1.9:dev"
+    compile "net.ilexiconn:llibrary:1.0.0-1.9.4:dev"
 }
 ```
 
