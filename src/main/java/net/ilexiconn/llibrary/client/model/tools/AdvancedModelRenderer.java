@@ -23,6 +23,7 @@ public class AdvancedModelRenderer extends ModelRenderer {
     public float defaultOffsetX, defaultOffsetY, defaultOffsetZ;
     public float defaultPositionX, defaultPositionY, defaultPositionZ;
     public float scaleX = 1.0F, scaleY = 1.0F, scaleZ = 1.0F;
+    public int textureOffsetX, textureOffsetY;
     public boolean scaleChildren;
     private AdvancedModelBase model;
     private AdvancedModelRenderer parent;
@@ -41,6 +42,11 @@ public class AdvancedModelRenderer extends ModelRenderer {
     public AdvancedModelRenderer(AdvancedModelBase model, int textureOffsetX, int textureOffsetY) {
         this(model);
         this.setTextureOffset(textureOffsetX, textureOffsetY);
+    }
+
+    public AdvancedModelRenderer add3DTexture(float posX, float posY, float posZ, int width, int height) {
+        this.cubeList.add(new Model3DTexture(this, textureOffsetX, textureOffsetY, posX, posY, posZ, width, height));
+        return this;
     }
 
     /**
@@ -282,6 +288,13 @@ public class AdvancedModelRenderer extends ModelRenderer {
             bob = (float) -Math.abs((Math.sin(f * speed) * f1 * degree));
         }
         this.rotationPointY += bob;
+    }
+
+    @Override
+    public AdvancedModelRenderer setTextureOffset(int textureOffsetX, int textureOffsetY) {
+        this.textureOffsetX = textureOffsetX;
+        this.textureOffsetY = textureOffsetY;
+        return this;
     }
 
     public void transitionTo(AdvancedModelRenderer to, float timer, float maxTime) {

@@ -187,4 +187,21 @@ public class AdvancedModelBase extends ModelBase {
     public void bob(AdvancedModelRenderer box, float speed, float degree, boolean bounce, float f, float f1) {
         box.bob(speed, degree, bounce, f, f1);
     }
+
+    /**
+     * Returns a float that can be used to move boxes.
+     *
+     * @param speed  is how fast the animation runs;
+     * @param degree is how far the box will move;
+     * @param bounce will make the box bounce;
+     * @param f      is the walked distance;
+     * @param f1     is the walk speed.
+     */
+    public float moveBox(float speed, float degree, boolean bounce, float f, float f1) {
+        if (bounce) {
+            return -MathHelper.abs((MathHelper.sin(f * speed) * f1 * degree));
+        } else {
+            return MathHelper.sin(f * speed) * f1 * degree - f1 * degree;
+        }
+    }
 }
