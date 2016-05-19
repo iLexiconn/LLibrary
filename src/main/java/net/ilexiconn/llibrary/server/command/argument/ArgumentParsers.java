@@ -97,7 +97,7 @@ public enum ArgumentParsers implements IArgumentParser {
 
         @Override
         public List<String> getTabCompletion(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
-            return CommandBase.getListOfStringsMatchingLastWord(args, Item.itemRegistry.getKeys());
+            return CommandBase.getListOfStringsMatchingLastWord(args, Item.REGISTRY.getKeys());
         }
     };
 

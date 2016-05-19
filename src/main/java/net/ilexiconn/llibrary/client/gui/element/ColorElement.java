@@ -51,7 +51,7 @@ public class ColorElement<T extends GuiScreen> extends Element<T> {
             if (button == 0 && mouseX >= x && mouseX <= x + 20 && mouseY >= y && mouseY <= y + 20 && LLibrary.CONFIG.getAccentColor() != this.colors[i]) {
                 this.selectedColor = this.colors[i];
                 if (this.function.apply(this)) {
-                    this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
+                    this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                 }
                 return true;
             }

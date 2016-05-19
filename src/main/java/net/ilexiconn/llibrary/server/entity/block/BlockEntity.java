@@ -4,7 +4,6 @@ import net.ilexiconn.llibrary.LLibrary;
 import net.ilexiconn.llibrary.server.network.BlockEntityMessage;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
@@ -39,10 +38,8 @@ public abstract class BlockEntity extends TileEntity implements ITickable {
     }
 
     @Override
-    public Packet<?> getDescriptionPacket() {
-        NBTTagCompound compound = new NBTTagCompound();
-        this.writeToNBT(compound);
-        return new SPacketUpdateTileEntity(this.pos, 0, compound);
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        return new SPacketUpdateTileEntity(this.pos, 0, this.getUpdateTag());
     }
 
     @Override
@@ -57,9 +54,10 @@ public abstract class BlockEntity extends TileEntity implements ITickable {
     }
 
     @Override
-    public final void writeToNBT(NBTTagCompound compound) {
+    public final NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
         this.saveNBTData(compound);
+        return compound;
     }
 
     /**

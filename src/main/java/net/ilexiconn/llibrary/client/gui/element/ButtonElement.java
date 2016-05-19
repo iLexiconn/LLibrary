@@ -35,7 +35,7 @@ public class ButtonElement<T extends GuiScreen> extends Element<T> {
     public boolean mouseClicked(float mouseX, float mouseY, int button) {
         if (this.isSelected(mouseX, mouseY)) {
             if (this.function.apply(this)) {
-                this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
+                this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             }
             return true;
         } else {

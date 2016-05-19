@@ -57,7 +57,7 @@ public class DropdownButtonElement<T extends GuiScreen> extends Element<T> {
         this.selected = null;
         if (this.isSelected(mouseX, mouseY)) {
             this.dropped = !this.dropped;
-            this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
+            this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             return true;
         } else {
             if (this.dropped) {
@@ -66,7 +66,7 @@ public class DropdownButtonElement<T extends GuiScreen> extends Element<T> {
                     if (this.isEntrySelected(mouseX, mouseY, y)) {
                         this.selected = entry;
                         if (this.function.apply(this)) {
-                            this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
+                            this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                             break;
                         }
                     }
