@@ -36,6 +36,7 @@ public class TabulaModel extends AdvancedModelBase {
         }
         container.getCubeGroups().forEach(this::parseCubeGroup);
         this.updateDefaultPose();
+        this.scale = container.getScale();
     }
 
     public TabulaModel(TabulaModelContainer container) {
