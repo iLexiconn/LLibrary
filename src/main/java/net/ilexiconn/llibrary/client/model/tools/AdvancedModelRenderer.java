@@ -73,6 +73,18 @@ public class AdvancedModelRenderer extends ModelRenderer {
         this.scaleZ = scaleZ;
     }
 
+    public void setScaleX(float scaleX) {
+        this.scaleX = scaleX;
+    }
+
+    public void setScaleY(float scaleY) {
+        this.scaleY = scaleY;
+    }
+
+    public void setScaleZ(float scaleZ) {
+        this.scaleZ = scaleZ;
+    }
+
     /**
      * Sets this ModelRenderer's default pose to the current pose.
      */

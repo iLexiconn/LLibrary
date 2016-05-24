@@ -78,8 +78,8 @@ public enum NetworkHandler {
                     Field field = targetClass.getDeclaredField(target.getObjectName());
                     field.setAccessible(true);
                     NetworkWrapper annotation = field.getAnnotation(NetworkWrapper.class);
-                    field.set(mod.getMod(), NetworkRegistry.INSTANCE.newSimpleChannel(mod.getModId()));
-                    SimpleNetworkWrapper networkWrapper = (SimpleNetworkWrapper) field.get(mod.getMod());
+                    SimpleNetworkWrapper networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel(mod.getModId());
+                    field.set(null, networkWrapper);
                     for (Class messageClass : annotation.value()) {
                         registerMessage(networkWrapper, messageClass);
                     }

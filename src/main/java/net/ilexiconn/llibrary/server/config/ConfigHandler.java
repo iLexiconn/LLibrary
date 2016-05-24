@@ -42,48 +42,17 @@ public enum ConfigHandler {
 
     /**
      * Register your mod's config. the first object has to be the main mod class - the class with the {@link Mod}
-     * annotation. This method returns the new instance of the config.
+     * annotation. This hook returns the new instance of the config.
      *
      * @param mod    the mod instance
      * @param file   the file to use
      * @param config the config instance
      * @param <T>    the config type
      * @return the config instance
+     * @deprecated use the {@link net.ilexiconn.llibrary.server.config.Config} annotation instead.
      */
+    @Deprecated
     public <T> T registerConfig(Object mod, File file, T config) {
-        if (!mod.getClass().isAnnotationPresent(Mod.class)) {
-            LLibrary.LOGGER.warn("Please register the config using the main mod class. Skipping registration of object " + mod + ".");
-            return null;
-        }
-
-        Mod annotation = mod.getClass().getAnnotation(Mod.class);
-        this.configList.add(new Tuple3<>(annotation.modid(), new Configuration(file), config));
-        Map<String, IEntryAdapter<?>> typeMap = new HashMap<>();
-        Map<String, Object> valueMap = new HashMap<>();
-        Arrays.stream(config.getClass().getFields()).filter(field -> field.isAnnotationPresent(ConfigEntry.class)).forEach(field -> {
-            try {
-                ConfigEntry configEntry = field.getAnnotation(ConfigEntry.class);
-                if (configEntry.side().isServer() || FMLCommonHandler.instance().getEffectiveSide().isClient()) {
-                    String name = configEntry.name().isEmpty() ? field.getName() : configEntry.name();
-                    IEntryAdapter<?> entryAdapter = EntryAdapters.getBuiltinAdapter(field.getType());
-                    if (entryAdapter == null) {
-                        entryAdapter = this.entryAdapterMap.get(field.getType());
-                    }
-                    if (entryAdapter != null) {
-                        field.setAccessible(true);
-                        typeMap.put(name, entryAdapter);
-                        valueMap.put(name, field.get(config));
-                    } else {
-                        LLibrary.LOGGER.error("Found unsupported config entry " + field.getName() + " for mod " + annotation.modid());
-                    }
-                }
-            } catch (IllegalAccessException e) {
-                LLibrary.LOGGER.error(CrashReport.makeCrashReport(e, "Failed to get config value " + field.getName() + " for mod " + annotation.modid()).getCompleteReport());
-            }
-        });
-        this.valueTypeMap.put(annotation.modid(), typeMap);
-        this.defaultValueMap.put(annotation.modid(), valueMap);
-        this.saveConfigForID(annotation.modid());
         return config;
     }
 
@@ -156,11 +125,42 @@ public enum ConfigHandler {
                     field.setAccessible(true);
                     Class<?> configClass = field.getType();
                     File configFile = new File(minecraftDir, "config" + File.separator + mod.getModId() + ".cfg");
-                    field.set(mod.getMod(), ConfigHandler.INSTANCE.registerConfig(mod.getMod(), configFile, configClass.newInstance()));
+                    field.set(null, ConfigHandler.INSTANCE.registerConfig(mod, configFile, configClass.newInstance()));
                 } catch (Exception e) {
                     LLibrary.LOGGER.fatal("Failed to inject config for mod container " + mod, e);
                 }
             }
         }
+    }
+
+    private <T> T registerConfig(ModContainer mod, File file, T config) {
+        this.configList.add(new Tuple3<>(mod.getModId(), new Configuration(file), config));
+        Map<String, IEntryAdapter<?>> typeMap = new HashMap<>();
+        Map<String, Object> valueMap = new HashMap<>();
+        Arrays.stream(config.getClass().getFields()).filter(field -> field.isAnnotationPresent(ConfigEntry.class)).forEach(field -> {
+            try {
+                ConfigEntry configEntry = field.getAnnotation(ConfigEntry.class);
+                if (configEntry.side().isServer() || FMLCommonHandler.instance().getEffectiveSide().isClient()) {
+                    String name = configEntry.name().isEmpty() ? field.getName() : configEntry.name();
+                    IEntryAdapter<?> entryAdapter = EntryAdapters.getBuiltinAdapter(field.getType());
+                    if (entryAdapter == null) {
+                        entryAdapter = this.entryAdapterMap.get(field.getType());
+                    }
+                    if (entryAdapter != null) {
+                        field.setAccessible(true);
+                        typeMap.put(name, entryAdapter);
+                        valueMap.put(name, field.get(config));
+                    } else {
+                        LLibrary.LOGGER.error("Found unsupported config entry " + field.getName() + " for mod " + mod.getName());
+                    }
+                }
+            } catch (IllegalAccessException e) {
+                LLibrary.LOGGER.error(CrashReport.makeCrashReport(e, "Failed to get config value " + field.getName() + " for mod " + mod.getName()).getCompleteReport());
+            }
+        });
+        this.valueTypeMap.put(mod.getModId(), typeMap);
+        this.defaultValueMap.put(mod.getModId(), valueMap);
+        this.saveConfigForID(mod.getModId());
+        return config;
     }
 }
