@@ -10,6 +10,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 
 public class LLibraryConfig implements INBTSerializable<NBTTagCompound> {
     @NBTProperty
@@ -129,7 +130,13 @@ public class LLibraryConfig implements INBTSerializable<NBTTagCompound> {
             if (!(e instanceof NullPointerException)) {
                 e.printStackTrace();
             } else {
-                this.save(); //Don't bother to check for the file first, just make it if the input is null... :^)
+                try {
+                    if (new File(".", "llibrary" + File.separator + "config.dat").createNewFile()) {
+                        this.save();
+                    }
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
             }
         }
     }
