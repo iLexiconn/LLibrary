@@ -38,7 +38,7 @@ public class PlayerModelEvent extends Event {
         }
 
         public boolean hasSmallArms() {
-            return smallArms;
+            return this.smallArms;
         }
     }
 

@@ -82,6 +82,7 @@ public enum LanguageHandler {
         }
     }
 
+    @SuppressWarnings("unused")
     public void addRemoteLocalizations(String language, Map<String, String> properties) {
         Map<String, String> localizationsForLang = this.localizations.get(language);
         if (localizationsForLang != null) {
