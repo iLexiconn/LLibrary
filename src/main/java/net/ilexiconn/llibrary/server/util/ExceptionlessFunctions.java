@@ -8,7 +8,6 @@ import java.util.function.Supplier;
  * The functional interfaces from Java are disallowing to throw exceptions. We have to wrap them ourselves...
  *
  * @author WorldSEnder
- * @link https://stackoverflow.com/questions/27644361/
  */
 public class ExceptionlessFunctions {
     public interface ThrowingRunnable<E extends Throwable> {
