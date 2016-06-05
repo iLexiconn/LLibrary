@@ -2,6 +2,7 @@ package net.ilexiconn.llibrary.client.model.tools;
 
 import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.model.TextureOffset;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -46,6 +47,34 @@ public class AdvancedModelRenderer extends ModelRenderer {
     public AdvancedModelRenderer add3DTexture(float posX, float posY, float posZ, int width, int height) {
         this.cubeList.add(new Model3DTexture(this, textureOffsetX, textureOffsetY, posX, posY, posZ, width, height));
         return this;
+    }
+
+    @Override
+    public ModelRenderer addBox(String partName, float offX, float offY, float offZ, int width, int height, int depth) {
+        partName = this.boxName + "." + partName;
+        TextureOffset textureoffset = this.model.getTextureOffset(partName);
+        this.setTextureOffset(textureoffset.textureOffsetX, textureoffset.textureOffsetY);
+        this.cubeList.add((new ModelBox(this, this.textureOffsetX, this.textureOffsetY, offX, offY, offZ, width, height, depth, 0.0F)).setBoxName(partName));
+        return this;
+    }
+
+    @Override
+    public ModelRenderer addBox(float offX, float offY, float offZ, int width, int height, int depth) {
+        this.cubeList.add(new ModelBox(this, this.textureOffsetX, this.textureOffsetY, offX, offY, offZ, width, height, depth, 0.0F));
+        return this;
+    }
+
+    @Override
+    public ModelRenderer addBox(float offX, float offY, float offZ, int width, int height, int depth, boolean mirrored) {
+        this.cubeList.add(new ModelBox(this, this.textureOffsetX, this.textureOffsetY, offX, offY, offZ, width, height, depth, 0.0F, mirrored));
+        return this;
+    }
+
+    /**
+     * Creates a textured box.
+     */
+    public void addBox(float offX, float offY, float offZ, int width, int height, int depth, float scaleFactor) {
+        this.cubeList.add(new ModelBox(this, this.textureOffsetX, this.textureOffsetY, offX, offY, offZ, width, height, depth, scaleFactor));
     }
 
     /**
