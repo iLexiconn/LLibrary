@@ -34,6 +34,10 @@ public class PlayerModelEvent extends Event {
         public void setModel(ModelBiped model) {
             this.model = model;
         }
+
+        public boolean hasSmallArms() {
+            return false;
+        }
     }
 
     public static class Construct extends PlayerModelEvent {
