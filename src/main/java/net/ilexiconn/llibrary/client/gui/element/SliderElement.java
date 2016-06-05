@@ -49,7 +49,7 @@ public class SliderElement<T extends GuiScreen> extends Element<T> {
 
     @Override
     public void init() {
-        this.value = (InputElement) new InputElement<>(this.getGUI(), "0.0", -1.0F, 0.0F, 28, true, input -> {
+        this.value = (InputElement) new InputElement<>(this.getGUI(), "0.0", -1.0F, 0.0F, 28, true, (input) -> {
             float value1 = 0.0F;
             String text = input.getText();
             if (!this.isInteger) {
@@ -119,14 +119,15 @@ public class SliderElement<T extends GuiScreen> extends Element<T> {
             return super.mouseClicked(mouseX, mouseY, button);
         }
         float offsetX = ((this.sliderWidth - 4) * (this.getValue() - this.minValue) / (this.maxValue - this.minValue));
-        boolean indicatorSelected = this.isSelected(mouseX, mouseY) && mouseX >= this.getPosX() + 38 + offsetX && mouseX <= this.getPosX() + 38 + offsetX + 4;
-        boolean upperSelected = this.isSelected(mouseX, mouseY) && mouseX >= this.getPosX() + this.getWidth() - this.sliderWidth - 11 && mouseY < this.getPosY() + 6 && mouseX < this.getPosX() + this.getWidth() - this.sliderWidth;
-        boolean lowerSelected = this.isSelected(mouseX, mouseY) && mouseX >= this.getPosX() + this.getWidth() - this.sliderWidth - 11 && mouseY > this.getPosY() + 6 && mouseX < this.getPosX() + this.getWidth() - this.sliderWidth;
+        boolean selected = this.isSelected(mouseX, mouseY);
+        boolean indicatorSelected = selected && mouseX >= this.getPosX() + 38 + offsetX && mouseX <= this.getPosX() + 38 + offsetX + 4;
+        boolean upperSelected = selected && mouseX >= this.getPosX() + this.getWidth() - this.sliderWidth - 11 && mouseY < this.getPosY() + 6 && mouseX < this.getPosX() + this.getWidth() - this.sliderWidth;
+        boolean lowerSelected = selected && mouseX >= this.getPosX() + this.getWidth() - this.sliderWidth - 11 && mouseY > this.getPosY() + 6 && mouseX < this.getPosX() + this.getWidth() - this.sliderWidth;
         if (upperSelected) {
             float newValue = GuiScreen.isShiftKeyDown() ? this.isInteger ? this.getValue() + 10 : this.getValue() + 1 : this.isInteger ? this.getValue() + 1 : this.getValue() + 0.1F;
             if (this.maxValue == -1.0F || newValue <= this.maxValue) {
                 if (this.onEnter.apply(newValue)) {
-                    this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("gui.button.press"), 1.0F));
+                    this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("gui.button.press")));
                     this.withValue(newValue);
                     return true;
                 }
@@ -135,20 +136,21 @@ public class SliderElement<T extends GuiScreen> extends Element<T> {
             float newValue = GuiScreen.isShiftKeyDown() ? this.isInteger ? this.getValue() - 10 : this.getValue() - 1 : this.isInteger ? this.getValue() - 1 : this.getValue() - 0.1F;
             if (this.minValue == -1.0F || newValue >= this.minValue) {
                 if (this.onEnter.apply(newValue)) {
-                    this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("gui.button.press"), 1.0F));
+                    this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("gui.button.press")));
                     this.withValue(newValue);
                     return true;
                 }
             }
         } else if (indicatorSelected) {
             this.dragging = true;
-            this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("gui.button.press"), 1.0F));
+            this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("gui.button.press")));
+            return true;
         }
         return false;
     }
 
     private float getValue() {
-        return Float.parseFloat(this.value.getText());
+        return this.value.getText().length() > 0 ? Float.parseFloat(this.value.getText()) : 0.0F;
     }
 
     @Override
@@ -166,7 +168,7 @@ public class SliderElement<T extends GuiScreen> extends Element<T> {
     @Override
     public boolean mouseReleased(float mouseX, float mouseY, int button) {
         if (this.dragging) {
-            this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("gui.button.press"), 1.0F));
+            this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("gui.button.press")));
         }
         this.dragging = false;
         return false;
