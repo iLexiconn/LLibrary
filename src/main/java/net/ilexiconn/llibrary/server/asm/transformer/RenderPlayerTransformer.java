@@ -18,7 +18,7 @@ public class RenderPlayerTransformer implements ITransformer {
                 insnList.clear();
                 insnList.add(new VarInsnNode(ALOAD, 0));
                 insnList.add(new VarInsnNode(ALOAD, 1));
-                insnList.add(new FieldInsnNode(GETSTATIC, "net/minecraft/util/EnumHandSide", dev ? renderLeftArm ? "LEFT" : "RIGHT" : renderLeftArm ? "a" : "b", "Lnet/minecraft/util/EnumHandSide;"));
+                insnList.add(new FieldInsnNode(GETSTATIC, "net/minecraft/util/EnumHandSide", renderLeftArm ? "LEFT" : "RIGHT", "Lnet/minecraft/util/EnumHandSide;"));
                 insnList.add(new MethodInsnNode(INVOKESTATIC, "net/ilexiconn/llibrary/server/asm/LLibraryHooks", "renderArm", "(Lnet/minecraft/client/renderer/entity/RenderPlayer;Lnet/minecraft/client/entity/AbstractClientPlayer;Lnet/minecraft/util/EnumHandSide;)V", false));
                 insnList.add(new InsnNode(RETURN));
             } else if (methodNode.name.equals("<init>") && methodNode.desc.equals("(Lnet/minecraft/client/renderer/entity/RenderManager;Z)V")) {
