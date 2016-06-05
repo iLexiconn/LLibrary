@@ -119,9 +119,10 @@ public class SliderElement<T extends GuiScreen> extends Element<T> {
             return super.mouseClicked(mouseX, mouseY, button);
         }
         float offsetX = ((this.sliderWidth - 4) * (this.getValue() - this.minValue) / (this.maxValue - this.minValue));
-        boolean indicatorSelected = this.isSelected(mouseX, mouseY) && mouseX >= this.getPosX() + 38 + offsetX && mouseX <= this.getPosX() + 38 + offsetX + 4;
-        boolean upperSelected = this.isSelected(mouseX, mouseY) && mouseX >= this.getPosX() + this.getWidth() - this.sliderWidth - 11 && mouseY < this.getPosY() + 6 && mouseX < this.getPosX() + this.getWidth() - this.sliderWidth;
-        boolean lowerSelected = this.isSelected(mouseX, mouseY) && mouseX >= this.getPosX() + this.getWidth() - this.sliderWidth - 11 && mouseY > this.getPosY() + 6 && mouseX < this.getPosX() + this.getWidth() - this.sliderWidth;
+        boolean selected = this.isSelected(mouseX, mouseY);
+        boolean indicatorSelected = selected && mouseX >= this.getPosX() + 38 + offsetX && mouseX <= this.getPosX() + 38 + offsetX + 4;
+        boolean upperSelected = selected && mouseX >= this.getPosX() + this.getWidth() - this.sliderWidth - 11 && mouseY < this.getPosY() + 6 && mouseX < this.getPosX() + this.getWidth() - this.sliderWidth;
+        boolean lowerSelected = selected && mouseX >= this.getPosX() + this.getWidth() - this.sliderWidth - 11 && mouseY > this.getPosY() + 6 && mouseX < this.getPosX() + this.getWidth() - this.sliderWidth;
         if (upperSelected) {
             float newValue = GuiScreen.isShiftKeyDown() ? this.isInteger ? this.getValue() + 10 : this.getValue() + 1 : this.isInteger ? this.getValue() + 1 : this.getValue() + 0.1F;
             if (this.maxValue == -1.0F || newValue <= this.maxValue) {
@@ -143,12 +144,13 @@ public class SliderElement<T extends GuiScreen> extends Element<T> {
         } else if (indicatorSelected) {
             this.dragging = true;
             this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+            return true;
         }
         return false;
     }
 
     private float getValue() {
-        return Float.parseFloat(this.value.getText());
+        return this.value.getText().length() > 0 ? Float.parseFloat(this.value.getText()) : 0.0F;
     }
 
     @Override
