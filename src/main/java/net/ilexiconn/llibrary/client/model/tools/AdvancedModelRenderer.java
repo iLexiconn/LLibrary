@@ -4,6 +4,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.model.TextureOffset;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.MathHelper;
@@ -42,6 +43,26 @@ public class AdvancedModelRenderer extends ModelRenderer {
     public AdvancedModelRenderer(AdvancedModelBase model, int textureOffsetX, int textureOffsetY) {
         this(model);
         this.setTextureOffset(textureOffsetX, textureOffsetY);
+    }
+
+    @Override
+    public ModelRenderer addBox(String name, float offsetX, float offsetY, float offsetZ, int dimensionX, int dimensionY, int dimensionZ) {
+        name = this.boxName + "." + name;
+        TextureOffset textureOffset = this.model.getTextureOffset(name);
+        this.setTextureOffset(textureOffset.textureOffsetX, textureOffset.textureOffsetY);
+        this.cubeList.add((new ModelBox(this, this.textureOffsetX, this.textureOffsetY, offsetX, offsetY, offsetZ, dimensionX, dimensionY, dimensionZ, 0.0F)).func_78244_a(name));
+        return this;
+    }
+
+    @Override
+    public ModelRenderer addBox(float offsetX, float offsetY, float offsetZ, int dimensionX, int dimensionY, int dimensionZ) {
+        this.cubeList.add(new ModelBox(this, this.textureOffsetX, this.textureOffsetY, offsetX, offsetY, offsetZ, dimensionX, dimensionY, dimensionZ, 0.0F));
+        return this;
+    }
+
+    @Override
+    public void addBox(float offsetX, float offsetY, float offsetZ, int dimensionX, int dimensionY, int dimensionZ, float f) {
+        this.cubeList.add(new ModelBox(this, this.textureOffsetX, this.textureOffsetY, offsetX, offsetY, offsetZ, dimensionX, dimensionY, dimensionZ, f));
     }
 
     public AdvancedModelRenderer add3DTexture(float posX, float posY, float posZ, int width, int height) {
