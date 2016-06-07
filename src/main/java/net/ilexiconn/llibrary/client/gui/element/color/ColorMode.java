@@ -10,7 +10,6 @@ import java.util.List;
  * @author iLexiconn
  * @since 1.4.0
  */
-@SideOnly(Side.CLIENT)
 public class ColorMode {
     private static final List<ColorMode> COLOR_MODE_LIST = new ArrayList<>();
 
