@@ -25,7 +25,7 @@ public class PageButtonGUI extends GuiButton {
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
         super.drawButton(mc, mouseX, mouseY);
         if (this.id == -1) {
-            mc.fontRenderer.drawString((SurvivalTabHandler.INSTANCE.getCurrentPage() + 1) + "/" + (int) (SurvivalTabHandler.INSTANCE.getSurvivalTabList().size() / 8 + 1), this.xPosition + 31, this.yPosition + 6, 0xFFFFFFFF);
+            mc.fontRenderer.drawString((SurvivalTabHandler.INSTANCE.getCurrentPage() + 1) + "/" + SurvivalTabHandler.INSTANCE.getSurvivalTabList().size() / 8 + 1, this.xPosition + 31, this.yPosition + 6, 0xFFFFFFFF);
         }
     }
 
