@@ -36,6 +36,7 @@ public class PartEntity extends Entity {
         super.onUpdate();
 
         this.setPositionAndUpdate(this.parent.posX + this.radius * Math.cos(this.parent.rotationYaw * (Math.PI / 180.0F) + this.angleYaw), this.parent.posY + this.offsetY, this.parent.posZ + this.radius * Math.sin(this.parent.rotationYaw * (Math.PI / 180.0F) + this.angleYaw));
+
         if (!this.worldObj.isRemote) {
             this.collideWithNearbyEntities();
         }
@@ -74,6 +75,10 @@ public class PartEntity extends Entity {
     public void collideWithNearbyEntities() {
         List<Entity> entities = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().expand(0.20000000298023224D, 0.0D, 0.20000000298023224D));
         entities.stream().filter(entity -> entity != this.parent && !(entity instanceof PartEntity) && entity.canBePushed()).forEach(entity -> entity.applyEntityCollision(this.parent));
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport) {
     }
 
     @Override
