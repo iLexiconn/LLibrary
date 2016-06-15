@@ -22,7 +22,7 @@ public class RenderPlayerTransformer implements ITransformer {
             } else if (methodNode.name.equals("<init>")) {
                 InsnList insnList = methodNode.instructions;
                 for (AbstractInsnNode insnNode : insnList.toArray()) {
-                    if (insnNode.getOpcode() == RETURN) {
+                    if (insnNode.getOpcode() == INVOKESPECIAL && ((MethodInsnNode) insnNode).desc.equals("(Lnet/minecraft/client/model/ModelBase;F)V")) {
                         insnList.insertBefore(insnNode, new VarInsnNode(ALOAD, 0));
                         insnList.insertBefore(insnNode, new VarInsnNode(ALOAD, 0));
                         insnList.insertBefore(insnNode, new VarInsnNode(ALOAD, 0));
