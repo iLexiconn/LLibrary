@@ -2,7 +2,6 @@ package net.ilexiconn.llibrary.server.entity.multipart;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.fml.relauncher.Side;
@@ -33,13 +32,13 @@ public class PartEntity extends Entity {
 
     @Override
     public void onUpdate() {
-        super.onUpdate();
-
-        this.setPositionAndUpdate(this.parent.posX + this.radius * Math.cos(this.parent.rotationYaw * (Math.PI / 180.0F) + this.angleYaw), this.parent.posY + this.offsetY, this.parent.posZ + this.radius * Math.sin(this.parent.rotationYaw * (Math.PI / 180.0F) + this.angleYaw));
-
+        this.setPositionAndUpdate(this.parent.posX + this.radius * Math.cos(this.parent.renderYawOffset * (Math.PI / 180.0F) + this.angleYaw), this.parent.posY + this.offsetY, this.parent.posZ + this.radius * Math.sin(this.parent.renderYawOffset * (Math.PI / 180.0F) + this.angleYaw));
         if (!this.worldObj.isRemote) {
             this.collideWithNearbyEntities();
         }
+        this.isDead = this.parent.isDead;
+
+        super.onUpdate();
     }
 
     @Override
@@ -79,11 +78,5 @@ public class PartEntity extends Entity {
 
     @SideOnly(Side.CLIENT)
     public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport) {
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public boolean isInvisibleToPlayer(EntityPlayer player) {
-        return true;
     }
 }

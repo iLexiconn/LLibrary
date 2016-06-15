@@ -6,7 +6,7 @@ import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.world.World;
 
 public class TestEntity extends EntityCreeper implements IMultipartEntity {
-    private Entity[] parts = {this.create(0.0F, 0.0F, 2.0F, 1.0F, 1.0F, 10.0F)};
+    private Entity[] parts = {this.create(1.0F, 3.0F, 2.0F, 1.0F, 1.0F, 10.0F)};
 
     public TestEntity(World world) {
         super(world);
