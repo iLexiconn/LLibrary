@@ -37,6 +37,9 @@ public class PartEntity extends Entity {
             this.collideWithNearbyEntities();
         }
         this.isDead = this.parent.isDead;
+        if (this.isDead) {
+            worldObj.removeEntityDangerously(this);
+        }
 
         super.onUpdate();
     }
