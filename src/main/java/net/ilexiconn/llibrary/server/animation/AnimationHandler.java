@@ -46,14 +46,14 @@ public enum AnimationHandler {
         } else {
             if (entity.getAnimation() != IAnimatedEntity.NO_ANIMATION) {
                 if (entity.getAnimationTick() == 0) {
-                    AnimationEvent event = new AnimationEvent.Start(entity, entity.getAnimation());
+                    AnimationEvent event = new AnimationEvent.Start<>(entity, entity.getAnimation());
                     if (!MinecraftForge.EVENT_BUS.post(event)) {
                         sendAnimationMessage(entity, event.getAnimation());
                     }
                 }
                 if (entity.getAnimationTick() < entity.getAnimation().getDuration()) {
                     entity.setAnimationTick(entity.getAnimationTick() + 1);
-                    MinecraftForge.EVENT_BUS.post(new AnimationEvent.Tick(entity, entity.getAnimation(), entity.getAnimationTick()));
+                    MinecraftForge.EVENT_BUS.post(new AnimationEvent.Tick<>(entity, entity.getAnimation(), entity.getAnimationTick()));
                 }
                 if (entity.getAnimationTick() == entity.getAnimation().getDuration()) {
                     entity.setAnimationTick(0);

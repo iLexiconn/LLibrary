@@ -24,7 +24,7 @@ public class AnimationEvent<T extends Entity & IAnimatedEntity> extends Event {
     }
 
     @Cancelable
-    public static class Start<T extends Entity & IAnimatedEntity> extends AnimationEvent {
+    public static class Start<T extends Entity & IAnimatedEntity> extends AnimationEvent<T> {
         public Start(T entity, Animation animation) {
             super(entity, animation);
         }
@@ -34,7 +34,7 @@ public class AnimationEvent<T extends Entity & IAnimatedEntity> extends Event {
         }
     }
 
-    public static class Tick<T extends Entity & IAnimatedEntity> extends AnimationEvent {
+    public static class Tick<T extends Entity & IAnimatedEntity> extends AnimationEvent<T> {
         protected int tick;
 
         public Tick(T entity, Animation animation, int tick) {
