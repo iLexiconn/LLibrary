@@ -1,6 +1,7 @@
 package net.ilexiconn.llibrary.client;
 
 import com.google.gson.Gson;
+import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.ReflectionHelper;
@@ -10,7 +11,9 @@ import net.ilexiconn.llibrary.client.gui.SnackbarGUI;
 import net.ilexiconn.llibrary.client.gui.survivaltab.SurvivalTab;
 import net.ilexiconn.llibrary.client.gui.survivaltab.SurvivalTabHandler;
 import net.ilexiconn.llibrary.client.lang.LanguageHandler;
+import net.ilexiconn.llibrary.client.render.entity.PartRenderer;
 import net.ilexiconn.llibrary.server.ServerProxy;
+import net.ilexiconn.llibrary.server.entity.multipart.PartEntity;
 import net.ilexiconn.llibrary.server.network.AbstractMessage;
 import net.ilexiconn.llibrary.server.snackbar.Snackbar;
 import net.ilexiconn.llibrary.server.util.WebUtils;
@@ -38,6 +41,7 @@ public class ClientProxy extends ServerProxy {
         MinecraftForge.EVENT_BUS.register(ClientEventHandler.INSTANCE);
         FMLCommonHandler.instance().bus().register(ClientEventHandler.INSTANCE);
         LanguageHandler.INSTANCE.load();
+        RenderingRegistry.registerEntityRenderingHandler(PartEntity.class, new PartRenderer());
     }
 
     @Override
