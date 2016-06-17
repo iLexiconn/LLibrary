@@ -7,7 +7,6 @@ import net.ilexiconn.llibrary.server.config.LLibraryConfig;
 import net.ilexiconn.llibrary.server.network.*;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ModContainer;
@@ -17,7 +16,6 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -40,9 +38,6 @@ public class LLibrary {
 
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent event) {
-        EntityRegistry.registerModEntity(TestEntity.class, "test", 0, this, 80, 1, true, 0, 0);
-        RenderingRegistry.registerEntityRenderingHandler(TestEntity.class, new TestRenderer.Factory());
-
         LLibrary.CONFIG.load();
         LLibrary.PROXY.onPreInit();
     }

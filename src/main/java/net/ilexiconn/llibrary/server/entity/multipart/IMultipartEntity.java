@@ -6,7 +6,7 @@ import net.minecraft.entity.EntityLiving;
 public interface IMultipartEntity {
     Entity[] getParts();
 
-    default void updateParts() {
+    default void onUpdateParts() {
         for (Entity entity : this.getParts()) {
             entity.onUpdate();
         }
@@ -17,6 +17,10 @@ public interface IMultipartEntity {
     }
 
     default PartEntity create(float radius, float angleYaw, float offsetY, float sizeX, float sizeY, float damageMultiplier) {
-        return new PartEntity((EntityLiving) this, radius, angleYaw, offsetY, sizeX, sizeY, damageMultiplier);
+        return new PartEntity(this.getEntity(), radius, angleYaw, offsetY, sizeX, sizeY, damageMultiplier);
+    }
+
+    default EntityLiving getEntity() {
+        return (EntityLiving) this;
     }
 }
