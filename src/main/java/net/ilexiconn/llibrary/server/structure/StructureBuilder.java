@@ -156,7 +156,6 @@ public class StructureBuilder extends StructureGenerator {
         if (facing.getAxis() == Axis.Y) {
             throw new IllegalArgumentException("Must be horizontal facing: " + facing);
         }
-        System.out.println(front);
         int idx = facing.getHorizontalIndex() - (front.getAxis() == Axis.Y ? top.getHorizontalIndex() : front.getHorizontalIndex()) - 1;
         idx = (idx % EnumFacing.HORIZONTALS.length + EnumFacing.HORIZONTALS.length) % EnumFacing.HORIZONTALS.length;
         return rotate(EnumFacing.HORIZONTALS[idx], EnumFacing.UP);
