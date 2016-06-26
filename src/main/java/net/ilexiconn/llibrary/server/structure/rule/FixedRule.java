@@ -1,6 +1,6 @@
 package net.ilexiconn.llibrary.server.structure.rule;
 
-import net.ilexiconn.llibrary.server.structure.BlockCoords;
+import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
 
 import java.util.Random;
@@ -19,19 +19,21 @@ public class FixedRule extends RepeatRule {
         this.countdown = times;
     }
 
-    public boolean continueRepeating(World world, Random rand, BlockCoords position) {
+    public boolean continueRepeating(World world, Random rand, MutableBlockPos position) {
         return countdown > 0;
     }
 
-    public void repeat(World world, Random rand, BlockCoords position) {
+    public void repeat(World world, Random rand, MutableBlockPos position) {
         countdown--;
-        position.x += getSpacingX();
-        position.y += getSpacingY();
-        position.z += getSpacingZ();
+        position.setPos(
+            position.getX() + getSpacingX(),
+            position.getY() + getSpacingY(),
+            position.getZ() + getSpacingZ()
+        );
     }
 
     @Override
-    public void reset(World world, Random random, BlockCoords pos) {
+    public void reset(World world, Random random, MutableBlockPos pos) {
         countdown = times;
     }
 }

@@ -1,11 +1,11 @@
 package net.ilexiconn.llibrary.server.structure;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import net.ilexiconn.llibrary.server.structure.rule.PlaceRule;
 import net.ilexiconn.llibrary.server.structure.rule.RepeatRule;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -14,14 +14,16 @@ import java.util.List;
  * @since 1.1.0
  */
 public class ComponentInfo {
-    public HashMap<BlockCoords, BlockList> blocks;
+    public HashMap<BlockPos, BlockList> blocks;
     public List<RepeatRule> repeats;
-    public EnumFacing facing;
+    public EnumFacing front;
+    public EnumFacing top;
 
     public ComponentInfo() {
-        facing = EnumFacing.NORTH;
-        blocks = Maps.newHashMap();
-        repeats = Lists.newArrayList();
+        front = EnumFacing.EAST;
+        top = EnumFacing.UP;
+        blocks = new HashMap<>();
+        repeats = new ArrayList<>();
         repeats.add(new PlaceRule());
     }
 }

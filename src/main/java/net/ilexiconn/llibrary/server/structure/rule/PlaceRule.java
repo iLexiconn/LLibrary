@@ -1,6 +1,6 @@
 package net.ilexiconn.llibrary.server.structure.rule;
 
-import net.ilexiconn.llibrary.server.structure.BlockCoords;
+import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
 
 import java.util.Random;
@@ -13,17 +13,17 @@ public class PlaceRule extends RepeatRule {
     private boolean placed;
 
     @Override
-    public boolean continueRepeating(World world, Random rand, BlockCoords position) {
+    public boolean continueRepeating(World world, Random rand, MutableBlockPos position) {
         return !placed;
     }
 
     @Override
-    public void repeat(World world, Random rand, BlockCoords position) {
+    public void repeat(World world, Random rand, MutableBlockPos position) {
         placed = true;
     }
 
     @Override
-    public void reset(World world, Random random, BlockCoords pos) {
+    public void reset(World world, Random random, MutableBlockPos pos) {
         placed = false;
     }
 }
