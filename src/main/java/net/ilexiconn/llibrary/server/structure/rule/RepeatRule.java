@@ -1,6 +1,6 @@
 package net.ilexiconn.llibrary.server.structure.rule;
 
-import net.ilexiconn.llibrary.server.structure.BlockCoords;
+import net.minecraft.util.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
 
 import java.util.Random;
@@ -32,13 +32,13 @@ public abstract class RepeatRule {
         return spacingZ;
     }
 
-    public abstract boolean continueRepeating(World world, Random rand, BlockCoords position);
+    public abstract boolean continueRepeating(World world, Random rand, MutableBlockPos position);
 
-    public abstract void repeat(World world, Random rand, BlockCoords position);
+    public abstract void repeat(World world, Random rand, MutableBlockPos position);
 
-    public abstract void reset(World world, Random random, BlockCoords pos);
+    public abstract void reset(World world, Random random, MutableBlockPos pos);
 
-    public void init(World world, Random random, BlockCoords pos) {
+    public void init(World world, Random random, MutableBlockPos pos) {
         reset(world, random, pos);
     }
 }

@@ -18,7 +18,7 @@ public class ColorScheme {
     /**
      * Create a new color scheme that can be used by elements.
      *
-     * @param primaryColor the primary color
+     * @param primaryColor   the primary color
      * @param secondaryColor the secondary color
      * @return the new color scheme instance
      */

@@ -1,6 +1,6 @@
 package net.ilexiconn.llibrary.server.structure.rule;
 
-import net.ilexiconn.llibrary.server.structure.BlockCoords;
+import net.minecraft.util.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
 
 import java.util.Random;
@@ -27,12 +27,12 @@ public class RandomRule extends FixedRule {
     }
 
     @Override
-    public void reset(World world, Random random, BlockCoords pos) {
+    public void reset(World world, Random random, MutableBlockPos pos) {
         times = random.nextInt(max - min) + min;
     }
 
     @Override
-    public void init(World world, Random random, BlockCoords pos) {
+    public void init(World world, Random random, MutableBlockPos pos) {
         countdown = times;
     }
 }

@@ -1,16 +1,19 @@
 package net.ilexiconn.llibrary.server.structure;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import net.ilexiconn.llibrary.server.structure.rule.FixedRule;
 import net.ilexiconn.llibrary.server.structure.rule.RepeatRule;
-import net.ilexiconn.llibrary.server.util.Tuple3;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockSlab;
+import net.minecraft.block.BlockStairs;
+import net.minecraft.block.BlockStairs.EnumHalf;
+import net.minecraft.block.BlockVine;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumFacing.Axis;
+import net.minecraft.util.Vec3i;
 import net.minecraft.world.World;
 
 import java.util.*;
@@ -20,40 +23,34 @@ import java.util.*;
  * @since 1.1.0
  */
 public class StructureBuilder extends StructureGenerator {
-    private final HashMap<BlockCoords, BlockList> blocks;
+    private final HashMap<BlockPos, BlockList> blocks = new HashMap<>();
     private int offsetX;
     private int offsetY;
     private int offsetZ;
-    private List<RepeatRule> repeats;
-    private List<ComponentInfo> components;
+    private final List<RepeatRule> repeats = new ArrayList<>();
+    private final List<ComponentInfo> components = new ArrayList<>();
     private ComponentInfo currentLayer;
-
-    public StructureBuilder() {
-        blocks = Maps.newHashMap();
-        repeats = Lists.newArrayList();
-        components = Lists.newArrayList();
-    }
+    private EnumFacing front = EnumFacing.EAST;
+    private EnumFacing top = EnumFacing.UP;
 
     @Override
     public void generate(World world, int x, int y, int z, Random random) {
-        BlockCoords pos = new BlockCoords();
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
         for (ComponentInfo layer : components) {
             for (RepeatRule rule : layer.repeats) {
                 rule.reset(world, random, pos);
             }
         }
         for (ComponentInfo layer : components) {
-            pos.x = x;
-            pos.y = y;
-            pos.z = z;
+            pos.set(x, y, z);
             for (RepeatRule rule : layer.repeats) {
                 rule.init(world, random, pos);
                 while (rule.continueRepeating(world, random, pos)) {
-                    for (Map.Entry<BlockCoords, BlockList> e : layer.blocks.entrySet()) {
-                        BlockCoords coords = e.getKey();
-                        int blockX = coords.x + pos.x;
-                        int blockY = coords.y + pos.y;
-                        int blockZ = coords.z + pos.z;
+                    for (Map.Entry<BlockPos, BlockList> e : layer.blocks.entrySet()) {
+                        BlockPos coords = e.getKey();
+                        int blockX = coords.getX() + pos.getX();
+                        int blockY = coords.getY() + pos.getY();
+                        int blockZ = coords.getZ() + pos.getZ();
                         world.setBlockState(new BlockPos(blockX, blockY, blockZ), e.getValue().getRandom(random));
                     }
                     rule.repeat(world, random, pos);
@@ -63,116 +60,100 @@ public class StructureBuilder extends StructureGenerator {
     }
 
     @Override
-    public StructureGenerator rotateClockwise(RotationAngle angle) {
-        StructureBuilder copy = new StructureBuilder();
-        float radAngle = 0;
-        switch (angle) {
-            case DEGREES_180:
-                return rotateClockwise(RotationAngle.DEGREES_90).rotateClockwise(RotationAngle.DEGREES_90);
-            case DEGREES_90:
-                radAngle = (float) Math.PI / 2f;
-                break;
-            case DEGREES_270:
-                radAngle = (float) Math.PI * 3f / 2f;
-                break;
+    public StructureBuilder rotate(EnumFacing front, EnumFacing top) {
+        if (front == top || front.getOpposite() == top) {
+            throw new IllegalArgumentException("Invalid rotation: " + front + " & " + top);
         }
+        Vec3i frontVec = new Vec3i(front.getFrontOffsetX(), front.getFrontOffsetY(), front.getFrontOffsetZ());
+        Vec3i topVec = new Vec3i(-top.getFrontOffsetX(), -top.getFrontOffsetY(), -top.getFrontOffsetZ());
+        Vec3i perpVec = topVec.crossProduct(frontVec);
+        StructureBuilder copy = new StructureBuilder();
+        copy.front = transform(this.front, frontVec, topVec, perpVec);
+        copy.top = transform(this.top, frontVec, topVec, perpVec);
         for (ComponentInfo oldComp : components) {
             ComponentInfo newComp = new ComponentInfo();
             newComp.repeats.addAll(oldComp.repeats);
-            newComp.facing = oldComp.facing;
-            for (int i = 0; i < angle.getTurnsCount(); i++) {
-                newComp.facing = getNextClockwise(newComp.facing);
-            }
-            HashMap<BlockCoords, BlockList> blocks = newComp.blocks;
-            Tuple3<Integer, Integer, Integer> minCoords = mins(oldComp.blocks);
-            Tuple3<Integer, Integer, Integer> maxCoords = maxs(oldComp.blocks);
-            int width = maxCoords.getA() - minCoords.getA();
-            int depth = maxCoords.getC() - minCoords.getC();
-
-            float midX = width / 2f + minCoords.getA();
-            float midZ = depth / 2f + minCoords.getC();
-            for (BlockCoords coords : oldComp.blocks.keySet()) {
-                float angleToCenter = (float) Math.atan2(coords.z - midZ, coords.x - midX);
-                float dx = midX - coords.x;
-                float dz = midZ - coords.z;
-                float distToCenter = (float) Math.sqrt(dx * dx + dz * dz);
-                float nangle = radAngle + angleToCenter;
-                float newX = (float) Math.cos(nangle) * distToCenter;
-                float newZ = (float) Math.sin(nangle) * distToCenter;
-                BlockCoords newCoords = new BlockCoords((int) Math.floor(newX + midX), coords.y, (int) Math.floor(newZ + midZ));
+            newComp.front = transform(oldComp.front, frontVec, topVec, perpVec);
+            newComp.top = transform(oldComp.top, frontVec, topVec, perpVec);
+            HashMap<BlockPos, BlockList> blocks = newComp.blocks;
+            boolean inverted = top == EnumFacing.DOWN;
+            for (BlockPos coords : oldComp.blocks.keySet()) {
+                BlockPos newCoords = transform(coords, frontVec, topVec, perpVec);
                 BlockList newList = oldComp.blocks.get(coords).copy();
                 IBlockState[] states = newList.getStates();
                 for (int i = 0; i < states.length; i++) {
                     IBlockState state = states[i];
-                    Collection<IProperty> properties = state.getPropertyNames();
-                    for (IProperty prop : properties) {
-                        if (prop instanceof PropertyDirection) {
-                            PropertyDirection dir = (PropertyDirection) prop;
-                            EnumFacing facing = state.getValue(dir);
-                            for (int j = 0; j < angle.getTurnsCount(); j++) {
-                                facing = getNextClockwise(facing);
+                    if (state.getBlock() instanceof BlockStairs) {
+                        EnumFacing facing = transform(state.getValue(BlockStairs.FACING), frontVec, topVec, perpVec);
+                        EnumFacing perp = transform(EnumFacing.UP, frontVec, topVec, perpVec);
+                        if (facing.getAxis() == Axis.Y) {
+                            if (state.getValue(BlockStairs.HALF) == EnumHalf.BOTTOM) {
+                                perp = perp.getOpposite();
+                                if (facing == EnumFacing.UP) {
+                                    state = state.cycleProperty(BlockStairs.HALF);
+                                }
+                            } else if (facing == EnumFacing.DOWN) {
+                                state = state.cycleProperty(BlockStairs.HALF);
                             }
-                            states[i] = state.withProperty(dir, facing);
+                            state = state.withProperty(BlockStairs.FACING, perp);
+                        } else {
+                            state = state.withProperty(BlockStairs.FACING, facing);
+                        }
+                        if (inverted) {
+                            state = state.cycleProperty(BlockStairs.HALF);
+                        }
+                    } else if (state.getBlock() instanceof BlockSlab) {
+                        if (inverted) {
+                            state = state.cycleProperty(BlockSlab.HALF);
+                        }
+                    } else if (state.getBlock() instanceof BlockVine) {
+                        EnumFacing facing = transform(state.getValue(BlockVine.NORTH) ? EnumFacing.NORTH : state.getValue(BlockVine.EAST) ? EnumFacing.EAST : state.getValue(BlockVine.SOUTH) ? EnumFacing.SOUTH : EnumFacing.WEST, frontVec, topVec, perpVec);
+                        state = state.withProperty(BlockVine.NORTH, facing == EnumFacing.NORTH);
+                        state = state.withProperty(BlockVine.EAST, facing == EnumFacing.EAST);
+                        state = state.withProperty(BlockVine.SOUTH, facing == EnumFacing.SOUTH);
+                        state = state.withProperty(BlockVine.WEST, facing == EnumFacing.WEST);
+                    } else {
+                        for (IProperty prop : state.getPropertyNames()) {
+                            if (prop instanceof PropertyDirection) {
+                                PropertyDirection propDir = (PropertyDirection) prop;
+                                EnumFacing facing = state.getValue(propDir);
+                                EnumFacing newFacing = transform(facing, frontVec, topVec, perpVec);
+                                if (propDir.getAllowedValues().contains(newFacing)) {
+                                    state = state.withProperty(propDir, newFacing);
+                                }
+                            }
                         }
                     }
+                    states[i] = state;
                 }
                 blocks.put(newCoords, newList);
             }
-
             copy.components.add(newComp);
         }
         return copy;
     }
 
-    private Tuple3<Integer, Integer, Integer> maxs(HashMap<BlockCoords, BlockList> blocks) {
-        Tuple3<Integer, Integer, Integer> result = new Tuple3<>();
-        int maxX = Integer.MIN_VALUE;
-        int maxY = Integer.MIN_VALUE;
-        int maxZ = Integer.MIN_VALUE;
-        for (BlockCoords coords : blocks.keySet()) {
-            int x = coords.x;
-            int y = coords.y;
-            int z = coords.z;
-            if (x > maxX) {
-                maxX = x;
-            }
-            if (y > maxY) {
-                maxY = y;
-            }
-            if (z > maxZ) {
-                maxZ = z;
-            }
-        }
-        result.set(maxX, maxY, maxZ);
-        return result;
+    private static BlockPos transform(Vec3i pos, Vec3i vec3i, Vec3i vec3i1, Vec3i vec3i2) {
+        return new BlockPos(
+                vec3i1.getX() * -pos.getY() + vec3i2.getX() * pos.getZ() + vec3i.getX() * pos.getX(),
+                vec3i1.getY() * -pos.getY() + vec3i2.getY() * pos.getZ() + vec3i.getY() * pos.getX(),
+                vec3i1.getZ() * -pos.getY() + vec3i2.getZ() * pos.getZ() + vec3i.getZ() * pos.getX()
+        );
     }
 
-    private Tuple3<Integer, Integer, Integer> mins(HashMap<BlockCoords, BlockList> blocks) {
-        Tuple3<Integer, Integer, Integer> result = new Tuple3<>();
-        int minX = Integer.MAX_VALUE;
-        int minY = Integer.MAX_VALUE;
-        int minZ = Integer.MAX_VALUE;
-        for (BlockCoords coords : blocks.keySet()) {
-            int x = coords.x;
-            int y = coords.y;
-            int z = coords.z;
-            if (x < minX) {
-                minX = x;
-            }
-            if (y < minY) {
-                minY = y;
-            }
-            if (z < minZ) {
-                minZ = z;
-            }
-        }
-        result.set(minX, minY, minZ);
-        return result;
+    private static EnumFacing transform(EnumFacing facing, Vec3i vec3i, Vec3i vec3i1, Vec3i vec3i2) {
+        BlockPos vec = transform(facing.getDirectionVec(), vec3i, vec3i1, vec3i2);
+        return EnumFacing.getFacingFromVector(vec.getX(), vec.getY(), vec.getZ());
     }
 
     @Override
-    public StructureGenerator rotateTowards(EnumFacing facing) {
-        return null;
+    public StructureBuilder rotateTowards(EnumFacing facing) {
+        if (facing.getAxis() == Axis.Y) {
+            throw new IllegalArgumentException("Must be horizontal facing: " + facing);
+        }
+        int idx = facing.getHorizontalIndex() - (front.getAxis() == Axis.Y ? top.getHorizontalIndex() : front.getHorizontalIndex()) - 1;
+        idx = (idx % EnumFacing.HORIZONTALS.length + EnumFacing.HORIZONTALS.length) % EnumFacing.HORIZONTALS.length;
+        return rotate(EnumFacing.HORIZONTALS[idx], EnumFacing.UP);
     }
 
     public StructureBuilder startComponent() {
@@ -185,8 +166,9 @@ public class StructureBuilder extends StructureGenerator {
         return this;
     }
 
-    public StructureBuilder setOrientation(EnumFacing facing) {
-        currentLayer.facing = facing;
+    public StructureBuilder setOrientation(EnumFacing front, EnumFacing top) {
+        currentLayer.front = front;
+        currentLayer.top = top;
         return this;
     }
 
@@ -220,7 +202,7 @@ public class StructureBuilder extends StructureGenerator {
     }
 
     public StructureBuilder setBlock(int x, int y, int z, BlockList list) {
-        blocks.put(new BlockCoords(x + offsetX, y + offsetY, z + offsetZ), list);
+        blocks.put(new BlockPos(x + offsetX, y + offsetY, z + offsetZ), list);
         return this;
     }
 
