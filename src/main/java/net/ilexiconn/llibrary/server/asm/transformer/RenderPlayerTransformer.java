@@ -21,8 +21,13 @@ public class RenderPlayerTransformer implements ITransformer {
                 insnList.add(new InsnNode(RETURN));
             } else if (methodNode.name.equals("<init>")) {
                 InsnList insnList = methodNode.instructions;
+                boolean flag = false;
                 for (AbstractInsnNode insnNode : insnList.toArray()) {
-                    if (insnNode.getOpcode() == INVOKESPECIAL && ((MethodInsnNode) insnNode).desc.equals("(Lnet/minecraft/client/model/ModelBase;F)V")) {
+                    if (insnNode instanceof VarInsnNode && ((VarInsnNode) insnNode).var == 0) {
+                        if (!flag) {
+                            flag = true;
+                            continue;
+                        }
                         insnList.insertBefore(insnNode, new VarInsnNode(ALOAD, 0));
                         insnList.insertBefore(insnNode, new VarInsnNode(ALOAD, 0));
                         insnList.insertBefore(insnNode, new VarInsnNode(ALOAD, 0));
@@ -31,6 +36,7 @@ public class RenderPlayerTransformer implements ITransformer {
                         insnList.insertBefore(insnNode, new TypeInsnNode(CHECKCAST, "net/minecraft/client/model/ModelBiped"));
                         insnList.insertBefore(insnNode, new FieldInsnNode(INVOKESTATIC, "net/ilexiconn/llibrary/server/asm/LLibraryHooks", "assignModel", "(Lnet/minecraft/client/renderer/entity/RenderPlayer;Lnet/minecraft/client/model/ModelBiped;)Lnet/minecraft/client/model/ModelBiped;"));
                         insnList.insertBefore(insnNode, new FieldInsnNode(PUTFIELD, "net/minecraft/client/renderer/entity/RenderPlayer", dev ? "mainModel" : "field_77045_g", "Lnet/minecraft/client/model/ModelBase;"));
+                        break;
                     }
                 }
             }
