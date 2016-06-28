@@ -110,6 +110,9 @@ public class StructureBuilder extends StructureGenerator {
                         }
                     } else if (state.getBlock() instanceof BlockVine) {
                         EnumFacing facing = transform(state.getValue(BlockVine.NORTH) ? EnumFacing.NORTH : state.getValue(BlockVine.EAST) ? EnumFacing.EAST : state.getValue(BlockVine.SOUTH) ? EnumFacing.SOUTH : EnumFacing.WEST, frontVec, topVec, perpVec);
+                        if (inverted) {
+                            facing = facing.getOpposite();
+                        }
                         state = state.withProperty(BlockVine.NORTH, facing == EnumFacing.NORTH);
                         state = state.withProperty(BlockVine.EAST, facing == EnumFacing.EAST);
                         state = state.withProperty(BlockVine.SOUTH, facing == EnumFacing.SOUTH);
