@@ -26,9 +26,9 @@ public class FixedRule extends RepeatRule {
     public void repeat(World world, Random rand, MutableBlockPos position) {
         countdown--;
         position.setPos(
-            position.getX() + getSpacingX(),
-            position.getY() + getSpacingY(),
-            position.getZ() + getSpacingZ()
+                position.getX() + getSpacingX(),
+                position.getY() + getSpacingY(),
+                position.getZ() + getSpacingZ()
         );
     }
 

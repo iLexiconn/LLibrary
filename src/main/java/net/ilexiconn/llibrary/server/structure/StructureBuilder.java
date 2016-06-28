@@ -109,7 +109,11 @@ public class StructureBuilder extends StructureGenerator {
                             state = state.cycleProperty(BlockSlab.HALF);
                         }
                     } else if (state.getBlock() instanceof BlockVine) {
-                        // TODO: vine rotation
+                        EnumFacing facing = transform(state.getValue(BlockVine.NORTH) ? EnumFacing.NORTH : state.getValue(BlockVine.EAST) ? EnumFacing.EAST : state.getValue(BlockVine.SOUTH) ? EnumFacing.SOUTH : EnumFacing.WEST, frontVec, topVec, perpVec);
+                        state = state.withProperty(BlockVine.NORTH, facing == EnumFacing.NORTH);
+                        state = state.withProperty(BlockVine.EAST, facing == EnumFacing.EAST);
+                        state = state.withProperty(BlockVine.SOUTH, facing == EnumFacing.SOUTH);
+                        state = state.withProperty(BlockVine.WEST, facing == EnumFacing.WEST);
                     } else {
                         for (IProperty prop : state.getPropertyNames()) {
                             if (prop instanceof PropertyDirection) {
@@ -133,9 +137,9 @@ public class StructureBuilder extends StructureGenerator {
 
     private static BlockPos transform(Vec3i pos, Vec3i vec3i, Vec3i vec3i1, Vec3i vec3i2) {
         return new BlockPos(
-            vec3i1.getX() * -pos.getY() + vec3i2.getX() * pos.getZ() + vec3i.getX() * pos.getX(),
-            vec3i1.getY() * -pos.getY() + vec3i2.getY() * pos.getZ() + vec3i.getY() * pos.getX(),
-            vec3i1.getZ() * -pos.getY() + vec3i2.getZ() * pos.getZ() + vec3i.getZ() * pos.getX()
+                vec3i1.getX() * -pos.getY() + vec3i2.getX() * pos.getZ() + vec3i.getX() * pos.getX(),
+                vec3i1.getY() * -pos.getY() + vec3i2.getY() * pos.getZ() + vec3i.getY() * pos.getX(),
+                vec3i1.getZ() * -pos.getY() + vec3i2.getZ() * pos.getZ() + vec3i.getZ() * pos.getX()
         );
     }
 
