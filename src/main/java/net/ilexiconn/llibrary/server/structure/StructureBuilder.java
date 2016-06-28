@@ -1,7 +1,5 @@
 package net.ilexiconn.llibrary.server.structure;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import net.ilexiconn.llibrary.server.structure.rule.FixedRule;
 import net.ilexiconn.llibrary.server.structure.rule.RepeatRule;
 import net.minecraft.block.Block;
@@ -12,18 +10,13 @@ import net.minecraft.block.BlockVine;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 /**
  * @author jglrxavpok
@@ -59,7 +52,7 @@ public class StructureBuilder extends StructureGenerator {
                         int blockX = coords.getX() + pos.getX();
                         int blockY = coords.getY() + pos.getY();
                         int blockZ = coords.getZ() + pos.getZ();
-                        world.setBlockState(pooledPos.set(blockX, blockY, blockZ), e.getValue().getRandom(random));
+                        world.setBlockState(pooledPos.setPos(blockX, blockY, blockZ), e.getValue().getRandom(random));
                     }
                     rule.repeat(world, random, pos);
                 }

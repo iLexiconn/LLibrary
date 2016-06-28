@@ -36,9 +36,9 @@ archivesBaseName = "llibrary"
 sourceCompatibility = targetCompatibility = "1.8"
 
 minecraft {
-    version = "1909"
+    version = "1.10-12.18.0.2000-1.10.0"
     runDir = "minecraft"
-    mappings = "snapshot_20160518"
+    mappings = "snapshot_20160628"
 }
 
 processResources {
@@ -88,7 +88,7 @@ publishing {
         mavenJava(MavenPublication) {
             groupId "net.ilexiconn"
             artifactId "llibrary"
-            version project.version + "-1.9.4"
+            version project.version + "-1.10.0"
 
             from components.java
 
@@ -126,7 +126,7 @@ publishing {
 }
 
 curseforge {
-    def url = "http://pastebin.com/raw/qh3Pnuuk".toURL()
+    def url = "http://pastebin.com/raw/EjsPPpVG".toURL()
     def versions = new JsonSlurper().parseText url.text
 
     if (secret) {
@@ -146,7 +146,7 @@ curseforge {
             changelog = ""
         }
 
-        addGameVersion("1.9.4")
+        addGameVersion("1.10.0")
 
         mainArtifact(jar) {
             displayName = "LLibrary $project.version"
