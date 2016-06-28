@@ -36,9 +36,9 @@ archivesBaseName = "llibrary"
 sourceCompatibility = targetCompatibility = "1.8"
 
 minecraft {
-    version = "1909"
+    version = "1.9.4-12.17.0.1987"
     runDir = "minecraft"
-    mappings = "snapshot_20160518"
+    mappings = "stable_26"
 }
 
 processResources {
