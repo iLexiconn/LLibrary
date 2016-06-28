@@ -63,7 +63,7 @@ public class ModUpdateEntryGUI extends GuiScrollingList {
             }
 
             IChatComponent chat = ForgeHooks.newChatWithLinks(text, false);
-            list.addAll(GuiUtilRenderComponents.func_178908_a(chat, this.listWidth - 8, this.parent.mc.fontRendererObj, false, true));
+            list.addAll(GuiUtilRenderComponents.splitText(chat, this.listWidth - 8, this.parent.mc.fontRendererObj, false, true));
         }
         return list;
     }
