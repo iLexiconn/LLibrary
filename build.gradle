@@ -146,7 +146,7 @@ curseforge {
             changelog = ""
         }
 
-        addGameVersion("1.10.0")
+        addGameVersion("1.10")
 
         mainArtifact(jar) {
             displayName = "LLibrary $project.version"
