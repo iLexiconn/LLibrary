@@ -15,7 +15,7 @@ import org.apache.commons.lang3.ArrayUtils;
  * @since 1.1.0
  */
 public abstract class StructureGenerator {
-    public static final EnumFacing[] CLOCKWISE_FACINGS = { EnumFacing.NORTH, EnumFacing.EAST, EnumFacing.SOUTH, EnumFacing.WEST };
+    public static final EnumFacing[] CLOCKWISE_FACINGS = {EnumFacing.NORTH, EnumFacing.EAST, EnumFacing.SOUTH, EnumFacing.WEST};
 
     public static EnumFacing getNextClockwise(EnumFacing facing) {
         int index = ArrayUtils.indexOf(CLOCKWISE_FACINGS, facing);
