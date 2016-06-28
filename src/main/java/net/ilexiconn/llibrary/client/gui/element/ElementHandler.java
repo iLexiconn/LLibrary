@@ -133,7 +133,7 @@ public enum ElementHandler {
             float mouseX = this.getPreciseMouseX(gui);
             float mouseY = this.getPreciseMouseY(gui);
             for (Element<T> element : Lists.reverse(elementList)) {
-                if (element.isVisible() && element.isEnabled() &&this.currentlyClicking == element) {
+                if (element.isVisible() && element.isEnabled() && this.currentlyClicking == element) {
                     if (element.mouseReleased(mouseX, mouseY, button)) {
                         return;
                     }

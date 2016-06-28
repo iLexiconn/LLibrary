@@ -39,13 +39,13 @@ public class ColorMode {
     /**
      * Create a new color mode that can be used by elements.
      *
-     * @param name the color mode name
-     * @param primaryColor the primary color
-     * @param secondaryColor the secondary color
-     * @param tertiaryColor the tertiary color
-     * @param primarySubcolor the primary subcolor
+     * @param name              the color mode name
+     * @param primaryColor      the primary color
+     * @param secondaryColor    the secondary color
+     * @param tertiaryColor     the tertiary color
+     * @param primarySubcolor   the primary subcolor
      * @param secondarySubcolor the secondary subcolor
-     * @param textColor the text color
+     * @param textColor         the text color
      * @param invertedTextColor the inverted text color
      * @return the new color mode instance
      */
