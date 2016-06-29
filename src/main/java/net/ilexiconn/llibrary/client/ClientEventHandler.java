@@ -15,7 +15,6 @@ import net.ilexiconn.llibrary.server.event.SurvivalTabClickEvent;
 import net.ilexiconn.llibrary.server.snackbar.Snackbar;
 import net.ilexiconn.llibrary.server.snackbar.SnackbarHandler;
 import net.ilexiconn.llibrary.server.update.UpdateHandler;
-import net.ilexiconn.llibrary.server.util.ModUtils;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -23,14 +22,10 @@ import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -121,19 +116,6 @@ public enum ClientEventHandler {
                         event.getButtonList().add(new PageButtonGUI(-1, container.guiLeft + container.xSize + 2, container.guiTop + 136 + offsetY, container));
                         event.getButtonList().add(new PageButtonGUI(-2, container.guiLeft + container.xSize + 62, container.guiTop + 136 + offsetY, container));
                     }
-                }
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public void onItemTooltip(ItemTooltipEvent event) {
-        if (!Loader.isModLoaded("Waila")) {
-            ItemStack stack = event.getItemStack();
-            if (stack != null) {
-                String name = ModUtils.getModNameForStack(stack);
-                if (name != null) {
-                    event.getToolTip().add(TextFormatting.BLUE.toString() + TextFormatting.ITALIC.toString() + name);
                 }
             }
         }
