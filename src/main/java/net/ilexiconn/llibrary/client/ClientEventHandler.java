@@ -1,7 +1,6 @@
 package net.ilexiconn.llibrary.client;
 
 import cpw.mods.fml.client.event.ConfigChangedEvent;
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
@@ -21,14 +20,12 @@ import net.ilexiconn.llibrary.server.event.SurvivalTabClickEvent;
 import net.ilexiconn.llibrary.server.snackbar.Snackbar;
 import net.ilexiconn.llibrary.server.snackbar.SnackbarHandler;
 import net.ilexiconn.llibrary.server.update.UpdateHandler;
-import net.ilexiconn.llibrary.server.util.ModUtils;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
@@ -130,15 +127,6 @@ public enum ClientEventHandler {
     public void onItemTooltip(ItemTooltipEvent event) {
         if (ClientProxy.MINECRAFT.gameSettings.advancedItemTooltips) {
             event.toolTip.add(EnumChatFormatting.DARK_GRAY + "" + Item.itemRegistry.getNameForObject(event.itemStack.getItem()));
-        }
-        if (!Loader.isModLoaded("Waila")) {
-            ItemStack stack = event.itemStack;
-            if (stack != null) {
-                String name = ModUtils.getModNameForStack(stack);
-                if (name != null) {
-                    event.toolTip.add(EnumChatFormatting.BLUE.toString() + EnumChatFormatting.ITALIC.toString() + name);
-                }
-            }
         }
     }
 
