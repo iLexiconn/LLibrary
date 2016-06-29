@@ -113,7 +113,7 @@ public enum ConfigHandler {
         config.save();
     }
 
-    public void injectConfig(ModContainer mod, ASMDataTable data, File minecraftDir) {
+    public void injectConfig(ModContainer mod, ASMDataTable data) {
         SetMultimap<String, ASMDataTable.ASMData> annotations = data.getAnnotationsFor(mod);
         if (annotations != null) {
             Set<ASMDataTable.ASMData> targetList = annotations.get(Config.class.getName());
@@ -124,7 +124,7 @@ public enum ConfigHandler {
                     Field field = targetClass.getDeclaredField(target.getObjectName());
                     field.setAccessible(true);
                     Class<?> configClass = field.getType();
-                    File configFile = new File(minecraftDir, "config" + File.separator + mod.getModId() + ".cfg");
+                    File configFile = new File(".", "config" + File.separator + mod.getModId() + ".cfg");
                     field.set(null, ConfigHandler.INSTANCE.registerConfig(mod, configFile, configClass.newInstance()));
                 } catch (Exception e) {
                     LLibrary.LOGGER.fatal("Failed to inject config for mod container " + mod, e);
