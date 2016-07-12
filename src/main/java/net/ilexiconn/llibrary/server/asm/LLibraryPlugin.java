@@ -1,5 +1,8 @@
 package net.ilexiconn.llibrary.server.asm;
 
+import com.google.common.eventbus.Subscribe;
+import cpw.mods.fml.common.discovery.ASMDataTable;
+import cpw.mods.fml.common.event.FMLConstructionEvent;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import net.ilexiconn.llibrary.server.asm.transformer.*;
 import net.minecraft.launchwrapper.IClassTransformer;
@@ -26,7 +29,6 @@ public class LLibraryPlugin implements IFMLLoadingPlugin, IClassTransformer {
         this.transformerList.add(new LocaleTransformer());
         this.transformerList.add(new RenderPlayerTransformer());
         this.transformerList.add(new ModelBipedTransformer());
-        this.transformerList.add(new ModContainerTransformer());
     }
 
     @Override
