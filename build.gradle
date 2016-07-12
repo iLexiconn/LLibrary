@@ -55,6 +55,7 @@ processResources {
 }
 
 jar {
+    classifier = "1.7.10"
     manifest {
         attributes "FMLAT": "llibrary_at.cfg"
         attributes "FMLCorePlugin": "net.ilexiconn.llibrary.server.asm.LLibraryPlugin"
