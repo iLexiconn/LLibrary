@@ -30,7 +30,7 @@ if (secretFile.exists()) {
     }
 }
 
-version = getLLibraryVersion()
+version = getLLibraryVersion() + "-1.8.9"
 group = "net.ilexiconn"
 archivesBaseName = "llibrary"
 sourceCompatibility = targetCompatibility = "1.8"
@@ -56,7 +56,6 @@ processResources {
 }
 
 jar {
-    classifier = "1.8.9"
     manifest {
         attributes "FMLAT": "llibrary_at.cfg"
         attributes "FMLCorePlugin": "net.ilexiconn.llibrary.server.asm.LLibraryPlugin"
