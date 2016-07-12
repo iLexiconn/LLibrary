@@ -89,7 +89,7 @@ publishing {
         mavenJava(MavenPublication) {
             groupId "net.ilexiconn"
             artifactId "llibrary"
-            version project.version + "-1.8.9"
+            version project.version
 
             from components.java
 
