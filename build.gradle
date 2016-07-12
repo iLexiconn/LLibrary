@@ -94,7 +94,7 @@ publishing {
         mavenJava(MavenPublication) {
             groupId "net.ilexiconn"
             artifactId "llibrary"
-            version project.version + "-1.7.10"
+            version project.version
 
             from components.java
 
