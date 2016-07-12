@@ -7,10 +7,14 @@ package net.ilexiconn.llibrary.server.snackbar;
 public class Snackbar {
     private String message;
     private int duration;
+    private int color;
+    private SnackbarPosition position;
 
     private Snackbar(String message) {
         this.message = message;
         this.duration = 0;
+        this.color = 0xFF333333;
+        this.position = SnackbarPosition.DOWN;
     }
 
     /**
@@ -46,5 +50,21 @@ public class Snackbar {
     public Snackbar setDuration(int duration) {
         this.duration = duration;
         return this;
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public SnackbarPosition getPosition() {
+        return position;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
+
+    public void setPosition(SnackbarPosition position) {
+        this.position = position;
     }
 }

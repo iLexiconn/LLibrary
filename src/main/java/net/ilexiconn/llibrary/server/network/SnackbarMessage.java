@@ -3,6 +3,7 @@ package net.ilexiconn.llibrary.server.network;
 import io.netty.buffer.ByteBuf;
 import net.ilexiconn.llibrary.LLibrary;
 import net.ilexiconn.llibrary.server.snackbar.Snackbar;
+import net.ilexiconn.llibrary.server.snackbar.SnackbarPosition;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
@@ -35,12 +36,17 @@ public class SnackbarMessage extends AbstractMessage<SnackbarMessage> {
 
     @Override
     public void fromBytes(ByteBuf byteBuf) {
-        this.snackbar = Snackbar.create(ByteBufUtils.readUTF8String(byteBuf)).setDuration(byteBuf.readInt());
+        Snackbar snackbar = Snackbar.create(ByteBufUtils.readUTF8String(byteBuf));
+        snackbar.setDuration(byteBuf.readInt());
+        snackbar.setColor(byteBuf.readInt());
+        snackbar.setPosition(SnackbarPosition.values()[byteBuf.readInt()]);
     }
 
     @Override
     public void toBytes(ByteBuf byteBuf) {
         ByteBufUtils.writeUTF8String(byteBuf, this.snackbar.getMessage());
         byteBuf.writeInt(this.snackbar.getDuration());
+        byteBuf.writeInt(this.snackbar.getColor());
+        byteBuf.writeInt(this.snackbar.getPosition().ordinal());
     }
 }
