@@ -26,7 +26,6 @@ public class LLibraryPlugin implements IFMLLoadingPlugin, IClassTransformer {
         this.transformerList.add(new LocaleTransformer());
         this.transformerList.add(new RenderPlayerTransformer());
         this.transformerList.add(new ModelPlayerTransformer());
-        this.transformerList.add(new ModContainerTransformer());
     }
 
     @Override
