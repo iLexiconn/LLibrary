@@ -2,11 +2,14 @@ package net.ilexiconn.llibrary;
 
 import net.ilexiconn.llibrary.server.ServerProxy;
 import net.ilexiconn.llibrary.server.capability.IEntityDataCapability;
+import net.ilexiconn.llibrary.server.config.ConfigHandler;
 import net.ilexiconn.llibrary.server.config.LLibraryConfig;
 import net.ilexiconn.llibrary.server.network.*;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -32,6 +35,10 @@ public class LLibrary {
 
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent event) {
+        for (ModContainer mod : Loader.instance().getModList()) {
+            ConfigHandler.INSTANCE.injectConfig(mod, event.getAsmData());
+            NetworkHandler.INSTANCE.injectNetworkWrapper(mod, event.getAsmData());
+        }
         LLibrary.CONFIG.load();
         LLibrary.PROXY.onPreInit();
     }
