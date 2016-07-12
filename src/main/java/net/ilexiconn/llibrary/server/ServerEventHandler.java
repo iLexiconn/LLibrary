@@ -66,7 +66,11 @@ public enum ServerEventHandler {
 
             @Override
             public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-                return (T) new EntityDataCapabilityImplementation();
+                if (capability == LLibrary.ENTITY_DATA_CAPABILITY) {
+                    return (T) new EntityDataCapabilityImplementation();
+                } else {
+                    return null;
+                }
             }
         });
     }
