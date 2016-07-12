@@ -35,10 +35,20 @@ public class SnackbarGUI extends Gui {
 
     public void drawSnackbar() {
         GL11.glPushMatrix();
-        GL11.glTranslatef(0.0F, this.yOffset, 0.0F);
+        GL11.glTranslatef(0.0F, 0.0F, 500.0F);
         ScaledResolution resolution = new ScaledResolution(ClientProxy.MINECRAFT, ClientProxy.MINECRAFT.displayWidth, ClientProxy.MINECRAFT.displayHeight);
-        drawRect(0, resolution.getScaledHeight() - 20, resolution.getScaledWidth(), resolution.getScaledHeight(), 0xFF333333);
-        ClientProxy.MINECRAFT.fontRenderer.drawString(this.snackbar.getMessage(), 10, resolution.getScaledHeight() - 14, 0xFFFFFFFF);
+        switch (this.snackbar.getPosition()) {
+            case UP:
+                GL11.glTranslatef(0.0F, -this.yOffset, 0.0F);
+                Gui.drawRect(0, 20, resolution.getScaledWidth(), 0, this.snackbar.getColor());
+                ClientProxy.MINECRAFT.fontRenderer.drawString(this.snackbar.getMessage(), 10, 6, 0xFFFFFFFF);
+                break;
+            case DOWN:
+                GL11.glTranslatef(0.0F, this.yOffset, 0.0F);
+                drawRect(0, resolution.getScaledHeight() - 20, resolution.getScaledWidth(), resolution.getScaledHeight(), this.snackbar.getColor());
+                ClientProxy.MINECRAFT.fontRenderer.drawString(this.snackbar.getMessage(), 10, resolution.getScaledHeight() - 14, 0xFFFFFFFF);
+                break;
+        }
         GL11.glPopMatrix();
         this.yOffset = ClientUtils.updateValue(this.yOffset, this.age < this.maxAge - 61 ? 0.0F : 20.0F);
     }
