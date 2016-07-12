@@ -56,6 +56,7 @@ processResources {
 }
 
 jar {
+    classifier = "1.10.2"
     manifest {
         attributes "FMLAT": "llibrary_at.cfg"
         attributes "FMLCorePlugin": "net.ilexiconn.llibrary.server.asm.LLibraryPlugin"
@@ -88,7 +89,7 @@ publishing {
         mavenJava(MavenPublication) {
             groupId "net.ilexiconn"
             artifactId "llibrary"
-            version project.version + "-1.10.0"
+            version project.version + "-1.10.2"
 
             from components.java
 
@@ -146,7 +147,7 @@ curseforge {
             changelog = ""
         }
 
-        addGameVersion("1.10")
+        addGameVersion("1.10.2")
 
         mainArtifact(jar) {
             displayName = "LLibrary $project.version"
