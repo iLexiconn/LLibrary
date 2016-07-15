@@ -2,6 +2,7 @@ package net.ilexiconn.llibrary.server.config.entry;
 
 import net.ilexiconn.llibrary.server.config.ConfigEntry;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 
 /**
  * @author iLexiconn
@@ -18,4 +19,8 @@ public interface IEntryAdapter<T> {
      * @return the updated object from the config
      */
     T getValue(Configuration config, String name, ConfigEntry entry, Object defaultValue);
+
+    default Property getProperty(Configuration config, String name, ConfigEntry entry, Object defaultValue) {
+        return config.get(entry.category(), name, (String) defaultValue);
+    }
 }
