@@ -1,5 +1,6 @@
 package net.ilexiconn.llibrary.client.lang;
 
+import com.google.common.base.Charsets;
 import com.google.gson.Gson;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
@@ -40,7 +41,7 @@ public enum LanguageHandler {
             if (child.isFile()) {
                 try {
                     Map<String, String> lang = StringTranslate.parseLangFile(new FileInputStream(child));
-                    localizations.put(child.getName().split("\\.")[0], lang);
+                    this.localizations.put(child.getName().split("\\.")[0], lang);
                 } catch (Exception e) {
                     LLibrary.LOGGER.error("An exception occurred while loading " + child.getName() + " from cache.", e);
                 }
@@ -64,16 +65,16 @@ public enum LanguageHandler {
                 LLibrary.LOGGER.error("An exception occurred while loading remote lang container for " + modId, e);
             }
         }
-        for (Map.Entry<String, Map<String, String>> entry : localizations.entrySet()) {
+        for (Map.Entry<String, Map<String, String>> entry : this.localizations.entrySet()) {
             String language = entry.getKey();
             File cache = new File(cacheDir, language + ".lang");
             try {
                 if (!cache.exists()) {
                     cache.createNewFile();
                 }
-                PrintWriter out = new PrintWriter(new FileWriter(cache));
+                BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(cache), Charsets.UTF_8));
                 for (Map.Entry<String, String> langEntry : entry.getValue().entrySet()) {
-                    out.println(langEntry.getKey() + "=" + langEntry.getValue());
+                    out.append(langEntry.getKey()).append("=").append(langEntry.getValue()).append("\n");
                 }
                 out.close();
             } catch (Exception e) {
