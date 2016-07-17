@@ -107,6 +107,7 @@ public enum ConfigHandler {
                 }
             });
             config.save();
+            this.loadConfigForID(modid);
         }
     }
 
