@@ -144,7 +144,8 @@ curseforge {
         id = "243298"
 
         releaseType = "release"
-        def remoteChangelog = versions.versions[project.version];
+        def curse_version = getLLibraryVersion()
+        def remoteChangelog = versions.versions[curse_version];
         if (remoteChangelog) {
             changelog = remoteChangelog.join("\n")
         } else {
@@ -154,19 +155,19 @@ curseforge {
         addGameVersion("1.7.10")
 
         mainArtifact(jar) {
-            displayName = "LLibrary $project.version"
+            displayName = "LLibrary $curse_version"
         }
 
         addArtifact(sourceJar) {
-            displayName = "LLibrary $project.version Sources"
+            displayName = "LLibrary $curse_version Sources"
         }
 
         addArtifact(devJar) {
-            displayName = "LLibrary $project.version Development"
+            displayName = "LLibrary $curse_version Development"
         }
 
         addArtifact(javadocJar) {
-            displayName = "LLibrary $project.version Javadoc"
+            displayName = "LLibrary $curse_version Javadoc"
         }
     }
 }
