@@ -136,6 +136,7 @@ public enum ConfigHandler {
                     e.printStackTrace();
                 }
             });
+            config.save();
         }
     }
 
