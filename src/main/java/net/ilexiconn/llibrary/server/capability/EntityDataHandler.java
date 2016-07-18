@@ -1,11 +1,11 @@
 package net.ilexiconn.llibrary.server.capability;
 
+import net.ilexiconn.llibrary.server.util.WeakIdentityHashMap;
 import net.minecraft.entity.Entity;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 /**
  * @author gegy1000
@@ -14,7 +14,7 @@ import java.util.WeakHashMap;
 public enum EntityDataHandler {
     INSTANCE;
 
-    private Map<Entity, List<IEntityData<?>>> registeredEntityData = new WeakHashMap<>();
+    private Map<Entity, List<IEntityData<?>>> registeredEntityData = new WeakIdentityHashMap<>();
 
     /**
      * Registers an Extended Entity Data Manager to the given entity
