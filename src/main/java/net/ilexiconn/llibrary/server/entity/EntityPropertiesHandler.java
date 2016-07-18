@@ -1,6 +1,7 @@
 package net.ilexiconn.llibrary.server.entity;
 
 import net.ilexiconn.llibrary.LLibrary;
+import net.ilexiconn.llibrary.server.util.WeakIdentityHashMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.IExtendedEntityProperties;
@@ -19,7 +20,7 @@ public enum EntityPropertiesHandler {
     private Map<Class<? extends EntityProperties>, String> propertiesIDMap = new HashMap<>();
     private Map<Class<? extends Entity>, List<Class<? extends EntityProperties<?>>>> registeredProperties = new HashMap<>();
     private Map<Class<? extends Entity>, List<String>> entityPropertiesCache = new HashMap<>();
-    private Map<EntityPlayerMP, List<PropertiesTracker<?>>> trackerMap = new WeakHashMap<>();
+    private Map<EntityPlayerMP, List<PropertiesTracker<?>>> trackerMap = new WeakIdentityHashMap<>();
 
     /**
      * Register a new properties class.
