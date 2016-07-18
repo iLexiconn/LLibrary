@@ -1,5 +1,6 @@
 package net.ilexiconn.llibrary.server.entity;
 
+import net.ilexiconn.llibrary.server.util.WeakIdentityHashMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -7,7 +8,6 @@ import net.minecraftforge.common.IExtendedEntityProperties;
 
 import java.util.Collections;
 import java.util.Set;
-import java.util.WeakHashMap;
 
 /**
  * If you want to keep certain values in sync with clients, use a tracker time of 0 or higher.
@@ -22,7 +22,7 @@ import java.util.WeakHashMap;
 public abstract class EntityProperties<T extends Entity> implements IExtendedEntityProperties {
     private World world;
     private T entity;
-    private Set<PropertiesTracker<?>> trackers = Collections.newSetFromMap(new WeakHashMap<>());
+    private Set<PropertiesTracker<?>> trackers = Collections.newSetFromMap(new WeakIdentityHashMap<>());
 
     @Override
     public final void init(Entity entity, World world) {
