@@ -47,33 +47,37 @@ public enum UpdateHandler {
      * @param url the json url
      */
     public void registerUpdateChecker(Object mod, String url) {
-        if (!mod.getClass().isAnnotationPresent(Mod.class)) {
-            LLibrary.LOGGER.warn("Please register the update checker using the main mod class. Skipping registration of object " + mod + ".");
-            return;
-        }
+        new Thread(() -> {
+            if (!mod.getClass().isAnnotationPresent(Mod.class)) {
+                LLibrary.LOGGER.warn("Please register the update checker using the main mod class. Skipping registration of object " + mod + ".");
+                return;
+            }
 
-        Mod annotation = mod.getClass().getAnnotation(Mod.class);
-        try {
-            UpdateContainer updateContainer = new Gson().fromJson(WebUtils.readURL(url), UpdateContainer.class);
-            if (updateContainer != null) {
-                final ModContainer[] modContainer = {null};
-                Loader.instance().getModList().stream().filter(container -> container.getModId().equals(annotation.modid())).forEach(container -> modContainer[0] = container);
+            Mod annotation = mod.getClass().getAnnotation(Mod.class);
+            try {
+                UpdateContainer updateContainer = new Gson().fromJson(WebUtils.readURL(url), UpdateContainer.class);
+                if (updateContainer != null) {
+                    final ModContainer[] modContainer = {null};
+                    Loader.instance().getModList().stream().filter(container -> container.getModId().equals(annotation.modid())).forEach(container -> modContainer[0] = container);
 
-                if (modContainer[0] == null) {
-                    LLibrary.LOGGER.warn("Couldn't find mod container with id " + annotation.modid() + ". Skipping registration of object " + mod + ".");
-                    return;
+                    if (modContainer[0] == null) {
+                        LLibrary.LOGGER.warn("Couldn't find mod container with id " + annotation.modid() + ". Skipping registration of object " + mod + ".");
+                        return;
+                    }
+
+                    updateContainer.setModContainer(modContainer[0]);
+                    if (!updateContainer.getIconURL().isEmpty()) {
+                        updateContainer.setIcon(WebUtils.downloadImage(updateContainer.getIconURL()));
+                    }
+
+                    UpdateHandler.this.updateContainerList.add(updateContainer);
+                } else {
+                    LLibrary.LOGGER.warn("Failed to load update container for mod " + annotation.name() + " (" + annotation.modid() + ")!");
                 }
-
-                updateContainer.setModContainer(modContainer[0]);
-                updateContainer.setIcon(WebUtils.downloadImage(updateContainer.getIconURL()));
-
-                this.updateContainerList.add(updateContainer);
-            } else {
+            } catch (JsonSyntaxException e) {
                 LLibrary.LOGGER.warn("Failed to load update container for mod " + annotation.name() + " (" + annotation.modid() + ")!");
             }
-        } catch (JsonSyntaxException e) {
-            LLibrary.LOGGER.warn("Failed to load update container for mod " + annotation.name() + " (" + annotation.modid() + ")!");
-        }
+        }).start();
     }
 
     /**
