@@ -11,6 +11,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 import java.util.function.Function;
 
 @SideOnly(Side.CLIENT)
@@ -39,7 +41,10 @@ public class SliderElement<T extends GuiScreen> extends Element<T> {
         super(gui, posX, posY, (int) (38 + sliderWidth), 12);
         this.onEnter = onEnter;
         this.isInteger = isInteger;
-        this.decimalFormat = new DecimalFormat("#.#");
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.ENGLISH);
+        symbols.setDecimalSeparator('.');
+        symbols.setGroupingSeparator(',');
+        this.decimalFormat = new DecimalFormat("#.#", symbols);
         this.hasSlider = sliderWidth > 0.0F;
         this.sliderWidth = sliderWidth;
         this.minValue = minValue;
