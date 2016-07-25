@@ -2,6 +2,7 @@ package net.ilexiconn.llibrary.server.core.patcher;
 
 import net.ilexiconn.llibrary.client.lang.LanguageHandler;
 import net.ilexiconn.llibrary.server.asm.RuntimePatcher;
+import net.ilexiconn.llibrary.server.util.EnumHandSide;
 import net.ilexiconn.llibrary.server.world.TickRateHandler;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBase;
@@ -12,7 +13,6 @@ import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.Locale;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.EnumHandSide;
 
 import java.util.List;
 import java.util.Map;

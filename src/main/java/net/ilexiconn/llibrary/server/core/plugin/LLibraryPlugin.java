@@ -5,7 +5,7 @@ import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import java.util.Map;
 
 @IFMLLoadingPlugin.Name("llibrary-core")
-@IFMLLoadingPlugin.MCVersion("1.10.2")
+@IFMLLoadingPlugin.MCVersion("1.8.9")
 @IFMLLoadingPlugin.TransformerExclusions("net.ilexiconn.llibrary.server.asm")
 public class LLibraryPlugin implements IFMLLoadingPlugin {
     public static boolean inDevelopment;
