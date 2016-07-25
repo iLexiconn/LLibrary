@@ -29,11 +29,16 @@ public enum MappingHandler {
         return cls.replace(".", "/");
     }
 
-    public String getMethodMapping(String cls, String method, String desc) {
+    public String getMethodMapping(Object obj, String method, String desc) {
         if (LLibraryPlugin.inDevelopment) {
             return method;
         }
-        cls = this.getClassMapping(cls);
+        String cls = "";
+        if (obj instanceof String) {
+            cls = this.getClassMapping((String) obj);
+        } else if (obj instanceof Class) {
+            cls = ((Class) obj).getName();
+        }
         for (Map.Entry<String, String> entry : this.map.entrySet()) {
             if (entry.getKey().contains("(")) {
                 String[] entryParts = entry.getKey().split("\\(");
@@ -49,11 +54,16 @@ public enum MappingHandler {
         return method;
     }
 
-    public String getFieldMapping(String cls, String field) {
+    public String getFieldMapping(Object obj, String field) {
         if (LLibraryPlugin.inDevelopment) {
             return field;
         }
-        cls = this.getClassMapping(cls);
+        String cls = "";
+        if (obj instanceof String) {
+            cls = this.getClassMapping((String) obj);
+        } else if (obj instanceof Class) {
+            cls = ((Class) obj).getName();
+        }
         for (Map.Entry<String, String> entry : this.map.entrySet()) {
             if (!entry.getKey().contains("(")) {
                 int fieldIndex = entry.getKey().lastIndexOf("/");
