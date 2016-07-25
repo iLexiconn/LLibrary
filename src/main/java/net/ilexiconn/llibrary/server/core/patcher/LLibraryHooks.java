@@ -1,4 +1,4 @@
-package net.ilexiconn.llibrary.server.asm;
+package net.ilexiconn.llibrary.server.core.patcher;
 
 import net.ilexiconn.llibrary.client.event.PlayerModelEvent;
 import net.ilexiconn.llibrary.client.event.RenderArmEvent;
