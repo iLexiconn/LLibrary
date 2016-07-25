@@ -34,11 +34,12 @@ version = getLLibraryVersion() + "-1.9.4"
 group = "net.ilexiconn"
 archivesBaseName = "llibrary"
 sourceCompatibility = targetCompatibility = "1.8"
+def minecraft_mappings = "stable_26"
 
 minecraft {
     version = "1.9.4-12.17.0.1987"
     runDir = "minecraft"
-    mappings = "stable_26"
+    mappings = minecraft_mappings
 }
 
 processResources {
@@ -58,7 +59,7 @@ processResources {
 jar {
     manifest {
         attributes "FMLAT": "llibrary_at.cfg"
-        attributes "FMLCorePlugin": "net.ilexiconn.llibrary.server.asm.LLibraryPlugin"
+        attributes "FMLCorePlugin": "net.ilexiconn.llibrary.server.core.plugin.LLibraryPlugin"
         attributes "FMLCorePluginContainsFMLMod": "true"
     }
 }
@@ -68,7 +69,7 @@ task devJar(type: Jar) {
     from sourceSets.main.output
     manifest {
         attributes "FMLAT": "llibrary_at.cfg"
-        attributes "FMLCorePlugin": "net.ilexiconn.llibrary.server.asm.LLibraryPlugin"
+        attributes "FMLCorePlugin": "net.ilexiconn.llibrary.server.core.plugin.LLibraryPlugin"
         attributes "FMLCorePluginContainsFMLMod": "true"
     }
 }
@@ -168,17 +169,16 @@ curseforge {
 }
 
 String getLLibraryVersion() {
-    String major = "0";
-    String revision = "0";
-    String patch = "0";
-    String prefix = "public static final String VERSION = \"";
-    File file = file("src/main/java/net/ilexiconn/llibrary/LLibrary.java")
+    def major = "0";
+    def revision = "0";
+    def patch = "0";
+    def prefix = "public static final String VERSION = \"";
+    def file = file("src/main/java/net/ilexiconn/llibrary/LLibrary.java")
     file.eachLine { String s ->
         s = s.trim();
         if (s.startsWith(prefix)) {
             s = s.substring(prefix.length(), s.length() - 2);
-            String[] pts = s.split("\\.");
-
+            def pts = s.split("\\.");
             major = pts[0];
             revision = pts[1];
             patch = pts[2];
@@ -187,3 +187,27 @@ String getLLibraryVersion() {
 
     return "$major.$revision.$patch";
 }
+
+task generateMappings << {
+    def mappingParts = minecraft_mappings.split("_");
+    def mappingReplacements = new HashMap<String, String>()
+    def mappingFile = new File(System.properties["user.home"] + "/.gradle/caches/minecraft/de/oceanlabs/mcp/mcp_" + mappingParts[0] + "/" + mappingParts[1] + "/srgs/mcp-srg.srg")
+    if (mappingFile.exists()) {
+        mappingFile.eachLine { line ->
+            def parts = line.split(" ")
+            if (line.startsWith("FD")) {
+                mappingReplacements[parts[1]] = parts[2].substring(parts[2].lastIndexOf("/") + 1, parts[2].length())
+            } else if (line.startsWith("MD")) {
+                mappingReplacements[parts[1] + parts[2]] = parts[3].substring(parts[3].lastIndexOf("/") + 1, parts[3].length())
+            }
+        }
+    }
+
+    def mappingsFile = new File("src/main/resources/llibrary_mappings")
+    mappingsFile.withWriter("UTF-8") { writer ->
+        mappingReplacements.each { k, v -> writer.write(k + "=" + v + "\n") }
+    }
+}
+
+compileJava.dependsOn generateMappings
+decompileMc.dependsOn generateMappings
