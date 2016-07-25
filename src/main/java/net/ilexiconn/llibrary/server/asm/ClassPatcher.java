@@ -1,7 +1,8 @@
 package net.ilexiconn.llibrary.server.asm;
 
 import net.minecraftforge.fml.relauncher.FMLRelaunchLog;
-import org.objectweb.asm.tree.*;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.MethodNode;
 
 import java.util.HashMap;
 import java.util.Map;

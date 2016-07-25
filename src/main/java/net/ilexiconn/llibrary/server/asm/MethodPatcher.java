@@ -4,7 +4,8 @@ import net.minecraftforge.fml.relauncher.FMLRelaunchLog;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class MethodPatcher {
@@ -27,13 +28,13 @@ public class MethodPatcher {
     void handlePatches(MethodNode methodNode) {
         FMLRelaunchLog.info("   Patching method " + this.method);
         this.patches.stream().filter(patch -> patch.insnType == null).forEach(patch -> {
-            Method method = new Method();
+            Method method = new Method(null);
             patch.consumer.accept(method);
             patch.patchType.apply(methodNode.instructions, null, method.insnList);
         });
         for (AbstractInsnNode insnNode : methodNode.instructions.toArray()) {
             this.patches.stream().filter(patch -> patch.insnType != null && patch.insnType.equals(this.patcher, this.cls, insnNode)).forEach(patch -> {
-                Method method = new Method();
+                Method method = new Method(insnNode);
                 patch.consumer.accept(method);
                 patch.patchType.apply(methodNode.instructions, insnNode, method.insnList);
             });
@@ -66,6 +67,15 @@ public class MethodPatcher {
 
     public class Method {
         private InsnList insnList = new InsnList();
+        private AbstractInsnNode insnNode;
+
+        public Method(AbstractInsnNode insnNode) {
+            this.insnNode = insnNode;
+        }
+
+        public AbstractInsnNode getInsnNode() {
+            return insnNode;
+        }
 
         public Method field(int opcode, Object obj, String name, Object type) {
             if (obj instanceof String) {
