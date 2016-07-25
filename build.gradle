@@ -194,7 +194,6 @@ String getLLibraryVersion() {
 }
 
 task generateMappings << {
-    def mappingParts = minecraft_mappings.split("_");
     def mappingReplacements = new HashMap<String, String>()
     def mappingFile = new File(System.properties["user.home"] + "/.gradle/caches/minecraft/net/minecraftforge/forge/" + forge + "/srgs/mcp-srg.srg")
     if (mappingFile.exists()) {
@@ -215,4 +214,4 @@ task generateMappings << {
 }
 
 compileJava.dependsOn generateMappings
-decompileMc.dependsOn generateMappings
+decompile.dependsOn generateMappings

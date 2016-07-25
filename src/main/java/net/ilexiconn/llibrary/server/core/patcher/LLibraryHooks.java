@@ -26,7 +26,7 @@ public class LLibraryHooks {
     }
 
     @SuppressWarnings("unused")
-    public static ModelBiped assignModel(RenderPlayer renderPlayer, ModelBiped model) {
+    public static ModelBiped assignModel(ModelBiped model, RenderPlayer renderPlayer) {
         PlayerModelEvent.Assign event = new PlayerModelEvent.Assign(renderPlayer, model);
         MinecraftForge.EVENT_BUS.post(event);
         return event.getModel();

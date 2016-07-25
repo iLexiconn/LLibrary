@@ -1,7 +1,7 @@
 package net.ilexiconn.llibrary.server.core.plugin;
 
+import cpw.mods.fml.relauncher.IFMLCallHook;
 import net.ilexiconn.llibrary.server.asm.MappingHandler;
-import net.minecraftforge.fml.relauncher.IFMLCallHook;
 import org.apache.commons.compress.utils.IOUtils;
 
 import java.io.InputStream;
