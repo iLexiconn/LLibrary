@@ -54,8 +54,9 @@ public class ClassPatcher {
         for (int i = 0; i < params.length - 1; i++) {
             Object obj = params[i];
             if (obj instanceof Integer) {
+                String desc = this.fieldDesc(params[++i]);
                 for (int j = 0, k = (int) obj; j < k; j++) {
-                    builder.append(this.fieldDesc(obj));
+                    builder.append(desc);
                 }
             } else {
                 builder.append(this.fieldDesc(obj));
