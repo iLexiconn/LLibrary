@@ -22,7 +22,7 @@ public class LLibraryRuntimePatcher extends RuntimePatcher {
     public void onInit() {
         patchClass(Locale.class)
             .patchMethod("loadLocaleDataFiles", IResourceManager.class, List.class, void.class)
-                .insertBefore(_method("format", String.class, Object[].class, String.class), method -> {
+                .apply(Patch.BEFORE, at(At.METHOD, "format", String.class, Object[].class, String.class), method -> {
                     method.field(GETSTATIC, LanguageHandler.class, "INSTANCE", LanguageHandler.class);
                     method.var(ALOAD, 4).var(ALOAD, 0);
                     method.field(GETFIELD, Locale.class, "properties", Map.class);
@@ -31,38 +31,38 @@ public class LLibraryRuntimePatcher extends RuntimePatcher {
 
         patchClass(ModelPlayer.class)
             .patchMethod("setRotationAngles", 6, float.class, Entity.class, void.class)
-                .insertBefore(_return(), method -> {
+                .apply(Patch.BEFORE, at(At.RETURN), method -> {
                     method.var(ALOAD, 0).var(ALOAD, 7).var(FLOAD, 1, 6);
                     method.method(INVOKESTATIC, LLibraryHooks.class, "setRotationAngles", ModelPlayer.class, Entity.class, 6, float.class, void.class);
                 }).pop()
             .patchMethod("render", Entity.class, 6, float.class, void.class)
-                .insertBefore(_return(), method -> {
+                .apply(Patch.BEFORE, at(At.RETURN), method -> {
                     method.var(ALOAD, 0, 1).var(FLOAD, 2, 7);
                     method.method(INVOKESTATIC, LLibraryHooks.class, "renderModel", ModelPlayer.class, Entity.class, 6, float.class, void.class);
                 }).pop()
             .patchMethod("<init>", float.class, boolean.class, void.class)
-                .insertBefore(_return(), method -> {
+                .apply(Patch.BEFORE, at(At.RETURN), method -> {
                     method.var(ALOAD, 0);
                     method.method(INVOKESTATIC, LLibraryHooks.class, "constructModel", ModelPlayer.class, void.class);
                 }).pop();
 
         patchClass(RenderPlayer.class)
             .patchMethod("renderLeftArm", AbstractClientPlayer.class, void.class)
-                .set(method -> {
+                .apply(Patch.REPLACE, method -> {
                     method.var(ALOAD, 0, 1);
                     method.field(GETSTATIC, EnumHandSide.class, "LEFT", EnumHandSide.class);
                     method.method(INVOKESTATIC, LLibraryHooks.class, "renderArm", RenderPlayer.class, AbstractClientPlayer.class, EnumHandSide.class, void.class);
                     method.node(RETURN);
                 }).pop()
             .patchMethod("renderRightArm", AbstractClientPlayer.class, void.class)
-                .set(method -> {
+                .apply(Patch.REPLACE, method -> {
                     method.var(ALOAD, 0, 1);
                     method.field(GETSTATIC, EnumHandSide.class, "RIGHT", EnumHandSide.class);
                     method.method(INVOKESTATIC, LLibraryHooks.class, "renderArm", RenderPlayer.class, AbstractClientPlayer.class, EnumHandSide.class, void.class);
                     method.node(RETURN);
                 }).pop()
             .patchMethod("<init>", RenderManager.class, boolean.class, void.class)
-                .insertBefore(_return(), method -> {
+                .apply(Patch.BEFORE, at(At.RETURN), method -> {
                     method.var(ALOAD, 0).var(ALOAD, 0).var(ALOAD, 0);
                     method.method(INVOKEVIRTUAL, RenderPlayer.class, "getMainModel", ModelPlayer.class);
                     method.var(ALOAD, 0);
@@ -73,7 +73,7 @@ public class LLibraryRuntimePatcher extends RuntimePatcher {
 
         patchClass(MinecraftServer.class)
             .patchMethod("run", void.class)
-                .replace(_ldc(50L), method -> {
+                .apply(Patch.REPLACE_NODE, at(At.LDC, 50L), method -> {
                     method.field(GETSTATIC, TickRateHandler.class, "INSTANCE", TickRateHandler.class);
                     method.method(INVOKEVIRTUAL, TickRateHandler.class, "getTickRate", long.class);
                 }).pop();
