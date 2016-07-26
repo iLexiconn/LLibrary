@@ -7,13 +7,14 @@ import org.objectweb.asm.tree.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public class MethodPatcher {
     private ClassPatcher patcher;
     private String cls;
     private String method;
 
-    private List<Patch> patches = new ArrayList<>();
+    private List<PatchData> patches = new ArrayList<>();
 
     public MethodPatcher(ClassPatcher patcher, String cls, String method) {
         this.patcher = patcher;
@@ -27,46 +28,31 @@ public class MethodPatcher {
 
     void handlePatches(MethodNode methodNode) {
         FMLRelaunchLog.info("   Patching method " + this.method);
-        this.patches.stream().filter(patch -> patch.insnType == null).forEach(patch -> {
+        this.patches.stream().filter(patch -> patch.predicate == null).forEach(patch -> {
             Method method = new Method(null);
             patch.consumer.accept(method);
-            patch.patchType.apply(methodNode.instructions, null, method.insnList);
+            patch.at.apply(patch, methodNode, null, method);
         });
         for (AbstractInsnNode insnNode : methodNode.instructions.toArray()) {
-            this.patches.stream().filter(patch -> patch.insnType != null && patch.insnType.equals(this.patcher, this.cls, insnNode)).forEach(patch -> {
+            this.patches.stream().filter(patch -> patch.predicate != null && patch.predicate.test(new PredicateData(this.patcher, this.cls, insnNode))).forEach(patch -> {
                 Method method = new Method(insnNode);
                 patch.consumer.accept(method);
-                patch.patchType.apply(methodNode.instructions, insnNode, method.insnList);
+                patch.at.apply(patch, methodNode, insnNode, method);
             });
         }
     }
 
-    public MethodPatcher insertBefore(InsnType insnType, Consumer<Method> consumer) {
-        this.addPatch(PatchType.BEFORE, insnType, consumer);
-        return this;
+    public MethodPatcher apply(RuntimePatcher.Patch at, Consumer<Method> consumer) {
+        return this.apply(at, null, consumer);
     }
 
-    public MethodPatcher insertAfter(InsnType insnType, Consumer<Method> consumer) {
-        this.addPatch(PatchType.AFTER, insnType, consumer);
+    public MethodPatcher apply(RuntimePatcher.Patch at, Predicate<PredicateData> insnType, Consumer<Method> consumer) {
+        this.patches.add(new PatchData(at, insnType, consumer));
         return this;
-    }
-
-    public MethodPatcher set(Consumer<Method> consumer) {
-        this.addPatch(PatchType.SET, null, consumer);
-        return this;
-    }
-
-    public MethodPatcher replace(InsnType insnType, Consumer<Method> consumer) {
-        this.addPatch(PatchType.REPLACE, insnType, consumer);
-        return this;
-    }
-
-    private void addPatch(PatchType patchType, InsnType insnType, Consumer<Method> consumer) {
-        this.patches.add(new Patch(insnType, patchType, consumer));
     }
 
     public class Method {
-        private InsnList insnList = new InsnList();
+        InsnList insnList = new InsnList();
         private AbstractInsnNode insnNode;
 
         public Method(AbstractInsnNode insnNode) {
@@ -121,6 +107,30 @@ public class MethodPatcher {
         public Method node(AbstractInsnNode node) {
             this.insnList.add(node);
             return this;
+        }
+    }
+
+    public class PatchData {
+        public final RuntimePatcher.Patch at;
+        public final Predicate<PredicateData> predicate;
+        public final Consumer<MethodPatcher.Method> consumer;
+
+        public PatchData(RuntimePatcher.Patch at, Predicate<PredicateData> predicate, Consumer<MethodPatcher.Method> consumer) {
+            this.at = at;
+            this.predicate = predicate;
+            this.consumer = consumer;
+        }
+    }
+
+    public class PredicateData {
+        public final ClassPatcher patcher;
+        public final String cls;
+        public final AbstractInsnNode node;
+
+        public PredicateData(ClassPatcher patcher, String cls, AbstractInsnNode node) {
+            this.patcher = patcher;
+            this.cls = cls;
+            this.node = node;
         }
     }
 

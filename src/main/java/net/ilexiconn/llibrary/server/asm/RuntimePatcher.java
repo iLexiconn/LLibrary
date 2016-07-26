@@ -5,13 +5,15 @@ import org.apache.commons.compress.utils.IOUtils;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.*;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 
 public abstract class RuntimePatcher implements IClassTransformer, Opcodes {
     private Map<String, ClassPatcher> patcherMap = new HashMap<>();
@@ -58,41 +60,8 @@ public abstract class RuntimePatcher implements IClassTransformer, Opcodes {
         return patcher;
     }
 
-    public InsnType _method(String name, Object... params) {
-        return new InsnType.MethodInsnType() {
-            @Override
-            public String getName() {
-                return name;
-            }
-
-            @Override
-            public Object[] getDesc() {
-                return params;
-            }
-        };
-    }
-
-    public InsnType _return() {
-        return new InsnType.ReturnInsnType() {
-        };
-    }
-
-    public InsnType _ldc(Object value) {
-        return new InsnType.LDCInsnType() {
-            @Override
-            public Object getValue() {
-                return value;
-            }
-        };
-    }
-
-    public InsnType _node(int opcode) {
-        return new InsnType.NodeInsnType() {
-            @Override
-            public int getOpcode() {
-                return opcode;
-            }
-        };
+    public Predicate<MethodPatcher.PredicateData> at(At at, Object... args) {
+        return at.getPredicate(args);
     }
 
     private void saveBytecode(String name, byte[] bytes) {
@@ -111,6 +80,95 @@ public abstract class RuntimePatcher implements IClassTransformer, Opcodes {
         } finally {
             IOUtils.closeQuietly(out);
         }
+    }
+
+    public enum At {
+        METHOD {
+            @Override
+            public Predicate<MethodPatcher.PredicateData> getPredicate(Object... args) {
+                return new Predicate<MethodPatcher.PredicateData>() {
+                    private String mappedName;
+                    private String mappedDesc;
+
+                    @Override
+                    public boolean test(MethodPatcher.PredicateData predicateData) {
+                        if (predicateData.node instanceof MethodInsnNode) {
+                            MethodInsnNode methodNode = (MethodInsnNode) predicateData.node;
+                            if (this.mappedDesc == null) {
+                                this.mappedDesc = MappingHandler.INSTANCE.getClassMapping(predicateData.patcher.methodDesc(Arrays.copyOfRange(args, 1, args.length)));
+                            }
+                            if (this.mappedName == null) {
+                                this.mappedName = MappingHandler.INSTANCE.getMethodMapping(predicateData.cls, (String) args[0], this.mappedDesc);
+                            }
+                            return methodNode.name.equals(this.mappedName) && (this.mappedDesc.isEmpty() || methodNode.desc.equals(this.mappedDesc));
+                        }
+                        return false;
+                    }
+                };
+            }
+        },
+        RETURN {
+            @Override
+            public Predicate<MethodPatcher.PredicateData> getPredicate(Object... args) {
+                return predicateData -> {
+                    int opcode = predicateData.node.getOpcode();
+                    return opcode == Opcodes.RETURN || opcode == Opcodes.IRETURN || opcode == Opcodes.LRETURN || opcode == Opcodes.FRETURN || opcode == Opcodes.DRETURN || opcode == Opcodes.ARETURN;
+                };
+            }
+        },
+        LDC {
+            @Override
+            public Predicate<MethodPatcher.PredicateData> getPredicate(Object... args) {
+                return predicateData -> {
+                    if (predicateData.node instanceof LdcInsnNode) {
+                        LdcInsnNode ldcNode = (LdcInsnNode) predicateData.node;
+                        if (ldcNode.cst.equals(args[0])) {
+                            return true;
+                        }
+                    }
+                    return false;
+                };
+            }
+        },
+        NODE {
+            @Override
+            public Predicate<MethodPatcher.PredicateData> getPredicate(Object... args) {
+                return predicateData -> predicateData.node.getOpcode() == (int) args[0];
+            }
+        };
+
+        public abstract Predicate<MethodPatcher.PredicateData> getPredicate(Object... args);
+    }
+
+    public enum Patch {
+        BEFORE {
+            @Override
+            public void apply(MethodPatcher.PatchData patch, MethodNode methodNode, AbstractInsnNode location, MethodPatcher.Method method) {
+                methodNode.instructions.insertBefore(location, method.insnList);
+            }
+        },
+        AFTER {
+            @Override
+            public void apply(MethodPatcher.PatchData patch, MethodNode methodNode, AbstractInsnNode location, MethodPatcher.Method method) {
+                methodNode.instructions.insert(location, method.insnList);
+            }
+        },
+        REPLACE {
+            @Override
+            public void apply(MethodPatcher.PatchData patch, MethodNode methodNode, AbstractInsnNode location, MethodPatcher.Method method) {
+                methodNode.instructions.clear();
+                methodNode.instructions.add(method.insnList);
+            }
+        },
+        REPLACE_NODE {
+            @Override
+            public void apply(MethodPatcher.PatchData patch, MethodNode methodNode, AbstractInsnNode location, MethodPatcher.Method method) {
+                methodNode.instructions.insertBefore(location, method.insnList);
+                methodNode.instructions.remove(location);
+            }
+        };
+
+        public abstract void apply(MethodPatcher.PatchData patch, MethodNode methodNode, AbstractInsnNode location, MethodPatcher.Method method);
     }
 
     @Override
