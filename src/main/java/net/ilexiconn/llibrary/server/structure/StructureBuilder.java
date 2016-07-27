@@ -34,27 +34,27 @@ public class StructureBuilder extends StructureGenerator {
     private EnumFacing top = EnumFacing.UP;
 
     @Override
-    public void generate(World world, int x, int y, int z, Random random) {
-        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+    public void generate(World world, BlockPos pos, Random random) {
+        BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
         for (ComponentInfo layer : components) {
             for (RepeatRule rule : layer.repeats) {
-                rule.reset(world, random, pos);
+                rule.reset(world, random, mutablePos);
             }
         }
         BlockPos.PooledMutableBlockPos pooledPos = BlockPos.PooledMutableBlockPos.retain();
         for (ComponentInfo layer : components) {
-            pos.setPos(x, y, z);
+            mutablePos.setPos(pos);
             for (RepeatRule rule : layer.repeats) {
-                rule.init(world, random, pos);
-                while (rule.continueRepeating(world, random, pos)) {
+                rule.init(world, random, mutablePos);
+                while (rule.continueRepeating(world, random, mutablePos)) {
                     for (Map.Entry<BlockPos, BlockList> e : layer.blocks.entrySet()) {
                         BlockPos coords = e.getKey();
-                        int blockX = coords.getX() + pos.getX();
-                        int blockY = coords.getY() + pos.getY();
-                        int blockZ = coords.getZ() + pos.getZ();
-                        world.setBlockState(pooledPos.set(blockX, blockY, blockZ), e.getValue().getRandom(random));
+                        int blockX = coords.getX() + mutablePos.getX();
+                        int blockY = coords.getY() + mutablePos.getY();
+                        int blockZ = coords.getZ() + mutablePos.getZ();
+                        world.setBlockState(pooledPos.setPos(blockX, blockY, blockZ).toImmutable(), e.getValue().getRandom(random));
                     }
-                    rule.repeat(world, random, pos);
+                    rule.repeat(world, random, mutablePos);
                 }
             }
         }
