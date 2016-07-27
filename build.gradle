@@ -40,6 +40,7 @@ minecraft {
     version = "1.9.4-12.17.0.1987"
     runDir = "minecraft"
     mappings = minecraft_mappings
+    makeObfSourceJar = false
 }
 
 processResources {
@@ -64,6 +65,11 @@ jar {
     }
 }
 
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = "sources"
+    from sourceSets.main.allSource
+}
+
 task devJar(type: Jar) {
     classifier = "dev"
     from sourceSets.main.output
@@ -80,6 +86,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 }
 
 artifacts {
+    archives sourcesJar
     archives devJar
     archives javadocJar
 }
@@ -97,7 +104,7 @@ publishing {
                 classifier "dev"
             }
 
-            artifact sourceJar {
+            artifact sourcesJar {
                 classifier "sources"
             }
 
