@@ -1,14 +1,11 @@
 package net.ilexiconn.llibrary.server.structure;
 
-import com.google.common.collect.Lists;
-
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
-import java.util.List;
-import java.util.Random;
-
 import org.apache.commons.lang3.ArrayUtils;
+
+import java.util.Random;
 
 /**
  * @author jglrxavpok
@@ -25,7 +22,7 @@ public abstract class StructureGenerator {
         return CLOCKWISE_FACINGS[(index + 1) % CLOCKWISE_FACINGS.length];
     }
 
-    public abstract void generate(World world, int x, int y, int z, Random random);
+    public abstract void generate(World world, BlockPos pos, Random random);
 
     public abstract StructureGenerator rotate(EnumFacing front, EnumFacing top);
 
