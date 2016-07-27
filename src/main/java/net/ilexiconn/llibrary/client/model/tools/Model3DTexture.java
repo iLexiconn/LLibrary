@@ -2,6 +2,7 @@ package net.ilexiconn.llibrary.client.model.tools;
 
 import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -40,30 +41,27 @@ public class Model3DTexture extends ModelBox {
     @Override
     public void render(WorldRenderer worldRenderer, float scale) {
         Tessellator tessellator = Tessellator.getInstance();
-        GL11.glPushMatrix();
-        GL11.glRotatef(90, 0, 1, 0);
-        GL11.glRotatef(180, 0, 0, 1);
-        GL11.glTranslatef(posX1 * scale, posY1 * scale, posZ1 * scale);
-        GL11.glScalef(width / 16F, height / 16F, 1);
+        GlStateManager.pushMatrix();
+        GlStateManager.rotate(90, 0, 1, 0);
+        GlStateManager.rotate(180, 0, 0, 1);
+        GlStateManager.translate(posX1 * scale, posY1 * scale, posZ1 * scale);
+        GlStateManager.scale(width / 16F, height / 16F, 1);
         float depth = 0.0625F;
-        worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-        worldRenderer.putNormal(0.0F, 0.0F, 1.0F);
-        worldRenderer.pos(0.0D, 0.0D, 0.0D).tex(u1, v2).endVertex();
-        worldRenderer.pos(1.0D, 0.0D, 0.0D).tex(u2, v2).endVertex();
-        worldRenderer.pos(1.0D, 1.0D, 0.0D).tex(u2, v1).endVertex();
-        worldRenderer.pos(0.0D, 1.0D, 0.0D).tex(u1, v1).endVertex();
+        worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);
+        worldRenderer.pos(0.0D, 0.0D, 0.0D).tex(u1, v2).normal(0.0F, 0.0F, 1.0F).endVertex();
+        worldRenderer.pos(1.0D, 0.0D, 0.0D).tex(u2, v2).normal(0.0F, 0.0F, 1.0F).endVertex();
+        worldRenderer.pos(1.0D, 1.0D, 0.0D).tex(u2, v1).normal(0.0F, 0.0F, 1.0F).endVertex();
+        worldRenderer.pos(0.0D, 1.0D, 0.0D).tex(u1, v1).normal(0.0F, 0.0F, 1.0F).endVertex();
         tessellator.draw();
-        worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-        worldRenderer.putNormal(0.0F, 0.0F, -1.0F);
-        worldRenderer.pos(0.0D, 1.0D, (0.0F - depth)).tex(u1, v1).endVertex();
-        worldRenderer.pos(1.0D, 1.0D, (0.0F - depth)).tex(u2, v1).endVertex();
-        worldRenderer.pos(1.0D, 0.0D, (0.0F - depth)).tex(u2, v2).endVertex();
-        worldRenderer.pos(0.0D, 0.0D, (0.0F - depth)).tex(u1, v2).endVertex();
+        worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);
+        worldRenderer.pos(0.0D, 1.0D, (0.0F - depth)).tex(u1, v1).normal(0.0F, 0.0F, -1.0F).endVertex();
+        worldRenderer.pos(1.0D, 1.0D, (0.0F - depth)).tex(u2, v1).normal(0.0F, 0.0F, -1.0F).endVertex();
+        worldRenderer.pos(1.0D, 0.0D, (0.0F - depth)).tex(u2, v2).normal(0.0F, 0.0F, -1.0F).endVertex();
+        worldRenderer.pos(0.0D, 0.0D, (0.0F - depth)).tex(u1, v2).normal(0.0F, 0.0F, -1.0F).endVertex();
         tessellator.draw();
         float f5 = 0.5F * (u1 - u2) / width;
         float f6 = 0.5F * (v2 - v1) / height;
-        worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-        worldRenderer.putNormal(-1.0F, 0.0F, 0.0F);
+        worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);
         int k;
         float f7;
         float f8;
@@ -71,56 +69,52 @@ public class Model3DTexture extends ModelBox {
         for (k = 0; k < width; k++) {
             f7 = (float) k / (float) width;
             f8 = u1 + (u2 - u1) * f7 - f5;
-            worldRenderer.pos(f7, 0.0D, (0.0F - depth)).tex(f8, v2).endVertex();
-            worldRenderer.pos(f7, 0.0D, 0.0D).tex(f8, v2).endVertex();
-            worldRenderer.pos(f7, 1.0D, 0.0D).tex(f8, v1).endVertex();
-            worldRenderer.pos(f7, 1.0D, (0.0F - depth)).tex(f8, v1).endVertex();
+            worldRenderer.pos(f7, 0.0D, (0.0F - depth)).tex(f8, v2).normal(-1.0F, 0.0F, 0.0F).endVertex();
+            worldRenderer.pos(f7, 0.0D, 0.0D).tex(f8, v2).normal(-1.0F, 0.0F, 0.0F).endVertex();
+            worldRenderer.pos(f7, 1.0D, 0.0D).tex(f8, v1).normal(-1.0F, 0.0F, 0.0F).endVertex();
+            worldRenderer.pos(f7, 1.0D, (0.0F - depth)).tex(f8, v1).normal(-1.0F, 0.0F, 0.0F).endVertex();
         }
 
         tessellator.draw();
-        worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-        worldRenderer.putNormal(1.0F, 0.0F, 0.0F);
+        worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);
         float f9;
 
         for (k = 0; k < width; k++) {
             f7 = (float) k / (float) width;
             f8 = u1 + (u2 - u1) * f7 - f5;
             f9 = f7 + 1.0F / width;
-            worldRenderer.pos(f9, 1.0D, (0.0F - depth)).tex(f8, v1).endVertex();
-            worldRenderer.pos(f9, 1.0D, 0.0D).tex(f8, v1).endVertex();
-            worldRenderer.pos(f9, 0.0D, 0.0D).tex(f8, v2).endVertex();
-            worldRenderer.pos(f9, 0.0D, (0.0F - depth)).tex(f8, v2).endVertex();
+            worldRenderer.pos(f9, 1.0D, (0.0F - depth)).tex(f8, v1).normal(1.0F, 0.0F, 0.0F).endVertex();
+            worldRenderer.pos(f9, 1.0D, 0.0D).tex(f8, v1).normal(1.0F, 0.0F, 0.0F).endVertex();
+            worldRenderer.pos(f9, 0.0D, 0.0D).tex(f8, v2).normal(1.0F, 0.0F, 0.0F).endVertex();
+            worldRenderer.pos(f9, 0.0D, (0.0F - depth)).tex(f8, v2).normal(1.0F, 0.0F, 0.0F).endVertex();
         }
 
         tessellator.draw();
-        worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-        worldRenderer.putNormal(0.0F, 1.0F, 0.0F);
+        worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);
 
         for (k = 0; k < height; k++) {
             f7 = (float) k / (float) height;
             f8 = v2 + (v1 - v2) * f7 - f6;
             f9 = f7 + 1.0F / height;
-            worldRenderer.pos(0.0D, f9, 0.0D).tex(u1, f8).endVertex();
-            worldRenderer.pos(1.0D, f9, 0.0D).tex(u2, f8).endVertex();
-            worldRenderer.pos(1.0D, f9, (0.0F - depth)).tex(u2, f8).endVertex();
-            worldRenderer.pos(0.0D, f9, (0.0F - depth)).tex(u1, f8).endVertex();
+            worldRenderer.pos(0.0D, f9, 0.0D).tex(u1, f8).normal(0.0F, 1.0F, 0.0F).endVertex();
+            worldRenderer.pos(1.0D, f9, 0.0D).tex(u2, f8).normal(0.0F, 1.0F, 0.0F).endVertex();
+            worldRenderer.pos(1.0D, f9, (0.0F - depth)).tex(u2, f8).normal(0.0F, 1.0F, 0.0F).endVertex();
+            worldRenderer.pos(0.0D, f9, (0.0F - depth)).tex(u1, f8).normal(0.0F, 1.0F, 0.0F).endVertex();
         }
 
         tessellator.draw();
-        worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-        worldRenderer.putNormal(0.0F, -1.0F, 0.0F);
+        worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_NORMAL);
 
         for (k = 0; k < height; k++) {
             f7 = (float) k / (float) height;
             f8 = v2 + (v1 - v2) * f7 - f6;
-            worldRenderer.pos(1.0D, f7, 0.0D).tex(u2, f8).endVertex();
-            worldRenderer.pos(0.0D, f7, 0.0D).tex(u1, f8).endVertex();
-            worldRenderer.pos(0.0D, f7, (0.0F - depth)).tex(u1, f8).endVertex();
-            worldRenderer.pos(1.0D, f7, (0.0F - depth)).tex(u2, f8).endVertex();
+            worldRenderer.pos(1.0D, f7, 0.0D).tex(u2, f8).normal(0.0F, -1.0F, 0.0F).endVertex();
+            worldRenderer.pos(0.0D, f7, 0.0D).tex(u1, f8).normal(0.0F, -1.0F, 0.0F).endVertex();
+            worldRenderer.pos(0.0D, f7, (0.0F - depth)).tex(u1, f8).normal(0.0F, -1.0F, 0.0F).endVertex();
+            worldRenderer.pos(1.0D, f7, (0.0F - depth)).tex(u2, f8).normal(0.0F, -1.0F, 0.0F).endVertex();
         }
 
         tessellator.draw();
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
 }
-
