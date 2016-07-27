@@ -161,7 +161,7 @@ curseforge {
             displayName = "LLibrary $curse_version"
         }
 
-        addArtifact(sourceJar) {
+        addArtifact(sourcesJar) {
             displayName = "LLibrary $curse_version Sources"
         }
 
