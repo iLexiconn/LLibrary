@@ -120,4 +120,3 @@ public class Model3DTexture extends ModelBox {
         GL11.glPopMatrix();
     }
 }
-
