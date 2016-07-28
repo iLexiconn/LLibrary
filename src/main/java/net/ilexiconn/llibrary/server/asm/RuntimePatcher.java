@@ -15,6 +15,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 
+/**
+ * Class to patch other classes at runtime. Return a class extending this class as class transformer in your coremod.
+ * NOTE: Do NOT place the patcher in the same directory or in a subdirectory of the plugin. Also make sure to put
+ * 'RuntimePatcher' in the name of the class.
+ *
+ * @see net.ilexiconn.llibrary.server.core.patcher.LLibraryRuntimePatcher
+ * @since 1.5.0
+ * @author iLexiconn
+ */
 public abstract class RuntimePatcher implements IClassTransformer, Opcodes {
     private Map<String, ClassPatcher> patcherMap = new HashMap<>();
 
@@ -50,6 +59,12 @@ public abstract class RuntimePatcher implements IClassTransformer, Opcodes {
         return bytes;
     }
 
+    /**
+     * Create a new {@link ClassPatcher} for the given class.
+     *
+     * @param obj the {@link Class} object or the full name of the target class.
+     * @return the new {@link ClassPatcher} instance.
+     */
     public ClassPatcher patchClass(Object obj) {
         ClassPatcher patcher = null;
         if (obj instanceof String) {
@@ -60,6 +75,13 @@ public abstract class RuntimePatcher implements IClassTransformer, Opcodes {
         return patcher;
     }
 
+    /**
+     * Set the place for the patch. You can use your custom predicate, this is just a helper method.
+     *
+     * @param at the place
+     * @param args optional arguments for the location, see {@link At}
+     * @return the predicate of the location
+     */
     public Predicate<MethodPatcher.PredicateData> at(At at, Object... args) {
         return at.getPredicate(args);
     }
@@ -82,7 +104,14 @@ public abstract class RuntimePatcher implements IClassTransformer, Opcodes {
         }
     }
 
+    /**
+     * Patch locations.
+     */
     public enum At {
+        /**
+         * At a method call
+         * Arguments: String method, Object... desc
+         */
         METHOD {
             @Override
             public Predicate<MethodPatcher.PredicateData> getPredicate(Object... args) {
@@ -107,6 +136,10 @@ public abstract class RuntimePatcher implements IClassTransformer, Opcodes {
                 };
             }
         },
+        /**
+         * At all the returns
+         * Arguments: none
+         */
         RETURN {
             @Override
             public Predicate<MethodPatcher.PredicateData> getPredicate(Object... args) {
@@ -116,6 +149,10 @@ public abstract class RuntimePatcher implements IClassTransformer, Opcodes {
                 };
             }
         },
+        /**
+         * At a LDC node
+         * Arguments: Object value
+         */
         LDC {
             @Override
             public Predicate<MethodPatcher.PredicateData> getPredicate(Object... args) {
@@ -130,6 +167,10 @@ public abstract class RuntimePatcher implements IClassTransformer, Opcodes {
                 };
             }
         },
+        /**
+         * At a node
+         * Arguments: int opcode
+         */
         NODE {
             @Override
             public Predicate<MethodPatcher.PredicateData> getPredicate(Object... args) {
