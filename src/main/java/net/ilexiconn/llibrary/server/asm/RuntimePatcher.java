@@ -143,32 +143,32 @@ public abstract class RuntimePatcher implements IClassTransformer, Opcodes {
     public enum Patch {
         BEFORE {
             @Override
-            public void apply(MethodPatcher.PatchData patch, MethodNode methodNode, AbstractInsnNode location, MethodPatcher.Method method) {
+            public void apply(MethodPatcher.PatchData patch, MethodNode methodNode, AbstractInsnNode location, Method method) {
                 methodNode.instructions.insertBefore(location, method.insnList);
             }
         },
         AFTER {
             @Override
-            public void apply(MethodPatcher.PatchData patch, MethodNode methodNode, AbstractInsnNode location, MethodPatcher.Method method) {
+            public void apply(MethodPatcher.PatchData patch, MethodNode methodNode, AbstractInsnNode location, Method method) {
                 methodNode.instructions.insert(location, method.insnList);
             }
         },
         REPLACE {
             @Override
-            public void apply(MethodPatcher.PatchData patch, MethodNode methodNode, AbstractInsnNode location, MethodPatcher.Method method) {
+            public void apply(MethodPatcher.PatchData patch, MethodNode methodNode, AbstractInsnNode location, Method method) {
                 methodNode.instructions.clear();
                 methodNode.instructions.add(method.insnList);
             }
         },
         REPLACE_NODE {
             @Override
-            public void apply(MethodPatcher.PatchData patch, MethodNode methodNode, AbstractInsnNode location, MethodPatcher.Method method) {
+            public void apply(MethodPatcher.PatchData patch, MethodNode methodNode, AbstractInsnNode location, Method method) {
                 methodNode.instructions.insertBefore(location, method.insnList);
                 methodNode.instructions.remove(location);
             }
         };
 
-        public abstract void apply(MethodPatcher.PatchData patch, MethodNode methodNode, AbstractInsnNode location, MethodPatcher.Method method);
+        public abstract void apply(MethodPatcher.PatchData patch, MethodNode methodNode, AbstractInsnNode location, Method method);
     }
 
     @Override
