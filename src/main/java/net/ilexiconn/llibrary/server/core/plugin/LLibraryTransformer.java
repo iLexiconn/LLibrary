@@ -16,8 +16,8 @@ public class LLibraryTransformer implements IClassTransformer {
         if (bytes == null) {
             return null;
         }
-        if (!name.startsWith("$") && name.contains(RUNTIME_PATCHER) && !name.startsWith("net.ilexiconn.llibrary.server.asm.RuntimePatcher")) {
-            FMLRelaunchLog.info("Found runtime patcher: " + name);
+        if (!name.startsWith("$") && name.contains(RUNTIME_PATCHER)) {
+            FMLRelaunchLog.info("Found runtime patcher " + name);
             ClassReader classReader = new ClassReader(bytes);
             ClassNode classNode = new ClassNode();
             classReader.accept(classNode, 0);
