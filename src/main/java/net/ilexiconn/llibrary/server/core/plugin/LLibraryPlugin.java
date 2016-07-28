@@ -1,11 +1,16 @@
 package net.ilexiconn.llibrary.server.core.plugin;
 
+import net.ilexiconn.llibrary.server.asm.MappingHandler;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
+import org.apache.commons.compress.utils.IOUtils;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
 
-@IFMLLoadingPlugin.Name("llibrary-core")
+@IFMLLoadingPlugin.Name("llibrary")
 @IFMLLoadingPlugin.MCVersion("1.8.9")
+@IFMLLoadingPlugin.SortingIndex(1001)
 @IFMLLoadingPlugin.TransformerExclusions("net.ilexiconn.llibrary.server.asm")
 public class LLibraryPlugin implements IFMLLoadingPlugin {
     public static boolean inDevelopment;
@@ -22,12 +27,21 @@ public class LLibraryPlugin implements IFMLLoadingPlugin {
 
     @Override
     public String getSetupClass() {
-        return "net.ilexiconn.llibrary.server.core.plugin.LLibraryCallHook";
+        return null;
     }
 
     @Override
     public void injectData(Map<String, Object> data) {
         LLibraryPlugin.inDevelopment = !(Boolean) data.get("runtimeDeobfuscationEnabled");
+        InputStream stream = null;
+        try {
+            stream = this.getClass().getResourceAsStream("/llibrary.mappings");
+            MappingHandler.INSTANCE.parseMappings(stream);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            IOUtils.closeQuietly(stream);
+        }
     }
 
     @Override
