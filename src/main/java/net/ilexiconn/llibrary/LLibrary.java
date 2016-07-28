@@ -20,7 +20,7 @@ import org.apache.logging.log4j.Logger;
 
 @Mod(modid = "llibrary", name = "LLibrary", version = LLibrary.VERSION, guiFactory = "net.ilexiconn.llibrary.client.gui.LLibraryGUIFactory")
 public class LLibrary {
-    public static final String VERSION = "1.5.0-develop";
+    public static final String VERSION = "1.5.0";
     public static final Logger LOGGER = LogManager.getLogger("LLibrary");
     @SidedProxy(serverSide = "net.ilexiconn.llibrary.server.ServerProxy", clientSide = "net.ilexiconn.llibrary.client.ClientProxy")
     public static ServerProxy PROXY;
