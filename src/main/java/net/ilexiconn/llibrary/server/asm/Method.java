@@ -17,6 +17,15 @@ public class Method {
         return insnNode;
     }
 
+    /**
+     * Add a field instruction
+     *
+     * @param opcode the opcode
+     * @param obj the class object or class name
+     * @param name the field name
+     * @param type the type class or name
+     * @return this
+     */
     public Method field(int opcode, Object obj, String name, Object type) {
         if (obj instanceof String) {
             String cls = MappingHandler.INSTANCE.getClassMapping((String) obj);
@@ -26,10 +35,25 @@ public class Method {
         return this;
     }
 
+    /**
+     * Add a single var instruction
+     *
+     * @param opcode the opcode
+     * @param var the var
+     * @return this
+     */
     public Method var(int opcode, int var) {
         return this.var(opcode, var, var);
     }
 
+    /**
+     * Load a range of vars of the same type
+     *
+     * @param opcode the opcode
+     * @param from the range begin
+     * @param to the range end
+     * @return this
+     */
     public Method var(int opcode, int from, int to) {
         if (from < to) {
             for (; from <= to; from++) {
@@ -45,6 +69,15 @@ public class Method {
         return this;
     }
 
+    /**
+     * Add a method instruction
+     *
+     * @param opcode the opcode
+     * @param obj the class object or class name
+     * @param name the method name
+     * @param params the method parameters
+     * @return this
+     */
     public Method method(int opcode, Object obj, String name, Object... params) {
         if (obj instanceof String) {
             String cls = MappingHandler.INSTANCE.getClassMapping((String) obj);
@@ -54,10 +87,22 @@ public class Method {
         return this;
     }
 
+    /**
+     * Add a basic instruction
+     *
+     * @param opcode the opcode
+     * @return this
+     */
     public Method node(int opcode) {
         return this.node(new InsnNode(opcode));
     }
 
+    /**
+     * Add a custom instruction
+     *
+     * @param node the instruction
+     * @return this
+     */
     public Method node(AbstractInsnNode node) {
         this.insnList.add(node);
         return this;
