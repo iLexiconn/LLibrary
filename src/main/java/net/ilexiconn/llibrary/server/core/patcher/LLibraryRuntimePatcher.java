@@ -7,9 +7,9 @@ import net.ilexiconn.llibrary.server.world.TickRateHandler;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelPlayer;
-import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.client.renderer.entity.RendererLivingEntity;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.Locale;
 import net.minecraft.entity.Entity;
@@ -69,7 +69,7 @@ public class LLibraryRuntimePatcher extends RuntimePatcher {
                     method.var(ALOAD, 0);
                     method.field(GETFIELD, RenderPlayer.class, "smallArms", boolean.class);
                     method.method(INVOKESTATIC, LLibraryHooks.class, "assignModel", RenderPlayer.class, ModelPlayer.class, boolean.class, ModelPlayer.class);
-                    method.field(PUTFIELD, RenderLivingBase.class, "mainModel", ModelBase.class);
+                    method.field(PUTFIELD, RendererLivingEntity.class, "mainModel", ModelBase.class);
                 }).pop();
 
         patchClass(MinecraftServer.class)
