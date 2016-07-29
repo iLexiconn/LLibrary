@@ -2,7 +2,7 @@ package net.ilexiconn.llibrary.server.core.plugin;
 
 import net.ilexiconn.llibrary.server.asm.MappingHandler;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
-import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
