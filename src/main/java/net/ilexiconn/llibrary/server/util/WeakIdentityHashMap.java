@@ -3,10 +3,10 @@ package net.ilexiconn.llibrary.server.util;
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
+import java.util.AbstractCollection;
+import java.util.AbstractSet;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -49,7 +49,7 @@ public class WeakIdentityHashMap<K, V> implements Map<K, V> {
     @Override
     public boolean containsKey(Object key) {
         reap();
-        return delegate.containsKey(new IdentityWeakReference(key));
+        return delegate.containsKey(new IdentityWeakReference((K) key));
     }
 
     @Override
@@ -61,7 +61,7 @@ public class WeakIdentityHashMap<K, V> implements Map<K, V> {
     @Override
     public V get(Object key) {
         reap();
-        return delegate.get(new IdentityWeakReference(key));
+        return delegate.get(new IdentityWeakReference((K) key));
     }
 
     @Override
@@ -72,7 +72,7 @@ public class WeakIdentityHashMap<K, V> implements Map<K, V> {
     @Override
     public V remove(Object key) {
         reap();
-        return delegate.remove(new IdentityWeakReference(key));
+        return delegate.remove(new IdentityWeakReference((K) key));
     }
 
     @Override
@@ -91,47 +91,132 @@ public class WeakIdentityHashMap<K, V> implements Map<K, V> {
     @Override
     public Set<K> keySet() {
         reap();
-        Set ret = new HashSet();
-        for (Iterator i = delegate.keySet().iterator(); i.hasNext();) {
-            IdentityWeakReference ref = (IdentityWeakReference) i.next();
-            ret.add(ref.get());
-        }
-        return Collections.unmodifiableSet(ret);
+        return new AbstractSet<K>() {
+            @Override
+            public int size() {
+                reap();
+                return delegate.size();
+            }
+
+            @Override
+            public Iterator<K> iterator() {
+                reap();
+                Iterator<IdentityWeakReference> iter = delegate.keySet().iterator();
+                return new Iterator<K>() {
+                    @Override
+                    public boolean hasNext() {
+                        return iter.hasNext();
+                    }
+
+                    @Override
+                    public K next() {
+                        return iter.next().get();
+                    }
+
+                    @Override
+                    public void remove() {
+                        iter.remove();
+                    }
+                };
+            }
+
+            @Override
+            public void clear() {
+                delegate.clear();
+                reap();
+            }
+        };
     }
 
     @Override
     public Collection<V> values() {
-        reap();
-        return delegate.values();
+        return new AbstractCollection<V>() {
+            @Override
+            public int size() {
+                reap();
+                return delegate.size();
+            }
+
+            @Override
+            public boolean contains(Object o) {
+                reap();
+                return containsValue(o);
+            }
+
+            @Override
+            public Iterator<V> iterator() {
+                reap();
+                return delegate.values().iterator();
+            }
+
+            @Override
+            public void clear() {
+                delegate.clear();
+                reap();
+            }
+        };
     }
 
     @Override
     public Set<Entry<K, V>> entrySet() {
         reap();
-        Set<Entry<K, V>> ret = new HashSet();
-        for (Iterator<Entry<IdentityWeakReference, V>> i = delegate.entrySet().iterator(); i.hasNext();) {
-            Entry<IdentityWeakReference, V> ref = i.next();
-            final K key = (K) ref.getKey().get();
-            final V value = ref.getValue();
-            Entry<K, V> entry = new Entry<K, V>() {
-                @Override
-                public K getKey() {
-                    return key;
-                }
+        return new AbstractSet<Entry<K, V>>() {
+            @Override
+            public int size() {
+                reap();
+                return delegate.size();
+            }
 
-                @Override
-                public V getValue() {
-                    return value;
-                }
+            @Override
+            public Iterator<Entry<K, V>> iterator() {
+                reap();
+                Iterator<Entry<IdentityWeakReference, V>> iter = delegate.entrySet().iterator();
+                return new Iterator<Entry<K, V>>() {
+                    @Override
+                    public boolean hasNext() {
+                        return iter.hasNext();
+                    }
 
-                @Override
-                public V setValue(V value) {
-                    throw new UnsupportedOperationException();
-                }
-            };
-            ret.add(entry);
-        }
-        return Collections.unmodifiableSet(ret);
+                    @Override
+                    public Entry<K, V> next() {
+                        Entry<IdentityWeakReference, V> entry = iter.next();
+                        return new Entry<K, V>() {
+                            @Override
+                            public K getKey() {
+                                return entry.getKey().get();
+                            }
+
+                            @Override
+                            public V getValue() {
+                                return entry.getValue();
+                            }
+
+                            @Override
+                            public V setValue(V value) {
+                                return delegate.put(entry.getKey(), value);
+                            }
+                        };
+                    }
+
+                    @Override
+                    public void remove() {
+                        iter.remove();
+                    }
+                };
+            }
+
+            @Override
+            public void clear() {
+                delegate.clear();
+                reap();
+            }
+        };
+    }
+
+    @Override
+    public String toString() {
+        reap();
+        return delegate.toString();
     }
 
     private synchronized void reap() {
@@ -143,10 +228,10 @@ public class WeakIdentityHashMap<K, V> implements Map<K, V> {
         }
     }
 
-    private class IdentityWeakReference extends WeakReference {
+    private class IdentityWeakReference extends WeakReference<K> {
         private final int hash;
 
-        public IdentityWeakReference(Object obj) {
+        public IdentityWeakReference(K obj) {
             super(obj, queue);
             hash = System.identityHashCode(obj);
         }
@@ -159,6 +244,11 @@ public class WeakIdentityHashMap<K, V> implements Map<K, V> {
         @Override
         public boolean equals(Object obj) {
             return this == obj || ((IdentityWeakReference) obj).get() == get();
+        }
+
+        @Override
+        public String toString() {
+            return String.valueOf(get());
         }
     }
 }
