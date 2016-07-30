@@ -6,7 +6,15 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.ilexiconn.llibrary.LLibrary;
 import net.ilexiconn.llibrary.client.gui.ElementGUI;
-import net.ilexiconn.llibrary.client.gui.element.*;
+import net.ilexiconn.llibrary.client.gui.element.ButtonElement;
+import net.ilexiconn.llibrary.client.gui.element.CheckboxElement;
+import net.ilexiconn.llibrary.client.gui.element.ColorElement;
+import net.ilexiconn.llibrary.client.gui.element.Element;
+import net.ilexiconn.llibrary.client.gui.element.ElementHandler;
+import net.ilexiconn.llibrary.client.gui.element.InputElement;
+import net.ilexiconn.llibrary.client.gui.element.LabelElement;
+import net.ilexiconn.llibrary.client.gui.element.ListElement;
+import net.ilexiconn.llibrary.client.gui.element.SliderElement;
 import net.ilexiconn.llibrary.client.gui.element.color.ColorScheme;
 import net.ilexiconn.llibrary.server.util.IValueAccess;
 import net.minecraft.client.gui.Gui;
@@ -17,7 +25,11 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import org.lwjgl.opengl.GL11;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @SideOnly(Side.CLIENT)
@@ -87,7 +99,7 @@ public class ConfigGUI extends ElementGUI {
     @Override
     public void drawScreen(float mouseX, float mouseY, float partialTicks) {
         Gui.drawRect(0, 0, this.width, 40, LLibrary.CONFIG.getPrimaryColor());
-        Gui.drawRect(120, 40, this.width, this.height, LLibrary.CONFIG.getInvertedTextColor());
+        Gui.drawRect(120, 40, this.width, this.height, LLibrary.CONFIG.getColorMode().equals("dark") ? 0xFF191919 : 0xFFFFFFFF);
         GL11.glPushMatrix();
         GL11.glEnable(GL11.GL_BLEND);
         int color = LLibrary.CONFIG.getAccentColor();
