@@ -23,10 +23,13 @@ import java.util.List;
 public abstract class ElementGUI extends GuiScreen {
     protected List<Element> elementList = new ArrayList<>();
 
+    private boolean requiresInit;
+
     public abstract void initElements();
 
     @Override
     public void initGui() {
+        this.requiresInit = true;
         ElementHandler.INSTANCE.clearElements(this);
         this.elementList.clear();
         this.initElements();
@@ -34,6 +37,7 @@ public abstract class ElementGUI extends GuiScreen {
             ElementHandler.INSTANCE.addElement(this, element);
         }
         ElementHandler.INSTANCE.onInit(this);
+        this.requiresInit = false;
     }
 
     @Override
@@ -81,5 +85,9 @@ public abstract class ElementGUI extends GuiScreen {
     @Override
     public void onGuiClosed() {
         ElementHandler.INSTANCE.clearElements(this);
+    }
+
+    public boolean doesRequireInit() {
+        return this.requiresInit;
     }
 }
