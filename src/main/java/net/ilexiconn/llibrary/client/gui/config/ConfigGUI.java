@@ -169,4 +169,8 @@ public class ConfigGUI extends ElementGUI {
         MinecraftForge.EVENT_BUS.post(new ConfigChangedEvent.OnConfigChangedEvent(this.mod.modid(), null, this.mc.theWorld != null, false));
         super.onGuiClosed();
     }
+
+    public GuiScreen getParent() {
+        return this.parent;
+    }
 }
