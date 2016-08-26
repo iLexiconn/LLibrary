@@ -21,7 +21,7 @@ public enum ElementHandler {
     private Map<GuiScreen, List<Element<?>>> elementMap = new HashMap<>();
     private Element<?> currentlyClicking;
 
-    public <T extends GuiScreen> Element<T> addElement(T gui, Element<T> element) {
+    public <T extends GuiScreen> void addElement(T gui, Element<T> element) {
         if (this.elementMap.containsKey(gui)) {
             this.elementMap.get(gui).add(element);
         } else {
@@ -34,15 +34,12 @@ public enum ElementHandler {
                 element.init();
             }
         }
-        return element;
     }
 
-    public <T extends GuiScreen> Element<T> removeElement(T gui, Element<T> element) {
+    public <T extends GuiScreen> void removeElement(T gui, Element<T> element) {
         if (this.elementMap.containsKey(gui)) {
             this.elementMap.get(gui).remove(element);
-            return element;
         }
-        return null;
     }
 
     public <T extends GuiScreen> void clearElements(T gui) {
