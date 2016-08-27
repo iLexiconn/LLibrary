@@ -1,13 +1,13 @@
 package net.ilexiconn.llibrary.client.gui.element;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.ilexiconn.llibrary.LLibrary;
 import net.ilexiconn.llibrary.client.gui.element.color.ColorScheme;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.function.Function;
 
@@ -15,8 +15,8 @@ import java.util.function.Function;
 public class ButtonElement<T extends GuiScreen> extends Element<T> {
     public static final ColorScheme CLOSE = ColorScheme.create(() -> LLibrary.CONFIG.getDarkAccentColor(), () -> 0xFFE04747);
 
-    private String text;
-    private Function<ButtonElement<T>, Boolean> function;
+    protected String text;
+    protected Function<ButtonElement<T>, Boolean> function;
 
     public ButtonElement(T gui, String text, float posX, float posY, int width, int height, Function<ButtonElement<T>, Boolean> function) {
         super(gui, posX, posY, width, height);
