@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @SideOnly(Side.CLIENT)
@@ -134,32 +135,37 @@ public class ConfigGUI extends ElementGUI {
         }
     }
 
-    private Element<ConfigGUI> createPropertyElement(ConfigProperty property, int x, int y) {
-        switch (property.getType()) {
-            case BOOLEAN:
-                return new CheckboxElement<>(this, x, y, (checkbox) -> {
-                    property.set(checkbox.isSelected());
-                    return true;
-                }).withSelection(property.get() instanceof Boolean ? (Boolean) property.get() : (Boolean.parseBoolean((String) property.get())));
-            case COLOR:
-                return new ColorElement<>(this, x, y, 195, 149, (color) -> {
-                    property.set(color.getColor());
-                    return true;
-                });
-            case STRING:
-                return new InputElement<>(this, (String) property.get(), x, y, 192, (input) -> {
-                    property.set(input.getText());
-                });
-            case DOUBLE:
-                return new SliderElement<>(this, x, y, false, (slider) -> {
-                    property.set(slider.doubleValue());
-                    return true;
-                }).withValue(Float.valueOf(String.valueOf(property.get())));
-            case INTEGER:
-                return new SliderElement<>(this, x, y, true, (slider) -> {
-                    property.set(slider.intValue());
-                    return true;
-                }).withValue((Integer.valueOf(String.valueOf(property.get()))));
+    protected Element<ConfigGUI> createPropertyElement(ConfigProperty property, int x, int y) {
+        Function<ConfigProperty.PropertyData, Element<ConfigGUI>> elementProvider = property.getElementProvider();
+        if (elementProvider == null) {
+            switch (property.getType()) {
+                case BOOLEAN:
+                    return new CheckboxElement<>(this, x, y, (checkbox) -> {
+                        property.set(checkbox.isSelected());
+                        return true;
+                    }).withSelection(property.get() instanceof Boolean ? (Boolean) property.get() : (Boolean.parseBoolean((String) property.get())));
+                case COLOR:
+                    return new ColorElement<>(this, x, y, 195, 149, (color) -> {
+                        property.set(color.getColor());
+                        return true;
+                    });
+                case STRING:
+                    return new InputElement<>(this, (String) property.get(), x, y, 192, (input) -> {
+                        property.set(input.getText());
+                    });
+                case DOUBLE:
+                    return new SliderElement<>(this, x, y, false, (slider) -> {
+                        property.set(slider.doubleValue());
+                        return true;
+                    }).withValue(Float.valueOf(String.valueOf(property.get())));
+                case INTEGER:
+                    return new SliderElement<>(this, x, y, true, (slider) -> {
+                        property.set(slider.intValue());
+                        return true;
+                    }).withValue((Integer.valueOf(String.valueOf(property.get()))));
+            }
+        } else {
+            return elementProvider.apply(new ConfigProperty.PropertyData(this, property, x, y));
         }
         return null;
     }
