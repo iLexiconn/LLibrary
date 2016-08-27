@@ -1,5 +1,11 @@
-package net.ilexiconn.llibrary.client.model.techne;
+package net.ilexiconn.qubble.client.model;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
+import net.ilexiconn.llibrary.client.model.techne.TechneCube;
 import org.apache.commons.io.IOUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -11,6 +17,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -36,11 +43,13 @@ public class TechneModel {
             ZipFile zipFile = new ZipFile(file);
             InputStream stream = null;
             Enumeration<? extends ZipEntry> entries = zipFile.entries();
+            boolean xml = false;
             while (entries.hasMoreElements()) {
                 ZipEntry entry = entries.nextElement();
-                if (!entry.getName().equals("model.xml")) {
+                if (!entry.getName().startsWith("model.")) {
                     continue;
                 }
+                xml = entry.getName().endsWith("xml");
                 stream = zipFile.getInputStream(entry);
                 break;
             }
@@ -49,94 +58,133 @@ public class TechneModel {
             }
             byte[] modelXml = IOUtils.toByteArray(stream);
             zipFile.close();
-            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-            Document document = documentBuilder.parse(new ByteArrayInputStream(modelXml));
-            NodeList nodeListModel = document.getElementsByTagName("Model");
-            NodeList nodes = nodeListModel.item(0).getChildNodes();
-            int i = 0;
-            while (i < nodes.getLength()) {
-                Node node = nodes.item(i);
-                if (node.getNodeName().equals("GlScale")) {
-                    String[] scale = node.getTextContent().split(",");
-                    this.scaleX = Float.parseFloat(scale[0]);
-                    this.scaleY = Float.parseFloat(scale[1]);
-                    this.scaleZ = Float.parseFloat(scale[2]);
+            ByteArrayInputStream is = new ByteArrayInputStream(modelXml);
+            if (xml) {
+                DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+                Document document = documentBuilder.parse(is);
+                NodeList nodeListModel = document.getElementsByTagName("Model");
+                NodeList nodes = nodeListModel.item(0).getChildNodes();
+                int i = 0;
+                while (i < nodes.getLength()) {
+                    Node node = nodes.item(i);
+                    if (node.getNodeName().equals("GlScale")) {
+                        String[] scale = node.getTextContent().split(",");
+                        this.scaleX = Float.parseFloat(scale[0]);
+                        this.scaleY = Float.parseFloat(scale[1]);
+                        this.scaleZ = Float.parseFloat(scale[2]);
+                    }
+                    if (node.getNodeName().equals("TextureSize")) {
+                        String[] textureSize = node.getTextContent().split(",");
+                        this.textureWidth = Integer.parseInt(textureSize[0]);
+                        this.textureHeight = Integer.parseInt(textureSize[1]);
+                    }
+                    ++i;
                 }
-                if (node.getNodeName().equals("TextureSize")) {
-                    String[] textureSize = node.getTextContent().split(",");
-                    this.textureWidth = Integer.parseInt(textureSize[0]);
-                    this.textureHeight = Integer.parseInt(textureSize[1]);
+                NodeList shapes = document.getElementsByTagName("Shape");
+                int shapeIndex = 0;
+                while (shapeIndex < shapes.getLength()) {
+                    Node shape = shapes.item(shapeIndex);
+                    NamedNodeMap shapeAttributes = shape.getAttributes();
+                    if (shapeAttributes == null) {
+                        throw new RuntimeException("Cube " + (shapeIndex + 1) + " has no attributes");
+                    }
+                    Node name = shapeAttributes.getNamedItem("name");
+                    String shapeName = null;
+                    if (name != null) {
+                        shapeName = name.getNodeValue();
+                    }
+                    if (shapeName == null) {
+                        shapeName = "cube " + (shapeIndex + 1);
+                    }
+                    try {
+                        boolean mirrored = false;
+                        String[] offset = new String[3];
+                        String[] position = new String[3];
+                        String[] rotation = new String[3];
+                        String[] size = new String[3];
+                        String[] textureOffset = new String[2];
+                        NodeList shapeChildren = shape.getChildNodes();
+                        int childIndex = 0;
+                        while (childIndex < shapeChildren.getLength()) {
+                            Node shapeChild = shapeChildren.item(childIndex);
+                            String shapeChildName = shapeChild.getNodeName();
+                            String shapeChildValue = shapeChild.getTextContent();
+                            if (shapeChildValue != null) {
+                                shapeChildValue = shapeChildValue.trim();
+                                switch (shapeChildName) {
+                                    case "IsMirrored":
+                                        mirrored = !shapeChildValue.equals("False");
+                                        break;
+                                    case "Offset":
+                                        offset = shapeChildValue.split(",");
+                                        break;
+                                    case "Position":
+                                        position = shapeChildValue.split(",");
+                                        break;
+                                    case "Rotation":
+                                        rotation = shapeChildValue.split(",");
+                                        break;
+                                    case "Size":
+                                        size = shapeChildValue.split(",");
+                                        break;
+                                    case "TextureOffset":
+                                        textureOffset = shapeChildValue.split(",");
+                                        break;
+                                }
+                            }
+                            ++childIndex;
+                        }
+                        TechneCube cube = TechneCube.create(shapeName);
+                        cube.setTexture(Integer.parseInt(textureOffset[0]), Integer.parseInt(textureOffset[1]));
+                        cube.setTextureMirrored(mirrored);
+                        cube.setOffset(Float.parseFloat(offset[0]), Float.parseFloat(offset[1]), Float.parseFloat(offset[2]));
+                        cube.setDimensions(Integer.parseInt(size[0]), Integer.parseInt(size[1]), Integer.parseInt(size[2]));
+                        cube.setPosition(Float.parseFloat(position[0]), Float.parseFloat(position[1]) - 23.4f, Float.parseFloat(position[2]));
+                        cube.setRotation(Float.parseFloat(rotation[0]), Float.parseFloat(rotation[1]), Float.parseFloat(rotation[2]));
+                        cube.setTexture(this.textureWidth, this.textureHeight);
+                        this.cubes.add(cube);
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
+                    ++shapeIndex;
                 }
-                ++i;
-            }
-            NodeList shapes = document.getElementsByTagName("Shape");
-            int i2 = 0;
-            while (i2 < shapes.getLength()) {
-                Node shape = shapes.item(i2);
-                NamedNodeMap shapeAttributes = shape.getAttributes();
-                if (shapeAttributes == null) {
-                    throw new RuntimeException("Cube " + (i2 + 1) + " has no attributes");
-                }
-                Node name = shapeAttributes.getNamedItem("name");
-                String shapeName = null;
-                if (name != null) {
-                    shapeName = name.getNodeValue();
-                }
-                if (shapeName == null) {
-                    shapeName = "cube " + (i2 + 1);
-                }
-                try {
-                    boolean mirrored = false;
-                    String[] offset = new String[3];
-                    String[] position = new String[3];
-                    String[] rotation = new String[3];
-                    String[] size = new String[3];
-                    String[] textureOffset = new String[2];
-                    NodeList shapeChildren = shape.getChildNodes();
-                    int j = 0;
-                    while (j < shapeChildren.getLength()) {
-                        Node shapeChild = shapeChildren.item(j);
-                        String shapeChildName = shapeChild.getNodeName();
-                        String shapeChildValue = shapeChild.getTextContent();
-                        if (shapeChildValue != null) {
-                            shapeChildValue = shapeChildValue.trim();
-                            switch (shapeChildName) {
-                                case "IsMirrored":
-                                    mirrored = !shapeChildValue.equals("False");
-                                    break;
-                                case "Offset":
-                                    offset = shapeChildValue.split(",");
-                                    break;
-                                case "Position":
-                                    position = shapeChildValue.split(",");
-                                    break;
-                                case "Rotation":
-                                    rotation = shapeChildValue.split(",");
-                                    break;
-                                case "Size":
-                                    size = shapeChildValue.split(",");
-                                    break;
-                                case "TextureOffset":
-                                    textureOffset = shapeChildValue.split(",");
-                                    break;
+            } else {
+                JsonParser jsonParser = new JsonParser();
+                JsonReader reader = new JsonReader(new InputStreamReader(is));
+                reader.setLenient(true);
+                JsonElement rootElement = jsonParser.parse(reader);
+                JsonObject techne = rootElement.getAsJsonObject().getAsJsonObject("Techne");
+                JsonArray models = techne.getAsJsonArray("Models");
+                for (int i = 0; i < models.size(); i++) {
+                    JsonElement modelEntryElement = models.get(i);
+                    if (modelEntryElement.isJsonObject()) {
+                        JsonObject modelEntryObject = modelEntryElement.getAsJsonObject();
+                        JsonObject modelObject = modelEntryObject.getAsJsonObject("Model");
+                        JsonObject geometry = modelObject.getAsJsonObject("Geometry");
+                        JsonArray shapes = geometry.getAsJsonArray("Shape");
+                        for (int shape = 0; shape < shapes.size(); shape++) {
+                            JsonElement shapeElement = shapes.get(shape);
+                            if (shapeElement.isJsonObject()) {
+                                JsonObject shapeObject = shapeElement.getAsJsonObject();
+                                TechneCube cube = TechneCube.create(shapeObject.get("@name").getAsString());
+                                cube.setTextureMirrored(shapeObject.get("IsMirrored").getAsBoolean());
+                                String[] offsets = shapeObject.get("Offset").getAsString().split(",");
+                                cube.setOffset(Float.parseFloat(offsets[0]), Float.parseFloat(offsets[1]), Float.parseFloat(offsets[2]));
+                                String[] positions = shapeObject.get("Position").getAsString().split(",");
+                                cube.setPosition(Float.parseFloat(positions[0]), Float.parseFloat(positions[1]), Float.parseFloat(positions[2]));
+                                String[] rotations = shapeObject.get("Rotation").getAsString().split(",");
+                                cube.setRotation(Float.parseFloat(rotations[0]), Float.parseFloat(rotations[1]), Float.parseFloat(rotations[2]));
+                                String[] sizes = shapeObject.get("Size").getAsString().split(",");
+                                cube.setDimensions(Integer.parseInt(sizes[0]), Integer.parseInt(sizes[1]), Integer.parseInt(sizes[2]));
+                                String[] textureOffset = shapeObject.get("TextureOffset").getAsString().split(",");
+                                cube.setTexture(Integer.parseInt(textureOffset[0]), Integer.parseInt(textureOffset[1]));
+                                this.cubes.add(cube);
                             }
                         }
-                        ++j;
+                        break;
                     }
-                    TechneCube cube = TechneCube.create(shapeName);
-                    cube.setTexture(Integer.parseInt(textureOffset[0]), Integer.parseInt(textureOffset[1]));
-                    cube.setTextureMirrored(mirrored);
-                    cube.setOffset(Float.parseFloat(offset[0]), Float.parseFloat(offset[1]), Float.parseFloat(offset[2]));
-                    cube.setDimensions(Integer.parseInt(size[0]), Integer.parseInt(size[1]), Integer.parseInt(size[2]));
-                    cube.setPosition(Float.parseFloat(position[0]), Float.parseFloat(position[1]) - 23.4f, Float.parseFloat(position[2]));
-                    cube.setRotation(Float.parseFloat(rotation[0]), Float.parseFloat(rotation[1]), Float.parseFloat(rotation[2]));
-                    cube.setTexture(this.textureWidth, this.textureHeight);
-                    this.cubes.add(cube);
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
                 }
-                ++i2;
             }
         } catch (Exception e) {
             e.printStackTrace();
