@@ -15,8 +15,8 @@ import java.util.function.Function;
 public class ButtonElement<T extends GuiScreen> extends Element<T> {
     public static final ColorScheme CLOSE = ColorScheme.create(() -> LLibrary.CONFIG.getDarkAccentColor(), () -> 0xFFE04747);
 
-    private String text;
-    private Function<ButtonElement<T>, Boolean> function;
+    protected String text;
+    protected Function<ButtonElement<T>, Boolean> function;
 
     public ButtonElement(T gui, String text, float posX, float posY, int width, int height, Function<ButtonElement<T>, Boolean> function) {
         super(gui, posX, posY, width, height);
