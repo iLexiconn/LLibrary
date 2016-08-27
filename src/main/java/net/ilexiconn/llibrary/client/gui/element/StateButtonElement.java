@@ -1,4 +1,3 @@
-
 package net.ilexiconn.llibrary.client.gui.element;
 
 import net.minecraft.client.audio.PositionedSoundRecord;
