@@ -2,7 +2,7 @@
 
 ==========
 
-The lightweight Minecraft modding library.
+The lightweight Minecraft modding library. [<img src="http://cf.way2muchnoise.eu/llibrary.svg" alt="LLibrary" align="center"/>](http://minecraft.curseforge.com/projects/llibrary)
 
 Quickstart
 ==========
