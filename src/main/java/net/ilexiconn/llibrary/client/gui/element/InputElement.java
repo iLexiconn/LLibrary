@@ -1,6 +1,7 @@
 package net.ilexiconn.llibrary.client.gui.element;
 
 import net.ilexiconn.llibrary.LLibrary;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -17,7 +18,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 @SideOnly(Side.CLIENT)
-public class InputElement<T extends GuiScreen> extends Element<T> {
+public class InputElement<T extends IElementGUI> extends Element<IElementGUI> {
     private String text;
     private boolean selected;
     private int lineScrollOffset;
@@ -50,7 +51,8 @@ public class InputElement<T extends GuiScreen> extends Element<T> {
         this.drawRectangle(this.getPosX(), this.getPosY(), this.getWidth(), this.getHeight(), this.editable ? LLibrary.CONFIG.getSecondaryColor() : LLibrary.CONFIG.getSecondarySubcolor());
         int cursor = this.cursorPosition - this.lineScrollOffset;
         int cursorEnd = this.selectionEnd - this.lineScrollOffset;
-        String displayString = this.getGUI().mc.fontRendererObj.trimStringToWidth(this.text.substring(this.lineScrollOffset), this.getWidth());
+        FontRenderer fontRenderer = this.gui.getFontRenderer();
+        String displayString = fontRenderer.trimStringToWidth(this.text.substring(this.lineScrollOffset), this.getWidth());
         boolean verticalCursor = cursor >= 0 && cursor <= displayString.length();
         boolean renderCursor = this.selected && this.cursorCounter / 6 % 2 == 0 && verticalCursor;
         float x = this.getPosX();
@@ -63,7 +65,7 @@ public class InputElement<T extends GuiScreen> extends Element<T> {
 
         if (!displayString.isEmpty()) {
             String s = verticalCursor ? displayString.substring(0, cursor) : displayString;
-            line = this.getGUI().mc.fontRendererObj.drawString(s, x + 3, y + 1 + getHeight() / 2 - this.getGUI().mc.fontRendererObj.FONT_HEIGHT / 2, LLibrary.CONFIG.getTextColor(), false);
+            line = fontRenderer.drawString(s, x + 3, y + 1 + getHeight() / 2 - fontRenderer.FONT_HEIGHT / 2, LLibrary.CONFIG.getTextColor(), false);
         }
 
         boolean renderVerticalCursor = this.cursorPosition < this.text.length();
@@ -77,20 +79,20 @@ public class InputElement<T extends GuiScreen> extends Element<T> {
         }
 
         if (!displayString.isEmpty() && verticalCursor && cursor < displayString.length()) {
-            this.getGUI().mc.fontRendererObj.drawString(displayString.substring(cursor), line + 1, y + 1 + this.getHeight() / 2 - this.getGUI().mc.fontRendererObj.FONT_HEIGHT / 2, LLibrary.CONFIG.getTextColor(), false);
+            fontRenderer.drawString(displayString.substring(cursor), line + 1, y + 1 + this.getHeight() / 2 - fontRenderer.FONT_HEIGHT / 2, LLibrary.CONFIG.getTextColor(), false);
         }
 
         if (renderCursor) {
             if (renderVerticalCursor) {
-                this.drawRectangle(lineX, y, 1, this.getHeight() / 2 - this.getGUI().mc.fontRendererObj.FONT_HEIGHT / 2 + 1 + this.getGUI().mc.fontRendererObj.FONT_HEIGHT, LLibrary.CONFIG.getPrimaryColor());
+                this.drawRectangle(lineX, y, 1, this.getHeight() / 2 - fontRenderer.FONT_HEIGHT / 2 + 1 + fontRenderer.FONT_HEIGHT, LLibrary.CONFIG.getPrimaryColor());
             } else {
-                this.getGUI().mc.fontRendererObj.drawString("_", cursor == 0 ? lineX + 3 : lineX, y + 1 + this.getHeight() / 2 - this.getGUI().mc.fontRendererObj.FONT_HEIGHT / 2, LLibrary.CONFIG.getPrimaryColor(), false);
+                fontRenderer.drawString("_", cursor == 0 ? lineX + 3 : lineX, y + 1 + this.getHeight() / 2 - fontRenderer.FONT_HEIGHT / 2, LLibrary.CONFIG.getPrimaryColor(), false);
             }
         }
 
         if (cursorEnd != cursor) {
-            float selectionWidth = x + this.getGUI().mc.fontRendererObj.getStringWidth(displayString.substring(0, cursorEnd));
-            this.drawCursorVertical(lineX + (selectionEnd > cursorPosition ? 0 : 1), y, selectionWidth + (selectionEnd < cursorPosition ? 2 : 3), y + getHeight() / 2 - this.getGUI().mc.fontRendererObj.FONT_HEIGHT / 2 + 1 + this.getGUI().mc.fontRendererObj.FONT_HEIGHT);
+            float selectionWidth = x + fontRenderer.getStringWidth(displayString.substring(0, cursorEnd));
+            this.drawCursorVertical(lineX + (selectionEnd > cursorPosition ? 0 : 1), y, selectionWidth + (selectionEnd < cursorPosition ? 2 : 3), y + getHeight() / 2 - fontRenderer.FONT_HEIGHT / 2 + 1 + fontRenderer.FONT_HEIGHT);
         }
     }
 
@@ -103,8 +105,9 @@ public class InputElement<T extends GuiScreen> extends Element<T> {
         this.selected = newSelected;
         if (this.selected && button == 0 && this.editable) {
             int width = (int) (mouseX - this.getPosX() - 1);
-            String displayString = this.getGUI().mc.fontRendererObj.trimStringToWidth(this.text.substring(this.lineScrollOffset), this.getWidth());
-            this.setCursorPosition(this.getGUI().mc.fontRendererObj.trimStringToWidth(displayString, width).length() + this.lineScrollOffset);
+            FontRenderer fontRenderer = this.gui.getFontRenderer();
+            String displayString = fontRenderer.trimStringToWidth(this.text.substring(this.lineScrollOffset), this.getWidth());
+            this.setCursorPosition(fontRenderer.trimStringToWidth(displayString, width).length() + this.lineScrollOffset);
         }
         return false;
     }
@@ -339,11 +342,12 @@ public class InputElement<T extends GuiScreen> extends Element<T> {
             this.lineScrollOffset = textLength;
         }
 
-        String displayText = this.getGUI().mc.fontRendererObj.trimStringToWidth(this.text.substring(this.lineScrollOffset), this.getWidth());
+        FontRenderer fontRenderer = this.gui.getFontRenderer();
+        String displayText = fontRenderer.trimStringToWidth(this.text.substring(this.lineScrollOffset), this.getWidth());
         int offset = displayText.length() + this.lineScrollOffset;
 
         if (position == this.lineScrollOffset) {
-            this.lineScrollOffset -= this.getGUI().mc.fontRendererObj.trimStringToWidth(this.text, this.getWidth(), true).length();
+            this.lineScrollOffset -= fontRenderer.trimStringToWidth(this.text, this.getWidth(), true).length();
         }
 
         if (position > offset) {

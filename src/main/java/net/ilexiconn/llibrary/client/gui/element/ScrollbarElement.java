@@ -1,14 +1,13 @@
 package net.ilexiconn.llibrary.client.gui.element;
 
 import net.ilexiconn.llibrary.LLibrary;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.function.Supplier;
 
 @SideOnly(Side.CLIENT)
-public class ScrollbarElement<T extends GuiScreen> extends Element<T> {
+public class ScrollbarElement<T extends IElementGUI> extends Element<T> {
     private int maxScroll;
     private float scrollPerEntry;
     private Supplier<Integer> entryCount;
@@ -23,7 +22,7 @@ public class ScrollbarElement<T extends GuiScreen> extends Element<T> {
     private float scrollVelocity;
 
     public ScrollbarElement(Element<T> parent, Supplier<Float> posX, Supplier<Float> posY, Supplier<Float> displayHeight, int entryHeight, Supplier<Integer> entryCount) {
-        super(parent.getGUI(), posX.get(), posY.get(), 4, 0);
+        super(parent.gui, posX.get(), posY.get(), 4, 0);
         this.withParent(parent);
         this.offsetX = posX;
         this.offsetY = posY;

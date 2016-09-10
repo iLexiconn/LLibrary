@@ -2,17 +2,14 @@ package net.ilexiconn.llibrary.client.gui.element;
 
 import net.ilexiconn.llibrary.LLibrary;
 import net.ilexiconn.llibrary.client.gui.element.color.ColorScheme;
-import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.init.SoundEvents;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.function.Function;
 
 @SideOnly(Side.CLIENT)
-public class ButtonElement<T extends GuiScreen> extends Element<T> {
+public class ButtonElement<T extends IElementGUI> extends Element<T> {
     public static final ColorScheme CLOSE = ColorScheme.create(() -> LLibrary.CONFIG.getDarkAccentColor(), () -> 0xFFE04747);
 
     protected String text;
@@ -27,7 +24,7 @@ public class ButtonElement<T extends GuiScreen> extends Element<T> {
     @Override
     public void render(float mouseX, float mouseY, float partialTicks) {
         this.drawRectangle(this.getPosX(), this.getPosY(), this.getWidth(), this.getHeight(), this.isEnabled() && this.isSelected(mouseX, mouseY) ? this.getColorScheme().getSecondaryColor() : this.getColorScheme().getPrimaryColor());
-        FontRenderer fontRenderer = this.getGUI().mc.fontRendererObj;
+        FontRenderer fontRenderer = this.gui.getFontRenderer();
         fontRenderer.drawString(this.text, this.getPosX() + (this.getWidth() / 2) - (fontRenderer.getStringWidth(this.text) / 2), this.getPosY() + (this.getHeight() / 2) - (fontRenderer.FONT_HEIGHT / 2), LLibrary.CONFIG.getTextColor(), false);
     }
 
@@ -35,7 +32,7 @@ public class ButtonElement<T extends GuiScreen> extends Element<T> {
     public boolean mouseClicked(float mouseX, float mouseY, int button) {
         if (this.isSelected(mouseX, mouseY)) {
             if (this.function.apply(this)) {
-                this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                this.gui.playClickSound();
             }
             return true;
         } else {

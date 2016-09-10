@@ -1,10 +1,7 @@
 package net.ilexiconn.llibrary.client.gui.element;
 
 import net.ilexiconn.llibrary.LLibrary;
-import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.init.SoundEvents;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -12,7 +9,7 @@ import java.util.List;
 import java.util.function.Function;
 
 @SideOnly(Side.CLIENT)
-public class DropdownButtonElement<T extends GuiScreen> extends Element<T> {
+public class DropdownButtonElement<T extends IElementGUI> extends Element<IElementGUI> {
     private final List<String> entries;
     private String text;
     private boolean dropped;
@@ -27,7 +24,7 @@ public class DropdownButtonElement<T extends GuiScreen> extends Element<T> {
         this.entries = entries;
 
         for (String entry : entries) {
-            int entryWidth = gui.mc.fontRendererObj.getStringWidth(entry) + 5;
+            int entryWidth = gui.getFontRenderer().getStringWidth(entry) + 5;
             if (entryWidth > dropdownWidth) {
                 this.dropdownWidth = entryWidth;
             }
@@ -37,7 +34,7 @@ public class DropdownButtonElement<T extends GuiScreen> extends Element<T> {
     @Override
     public void render(float mouseX, float mouseY, float partialTicks) {
         this.drawRectangle(this.getPosX(), this.getPosY(), this.getWidth(), this.getHeight(), this.isEnabled() && (this.isSelected(mouseX, mouseY) || this.dropped) ? this.getColorScheme().getPrimaryColor() : this.getColorScheme().getSecondaryColor());
-        FontRenderer fontRenderer = this.getGUI().mc.fontRendererObj;
+        FontRenderer fontRenderer = this.gui.getFontRenderer();
         fontRenderer.drawString(this.text, this.getPosX() + (this.getWidth() / 2) - (fontRenderer.getStringWidth(this.text) / 2), this.getPosY() + (this.getHeight() / 2) - (fontRenderer.FONT_HEIGHT / 2), LLibrary.CONFIG.getTextColor(), false);
         if (this.dropped) {
             this.drawRectangle(this.getPosX(), this.getPosY() + this.getHeight(), this.dropdownWidth, this.entries.size() * 12, this.getColorScheme().getSecondaryColor());
@@ -57,7 +54,7 @@ public class DropdownButtonElement<T extends GuiScreen> extends Element<T> {
         this.selected = null;
         if (this.isSelected(mouseX, mouseY)) {
             this.dropped = !this.dropped;
-            this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+            this.gui.playClickSound();
             return true;
         } else {
             if (this.dropped) {
@@ -66,7 +63,7 @@ public class DropdownButtonElement<T extends GuiScreen> extends Element<T> {
                     if (this.isEntrySelected(mouseX, mouseY, y)) {
                         this.selected = entry;
                         if (this.function.apply(this)) {
-                            this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                            this.gui.playClickSound();
                             break;
                         }
                     }

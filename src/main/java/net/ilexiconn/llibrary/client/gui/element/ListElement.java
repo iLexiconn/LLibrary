@@ -4,7 +4,6 @@ import net.ilexiconn.llibrary.LLibrary;
 import net.ilexiconn.llibrary.client.ClientProxy;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.init.SoundEvents;
 import net.minecraftforge.fml.relauncher.Side;
@@ -16,7 +15,7 @@ import java.util.List;
 import java.util.function.Function;
 
 @SideOnly(Side.CLIENT)
-public class ListElement<T extends GuiScreen> extends Element<T> {
+public class ListElement<T extends IElementGUI> extends Element<T> {
     private List<String> entries;
     private Function<ListElement<T>, Boolean> function;
     private ScrollbarElement<T> scrollbar;
@@ -28,8 +27,8 @@ public class ListElement<T extends GuiScreen> extends Element<T> {
         this(gui, posX, posY, width, height, entries, 13, function);
     }
 
-    public ListElement(T gui, float posX, float posY, int width, int height, List<String> entries, int entryHeight, Function<ListElement<T>, Boolean> function) {
-        super(gui, posX, posY, width, height);
+    public ListElement(T handler, float posX, float posY, int width, int height, List<String> entries, int entryHeight, Function<ListElement<T>, Boolean> function) {
+        super(handler, posX, posY, width, height);
         this.entries = entries;
         this.function = function;
         this.entryHeight = entryHeight;
@@ -43,12 +42,12 @@ public class ListElement<T extends GuiScreen> extends Element<T> {
     @Override
     public void render(float mouseX, float mouseY, float partialTicks) {
         this.drawRectangle(this.getPosX(), this.getPosY(), this.getWidth(), this.getHeight(), this.getColorScheme().getSecondaryColor());
-        FontRenderer fontRenderer = this.getGUI().mc.fontRendererObj;
+        FontRenderer fontRenderer = this.gui.getFontRenderer();
         float y = -this.scrollbar.getScrollOffset();
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
         ScaledResolution scaledResolution = new ScaledResolution(ClientProxy.MINECRAFT);
         int scaleFactor = scaledResolution.getScaleFactor();
-        GL11.glScissor((int) (this.getPosX() * scaleFactor), (int) ((this.getGUI().height - (this.getPosY() + this.getHeight()) + 2) * scaleFactor), this.getWidth() * scaleFactor, (this.getHeight() - 4) * scaleFactor);
+        GL11.glScissor((int) (this.getPosX() * scaleFactor), (int) ((this.gui.getHeight() - (this.getPosY() + this.getHeight()) + 2) * scaleFactor), this.getWidth() * scaleFactor, (this.getHeight() - 4) * scaleFactor);
         int entryIndex = 0;
         for (String entry : this.entries) {
             float entryX = this.getPosX() + 2;
@@ -81,7 +80,7 @@ public class ListElement<T extends GuiScreen> extends Element<T> {
                     int previousSelected = this.selectedEntry;
                     this.selectedEntry = entryIndex;
                     if (this.function.apply(this)) {
-                        this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                        this.gui.playClickSound();
                     } else {
                         this.selectedEntry = previousSelected;
                     }
@@ -94,7 +93,7 @@ public class ListElement<T extends GuiScreen> extends Element<T> {
     }
 
     private boolean isSelected(float entryX, float entryY, float entryWidth, float entryHeight, float mouseX, float mouseY) {
-        return ElementHandler.INSTANCE.isElementOnTop(this.getGUI(), this) && mouseX > entryX && mouseX < entryX + entryWidth && mouseY > entryY && mouseY < entryY + entryHeight;
+        return this.gui.isElementOnTop(this) && mouseX > entryX && mouseX < entryX + entryWidth && mouseY > entryY && mouseY < entryY + entryHeight;
     }
 
     public int getSelectedIndex() {
