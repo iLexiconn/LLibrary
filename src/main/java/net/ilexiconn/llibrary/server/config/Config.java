@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Assign a new config instance to the field and register it.
+ * Assign a new config instance to the wrappedField and register it.
  *
  * @author iLexiconn
  * @since 1.2.0
