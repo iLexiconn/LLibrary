@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface ConfigEntry {
     /**
-     * @return a custom config name for this entry. If empty, the wrappedField name will be used
+     * @return a custom config name for this entry. If empty, the field name will be used
      */
     String name() default "";
 
@@ -31,17 +31,17 @@ public @interface ConfigEntry {
     String category() default Configuration.CATEGORY_GENERAL;
 
     /**
-     * @return return the minimal config value of this entry. This wrappedField is used by integers, floats and doubles
+     * @return return the minimal config value of this entry. This field is used by integers, floats and doubles
      */
     String minValue() default "";
 
     /**
-     * @return return the maximal config value of this entry. This wrappedField is used by integers, floats and doubles
+     * @return return the maximal config value of this entry. This field is used by integers, floats and doubles
      */
     String maxValue() default "";
 
     /**
-     * @return return a list of valid values. This wrappedField is used by all arrays
+     * @return return a list of valid values. This field is used by all arrays
      */
     String[] validValues() default "";
 }
