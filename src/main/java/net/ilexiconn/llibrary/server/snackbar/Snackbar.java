@@ -60,11 +60,13 @@ public class Snackbar {
         return position;
     }
 
-    public void setColor(int color) {
+    public Snackbar setColor(int color) {
         this.color = color;
+        return this;
     }
 
-    public void setPosition(SnackbarPosition position) {
+    public Snackbar setPosition(SnackbarPosition position) {
         this.position = position;
+        return this;
     }
 }

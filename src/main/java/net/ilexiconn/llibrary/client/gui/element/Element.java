@@ -130,48 +130,54 @@ public class Element<T extends GuiScreen> {
         return posX + (this.getParent() != null ? this.getParent().getPosX() : 0);
     }
 
-    public void setPosX(float posX) {
+    public Element<T> setPosX(float posX) {
         this.posX = posX;
+        return this;
     }
 
     public float getPosY() {
         return posY + (this.getParent() != null ? this.getParent().getPosY() : 0);
     }
 
-    public void setPosY(float posY) {
+    public Element<T> setPosY(float posY) {
         this.posY = posY;
+        return this;
     }
 
     public int getWidth() {
         return width;
     }
 
-    public void setWidth(int width) {
+    public Element<T> setWidth(int width) {
         this.width = width;
+        return this;
     }
 
     public int getHeight() {
         return height;
     }
 
-    public void setHeight(int height) {
+    public Element<T> setHeight(int height) {
         this.height = height;
+        return this;
     }
 
     public boolean isEnabled() {
         return enabled;
     }
 
-    public void setEnabled(boolean enabled) {
+    public Element<T> setEnabled(boolean enabled) {
         this.enabled = enabled;
+        return this;
     }
 
     public boolean isVisible() {
         return visible;
     }
 
-    public void setVisible(boolean visible) {
+    public Element<T> setVisible(boolean visible) {
         this.visible = visible;
+        return this;
     }
 
     protected void drawRectangle(double x, double y, double width, double height, int color) {

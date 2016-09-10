@@ -28,6 +28,7 @@ public class SliderElement<T extends GuiScreen> extends Element<T> {
     private boolean editable = true;
     private boolean dragging;
     private InputElement value;
+    private Float nextValue;
 
     public SliderElement(T gui, float posX, float posY, Function<Float, Boolean> onEnter) {
         this(gui, posX, posY, false, onEnter);
@@ -71,6 +72,9 @@ public class SliderElement<T extends GuiScreen> extends Element<T> {
             this.withValue(value1);
             this.onEnter.apply(value1);
         }, this.allowKey).withParent(this);
+        if (this.nextValue != null) {
+            this.withValue(this.nextValue);
+        }
     }
 
     @Override
@@ -109,11 +113,15 @@ public class SliderElement<T extends GuiScreen> extends Element<T> {
     }
 
     public SliderElement<T> withValue(float value) {
-        this.value.clearText();
-        if (this.isInteger) {
-            this.value.writeText(String.valueOf((int) value));
+        if (this.value == null) {
+            nextValue = value;
         } else {
-            this.value.writeText(String.valueOf(Float.parseFloat(this.decimalFormat.format(value)) + 0.0F));
+            this.value.clearText();
+            if (this.isInteger) {
+                this.value.writeText(String.valueOf((int) value));
+            } else {
+                this.value.writeText(String.valueOf(Float.parseFloat(this.decimalFormat.format(value)) + 0.0F));
+            }
         }
         return this;
     }
