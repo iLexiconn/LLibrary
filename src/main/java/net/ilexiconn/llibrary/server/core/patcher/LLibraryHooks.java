@@ -50,11 +50,17 @@ public class LLibraryHooks {
 
     @SuppressWarnings("unused")
     public static void setRotationAngles(ModelPlayer model, Entity entity, float limbSwing, float limbSwingAmount, float rotation, float rotationYaw, float rotationPitch, float scale) {
+        if (!(entity instanceof EntityPlayer)) {
+            return;
+        }
         MinecraftForge.EVENT_BUS.post(new PlayerModelEvent.SetRotationAngles(model, (EntityPlayer) entity, limbSwing, limbSwingAmount, rotation, rotationYaw, rotationPitch, scale));
     }
 
     @SuppressWarnings("unused")
     public static void renderModel(ModelPlayer model, Entity entity, float limbSwing, float limbSwingAmount, float rotation, float rotationYaw, float rotationPitch, float scale) {
+        if (!(entity instanceof EntityPlayer)) {
+            return;
+        }
         MinecraftForge.EVENT_BUS.post(new PlayerModelEvent.Render(model, (EntityPlayer) entity, limbSwing, limbSwingAmount, rotation, rotationYaw, rotationPitch, scale));
     }
 
