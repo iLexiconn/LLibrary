@@ -36,7 +36,7 @@ public enum ConfigHandler {
                         }
                         if (entryPropertyClass != null) {
                             try {
-                                return entryPropertyClass.getConstructor(Object.class, Field.class, Configuration.class).newInstance(field, wrappedConfig, forgeConfiguration);
+                                return entryPropertyClass.getConstructor(Object.class, Field.class, Configuration.class).newInstance(wrappedConfig, field, forgeConfiguration);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
