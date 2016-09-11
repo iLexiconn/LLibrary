@@ -181,6 +181,7 @@ public enum ClientEventHandler {
 
     @SubscribeEvent
     public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
+        ConfigHandler.INSTANCE.loadConfigForID(event.getModID());
         ConfigHandler.INSTANCE.saveConfigForID(event.getModID());
     }
 

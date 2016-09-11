@@ -2,20 +2,15 @@ package net.ilexiconn.llibrary.server.config;
 
 import com.google.common.collect.SetMultimap;
 import net.ilexiconn.llibrary.LLibrary;
-import net.ilexiconn.llibrary.server.config.entry.EntryAdapters;
-import net.ilexiconn.llibrary.server.config.entry.IEntryAdapter;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
 
 import java.io.File;
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author iLexiconn
@@ -24,21 +19,61 @@ import java.util.Set;
 public enum ConfigHandler {
     INSTANCE;
 
-    private Map<Class<?>, IEntryAdapter<?>> entryAdapters = new HashMap<>();
-    private Map<String, Object> configObjects = new HashMap<>();
-    private Map<Object, Configuration> configurations = new HashMap<>();
-    private Map<Configuration, Map<String, Object>> defaultValues = new HashMap<>();
-    private Map<Configuration, Map<String, IEntryAdapter<?>>> adapters = new HashMap<>();
+    private class ConfigContainer {
+        public final Object wrappedConfig;
+        public final Configuration forgeConfiguration;
+        private final List<EntryProperty> entryProperties;
+
+        public ConfigContainer(ModContainer mod, Object wrappedConfig, Configuration forgeConfiguration) {
+            this.wrappedConfig = wrappedConfig;
+            this.forgeConfiguration = forgeConfiguration;
+            this.entryProperties = Arrays.stream(wrappedConfig.getClass().getFields())
+                    .filter(field -> field.isAnnotationPresent(ConfigEntry.class))
+                    .map(field -> {
+                        Class<? extends EntryProperty> entryPropertyClass = EntryProperty.getBuiltInPropertyClass(field.getType());
+                        if (entryPropertyClass == null) {
+                            entryPropertyClass = entryPropertyClasses.get(field.getType());
+                        }
+                        if (entryPropertyClass != null) {
+                            try {
+                                return entryPropertyClass.getConstructor(Object.class, Field.class, Configuration.class).newInstance(wrappedConfig, field, forgeConfiguration);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            LLibrary.LOGGER.error("Found unsupported config entry " + field.getName() + " for mod " + mod.getName());
+                        }
+                        return null;
+                    })
+                    .filter(entryProperty -> entryProperty != null).collect(Collectors.toList());
+        }
+
+        public void save() {
+            this.entryProperties.forEach(EntryProperty::save);
+            this.forgeConfiguration.save();
+        }
+
+        public void load() {
+            this.entryProperties.forEach(EntryProperty::load);
+        }
+
+        public void reset() {
+            this.entryProperties.forEach(EntryProperty::reset);
+        }
+    }
+
+    private Map<Class<?>, Class<EntryProperty>> entryPropertyClasses = new HashMap<>();
+    private Map<String, ConfigContainer> configContainers = new HashMap<>();
 
     /**
-     * Register an entry adapter.
+     * Register an entry property class.
      *
      * @param type         the class to handle
-     * @param entryAdapter the adapter
+     * @param entryAdapter the property class
      * @param <T>          the entry type
      */
-    public <T> void registerEntryAdapter(Class<T> type, IEntryAdapter<T> entryAdapter) {
-        this.entryAdapters.put(type, entryAdapter);
+    public <T> void registerEntryPropertyClass(Class<T> type, Class<EntryProperty> entryAdapter) {
+        this.entryPropertyClasses.put(type, entryAdapter);
     }
 
     /**
@@ -46,7 +81,7 @@ public enum ConfigHandler {
      * @return true if the mod with that id registered a config
      */
     public boolean hasConfigForID(String modid) {
-        return this.configObjects.containsKey(modid);
+        return this.configContainers.containsKey(modid);
     }
 
     /**
@@ -54,19 +89,24 @@ public enum ConfigHandler {
      * @return the {@link Configuration} instance of the mod, null if none can be found
      */
     public Configuration getConfigForID(String modid) {
-        if (this.hasConfigForID(modid)) {
-            return this.configurations.get(this.getObjectForID(modid, Object.class));
+        ConfigContainer configContainer = this.configContainers.get(modid);
+        if (configContainer != null) {
+            return configContainer.forgeConfiguration;
         }
         return null;
     }
 
     /**
      * @param modid the mod id
-     * @return the config instance of the mod, null if none can be found
+     * @return the wrapped config object of the mod, null if none can be found
      */
     @Deprecated
     public Object getObjectForID(String modid) {
-        return this.getObjectForID(modid, Object.class);
+        ConfigContainer configContainer = this.configContainers.get(modid);
+        if (configContainer != null) {
+            return configContainer.wrappedConfig;
+        }
+        return null;
     }
 
     /**
@@ -75,8 +115,9 @@ public enum ConfigHandler {
      * @return the config instance of the mod, null if none can be found
      */
     public <T> T getObjectForID(String modid, Class<T> type) {
-        if (this.hasConfigForID(modid)) {
-            return type.cast(this.configObjects.get(modid));
+        ConfigContainer configContainer = this.configContainers.get(modid);
+        if (configContainer != null) {
+            return type.cast(configContainer.wrappedConfig);
         }
         return null;
     }
@@ -87,27 +128,9 @@ public enum ConfigHandler {
      * @param modid the mod id
      */
     public void saveConfigForID(String modid) {
-        if (this.hasConfigForID(modid)) {
-            Object object = this.configObjects.get(modid);
-            Configuration config = this.configurations.get(object);
-            Map<String, Object> defaultValues = this.defaultValues.get(config);
-            Map<String, IEntryAdapter<?>> adapters = this.adapters.get(config);
-            Arrays.stream(object.getClass().getFields()).filter(field -> field.isAnnotationPresent(ConfigEntry.class)).forEach(field -> {
-                try {
-                    ConfigEntry entry = field.getAnnotation(ConfigEntry.class);
-                    if (entry.side().isServer() || FMLCommonHandler.instance().getSide().isClient()) {
-                        String name = entry.name().isEmpty() ? field.getName() : entry.name();
-                        IEntryAdapter<?> entryAdapter = adapters.get(name);
-                        if (entryAdapter != null) {
-                            entryAdapter.getProperty(config, name, entry, defaultValues.get(name)).set(String.valueOf(field.get(object)));
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
-            config.save();
-            this.loadConfigForID(modid);
+        ConfigContainer configContainer = this.configContainers.get(modid);
+        if (configContainer != null) {
+            configContainer.save();
         }
     }
 
@@ -117,26 +140,9 @@ public enum ConfigHandler {
      * @param modid the mod id
      */
     public void loadConfigForID(String modid) {
-        if (this.hasConfigForID(modid)) {
-            Object object = this.configObjects.get(modid);
-            Configuration config = this.configurations.get(object);
-            Map<String, Object> defaultValues = this.defaultValues.get(config);
-            Map<String, IEntryAdapter<?>> adapters = this.adapters.get(config);
-            Arrays.stream(object.getClass().getFields()).filter(field -> field.isAnnotationPresent(ConfigEntry.class)).forEach(field -> {
-                try {
-                    ConfigEntry entry = field.getAnnotation(ConfigEntry.class);
-                    if (entry.side().isServer() || FMLCommonHandler.instance().getSide().isClient()) {
-                        String name = entry.name().isEmpty() ? field.getName() : entry.name();
-                        IEntryAdapter<?> entryAdapter = adapters.get(name);
-                        if (entryAdapter != null) {
-                            field.set(object, entryAdapter.getValue(config, name, entry, defaultValues.get(name)));
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
-            config.save();
+        ConfigContainer configContainer = this.configContainers.get(modid);
+        if (configContainer != null) {
+            configContainer.load();
         }
     }
 
@@ -152,7 +158,7 @@ public enum ConfigHandler {
                     field.setAccessible(true);
                     Class<?> configClass = field.getType();
                     File configFile = new File(".", "config" + File.separator + mod.getModId() + ".cfg");
-                    field.set(null, ConfigHandler.INSTANCE.registerConfig(mod, configFile, configClass.newInstance()));
+                    field.set(null, this.registerConfig(mod, configFile, configClass.newInstance()));
                 } catch (Exception e) {
                     LLibrary.LOGGER.fatal("Failed to inject config for mod container " + mod, e);
                 }
@@ -161,35 +167,10 @@ public enum ConfigHandler {
     }
 
     private <T> T registerConfig(ModContainer mod, File file, T config) {
-        this.configObjects.put(mod.getModId(), config);
-        Configuration configuration = new Configuration(file);
-        this.configurations.put(config, configuration);
-        Map<String, Object> defaultValues = new HashMap<>();
-        Map<String, IEntryAdapter<?>> adapters = new HashMap<>();
-        Arrays.stream(config.getClass().getFields()).filter(field -> field.isAnnotationPresent(ConfigEntry.class)).forEach(field -> {
-            try {
-                ConfigEntry entry = field.getAnnotation(ConfigEntry.class);
-                if (entry.side().isServer() || FMLCommonHandler.instance().getSide().isClient()) {
-                    String name = entry.name().isEmpty() ? field.getName() : entry.name();
-                    IEntryAdapter<?> entryAdapter = EntryAdapters.getBuiltinAdapter(field.getType());
-                    if (entryAdapter == null) {
-                        entryAdapter = this.entryAdapters.get(field.getType());
-                    }
-                    if (entryAdapter != null) {
-                        field.setAccessible(true);
-                        defaultValues.put(name, field.get(config));
-                        adapters.put(name, entryAdapter);
-                    } else {
-                        LLibrary.LOGGER.error("Found unsupported config entry " + field.getName() + " for mod " + mod.getName());
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-        this.defaultValues.put(configuration, defaultValues);
-        this.adapters.put(configuration, adapters);
-        this.loadConfigForID(mod.getModId());
+        ConfigContainer configContainer = new ConfigContainer(mod, config, new Configuration(file));
+        this.configContainers.put(mod.getModId(), configContainer);
+        configContainer.load();
+        configContainer.save();
         return config;
     }
 }

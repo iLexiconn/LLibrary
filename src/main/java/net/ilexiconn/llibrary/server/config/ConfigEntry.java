@@ -44,9 +44,4 @@ public @interface ConfigEntry {
      * @return return a list of valid values. This field is used by all arrays
      */
     String[] validValues() default "";
-
-    /**
-     * @return the side of this config entry. If it returns SERVER, this entry will be universal
-     */
-    Side side() default Side.SERVER;
 }

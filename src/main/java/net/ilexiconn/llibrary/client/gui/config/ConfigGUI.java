@@ -45,25 +45,28 @@ public class ConfigGUI extends ElementGUI {
         }
         this.mod = mod.getClass().getAnnotation(Mod.class);
         if (config != null) {
-            this.categories.addAll(config.getCategoryNames().stream().map(name -> {
-                Map<String, ConfigProperty<?>> propertyMap = new LinkedHashMap<>();
-                net.minecraftforge.common.config.ConfigCategory configCategory = config.getCategory(name);
-                for (Map.Entry<String, Property> entry : configCategory.entrySet()) {
-                    ConfigProperty<?> configProperty = new ConfigProperty<>(new IValueAccess() {
-                        @Override
-                        public void accept(Object string) {
-                            configCategory.put(entry.getKey(), new Property(entry.getKey(), String.valueOf(string), null));
-                        }
+            this.categories.addAll(config.getCategoryNames().stream()
+                    .map(config::getCategory)
+                    .filter(category -> category.size() > 0)
+                    .map(category -> {
+                        Map<String, ConfigProperty<?>> propertyMap = new LinkedHashMap<>();
+                        for (Map.Entry<String, Property> entry : category.entrySet()) {
+                            ConfigProperty<?> configProperty = new ConfigProperty<>(new IValueAccess() {
+                                @Override
+                                public void accept(Object string) {
+                                    entry.getValue().set(string.toString());
+                                }
 
-                        @Override
-                        public Object get() {
-                            return configCategory.get(entry.getKey()).getString();
+                                @Override
+                                public Object get() {
+                                    return entry.getValue().getString();
+                                }
+                            }, entry.getValue().getType());
+                            propertyMap.put(entry.getKey(), configProperty);
                         }
-                    }, entry.getValue().getType());
-                    propertyMap.put(entry.getKey(), configProperty);
-                }
-                return new ConfigCategory(name, propertyMap);
-            }).collect(Collectors.toList()));
+                        return new ConfigCategory(category.getQualifiedName(), propertyMap);
+                    })
+                    .collect(Collectors.toList()));
         }
     }
 
