@@ -59,8 +59,8 @@ public class ConfigGUI extends ElementGUI {
                 for (Map.Entry<String, Property> entry : configCategory.entrySet()) {
                     ConfigProperty<?> configProperty = new ConfigProperty<>(new IValueAccess() {
                         @Override
-                        public void accept(Object string) {
-                            entry.getValue().set((String)string);
+                        public void accept(Object value) {
+                            entry.getValue().set(value.toString());
                         }
 
                         @Override
