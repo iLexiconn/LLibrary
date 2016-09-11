@@ -60,12 +60,12 @@ public class ConfigGUI extends ElementGUI {
                     ConfigProperty<?> configProperty = new ConfigProperty<>(new IValueAccess() {
                         @Override
                         public void accept(Object string) {
-                            configCategory.put(entry.getKey(), new Property(entry.getKey(), String.valueOf(string), null));
+                            entry.getValue().set((String)string);
                         }
 
                         @Override
                         public Object get() {
-                            return configCategory.get(entry.getKey()).getString();
+                            return entry.getValue().getString();
                         }
                     }, entry.getValue().getType());
                     propertyMap.put(entry.getKey(), configProperty);
