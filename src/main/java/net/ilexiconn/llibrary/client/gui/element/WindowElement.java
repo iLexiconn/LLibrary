@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-public class WindowElement<T extends GuiScreen> extends Element<T> {
+public class WindowElement<T extends IElementGUI> extends Element<T> {
     private String name;
     private float dragOffsetX;
     private float dragOffsetY;
@@ -21,20 +21,20 @@ public class WindowElement<T extends GuiScreen> extends Element<T> {
     private List<Element<T>> elementList = new ArrayList<>();
 
     public WindowElement(T gui, String name, int width, int height) {
-        this(gui, name, width, height, gui.width / 2 - width / 2, gui.height / 2 - height / 2, true);
+        this(gui, name, width, height, gui.getWidth() / 2 - width / 2, gui.getHeight() / 2 - height / 2, true);
     }
 
     public WindowElement(T gui, String name, int width, int height, boolean hasCloseButton) {
-        this(gui, name, width, height, gui.width / 2 - width / 2, gui.height / 2 - height / 2, hasCloseButton);
+        this(gui, name, width, height, gui.getWidth() / 2 - width / 2, gui.getHeight() / 2 - height / 2, hasCloseButton);
     }
 
-    public WindowElement(T gui, String name, int width, int height, int posX, int posY, boolean hasCloseButton) {
-        super(gui, posX, posY, width, height);
+    public WindowElement(T handler, String name, int width, int height, int posX, int posY, boolean hasCloseButton) {
+        super(handler, posX, posY, width, height);
         this.name = name;
         this.hasCloseButton = hasCloseButton;
         if (hasCloseButton) {
             this.addElement(new ButtonElement<>(gui, "x", this.getWidth() - 14, 0, 14, 14, (v) -> {
-                ElementHandler.INSTANCE.removeElement(this.getGUI(), this);
+                gui.removeElement(this);
                 return true;
             }).withColorScheme(ButtonElement.CLOSE));
         }
@@ -50,7 +50,7 @@ public class WindowElement<T extends GuiScreen> extends Element<T> {
         this.startScissor();
         this.drawRectangle(this.getPosX(), this.getPosY(), this.getWidth(), this.getHeight(), LLibrary.CONFIG.getPrimaryColor());
         this.drawRectangle(this.getPosX(), this.getPosY(), this.getWidth(), 14, LLibrary.CONFIG.getAccentColor());
-        FontRenderer fontRenderer = this.getGUI().mc.fontRendererObj;
+        FontRenderer fontRenderer = this.gui.getFontRenderer();
         fontRenderer.drawString(this.name, this.getPosX() + 2.0F, this.getPosY() + 3.0F, LLibrary.CONFIG.getTextColor(), false);
         for (Element<T> element : this.elementList) {
             element.render(mouseX, mouseY, partialTicks);
@@ -68,8 +68,7 @@ public class WindowElement<T extends GuiScreen> extends Element<T> {
             this.dragOffsetX = mouseX - this.getPosX();
             this.dragOffsetY = mouseY - this.getPosY();
             this.isDragging = true;
-            ElementHandler.INSTANCE.removeElement(this.getGUI(), this);
-            ElementHandler.INSTANCE.addElement(this.getGUI(), this);
+            gui.sendElementToFront(this);
             return true;
         }
         return false;
@@ -78,8 +77,8 @@ public class WindowElement<T extends GuiScreen> extends Element<T> {
     @Override
     public boolean mouseDragged(float mouseX, float mouseY, int button, long timeSinceClick) {
         if (this.isDragging) {
-            this.setPosX(Math.min(Math.max(mouseX - this.dragOffsetX, 0), this.getGUI().width - this.getWidth()));
-            this.setPosY(Math.min(Math.max(mouseY - this.dragOffsetY, 0), this.getGUI().height - this.getHeight()));
+            this.setPosX(Math.min(Math.max(mouseX - this.dragOffsetX, 0), this.gui.getWidth() - this.getWidth()));
+            this.setPosY(Math.min(Math.max(mouseY - this.dragOffsetY, 0), this.gui.getHeight() - this.getHeight()));
             return true;
         }
         return false;

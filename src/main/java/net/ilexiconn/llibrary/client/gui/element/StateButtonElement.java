@@ -1,8 +1,5 @@
 package net.ilexiconn.llibrary.client.gui.element;
 
-import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.init.SoundEvents;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -10,12 +7,12 @@ import java.util.List;
 import java.util.function.Function;
 
 @SideOnly(Side.CLIENT)
-public class StateButtonElement<T extends GuiScreen> extends ButtonElement<T> {
+public class StateButtonElement<T extends IElementGUI> extends ButtonElement<T> {
     private List<String> states;
     private int state;
 
-    public StateButtonElement(T gui, float posX, float posY, int width, int height, List<String> states, Function<ButtonElement<T>, Boolean> function) {
-        super(gui, states.get(0), posX, posY, width, height, function);
+    public StateButtonElement(T handler, float posX, float posY, int width, int height, List<String> states, Function<ButtonElement<T>, Boolean> function) {
+        super(handler, states.get(0), posX, posY, width, height, function);
         this.states = states;
     }
 
@@ -28,7 +25,7 @@ public class StateButtonElement<T extends GuiScreen> extends ButtonElement<T> {
                     this.state = 0;
                 }
                 this.text = this.states.get(this.state);
-                this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                this.gui.playClickSound();
             }
             return true;
         } else {

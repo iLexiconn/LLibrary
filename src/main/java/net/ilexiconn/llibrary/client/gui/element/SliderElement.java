@@ -2,10 +2,8 @@ package net.ilexiconn.llibrary.client.gui.element;
 
 import net.ilexiconn.llibrary.LLibrary;
 import net.ilexiconn.llibrary.client.ClientProxy;
-import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.init.SoundEvents;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
@@ -16,7 +14,7 @@ import java.util.Locale;
 import java.util.function.Function;
 
 @SideOnly(Side.CLIENT)
-public class SliderElement<T extends GuiScreen> extends Element<T> {
+public class SliderElement<T extends IElementGUI> extends Element<T> {
     private Function<Float, Boolean> onEnter;
     private Function<Integer, Boolean> allowKey;
     private boolean isInteger;
@@ -27,7 +25,7 @@ public class SliderElement<T extends GuiScreen> extends Element<T> {
     private float maxValue;
     private boolean editable = true;
     private boolean dragging;
-    private InputElement value;
+    private InputElement<T> value;
     private Float nextValue;
 
     public SliderElement(T gui, float posX, float posY, Function<Float, Boolean> onEnter) {
@@ -55,7 +53,7 @@ public class SliderElement<T extends GuiScreen> extends Element<T> {
 
     @Override
     public void init() {
-        this.value = (InputElement) new InputElement<>(this.getGUI(), "0.0", -1.0F, 0.0F, 28, true, (input) -> {
+        this.value = (InputElement<T>) new InputElement<>(this.gui, "0.0", -1.0F, 0.0F, 28, true, (input) -> {
             float value1 = 0.0F;
             String text = input.getText();
             if (!this.isInteger) {
@@ -71,7 +69,7 @@ public class SliderElement<T extends GuiScreen> extends Element<T> {
             value1 = Float.parseFloat(text);
             this.withValue(value1);
             this.onEnter.apply(value1);
-        }, this.allowKey).withParent(this);
+        }, this.allowKey).withParent((Element<IElementGUI>) this);
         if (this.nextValue != null) {
             this.withValue(this.nextValue);
         }
@@ -98,7 +96,7 @@ public class SliderElement<T extends GuiScreen> extends Element<T> {
         this.drawRectangle(posX + width - 6 - this.sliderWidth, posY + 9, 1, 1, textColor);
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
         float scaleFactor = new ScaledResolution(ClientProxy.MINECRAFT).getScaleFactor();
-        GL11.glScissor((int) (posX * scaleFactor), (int) ((this.getGUI().height - (posY + height)) * scaleFactor), (int) ((width - 11) * scaleFactor), (int) (height * scaleFactor));
+        GL11.glScissor((int) (posX * scaleFactor), (int) ((this.gui.getHeight() - (posY + height)) * scaleFactor), (int) ((width - 11) * scaleFactor), (int) (height * scaleFactor));
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
         if (this.hasSlider) {
             float offsetX = ((this.sliderWidth - 4) * (this.getValue() - this.minValue) / (this.maxValue - this.minValue));
@@ -140,7 +138,7 @@ public class SliderElement<T extends GuiScreen> extends Element<T> {
             float newValue = GuiScreen.isShiftKeyDown() ? this.isInteger ? this.getValue() + 10 : this.getValue() + 1 : this.isInteger ? this.getValue() + 1 : this.getValue() + 0.1F;
             if (this.maxValue == -1.0F || newValue <= this.maxValue) {
                 if (this.onEnter.apply(newValue)) {
-                    this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                    this.gui.playClickSound();
                     this.withValue(newValue);
                     return true;
                 }
@@ -149,14 +147,14 @@ public class SliderElement<T extends GuiScreen> extends Element<T> {
             float newValue = GuiScreen.isShiftKeyDown() ? this.isInteger ? this.getValue() - 10 : this.getValue() - 1 : this.isInteger ? this.getValue() - 1 : this.getValue() - 0.1F;
             if (this.minValue == -1.0F || newValue >= this.minValue) {
                 if (this.onEnter.apply(newValue)) {
-                    this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                    this.gui.playClickSound();
                     this.withValue(newValue);
                     return true;
                 }
             }
         } else if (indicatorSelected) {
             this.dragging = true;
-            this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+            this.gui.playClickSound();
             return true;
         }
         return false;
@@ -181,7 +179,7 @@ public class SliderElement<T extends GuiScreen> extends Element<T> {
     @Override
     public boolean mouseReleased(float mouseX, float mouseY, int button) {
         if (this.dragging) {
-            this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+            this.gui.playClickSound();
         }
         this.dragging = false;
         return false;

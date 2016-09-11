@@ -2,15 +2,7 @@ package net.ilexiconn.llibrary.client.gui.config;
 
 import net.ilexiconn.llibrary.LLibrary;
 import net.ilexiconn.llibrary.client.gui.ElementGUI;
-import net.ilexiconn.llibrary.client.gui.element.ButtonElement;
-import net.ilexiconn.llibrary.client.gui.element.CheckboxElement;
-import net.ilexiconn.llibrary.client.gui.element.ColorElement;
-import net.ilexiconn.llibrary.client.gui.element.Element;
-import net.ilexiconn.llibrary.client.gui.element.ElementHandler;
-import net.ilexiconn.llibrary.client.gui.element.InputElement;
-import net.ilexiconn.llibrary.client.gui.element.LabelElement;
-import net.ilexiconn.llibrary.client.gui.element.ListElement;
-import net.ilexiconn.llibrary.client.gui.element.SliderElement;
+import net.ilexiconn.llibrary.client.gui.element.*;
 import net.ilexiconn.llibrary.client.gui.element.color.ColorScheme;
 import net.ilexiconn.llibrary.server.util.IValueAccess;
 import net.minecraft.client.gui.Gui;
@@ -80,23 +72,21 @@ public class ConfigGUI extends ElementGUI {
 
     @Override
     public void initElements() {
-        this.elementList.add(new ButtonElement<>(this, "<", 0, 0, 30, 20, button -> {
+        this.addElement(new ButtonElement<>(this, "<", 0, 0, 30, 20, button -> {
             this.mc.displayGuiScreen(this.parent);
             return true;
         }).withColorScheme(ConfigGUI.RETURN));
-        this.elementList.add(new LabelElement<>(this, "Mod List", 35, 6));
-        this.elementList.add(new LabelElement<>(this, this.mod.name().toUpperCase() + " SETTINGS", 35, 26));
+        this.addElement(new LabelElement<>(this, "Mod List", 35, 6));
+        this.addElement(new LabelElement<>(this, this.mod.name().toUpperCase() + " SETTINGS", 35, 26));
         ListElement<ConfigGUI> categoryList = (ListElement<ConfigGUI>) new ListElement<>(this, 0, 40, 120, this.height - 40, this.categories.stream().map(ConfigCategory::getName).collect(Collectors.toList()), 20, list -> {
             this.selectedCategory = this.categories.get(list.getSelectedIndex());
-            for (Map.Entry<ConfigProperty<?>, Element<ConfigGUI>> element : this.propertyElements.entrySet()) {
-                ElementHandler.INSTANCE.removeElement(this, element.getValue());
-            }
+            this.propertyElements.values().forEach(this::removeElement);
             this.propertyElements.clear();
             return true;
         }).withPersistence(true).withColorScheme(ConfigGUI.SIDEBAR);
         categoryList.setSelectedIndex(0);
         this.selectedCategory = this.categories.get(0);
-        this.elementList.add(categoryList);
+        this.addElement(categoryList);
         this.propertyElements.clear();
     }
 
@@ -128,8 +118,7 @@ public class ConfigGUI extends ElementGUI {
                 propertyElement = this.createPropertyElement(property, x, y + 10);
                 this.propertyElements.put(property, propertyElement);
                 if (propertyElement != null) {
-                    this.elementList.add(propertyElement);
-                    ElementHandler.INSTANCE.addElement(this, propertyElement);
+                    this.addElement(propertyElement);
                 }
             }
             if (propertyElement != null) {
@@ -138,7 +127,7 @@ public class ConfigGUI extends ElementGUI {
         }
     }
 
-    protected Element<ConfigGUI> createPropertyElement(ConfigProperty property, int x, int y) {
+    protected Element createPropertyElement(ConfigProperty property, int x, int y) {
         Function<ConfigProperty.PropertyData, Element<ConfigGUI>> elementProvider = property.getElementProvider();
         if (elementProvider == null) {
             switch (property.getType()) {
@@ -153,8 +142,8 @@ public class ConfigGUI extends ElementGUI {
                         return true;
                     });
                 case STRING:
-                    return new InputElement<>(this, (String) property.get(), x, y, 192, (input) -> {
-                        property.set(input.getText());
+                    return new InputElement<>(this, (String) property.get(), x, y, 192, (element) -> {
+                        property.set(element.getText());
                     });
                 case DOUBLE:
                     return new SliderElement<>(this, x, y, false, (slider) -> {

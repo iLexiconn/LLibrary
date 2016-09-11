@@ -1,16 +1,13 @@
 package net.ilexiconn.llibrary.client.gui.element;
 
 import net.ilexiconn.llibrary.LLibrary;
-import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.init.SoundEvents;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.function.Function;
 
 @SideOnly(Side.CLIENT)
-public class CheckboxElement<T extends GuiScreen> extends Element<T> {
+public class CheckboxElement<T extends IElementGUI> extends Element<T> {
     private boolean selected;
     private Function<CheckboxElement<T>, Boolean> function;
 
@@ -18,8 +15,8 @@ public class CheckboxElement<T extends GuiScreen> extends Element<T> {
         this(gui, posX, posY, null);
     }
 
-    public CheckboxElement(T gui, float posX, float posY, Function<CheckboxElement<T>, Boolean> function) {
-        super(gui, posX, posY, 12, 12);
+    public CheckboxElement(T handler, float posX, float posY, Function<CheckboxElement<T>, Boolean> function) {
+        super(handler, posX, posY, 12, 12);
         this.function = function;
     }
 
@@ -40,7 +37,7 @@ public class CheckboxElement<T extends GuiScreen> extends Element<T> {
         if (button == 0 && super.isSelected(mouseX, mouseY)) {
             this.selected = !this.selected;
             if (this.function != null && this.function.apply(this)) {
-                this.getGUI().mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                this.gui.playClickSound();
             } else {
                 this.selected = !this.selected;
             }

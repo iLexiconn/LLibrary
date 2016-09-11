@@ -3,7 +3,6 @@ package net.ilexiconn.llibrary.client.gui.element;
 import net.ilexiconn.llibrary.LLibrary;
 import net.ilexiconn.llibrary.client.ClientProxy;
 import net.ilexiconn.llibrary.client.gui.element.color.ColorScheme;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -21,10 +20,10 @@ import java.util.List;
  * @since 1.4.0
  */
 @SideOnly(Side.CLIENT)
-public class Element<T extends GuiScreen> {
+public class Element<T extends IElementGUI> {
     public static final ColorScheme DEFAULT = ColorScheme.create(() -> LLibrary.CONFIG.getPrimaryColor(), () -> LLibrary.CONFIG.getSecondaryColor());
 
-    private final T gui;
+    protected final T gui;
     private Element<T> parent;
     private List<Element<T>> children = new ArrayList<>();
     private ColorScheme colorScheme = Element.DEFAULT;
@@ -77,7 +76,7 @@ public class Element<T extends GuiScreen> {
         if (this.isSelected(mouseX, mouseY)) {
             for (Element<T> child : this.getChildren()) {
                 if (child instanceof ScrollbarElement) {
-                    ((ScrollbarElement<T>) child).setScrollVelocity(((ScrollbarElement<T>) child).getScrollVelocity() + (amount / 120.0F) * 0.5F);
+                    ((ScrollbarElement) child).setScrollVelocity(((ScrollbarElement) child).getScrollVelocity() + (amount / 120.0F) * 0.5F);
                     break;
                 }
             }
@@ -87,7 +86,7 @@ public class Element<T extends GuiScreen> {
     }
 
     protected boolean isSelected(float mouseX, float mouseY) {
-        return ElementHandler.INSTANCE.isElementOnTop(this.getGUI(), this) && mouseX >= this.getPosX() && mouseY >= this.getPosY() && mouseX < this.getPosX() + this.getWidth() && mouseY < this.getPosY() + this.getHeight();
+        return this.gui.isElementOnTop(this) && mouseX >= this.getPosX() && mouseY >= this.getPosY() && mouseX < this.getPosX() + this.getWidth() && mouseY < this.getPosY() + this.getHeight();
     }
 
     public Element<T> withParent(Element<T> parent) {
@@ -108,10 +107,6 @@ public class Element<T extends GuiScreen> {
     public Element<T> withColorScheme(ColorScheme colorScheme) {
         this.colorScheme = colorScheme;
         return this;
-    }
-
-    public T getGUI() {
-        return gui;
     }
 
     public Element<T> getParent() {
@@ -232,7 +227,7 @@ public class Element<T extends GuiScreen> {
     protected void startScissor() {
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
         float scaleFactor = new ScaledResolution(ClientProxy.MINECRAFT).getScaleFactor();
-        GL11.glScissor((int) (this.posX * scaleFactor), (int) ((this.gui.height - (this.posY + this.height)) * scaleFactor), (int) (this.width * scaleFactor), (int) (this.height * scaleFactor));
+        GL11.glScissor((int) (this.posX * scaleFactor), (int) ((this.gui.getHeight() - (this.posY + this.height)) * scaleFactor), (int) (this.width * scaleFactor), (int) (this.height * scaleFactor));
     }
 
     protected void endScissor() {

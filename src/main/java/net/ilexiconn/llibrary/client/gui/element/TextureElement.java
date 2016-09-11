@@ -6,7 +6,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class TextureElement<T extends GuiScreen> extends Element<T> {
+public class TextureElement<T extends IElementGUI> extends Element<T> {
     private ResourceLocation texture;
     private int u;
     private int v;
@@ -19,7 +19,7 @@ public class TextureElement<T extends GuiScreen> extends Element<T> {
     }
 
     public void render(float mouseX, float mouseY, float partialTicks) {
-        this.getGUI().mc.getTextureManager().bindTexture(this.texture);
-        this.getGUI().drawTexturedModalRect(this.getPosX(), this.getPosY(), this.u, this.v, this.getWidth(), this.getHeight());
+        this.gui.getTextureManager().bindTexture(this.texture);
+        this.gui.drawTexturedModalRect(this.getPosX(), this.getPosY(), this.u, this.v, this.getWidth(), this.getHeight());
     }
 }

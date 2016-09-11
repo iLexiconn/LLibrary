@@ -10,7 +10,7 @@ import net.minecraft.world.World;
  */
 public interface IEntityData<T extends Entity> {
     /**
-     * Initialize this data handler.
+     * Initialize this data context.
      *
      * @param entity the new entity
      * @param world  the new world
