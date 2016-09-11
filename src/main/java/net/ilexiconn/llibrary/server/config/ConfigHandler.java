@@ -36,7 +36,7 @@ public enum ConfigHandler {
                         }
                         if (entryPropertyClass != null) {
                             try {
-                                return entryPropertyClass.getConstructor(Field.class, Object.class, Configuration.class).newInstance(field, wrappedConfig, forgeConfiguration);
+                                return entryPropertyClass.getConstructor(Object.class, Field.class, Configuration.class).newInstance(wrappedConfig, field, forgeConfiguration);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -167,8 +167,10 @@ public enum ConfigHandler {
     }
 
     private <T> T registerConfig(ModContainer mod, File file, T config) {
-        this.configContainers.put(mod.getModId(), new ConfigContainer(mod, config, new Configuration(file)));
-        this.loadConfigForID(mod.getModId());
+        ConfigContainer configContainer = new ConfigContainer(mod, config, new Configuration(file));
+        this.configContainers.put(mod.getModId(), configContainer);
+        configContainer.load();
+        configContainer.save();
         return config;
     }
 }
