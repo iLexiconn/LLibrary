@@ -73,10 +73,9 @@ public abstract class ElementGUI extends GuiScreen implements IElementGUI {
 
     @Override
     public boolean isElementOnTop(Element element) {
-        List<Element> elementList = Lists.reverse(this.elements);
         float mouseX = this.getPreciseMouseX();
         float mouseY = this.getPreciseMouseY();
-        for (Element e : elementList) {
+        for (Element e : this.getPreOrderElements()) {
             if (e.isVisible() && mouseX >= e.getPosX() && mouseY >= e.getPosY() && mouseX < e.getPosX() + e.getWidth() && mouseY < e.getPosY() + e.getHeight()) {
                 return element == e || (element.getParent() != null && element.getParent() == e);
             }
@@ -116,7 +115,7 @@ public abstract class ElementGUI extends GuiScreen implements IElementGUI {
 
     @Override
     public void updateScreen() {
-        this.elements.forEach(Element::update);
+        Lists.reverse(this.getPostOrderElements()).forEach(Element::update);
     }
 
     public abstract void drawScreen(float mouseX, float mouseY, float partialTicks);
@@ -132,7 +131,7 @@ public abstract class ElementGUI extends GuiScreen implements IElementGUI {
 
         int scrollAmount = Mouse.getDWheel();
         if (scrollAmount != 0) {
-            for (Element element : this.elements) {
+            for (Element element : this.getPostOrderElements()) {
                 if (element.isVisible() && element.isEnabled()) {
                     if (element.mouseScrolled(preciseMouseX, preciseMouseY, scrollAmount)) {
                         return;
@@ -196,7 +195,7 @@ public abstract class ElementGUI extends GuiScreen implements IElementGUI {
 
     @Override
     protected void keyTyped(char typedChar, int keyCode) throws IOException {
-        for (Element element : this.getPostOrderElements()) {
+        for (Element element : this.getPreOrderElements()) {
             if (element.isVisible() && element.isEnabled()) {
                 if (element.keyPressed(typedChar, keyCode)) {
                     break;
@@ -226,10 +225,23 @@ public abstract class ElementGUI extends GuiScreen implements IElementGUI {
         return result;
     }
 
+    public List<Element> getPreOrderElements() {
+        List<Element> result = new ArrayList<>();
+        this.traversePreOrderRecursively(this.elements, result);
+        return result;
+    }
+
     private void traversePostOrderRecursively(List<Element> in, List<Element> out) {
         for (Element element : in) {
             traversePostOrderRecursively(element.getChildren(), out);
             out.add(element);
+        }
+    }
+
+    private void traversePreOrderRecursively(List<Element> in, List<Element> out) {
+        for (Element element : in) {
+            out.add(element);
+            traversePreOrderRecursively(element.getChildren(), out);
         }
     }
 }
