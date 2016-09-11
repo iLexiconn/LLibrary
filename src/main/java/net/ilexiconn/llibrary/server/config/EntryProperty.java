@@ -53,7 +53,7 @@ public abstract class EntryProperty {
     protected abstract Property createForgeConfigurationProperty(Configuration forgeConfiguration);
 
     public static class IntegerEntryProperty extends EntryProperty {
-        protected IntegerEntryProperty(Object wrappedConfig, Field field, Configuration forgeConfiguration) {
+        public IntegerEntryProperty(Object wrappedConfig, Field field, Configuration forgeConfiguration) {
             super(wrappedConfig, field, forgeConfiguration);
         }
 
@@ -76,7 +76,7 @@ public abstract class EntryProperty {
     }
 
     public static class BooleanEntryProperty extends EntryProperty {
-        protected BooleanEntryProperty(Object wrappedConfig, Field field, Configuration forgeConfiguration) {
+        public BooleanEntryProperty(Object wrappedConfig, Field field, Configuration forgeConfiguration) {
             super(wrappedConfig, field, forgeConfiguration);
         }
 
@@ -97,7 +97,7 @@ public abstract class EntryProperty {
     }
 
     public static class StringEntryProperty extends EntryProperty {
-        protected StringEntryProperty(Object wrappedConfig, Field field, Configuration forgeConfiguration) {
+        public StringEntryProperty(Object wrappedConfig, Field field, Configuration forgeConfiguration) {
             super(wrappedConfig, field, forgeConfiguration);
         }
 
@@ -118,7 +118,7 @@ public abstract class EntryProperty {
     }
 
     public static class FloatEntryProperty extends EntryProperty {
-        protected FloatEntryProperty(Object wrappedConfig, Field field, Configuration forgeConfiguration) {
+        public FloatEntryProperty(Object wrappedConfig, Field field, Configuration forgeConfiguration) {
             super(wrappedConfig, field, forgeConfiguration);
         }
 
@@ -141,7 +141,7 @@ public abstract class EntryProperty {
     }
 
     public static class DoubleEntryProperty extends EntryProperty {
-        protected DoubleEntryProperty(Object wrappedConfig, Field field, Configuration forgeConfiguration) {
+        public DoubleEntryProperty(Object wrappedConfig, Field field, Configuration forgeConfiguration) {
             super(wrappedConfig, field, forgeConfiguration);
         }
 
@@ -164,7 +164,7 @@ public abstract class EntryProperty {
     }
 
     public static class IntegerArrayEntryProperty extends EntryProperty {
-        protected IntegerArrayEntryProperty(Object wrappedConfig, Field field, Configuration forgeConfiguration) {
+        public IntegerArrayEntryProperty(Object wrappedConfig, Field field, Configuration forgeConfiguration) {
             super(wrappedConfig, field, forgeConfiguration);
         }
 
@@ -187,7 +187,7 @@ public abstract class EntryProperty {
     }
 
     public static class BooleanArrayEntryProperty extends EntryProperty {
-        protected BooleanArrayEntryProperty(Object wrappedConfig, Field field, Configuration forgeConfiguration) {
+        public BooleanArrayEntryProperty(Object wrappedConfig, Field field, Configuration forgeConfiguration) {
             super(wrappedConfig, field, forgeConfiguration);
         }
 
@@ -210,7 +210,7 @@ public abstract class EntryProperty {
     }
 
     public static class StringArrayEntryProperty extends EntryProperty {
-        protected StringArrayEntryProperty(Object wrappedConfig, Field field, Configuration forgeConfiguration) {
+        public StringArrayEntryProperty(Object wrappedConfig, Field field, Configuration forgeConfiguration) {
             super(wrappedConfig, field, forgeConfiguration);
         }
 
@@ -233,7 +233,7 @@ public abstract class EntryProperty {
     }
 
     public static class FloatArrayEntryProperty extends EntryProperty {
-        protected FloatArrayEntryProperty(Object wrappedConfig, Field field, Configuration forgeConfiguration) {
+        public FloatArrayEntryProperty(Object wrappedConfig, Field field, Configuration forgeConfiguration) {
             super(wrappedConfig, field, forgeConfiguration);
         }
 
@@ -273,7 +273,7 @@ public abstract class EntryProperty {
     }
 
     public static class DoubleArrayEntryProperty extends EntryProperty {
-        protected DoubleArrayEntryProperty(Object wrappedConfig, Field field, Configuration forgeConfiguration) {
+        public DoubleArrayEntryProperty(Object wrappedConfig, Field field, Configuration forgeConfiguration) {
             super(wrappedConfig, field, forgeConfiguration);
         }
 
