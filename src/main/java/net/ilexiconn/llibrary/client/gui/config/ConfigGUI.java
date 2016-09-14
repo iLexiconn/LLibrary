@@ -2,9 +2,9 @@ package net.ilexiconn.llibrary.client.gui.config;
 
 import net.ilexiconn.llibrary.LLibrary;
 import net.ilexiconn.llibrary.client.gui.ElementGUI;
+import net.ilexiconn.llibrary.client.gui.config.property.ForgeConfigProperty;
 import net.ilexiconn.llibrary.client.gui.element.*;
 import net.ilexiconn.llibrary.client.gui.element.color.ColorScheme;
-import net.ilexiconn.llibrary.server.util.IValueAccess;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @SideOnly(Side.CLIENT)
@@ -33,7 +32,7 @@ public class ConfigGUI extends ElementGUI {
 
     protected GuiScreen parent;
     protected List<ConfigCategory> categories = new ArrayList<>();
-    protected Map<ConfigProperty<?>, Element<ConfigGUI>> propertyElements = new HashMap<>();
+    protected Map<ConfigProperty, Element<ConfigGUI>> propertyElements = new HashMap<>();
     protected ConfigCategory selectedCategory;
 
     private Mod mod;
@@ -49,20 +48,12 @@ public class ConfigGUI extends ElementGUI {
                     .map(config::getCategory)
                     .filter(category -> category.size() > 0)
                     .map(category -> {
-                        Map<String, ConfigProperty<?>> propertyMap = new LinkedHashMap<>();
+                        Map<String, ConfigProperty> propertyMap = new LinkedHashMap<>();
                         for (Map.Entry<String, Property> entry : category.entrySet()) {
-                            ConfigProperty<?> configProperty = new ConfigProperty<>(new IValueAccess() {
-                                @Override
-                                public void accept(Object string) {
-                                    entry.getValue().set(string.toString());
-                                }
-
-                                @Override
-                                public Object get() {
-                                    return entry.getValue().getString();
-                                }
-                            }, entry.getValue().getType());
-                            propertyMap.put(entry.getKey(), configProperty);
+                            ConfigProperty configProperty = ForgeConfigProperty.factory(entry.getValue());
+                            if (configProperty != null) {
+                                propertyMap.put(entry.getKey(), configProperty);
+                            }
                         }
                         return new ConfigCategory(category.getQualifiedName(), propertyMap);
                     })
@@ -109,13 +100,13 @@ public class ConfigGUI extends ElementGUI {
         GlStateManager.popMatrix();
         int x = 125;
         int y = 45;
-        for (Map.Entry<String, ConfigProperty<?>> propertyEntry : this.selectedCategory.getProperties().entrySet()) {
+        for (Map.Entry<String, ConfigProperty> propertyEntry : this.selectedCategory.getProperties().entrySet()) {
             String name = propertyEntry.getKey();
-            ConfigProperty<?> property = propertyEntry.getValue();
+            ConfigProperty property = propertyEntry.getValue();
             fontRendererObj.drawString(name, x, y, LLibrary.CONFIG.getTextColor());
             Element<ConfigGUI> propertyElement = this.propertyElements.get(property);
             if (propertyElement == null) {
-                propertyElement = this.createPropertyElement(property, x, y + 10);
+                propertyElement = property.provideElement(this, x, y + 10);
                 this.propertyElements.put(property, propertyElement);
                 if (propertyElement != null) {
                     this.addElement(propertyElement);
@@ -125,41 +116,6 @@ public class ConfigGUI extends ElementGUI {
                 y += propertyElement.getHeight() + 14;
             }
         }
-    }
-
-    protected Element createPropertyElement(ConfigProperty property, int x, int y) {
-        Function<ConfigProperty.PropertyData, Element<ConfigGUI>> elementProvider = property.getElementProvider();
-        if (elementProvider == null) {
-            switch (property.getType()) {
-                case BOOLEAN:
-                    return new CheckboxElement<>(this, x, y, (checkbox) -> {
-                        property.set(checkbox.isSelected());
-                        return true;
-                    }).withSelection(property.get() instanceof Boolean ? (Boolean) property.get() : (Boolean.parseBoolean((String) property.get())));
-                case COLOR:
-                    return new ColorElement<>(this, x, y, 195, 149, (color) -> {
-                        property.set(color.getColor());
-                        return true;
-                    });
-                case STRING:
-                    return new InputElement<>(this, (String) property.get(), x, y, 192, (element) -> {
-                        property.set(element.getText());
-                    });
-                case DOUBLE:
-                    return new SliderElement<>(this, x, y, false, (slider) -> {
-                        property.set(slider.doubleValue());
-                        return true;
-                    }).withValue(Float.valueOf(String.valueOf(property.get())));
-                case INTEGER:
-                    return new SliderElement<>(this, x, y, true, (slider) -> {
-                        property.set(slider.intValue());
-                        return true;
-                    }).withValue((Integer.valueOf(String.valueOf(property.get()))));
-            }
-        } else {
-            return elementProvider.apply(new ConfigProperty.PropertyData(this, property, x, y));
-        }
-        return null;
     }
 
     @Override

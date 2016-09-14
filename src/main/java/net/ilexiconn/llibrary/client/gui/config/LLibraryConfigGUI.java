@@ -1,6 +1,11 @@
 package net.ilexiconn.llibrary.client.gui.config;
 
 import net.ilexiconn.llibrary.LLibrary;
+import net.ilexiconn.llibrary.client.gui.element.CheckboxElement;
+import net.ilexiconn.llibrary.client.gui.element.ColorElement;
+import net.ilexiconn.llibrary.client.gui.element.Element;
+import net.ilexiconn.llibrary.server.property.IBooleanProperty;
+import net.ilexiconn.llibrary.server.property.IIntProperty;
 import net.ilexiconn.llibrary.server.util.IValueAccess;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.common.config.Property;
@@ -12,76 +17,136 @@ import java.util.Map;
 
 @SideOnly(Side.CLIENT)
 public class LLibraryConfigGUI extends ConfigGUI {
-    private static final Map<String, ConfigProperty<?>> GENERAL_PROPERTIES = new HashMap<>();
-    private static final Map<String, ConfigProperty<?>> APPEARANCE_PROPERTIES = new HashMap<>();
+    private static final Map<String, ConfigProperty> GENERAL_PROPERTIES = new HashMap<>();
+    private static final Map<String, ConfigProperty> APPEARANCE_PROPERTIES = new HashMap<>();
 
     static {
-        LLibraryConfigGUI.GENERAL_PROPERTIES.put("Patreon Effects", new ConfigProperty<>(new IValueAccess<Boolean>() {
+        LLibraryConfigGUI.GENERAL_PROPERTIES.put("Patreon Effects", new ConfigProperty() {
             @Override
-            public Boolean get() {
-                return LLibrary.CONFIG.hasPatreonEffects();
-            }
+            public Element<ConfigGUI> provideElement(ConfigGUI gui, float x, float y) {
+                return new CheckboxElement<>(gui, x, y, new IBooleanProperty() {
+                    @Override
+                    public boolean getBoolean() {
+                        return LLibrary.CONFIG.hasPatreonEffects();
+                    }
 
-            @Override
-            public void accept(Boolean patreonEffects) {
-                LLibrary.CONFIG.setPatreonEffects(patreonEffects);
-            }
-        }, Property.Type.BOOLEAN));
-        LLibraryConfigGUI.GENERAL_PROPERTIES.put("Version Checker", new ConfigProperty<>(new IValueAccess<Boolean>() {
-            @Override
-            public Boolean get() {
-                return LLibrary.CONFIG.hasVersionCheck();
-            }
+                    @Override
+                    public void setBoolean(boolean value) {
+                        LLibrary.CONFIG.setPatreonEffects(value);
+                    }
 
-            @Override
-            public void accept(Boolean versionCheck) {
-                LLibrary.CONFIG.setVersionCheck(versionCheck);
+                    @Override
+                    public boolean isValidBoolean(boolean value) {
+                        return true;
+                    }
+                });
             }
-        }, Property.Type.BOOLEAN));
-        LLibraryConfigGUI.GENERAL_PROPERTIES.put("Survival Tabs Always Visible", new ConfigProperty<>(new IValueAccess<Boolean>() {
+        });
+        LLibraryConfigGUI.GENERAL_PROPERTIES.put("Version Checker", new ConfigProperty() {
             @Override
-            public Boolean get() {
-                return LLibrary.CONFIG.areTabsAlwaysVisible();
-            }
+            public Element<ConfigGUI> provideElement(ConfigGUI gui, float x, float y) {
+                return new CheckboxElement<>(gui, x, y, new IBooleanProperty() {
+                    @Override
+                    public boolean getBoolean() {
+                        return LLibrary.CONFIG.hasVersionCheck();
+                    }
 
-            @Override
-            public void accept(Boolean tabsAlwaysVisible) {
-                LLibrary.CONFIG.setTabsAlwaysVisible(tabsAlwaysVisible);
-            }
-        }, Property.Type.BOOLEAN));
-        LLibraryConfigGUI.GENERAL_PROPERTIES.put("Survival Tabs Left Side", new ConfigProperty<>(new IValueAccess<Boolean>() {
-            @Override
-            public void accept(Boolean tabsLeftSide) {
-                LLibrary.CONFIG.setTabsLeftSide(tabsLeftSide);
-            }
+                    @Override
+                    public void setBoolean(boolean value) {
+                        LLibrary.CONFIG.setVersionCheck(value);
+                    }
 
-            @Override
-            public Boolean get() {
-                return LLibrary.CONFIG.areTabsLeftSide();
+                    @Override
+                    public boolean isValidBoolean(boolean value) {
+                        return true;
+                    }
+                });
             }
-        }, Property.Type.BOOLEAN));
-        LLibraryConfigGUI.APPEARANCE_PROPERTIES.put("Accent Color", new ConfigProperty<>(new IValueAccess<Integer>() {
+        });
+        LLibraryConfigGUI.GENERAL_PROPERTIES.put("Survival Tabs Always Visible", new ConfigProperty() {
             @Override
-            public Integer get() {
-                return LLibrary.CONFIG.getAccentColor();
-            }
+            public Element<ConfigGUI> provideElement(ConfigGUI gui, float x, float y) {
+                return new CheckboxElement<>(gui, x, y, new IBooleanProperty() {
+                    @Override
+                    public boolean getBoolean() {
+                        return LLibrary.CONFIG.areTabsAlwaysVisible();
+                    }
 
-            @Override
-            public void accept(Integer accentColor) {
-                LLibrary.CONFIG.setAccentColor(accentColor);
-            }
-        }, Property.Type.COLOR));
-        LLibraryConfigGUI.APPEARANCE_PROPERTIES.put("Dark Mode", new ConfigProperty<>(new IValueAccess<Boolean>() {
-            @Override
-            public Boolean get() {
-                return LLibrary.CONFIG.getColorMode().equals("dark");
-            }
+                    @Override
+                    public void setBoolean(boolean value) {
+                        LLibrary.CONFIG.setTabsAlwaysVisible(value);
+                    }
 
-            @Override
-            public void accept(Boolean colorMode) {
-                LLibrary.CONFIG.setColorMode(colorMode ? "dark" : "light");
+                    @Override
+                    public boolean isValidBoolean(boolean value) {
+                        return true;
+                    }
+                });
             }
-        }, Property.Type.BOOLEAN));
+        });
+        LLibraryConfigGUI.GENERAL_PROPERTIES.put("Survival Tabs Left Side", new ConfigProperty() {
+            @Override
+            public Element<ConfigGUI> provideElement(ConfigGUI gui, float x, float y) {
+                return new CheckboxElement<>(gui, x, y, new IBooleanProperty() {
+                    @Override
+                    public boolean getBoolean() {
+                        return LLibrary.CONFIG.areTabsLeftSide();
+                    }
+
+                    @Override
+                    public void setBoolean(boolean value) {
+                        LLibrary.CONFIG.setTabsLeftSide(value);
+                    }
+
+                    @Override
+                    public boolean isValidBoolean(boolean value) {
+                        return true;
+                    }
+                });
+            }
+        });
+        LLibraryConfigGUI.APPEARANCE_PROPERTIES.put("Accent Color", new ConfigProperty() {
+            @Override
+            public Element<ConfigGUI> provideElement(ConfigGUI gui, float x, float y) {
+                return new ColorElement<>(gui, x, y, 195, 149, new IIntProperty() {
+                    @Override
+                    public int getInt() {
+                        return LLibrary.CONFIG.getAccentColor();
+                    }
+
+                    @Override
+                    public void setInt(int value) {
+                        LLibrary.CONFIG.setAccentColor(value);
+                    }
+
+                    @Override
+                    public boolean isValidInt(int value) {
+                        return true;
+                    }
+                });
+            }
+        });
+        LLibraryConfigGUI.APPEARANCE_PROPERTIES.put("Dark Mode", new ConfigProperty() {
+            @Override
+            public Element<ConfigGUI> provideElement(ConfigGUI gui, float x, float y) {
+                return new CheckboxElement<>(gui, x, y, new IBooleanProperty() {
+                    @Override
+                    public boolean getBoolean() {
+                        return LLibrary.CONFIG.getColorMode().equals("dark");
+                    }
+
+                    @Override
+                    public void setBoolean(boolean value) {
+                        LLibrary.CONFIG.setColorMode(value ? "dark" : "light");
+                    }
+
+                    @Override
+                    public boolean isValidBoolean(boolean value) {
+                        return true;
+                    }
+                });
+            }
+        });
     }
 
     public LLibraryConfigGUI(GuiScreen parent) {
