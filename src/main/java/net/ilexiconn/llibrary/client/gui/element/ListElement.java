@@ -2,10 +2,8 @@ package net.ilexiconn.llibrary.client.gui.element;
 
 import net.ilexiconn.llibrary.LLibrary;
 import net.ilexiconn.llibrary.client.ClientProxy;
-import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.init.SoundEvents;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
