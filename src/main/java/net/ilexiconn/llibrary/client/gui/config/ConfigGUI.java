@@ -107,7 +107,7 @@ public class ConfigGUI extends ElementGUI {
         int x = 125;
         int y = 45;
         for (ConfigProperty property : this.selectedCategory.getProperties()) {
-            fontRendererObj.drawStringWithShadow(property.name, x, y, this.getTextColor());
+            fontRendererObj.drawString(property.name, x, y, this.getTextColor());
             y += 10;
             if (property.description != null && property.description.length() > 0) {
                 fontRendererObj.drawString(property.description, x, y, this.getTextColor());
