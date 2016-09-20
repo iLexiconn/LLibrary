@@ -48,14 +48,14 @@ public class ConfigGUI extends ElementGUI {
                     .map(config::getCategory)
                     .filter(category -> category.size() > 0)
                     .map(category -> {
-                        Map<String, ConfigProperty> propertyMap = new LinkedHashMap<>();
-                        for (Map.Entry<String, Property> entry : category.entrySet()) {
-                            ConfigProperty configProperty = ForgeConfigProperty.factory(entry.getValue());
+                        List<ConfigProperty> configProperties = new ArrayList<>();
+                        for (Property property : category.values()) {
+                            ConfigProperty configProperty = ForgeConfigProperty.factory(property);
                             if (configProperty != null) {
-                                propertyMap.put(entry.getKey(), configProperty);
+                                configProperties.add(configProperty);
                             }
                         }
-                        return new ConfigCategory(category.getQualifiedName(), propertyMap);
+                        return new ConfigCategory(category.getQualifiedName(), configProperties);
                     })
                     .collect(Collectors.toList()));
         }
@@ -100,13 +100,16 @@ public class ConfigGUI extends ElementGUI {
         GlStateManager.popMatrix();
         int x = 125;
         int y = 45;
-        for (Map.Entry<String, ConfigProperty> propertyEntry : this.selectedCategory.getProperties().entrySet()) {
-            String name = propertyEntry.getKey();
-            ConfigProperty property = propertyEntry.getValue();
-            fontRendererObj.drawString(name, x, y, this.getTextColor());
+        for (ConfigProperty property : this.selectedCategory.getProperties()) {
+            fontRendererObj.drawStringWithShadow(property.name, x, y, this.getTextColor());
+            y += 10;
+            if (property.description != null && property.description.length() > 0) {
+                fontRendererObj.drawString(property.description, x, y, this.getTextColor());
+                y += 10;
+            }
             Element<ConfigGUI> propertyElement = this.propertyElements.get(property);
             if (propertyElement == null) {
-                propertyElement = property.provideElement(this, x, y + 10);
+                propertyElement = property.provideElement(this, x, y);
                 if (propertyElement != null) {
                     this.decoratePropertyElement(propertyElement);
                     this.propertyElements.put(property, propertyElement);
@@ -114,7 +117,7 @@ public class ConfigGUI extends ElementGUI {
                 }
             }
             if (propertyElement != null) {
-                y += propertyElement.getHeight() + 14;
+                y += propertyElement.getHeight() + 4;
             }
         }
     }

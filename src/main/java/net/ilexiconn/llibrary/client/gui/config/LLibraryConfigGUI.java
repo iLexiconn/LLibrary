@@ -6,22 +6,20 @@ import net.ilexiconn.llibrary.client.gui.element.ColorElement;
 import net.ilexiconn.llibrary.client.gui.element.Element;
 import net.ilexiconn.llibrary.server.property.IBooleanProperty;
 import net.ilexiconn.llibrary.server.property.IIntProperty;
-import net.ilexiconn.llibrary.server.util.IValueAccess;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class LLibraryConfigGUI extends ConfigGUI {
-    private static final Map<String, ConfigProperty> GENERAL_PROPERTIES = new HashMap<>();
-    private static final Map<String, ConfigProperty> APPEARANCE_PROPERTIES = new HashMap<>();
+    private static final List<ConfigProperty> GENERAL_PROPERTIES = new ArrayList<>();
+    private static final List<ConfigProperty> APPEARANCE_PROPERTIES = new ArrayList<>();
 
     static {
-        LLibraryConfigGUI.GENERAL_PROPERTIES.put("Patreon Effects", new ConfigProperty() {
+        LLibraryConfigGUI.GENERAL_PROPERTIES.add(new ConfigProperty("Patreon Effects") {
             @Override
             public Element<ConfigGUI> provideElement(ConfigGUI gui, float x, float y) {
                 return new CheckboxElement<>(gui, x, y, new IBooleanProperty() {
@@ -42,7 +40,7 @@ public class LLibraryConfigGUI extends ConfigGUI {
                 });
             }
         });
-        LLibraryConfigGUI.GENERAL_PROPERTIES.put("Version Checker", new ConfigProperty() {
+        LLibraryConfigGUI.GENERAL_PROPERTIES.add(new ConfigProperty("Version Checker") {
             @Override
             public Element<ConfigGUI> provideElement(ConfigGUI gui, float x, float y) {
                 return new CheckboxElement<>(gui, x, y, new IBooleanProperty() {
@@ -63,7 +61,7 @@ public class LLibraryConfigGUI extends ConfigGUI {
                 });
             }
         });
-        LLibraryConfigGUI.GENERAL_PROPERTIES.put("Survival Tabs Always Visible", new ConfigProperty() {
+        LLibraryConfigGUI.GENERAL_PROPERTIES.add(new ConfigProperty("Survival Tabs Always Visible") {
             @Override
             public Element<ConfigGUI> provideElement(ConfigGUI gui, float x, float y) {
                 return new CheckboxElement<>(gui, x, y, new IBooleanProperty() {
@@ -84,7 +82,7 @@ public class LLibraryConfigGUI extends ConfigGUI {
                 });
             }
         });
-        LLibraryConfigGUI.GENERAL_PROPERTIES.put("Survival Tabs Left Side", new ConfigProperty() {
+        LLibraryConfigGUI.GENERAL_PROPERTIES.add(new ConfigProperty("Survival Tabs Left Side") {
             @Override
             public Element<ConfigGUI> provideElement(ConfigGUI gui, float x, float y) {
                 return new CheckboxElement<>(gui, x, y, new IBooleanProperty() {
@@ -105,7 +103,7 @@ public class LLibraryConfigGUI extends ConfigGUI {
                 });
             }
         });
-        LLibraryConfigGUI.APPEARANCE_PROPERTIES.put("Accent Color", new ConfigProperty() {
+        LLibraryConfigGUI.APPEARANCE_PROPERTIES.add(new ConfigProperty("Accent Color") {
             @Override
             public Element<ConfigGUI> provideElement(ConfigGUI gui, float x, float y) {
                 return new ColorElement<>(gui, x, y, 195, 149, new IIntProperty() {
@@ -126,7 +124,7 @@ public class LLibraryConfigGUI extends ConfigGUI {
                 });
             }
         });
-        LLibraryConfigGUI.APPEARANCE_PROPERTIES.put("Dark Mode", new ConfigProperty() {
+        LLibraryConfigGUI.APPEARANCE_PROPERTIES.add(new ConfigProperty("Dark Mode") {
             @Override
             public Element<ConfigGUI> provideElement(ConfigGUI gui, float x, float y) {
                 return new CheckboxElement<>(gui, x, y, new IBooleanProperty() {

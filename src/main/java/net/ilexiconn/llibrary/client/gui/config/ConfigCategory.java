@@ -1,12 +1,12 @@
 package net.ilexiconn.llibrary.client.gui.config;
 
-import java.util.Map;
+import java.util.List;
 
 public class ConfigCategory {
     private String name;
-    private Map<String, ConfigProperty> properties;
+    private List<ConfigProperty> properties;
 
-    public ConfigCategory(String name, Map<String, ConfigProperty> properties) {
+    public ConfigCategory(String name, List<ConfigProperty> properties) {
         this.name = name;
         this.properties = properties;
     }
@@ -15,7 +15,7 @@ public class ConfigCategory {
         return this.name;
     }
 
-    public Map<String, ConfigProperty> getProperties() {
+    public List<ConfigProperty> getProperties() {
         return this.properties;
     }
 }
