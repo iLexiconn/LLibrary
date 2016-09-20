@@ -5,6 +5,7 @@ import net.ilexiconn.llibrary.client.gui.ElementGUI;
 import net.ilexiconn.llibrary.client.gui.config.property.ForgeConfigProperty;
 import net.ilexiconn.llibrary.client.gui.element.*;
 import net.ilexiconn.llibrary.client.gui.element.color.ColorScheme;
+import net.ilexiconn.llibrary.server.config.Config;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
@@ -30,6 +31,7 @@ public class ConfigGUI extends ElementGUI {
     public static final ResourceLocation SETTINGS_ICON = new ResourceLocation("llibrary", "textures/gui/settings.png");
 
     protected GuiScreen parent;
+    protected String parentName;
     protected List<ConfigCategory> categories = new ArrayList<>();
     protected Map<ConfigProperty, Element<ConfigGUI>> propertyElements = new HashMap<>();
     protected ConfigCategory selectedCategory;
@@ -37,7 +39,12 @@ public class ConfigGUI extends ElementGUI {
     private Mod mod;
 
     public ConfigGUI(GuiScreen parent, Object mod, Configuration config) {
+        this(parent, mod, config, "Mod List");
+    }
+
+    public ConfigGUI(GuiScreen parent, Object mod, Configuration config, String parentName) {
         this.parent = parent;
+        this.parentName = parentName;
         if (!mod.getClass().isAnnotationPresent(Mod.class)) {
             throw new RuntimeException("@Mod annotation not found in class " + mod + "!");
         }
@@ -66,7 +73,7 @@ public class ConfigGUI extends ElementGUI {
             this.mc.displayGuiScreen(this.parent);
             return true;
         }).withColorScheme(this.getReturnButtonColorScheme()));
-        this.addElement(new LabelElement<>(this, "Mod List", 35, 6));
+        this.addElement(new LabelElement<>(this, this.parentName, 35, 6));
         this.addElement(new LabelElement<>(this, this.mod.name().toUpperCase() + " SETTINGS", 35, 26));
         ListElement<ConfigGUI> categoryList = (ListElement<ConfigGUI>) new ListElement<>(this, 0, 40, 120, this.height - 40, this.categories.stream().map(ConfigCategory::getName).collect(Collectors.toList()), 20, list -> {
             this.selectedCategory = this.categories.get(list.getSelectedIndex());
