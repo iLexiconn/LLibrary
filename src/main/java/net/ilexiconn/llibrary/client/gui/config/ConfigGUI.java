@@ -66,7 +66,7 @@ public class ConfigGUI extends ElementGUI {
         this.addElement(new ButtonElement<>(this, "<", 0, 0, 30, 20, button -> {
             this.mc.displayGuiScreen(this.parent);
             return true;
-        }).withColorScheme(ConfigGUI.RETURN));
+        }).withColorScheme(this.getReturnButtonColorScheme()));
         this.addElement(new LabelElement<>(this, "Mod List", 35, 6));
         this.addElement(new LabelElement<>(this, this.mod.name().toUpperCase() + " SETTINGS", 35, 26));
         ListElement<ConfigGUI> categoryList = (ListElement<ConfigGUI>) new ListElement<>(this, 0, 40, 120, this.height - 40, this.categories.stream().map(ConfigCategory::getName).collect(Collectors.toList()), 20, list -> {
@@ -74,7 +74,7 @@ public class ConfigGUI extends ElementGUI {
             this.propertyElements.values().forEach(this::removeElement);
             this.propertyElements.clear();
             return true;
-        }).withPersistence(true).withColorScheme(ConfigGUI.SIDEBAR);
+        }).withPersistence(true).withColorScheme(this.getSidebarColorScheme());
         categoryList.setSelectedIndex(0);
         this.selectedCategory = this.categories.get(0);
         this.addElement(categoryList);
@@ -83,11 +83,11 @@ public class ConfigGUI extends ElementGUI {
 
     @Override
     public void drawScreen(float mouseX, float mouseY, float partialTicks) {
-        Gui.drawRect(0, 0, this.width, 40, LLibrary.CONFIG.getPrimaryColor());
-        Gui.drawRect(120, 40, this.width, this.height, LLibrary.CONFIG.getColorMode().equals("dark") ? 0xFF191919 : 0xFFFFFFFF);
+        Gui.drawRect(0, 0, this.width, 40, this.getTopBackgroundColor());
+        Gui.drawRect(120, 40, this.width, this.height, this.getContentBackgroundColor());
         GlStateManager.pushMatrix();
         GlStateManager.enableBlend();
-        int color = LLibrary.CONFIG.getAccentColor();
+        int color = this.getAccentColor();
         float a = (float) (color >> 24 & 255) / 255.0F;
         float r = (float) (color >> 16 & 255) / 255.0F;
         float g = (float) (color >> 8 & 255) / 255.0F;
@@ -103,12 +103,13 @@ public class ConfigGUI extends ElementGUI {
         for (Map.Entry<String, ConfigProperty> propertyEntry : this.selectedCategory.getProperties().entrySet()) {
             String name = propertyEntry.getKey();
             ConfigProperty property = propertyEntry.getValue();
-            fontRendererObj.drawString(name, x, y, LLibrary.CONFIG.getTextColor());
+            fontRendererObj.drawString(name, x, y, this.getTextColor());
             Element<ConfigGUI> propertyElement = this.propertyElements.get(property);
             if (propertyElement == null) {
                 propertyElement = property.provideElement(this, x, y + 10);
-                this.propertyElements.put(property, propertyElement);
                 if (propertyElement != null) {
+                    this.decoratePropertyElement(propertyElement);
+                    this.propertyElements.put(property, propertyElement);
                     this.addElement(propertyElement);
                 }
             }
@@ -123,6 +124,32 @@ public class ConfigGUI extends ElementGUI {
         MinecraftForge.EVENT_BUS.post(new ConfigChangedEvent.OnConfigChangedEvent(this.mod.modid(), null, this.mc.theWorld != null, false));
         super.onGuiClosed();
     }
+
+    public ColorScheme getReturnButtonColorScheme() {
+        return RETURN;
+    }
+
+    public ColorScheme getSidebarColorScheme() {
+        return SIDEBAR;
+    }
+
+    public int getTopBackgroundColor() {
+        return LLibrary.CONFIG.getPrimaryColor();
+    }
+
+    public int getContentBackgroundColor() {
+        return LLibrary.CONFIG.getColorMode().equals("dark") ? 0xFF191919 : 0xFFFFFFFF;
+    }
+
+    public int getAccentColor() {
+        return LLibrary.CONFIG.getAccentColor();
+    }
+
+    public int getTextColor() {
+        return LLibrary.CONFIG.getTextColor();
+    }
+
+    public void decoratePropertyElement(Element<ConfigGUI> element) {}
 
     public GuiScreen getParent() {
         return this.parent;
