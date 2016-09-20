@@ -5,6 +5,7 @@ import net.ilexiconn.llibrary.client.gui.ElementGUI;
 import net.ilexiconn.llibrary.client.gui.config.property.ForgeConfigProperty;
 import net.ilexiconn.llibrary.client.gui.element.*;
 import net.ilexiconn.llibrary.client.gui.element.color.ColorScheme;
+import net.ilexiconn.llibrary.server.config.Config;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
@@ -19,7 +20,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -31,6 +31,7 @@ public class ConfigGUI extends ElementGUI {
     public static final ResourceLocation SETTINGS_ICON = new ResourceLocation("llibrary", "textures/gui/settings.png");
 
     protected GuiScreen parent;
+    protected String parentName;
     protected List<ConfigCategory> categories = new ArrayList<>();
     protected Map<ConfigProperty, Element<ConfigGUI>> propertyElements = new HashMap<>();
     protected ConfigCategory selectedCategory;
@@ -38,7 +39,12 @@ public class ConfigGUI extends ElementGUI {
     private Mod mod;
 
     public ConfigGUI(GuiScreen parent, Object mod, Configuration config) {
+        this(parent, mod, config, "Mod List");
+    }
+
+    public ConfigGUI(GuiScreen parent, Object mod, Configuration config, String parentName) {
         this.parent = parent;
+        this.parentName = parentName;
         if (!mod.getClass().isAnnotationPresent(Mod.class)) {
             throw new RuntimeException("@Mod annotation not found in class " + mod + "!");
         }
@@ -48,14 +54,14 @@ public class ConfigGUI extends ElementGUI {
                     .map(config::getCategory)
                     .filter(category -> category.size() > 0)
                     .map(category -> {
-                        Map<String, ConfigProperty> propertyMap = new LinkedHashMap<>();
-                        for (Map.Entry<String, Property> entry : category.entrySet()) {
-                            ConfigProperty configProperty = ForgeConfigProperty.factory(entry.getValue());
+                        List<ConfigProperty> configProperties = new ArrayList<>();
+                        for (Property property : category.values()) {
+                            ConfigProperty configProperty = ForgeConfigProperty.factory(property);
                             if (configProperty != null) {
-                                propertyMap.put(entry.getKey(), configProperty);
+                                configProperties.add(configProperty);
                             }
                         }
-                        return new ConfigCategory(category.getQualifiedName(), propertyMap);
+                        return new ConfigCategory(category.getQualifiedName(), configProperties);
                     })
                     .collect(Collectors.toList()));
         }
@@ -66,15 +72,15 @@ public class ConfigGUI extends ElementGUI {
         this.addElement(new ButtonElement<>(this, "<", 0, 0, 30, 20, button -> {
             this.mc.displayGuiScreen(this.parent);
             return true;
-        }).withColorScheme(ConfigGUI.RETURN));
-        this.addElement(new LabelElement<>(this, "Mod List", 35, 6));
+        }).withColorScheme(this.getReturnButtonColorScheme()));
+        this.addElement(new LabelElement<>(this, this.parentName, 35, 6));
         this.addElement(new LabelElement<>(this, this.mod.name().toUpperCase() + " SETTINGS", 35, 26));
         ListElement<ConfigGUI> categoryList = (ListElement<ConfigGUI>) new ListElement<>(this, 0, 40, 120, this.height - 40, this.categories.stream().map(ConfigCategory::getName).collect(Collectors.toList()), 20, list -> {
             this.selectedCategory = this.categories.get(list.getSelectedIndex());
             this.propertyElements.values().forEach(this::removeElement);
             this.propertyElements.clear();
             return true;
-        }).withPersistence(true).withColorScheme(ConfigGUI.SIDEBAR);
+        }).withPersistence(true).withColorScheme(this.getSidebarColorScheme());
         categoryList.setSelectedIndex(0);
         this.selectedCategory = this.categories.get(0);
         this.addElement(categoryList);
@@ -83,11 +89,11 @@ public class ConfigGUI extends ElementGUI {
 
     @Override
     public void drawScreen(float mouseX, float mouseY, float partialTicks) {
-        Gui.drawRect(0, 0, this.width, 40, LLibrary.CONFIG.getPrimaryColor());
-        Gui.drawRect(120, 40, this.width, this.height, LLibrary.CONFIG.getColorMode().equals("dark") ? 0xFF191919 : 0xFFFFFFFF);
+        Gui.drawRect(0, 0, this.width, 40, this.getTopBackgroundColor());
+        Gui.drawRect(120, 40, this.width, this.height, this.getContentBackgroundColor());
         GlStateManager.pushMatrix();
         GlStateManager.enableBlend();
-        int color = LLibrary.CONFIG.getAccentColor();
+        int color = this.getAccentColor();
         float a = (float) (color >> 24 & 255) / 255.0F;
         float r = (float) (color >> 16 & 255) / 255.0F;
         float g = (float) (color >> 8 & 255) / 255.0F;
@@ -100,20 +106,24 @@ public class ConfigGUI extends ElementGUI {
         GlStateManager.popMatrix();
         int x = 125;
         int y = 45;
-        for (Map.Entry<String, ConfigProperty> propertyEntry : this.selectedCategory.getProperties().entrySet()) {
-            String name = propertyEntry.getKey();
-            ConfigProperty property = propertyEntry.getValue();
-            fontRendererObj.drawString(name, x, y, LLibrary.CONFIG.getTextColor());
+        for (ConfigProperty property : this.selectedCategory.getProperties()) {
+            fontRendererObj.drawString(property.name, x, y, this.getTextColor());
+            y += 10;
+            if (property.description != null && property.description.length() > 0) {
+                fontRendererObj.drawString(property.description, x, y, this.getTextColor());
+                y += 10;
+            }
             Element<ConfigGUI> propertyElement = this.propertyElements.get(property);
             if (propertyElement == null) {
-                propertyElement = property.provideElement(this, x, y + 10);
-                this.propertyElements.put(property, propertyElement);
+                propertyElement = property.provideElement(this, x, y);
                 if (propertyElement != null) {
+                    this.decoratePropertyElement(propertyElement);
+                    this.propertyElements.put(property, propertyElement);
                     this.addElement(propertyElement);
                 }
             }
             if (propertyElement != null) {
-                y += propertyElement.getHeight() + 14;
+                y += propertyElement.getHeight() + 4;
             }
         }
     }
@@ -123,6 +133,32 @@ public class ConfigGUI extends ElementGUI {
         MinecraftForge.EVENT_BUS.post(new ConfigChangedEvent.OnConfigChangedEvent(this.mod.modid(), null, this.mc.theWorld != null, false));
         super.onGuiClosed();
     }
+
+    public ColorScheme getReturnButtonColorScheme() {
+        return RETURN;
+    }
+
+    public ColorScheme getSidebarColorScheme() {
+        return SIDEBAR;
+    }
+
+    public int getTopBackgroundColor() {
+        return LLibrary.CONFIG.getPrimaryColor();
+    }
+
+    public int getContentBackgroundColor() {
+        return LLibrary.CONFIG.getColorMode().equals("dark") ? 0xFF191919 : 0xFFFFFFFF;
+    }
+
+    public int getAccentColor() {
+        return LLibrary.CONFIG.getAccentColor();
+    }
+
+    public int getTextColor() {
+        return LLibrary.CONFIG.getTextColor();
+    }
+
+    public void decoratePropertyElement(Element<ConfigGUI> element) {}
 
     public GuiScreen getParent() {
         return this.parent;

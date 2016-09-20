@@ -11,5 +11,17 @@ import net.minecraftforge.common.config.Property;
 import java.util.function.Function;
 
 public abstract class ConfigProperty {
+    public final String name;
+    public final String description;
+
+    public ConfigProperty(String name) {
+        this(name, "");
+    }
+
+    public ConfigProperty(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
+
     public abstract Element<ConfigGUI> provideElement(ConfigGUI gui, float x, float y);
 }

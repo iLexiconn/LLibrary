@@ -7,6 +7,7 @@ public abstract class ForgeConfigProperty extends ConfigProperty {
     protected final Property property;
 
     public ForgeConfigProperty(Property property) {
+        super(property.getName(), property.getComment());
         this.property = property;
     }
 
