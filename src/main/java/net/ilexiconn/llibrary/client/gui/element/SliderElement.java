@@ -81,7 +81,12 @@ public class SliderElement<T extends IElementGUI, P extends IFloatRangeProperty 
         this.inputElement.setEditable(editable);
     }
 
+    /**
+     * @deprecated Property should be changed through property object
+     */
+    @Deprecated
     public SliderElement<T, P> withValue(float value) {
+        this.trySetValue(value);
         return this;
     }
 

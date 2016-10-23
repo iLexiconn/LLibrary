@@ -75,7 +75,7 @@ public abstract class ElementGUI extends GuiScreen implements IElementGUI {
     public boolean isElementOnTop(Element element) {
         float mouseX = this.getPreciseMouseX();
         float mouseY = this.getPreciseMouseY();
-        for (Element e : this.getPreOrderElements()) {
+        for (Element e : this.getPostOrderElements()) {
             if (e.isVisible() && mouseX >= e.getPosX() && mouseY >= e.getPosY() && mouseX < e.getPosX() + e.getWidth() && mouseY < e.getPosY() + e.getHeight()) {
                 return element == e || (element.getParent() != null && element.getParent() == e);
             }
@@ -144,7 +144,7 @@ public abstract class ElementGUI extends GuiScreen implements IElementGUI {
     protected void renderElement(Element element, float mouseX, float mouseY, float partialTicks) {
         if (element.isVisible()) {
             element.render(mouseX, mouseY, partialTicks);
-            for (Element child : (List<Element>)element.getChildren()) {
+            for (Element child : (List<Element>) element.getChildren()) {
                 this.renderElement(child, mouseX, mouseY, partialTicks);
             }
         }
@@ -195,7 +195,7 @@ public abstract class ElementGUI extends GuiScreen implements IElementGUI {
 
     @Override
     protected void keyTyped(char typedChar, int keyCode) throws IOException {
-        for (Element element : this.getPreOrderElements()) {
+        for (Element element : this.getPostOrderElements()) {
             if (element.isVisible() && element.isEnabled()) {
                 if (element.keyPressed(typedChar, keyCode)) {
                     break;
