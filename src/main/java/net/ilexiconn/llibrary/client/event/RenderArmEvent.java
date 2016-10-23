@@ -36,7 +36,7 @@ public class RenderArmEvent extends Event {
     }
 
     public EnumHandSide getSide() {
-        return side;
+        return this.side;
     }
 
     @Cancelable

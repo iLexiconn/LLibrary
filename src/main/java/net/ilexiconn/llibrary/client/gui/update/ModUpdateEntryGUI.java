@@ -69,7 +69,7 @@ public class ModUpdateEntryGUI extends GuiScrollingList {
     }
 
     private int getHeaderHeight() {
-        int height = (textList.size() * 10);
+        int height = (this.textList.size() * 10);
         if (height < this.bottom - this.top - 8) {
             height = this.bottom - this.top - 8;
         }

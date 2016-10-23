@@ -74,7 +74,7 @@ public class ListElement<T extends IElementGUI> extends Element<T> {
                 float entryX = this.getPosX() + 2;
                 float entryY = this.getPosY() + y + 1;
                 float entryWidth = this.getWidth() - this.entryHeight;
-                if (this.isSelected(entryX, entryY, entryWidth, entryHeight, mouseX, mouseY)) {
+                if (this.isSelected(entryX, entryY, entryWidth, this.entryHeight, mouseX, mouseY)) {
                     int previousSelected = this.selectedEntry;
                     this.selectedEntry = entryIndex;
                     if (this.function.apply(this)) {
@@ -103,7 +103,7 @@ public class ListElement<T extends IElementGUI> extends Element<T> {
     }
 
     public String getSelectedEntry() {
-        return this.entries.get(selectedEntry);
+        return this.entries.get(this.selectedEntry);
     }
 
     public ListElement<T> withPersistence(boolean persistent) {

@@ -28,7 +28,7 @@ public class EntityDataCapabilityImplementation implements IEntityDataCapability
 
     @Override
     public void saveToNBT(NBTTagCompound compound) {
-        for (IEntityData entityData : EntityDataHandler.INSTANCE.getEntityData(entity)) {
+        for (IEntityData entityData : EntityDataHandler.INSTANCE.getEntityData(this.entity)) {
             NBTTagCompound managerTag = new NBTTagCompound();
             entityData.saveNBTData(managerTag);
             compound.setTag(entityData.getID(), managerTag);
@@ -37,7 +37,7 @@ public class EntityDataCapabilityImplementation implements IEntityDataCapability
 
     @Override
     public void loadFromNBT(NBTTagCompound compound) {
-        for (IEntityData entityData : EntityDataHandler.INSTANCE.getEntityData(entity)) {
+        for (IEntityData entityData : EntityDataHandler.INSTANCE.getEntityData(this.entity)) {
             NBTTagCompound managerTag = compound.getCompoundTag(entityData.getID());
             entityData.loadNBTData(managerTag);
         }

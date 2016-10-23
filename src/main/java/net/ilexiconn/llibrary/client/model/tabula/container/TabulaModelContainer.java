@@ -52,7 +52,7 @@ public class TabulaModelContainer {
     }
 
     public String[] getMetadata() {
-        return metadata;
+        return this.metadata;
     }
 
     public int getTextureWidth() {

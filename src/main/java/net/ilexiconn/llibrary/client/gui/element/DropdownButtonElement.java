@@ -20,7 +20,7 @@ public class DropdownButtonElement<T extends IElementGUI> extends Element<IEleme
 
         for (String value : this.selected.getValidStringValues()) {
             int entryWidth = gui.getFontRenderer().getStringWidth(value) + 5;
-            if (entryWidth > dropdownWidth) {
+            if (entryWidth > this.dropdownWidth) {
                 this.dropdownWidth = entryWidth;
             }
         }

@@ -1,8 +1,5 @@
 package net.ilexiconn.llibrary.client.gui.element.color;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,35 +62,35 @@ public class ColorMode {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public int getPrimaryColor() {
-        return primaryColor;
+        return this.primaryColor;
     }
 
     public int getSecondaryColor() {
-        return secondaryColor;
+        return this.secondaryColor;
     }
 
     public int getTertiaryColor() {
-        return tertiaryColor;
+        return this.tertiaryColor;
     }
 
     public int getPrimarySubcolor() {
-        return primarySubcolor;
+        return this.primarySubcolor;
     }
 
     public int getSecondarySubcolor() {
-        return secondarySubcolor;
+        return this.secondarySubcolor;
     }
 
     public int getTextColor() {
-        return textColor;
+        return this.textColor;
     }
 
     public int getInvertedTextColor() {
-        return invertedTextColor;
+        return this.invertedTextColor;
     }
 }
 

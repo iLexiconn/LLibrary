@@ -8,7 +8,11 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * @author iLexiconn
@@ -48,7 +52,7 @@ public enum CommandHandler {
 
             @Override
             public List<String> getTabCompletion(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
-                return CommandBase.getListOfStringsMatchingLastWord(args, values);
+                return CommandBase.getListOfStringsMatchingLastWord(args, this.values);
             }
         };
     }

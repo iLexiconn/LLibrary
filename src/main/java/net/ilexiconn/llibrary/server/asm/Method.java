@@ -1,7 +1,12 @@
 package net.ilexiconn.llibrary.server.asm;
 
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.*;
+import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.FieldInsnNode;
+import org.objectweb.asm.tree.InsnList;
+import org.objectweb.asm.tree.InsnNode;
+import org.objectweb.asm.tree.MethodInsnNode;
+import org.objectweb.asm.tree.VarInsnNode;
 
 public class Method {
     private ClassPatcher patcher;
@@ -14,7 +19,7 @@ public class Method {
     }
 
     public AbstractInsnNode getInsnNode() {
-        return insnNode;
+        return this.insnNode;
     }
 
     /**

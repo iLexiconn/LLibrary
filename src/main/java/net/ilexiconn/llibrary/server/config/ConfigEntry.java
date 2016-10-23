@@ -1,7 +1,6 @@
 package net.ilexiconn.llibrary.server.config;
 
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.relauncher.Side;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

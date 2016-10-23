@@ -75,31 +75,31 @@ public class PlayerModelEvent extends Event {
         }
 
         public EntityPlayer getEntityPlayer() {
-            return entityPlayer;
+            return this.entityPlayer;
         }
 
         public float getLimbSwing() {
-            return limbSwing;
+            return this.limbSwing;
         }
 
         public float getLimbSwingAmount() {
-            return limbSwingAmount;
+            return this.limbSwingAmount;
         }
 
         public float getRotation() {
-            return rotation;
+            return this.rotation;
         }
 
         public float getRotationYaw() {
-            return rotationYaw;
+            return this.rotationYaw;
         }
 
         public float getRotationPitch() {
-            return rotationPitch;
+            return this.rotationPitch;
         }
 
         public float getScale() {
-            return scale;
+            return this.scale;
         }
     }
 }

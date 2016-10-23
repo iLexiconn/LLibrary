@@ -15,10 +15,10 @@ public class Argument<T> {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public T getValue() {
-        return value;
+        return this.value;
     }
 }

@@ -1,6 +1,10 @@
 package net.ilexiconn.llibrary.client.model.tabula.baked.deserializer;
 
-import com.google.gson.*;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
 import net.minecraftforge.fml.relauncher.Side;
@@ -15,6 +19,7 @@ import java.lang.reflect.Type;
 @SuppressWarnings("deprecation")
 @SideOnly(Side.CLIENT)
 public class ItemCameraTransformsDeserializer implements JsonDeserializer<ItemCameraTransforms> {
+    @Override
     public ItemCameraTransforms deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
         JsonObject object = element.getAsJsonObject();
         ItemTransformVec3f thirdperson_righthand = this.getTransform(context, object, "thirdperson_righthand");

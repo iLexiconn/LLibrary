@@ -45,7 +45,7 @@ public class TabulaModel extends AdvancedModelBase {
 
     private void parseCubeGroup(TabulaCubeGroupContainer container) {
         for (TabulaCubeContainer cube : container.getCubes()) {
-            parseCube(cube, null);
+            this.parseCube(cube, null);
         }
         container.getCubeGroups().forEach(this::parseCubeGroup);
     }

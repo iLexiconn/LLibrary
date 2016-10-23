@@ -12,17 +12,17 @@ public enum StructureHandler {
     private HashMap<String, StructureGenerator> map = new HashMap<>();
 
     public void registerStructure(String name, StructureGenerator generator) {
-        map.put(name, generator);
+        this.map.put(name, generator);
     }
 
     public StructureBuilder createStructure(String name) {
         StructureBuilder builder = new StructureBuilder();
-        registerStructure(name, builder);
+        this.registerStructure(name, builder);
         return builder;
     }
 
     public StructureGenerator getStructure(String name) {
-        return map.get(name);
+        return this.map.get(name);
     }
 }
 

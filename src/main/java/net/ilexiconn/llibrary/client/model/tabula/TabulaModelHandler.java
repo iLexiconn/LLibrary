@@ -1,7 +1,12 @@
 package net.ilexiconn.llibrary.client.model.tabula;
 
 import com.google.common.collect.ImmutableList;
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
 import net.ilexiconn.llibrary.client.model.tabula.baked.VanillaTabulaModel;
 import net.ilexiconn.llibrary.client.model.tabula.baked.deserializer.ItemCameraTransformsDeserializer;
 import net.ilexiconn.llibrary.client.model.tabula.baked.deserializer.ItemTransformVec3fDeserializer;
@@ -67,7 +72,7 @@ public enum TabulaModelHandler implements ICustomModelLoader, JsonDeserializatio
      * @return the new {@link TabulaModelContainer} instance
      */
     public TabulaModelContainer loadTabulaModel(InputStream stream) {
-        return gson.fromJson(new InputStreamReader(stream), TabulaModelContainer.class);
+        return this.gson.fromJson(new InputStreamReader(stream), TabulaModelContainer.class);
     }
 
     /**
@@ -76,7 +81,7 @@ public enum TabulaModelHandler implements ICustomModelLoader, JsonDeserializatio
      * @return the cube
      */
     public TabulaCubeContainer getCubeByName(String name, TabulaModelContainer model) {
-        List<TabulaCubeContainer> allCubes = getAllCubes(model);
+        List<TabulaCubeContainer> allCubes = this.getAllCubes(model);
 
         for (TabulaCubeContainer cube : allCubes) {
             if (cube.getName().equals(name)) {
@@ -93,7 +98,7 @@ public enum TabulaModelHandler implements ICustomModelLoader, JsonDeserializatio
      * @return the cube
      */
     public TabulaCubeContainer getCubeByIdentifier(String identifier, TabulaModelContainer model) {
-        List<TabulaCubeContainer> allCubes = getAllCubes(model);
+        List<TabulaCubeContainer> allCubes = this.getAllCubes(model);
 
         for (TabulaCubeContainer cube : allCubes) {
             if (cube.getIdentifier().equals(identifier)) {
@@ -112,11 +117,11 @@ public enum TabulaModelHandler implements ICustomModelLoader, JsonDeserializatio
         List<TabulaCubeContainer> cubes = new ArrayList<>();
 
         for (TabulaCubeGroupContainer cubeGroup : model.getCubeGroups()) {
-            cubes.addAll(traverse(cubeGroup));
+            cubes.addAll(this.traverse(cubeGroup));
         }
 
         for (TabulaCubeContainer cube : model.getCubes()) {
-            cubes.addAll(traverse(cube));
+            cubes.addAll(this.traverse(cube));
         }
 
         return cubes;
@@ -126,11 +131,11 @@ public enum TabulaModelHandler implements ICustomModelLoader, JsonDeserializatio
         List<TabulaCubeContainer> retCubes = new ArrayList<>();
 
         for (TabulaCubeContainer child : group.getCubes()) {
-            retCubes.addAll(traverse(child));
+            retCubes.addAll(this.traverse(child));
         }
 
         for (TabulaCubeGroupContainer child : group.getCubeGroups()) {
-            retCubes.addAll(traverse(child));
+            retCubes.addAll(this.traverse(child));
         }
 
         return retCubes;
@@ -142,7 +147,7 @@ public enum TabulaModelHandler implements ICustomModelLoader, JsonDeserializatio
         retCubes.add(cube);
 
         for (TabulaCubeContainer child : cube.getChildren()) {
-            retCubes.addAll(traverse(child));
+            retCubes.addAll(this.traverse(child));
         }
 
         return retCubes;
@@ -170,7 +175,7 @@ public enum TabulaModelHandler implements ICustomModelLoader, JsonDeserializatio
         String tblLocationStr = json.getAsJsonObject().get("tabula").getAsString() + ".tbl";
         ResourceLocation tblLocation = new ResourceLocation(tblLocationStr);
         IResource tblResource = this.manager.getResource(tblLocation);
-        InputStream modelStream = getModelJsonStream(tblLocation.toString(), tblResource.getInputStream());
+        InputStream modelStream = this.getModelJsonStream(tblLocation.toString(), tblResource.getInputStream());
         TabulaModelContainer modelJson = TabulaModelHandler.INSTANCE.loadTabulaModel(modelStream);
         modelStream.close();
         ImmutableList.Builder<ResourceLocation> builder = ImmutableList.builder();
@@ -195,6 +200,6 @@ public enum TabulaModelHandler implements ICustomModelLoader, JsonDeserializatio
 
     @Override
     public <T> T deserialize(JsonElement json, Type type) throws JsonParseException {
-        return gson.fromJson(json, type);
+        return this.gson.fromJson(json, type);
     }
 }

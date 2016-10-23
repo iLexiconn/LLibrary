@@ -14,7 +14,7 @@ public enum TickRateHandler {
     private long tickRate = DEFAULT_TICK_RATE;
 
     public long getTickRate() {
-        return tickRate;
+        return this.tickRate;
     }
 
     public void setTickRate(float tickRate) {

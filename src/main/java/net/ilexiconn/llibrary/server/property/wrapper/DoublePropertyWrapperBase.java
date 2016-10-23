@@ -19,17 +19,17 @@ public abstract class DoublePropertyWrapperBase<T extends IDoubleProperty> imple
 
     @Override
     public double getDouble() {
-        return delegateFor.getDouble();
+        return this.delegateFor.getDouble();
     }
 
     @Override
     public void setDouble(double value) {
-        delegateFor.setDouble(value);
+        this.delegateFor.setDouble(value);
     }
 
     @Override
     public boolean isValidDouble(double value) {
-        return delegateFor.isValidDouble(value);
+        return this.delegateFor.isValidDouble(value);
     }
 
     @Override

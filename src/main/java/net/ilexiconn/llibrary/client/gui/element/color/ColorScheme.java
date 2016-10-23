@@ -27,10 +27,10 @@ public class ColorScheme {
     }
 
     public int getPrimaryColor() {
-        return primaryColor.get();
+        return this.primaryColor.get();
     }
 
     public int getSecondaryColor() {
-        return secondaryColor.get();
+        return this.secondaryColor.get();
     }
 }

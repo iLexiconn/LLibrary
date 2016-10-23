@@ -19,21 +19,23 @@ public class FixedRule extends RepeatRule {
         this.countdown = times;
     }
 
+    @Override
     public boolean continueRepeating(World world, Random rand, MutableBlockPos position) {
-        return countdown > 0;
+        return this.countdown > 0;
     }
 
+    @Override
     public void repeat(World world, Random rand, MutableBlockPos position) {
-        countdown--;
+        this.countdown--;
         position.setPos(
-                position.getX() + getSpacingX(),
-                position.getY() + getSpacingY(),
-                position.getZ() + getSpacingZ()
+                position.getX() + this.getSpacingX(),
+                position.getY() + this.getSpacingY(),
+                position.getZ() + this.getSpacingZ()
         );
     }
 
     @Override
     public void reset(World world, Random random, MutableBlockPos pos) {
-        countdown = times;
+        this.countdown = this.times;
     }
 }

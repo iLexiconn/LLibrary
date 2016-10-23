@@ -1,6 +1,11 @@
 package net.ilexiconn.llibrary.client.model.tabula.baked.deserializer;
 
-import com.google.gson.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.math.MathHelper;
@@ -21,6 +26,7 @@ public class ItemTransformVec3fDeserializer implements JsonDeserializer<ItemTran
     private static final Vector3f TRANSLATION_DEFAULT = new Vector3f(0.0F, 0.0F, 0.0F);
     private static final Vector3f SCALE_DEFAULT = new Vector3f(1.0F, 1.0F, 1.0F);
 
+    @Override
     public ItemTransformVec3f deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
         JsonObject object = element.getAsJsonObject();
         Vector3f rotation = this.parseVector3f(object, "rotation", ROTATION_DEFAULT);

@@ -9,7 +9,13 @@ import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -50,7 +56,7 @@ public enum LanguageHandler {
         for (ModContainer mod : Loader.instance().getModList()) {
             String modId = mod.getModId();
             try {
-                RemoteLanguageContainer container = loadRemoteLocalization(modId);
+                RemoteLanguageContainer container = this.loadRemoteLocalization(modId);
                 if (container != null) {
                     for (RemoteLanguageContainer.LangContainer language : container.languages) {
                         Map<String, String> lang = LanguageMap.parseLangFile(new URL(language.downloadURL).openStream());

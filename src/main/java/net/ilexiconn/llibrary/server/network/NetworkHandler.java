@@ -81,7 +81,7 @@ public enum NetworkHandler {
                     SimpleNetworkWrapper networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel(mod.getModId());
                     field.set(null, networkWrapper);
                     for (Class messageClass : annotation.value()) {
-                        registerMessage(networkWrapper, messageClass);
+                        this.registerMessage(networkWrapper, messageClass);
                     }
                 } catch (Exception e) {
                     LLibrary.LOGGER.fatal("Failed to inject network wrapper for mod container " + mod, e);

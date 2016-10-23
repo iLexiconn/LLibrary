@@ -28,9 +28,9 @@ public abstract class AnimationAI<T extends Entity & IAnimatedEntity> extends En
     @Override
     public boolean shouldExecute() {
         if (this.isAutomatic()) {
-            return this.entity.getAnimation() == getAnimation();
+            return this.entity.getAnimation() == this.getAnimation();
         }
-        return shouldAnimate();
+        return this.shouldAnimate();
     }
 
     @Override

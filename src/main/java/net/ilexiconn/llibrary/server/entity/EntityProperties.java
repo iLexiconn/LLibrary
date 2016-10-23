@@ -67,6 +67,7 @@ public abstract class EntityProperties<T extends Entity> implements IEntityData<
     /**
      * @return the ID of this property
      */
+    @Override
     public abstract String getID();
 
     /**

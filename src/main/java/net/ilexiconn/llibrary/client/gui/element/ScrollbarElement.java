@@ -76,7 +76,7 @@ public class ScrollbarElement<T extends IElementGUI> extends Element<T> {
         this.setPosX(this.offsetX.get());
         this.setPosY(this.offsetY.get() + this.scroll);
         float parentHeight = this.getParent().getHeight();
-        int maxDisplayEntries = (int) (parentHeight / entryHeight);
+        int maxDisplayEntries = (int) (parentHeight / this.entryHeight);
         int entryCount = this.entryCount.get();
         this.maxScroll = Math.max(0, entryCount - maxDisplayEntries);
         this.scrollPerEntry = (float) entryCount / parentHeight;
@@ -88,15 +88,15 @@ public class ScrollbarElement<T extends IElementGUI> extends Element<T> {
     }
 
     public boolean isScrolling() {
-        return scrolling;
+        return this.scrolling;
     }
 
     public int getMaxScroll() {
-        return maxScroll;
+        return this.maxScroll;
     }
 
     public float getScrollVelocity() {
-        return scrollVelocity;
+        return this.scrollVelocity;
     }
 
     public void setScrollVelocity(float scrollVelocity) {

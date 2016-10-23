@@ -10,8 +10,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
-import java.util.function.Function;
-
 @SideOnly(Side.CLIENT)
 public class SliderElement<T extends IElementGUI, IProperty extends IFloatRangeProperty & IStringProperty> extends Element<T> {
     private final IProperty value;
@@ -146,6 +144,6 @@ public class SliderElement<T extends IElementGUI, IProperty extends IFloatRangeP
     }
 
     public InputElementBase getValueInput() {
-        return inputElement;
+        return this.inputElement;
     }
 }

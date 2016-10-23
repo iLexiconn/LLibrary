@@ -64,9 +64,9 @@ public class AdvancedModelBase extends ModelBase {
      * @param swingAmount the swing amount
      */
     public void chainSwing(AdvancedModelRenderer[] boxes, float speed, float degree, double rootOffset, float swing, float swingAmount) {
-        float offset = calculateChainOffset(rootOffset, boxes);
+        float offset = this.calculateChainOffset(rootOffset, boxes);
         for (int index = 0; index < boxes.length; index++) {
-            boxes[index].rotateAngleY += calculateChainRotation(speed, degree, swing, swingAmount, offset, index);
+            boxes[index].rotateAngleY += this.calculateChainRotation(speed, degree, swing, swingAmount, offset, index);
         }
     }
 
@@ -81,9 +81,9 @@ public class AdvancedModelBase extends ModelBase {
      * @param swingAmount the swing amount
      */
     public void chainWave(AdvancedModelRenderer[] boxes, float speed, float degree, double rootOffset, float swing, float swingAmount) {
-        float offset = calculateChainOffset(rootOffset, boxes);
+        float offset = this.calculateChainOffset(rootOffset, boxes);
         for (int index = 0; index < boxes.length; index++) {
-            boxes[index].rotateAngleX += calculateChainRotation(speed, degree, swing, swingAmount, offset, index);
+            boxes[index].rotateAngleX += this.calculateChainRotation(speed, degree, swing, swingAmount, offset, index);
         }
     }
 
@@ -98,14 +98,14 @@ public class AdvancedModelBase extends ModelBase {
      * @param swingAmount the swing amount
      */
     public void chainFlap(AdvancedModelRenderer[] boxes, float speed, float degree, double rootOffset, float swing, float swingAmount) {
-        float offset = calculateChainOffset(rootOffset, boxes);
+        float offset = this.calculateChainOffset(rootOffset, boxes);
         for (int index = 0; index < boxes.length; index++) {
-            boxes[index].rotateAngleZ += calculateChainRotation(speed, degree, swing, swingAmount, offset, index);
+            boxes[index].rotateAngleZ += this.calculateChainRotation(speed, degree, swing, swingAmount, offset, index);
         }
     }
 
     private float calculateChainRotation(float speed, float degree, float swing, float swingAmount, float offset, int boxIndex) {
-        return MathHelper.cos(swing * (speed * movementScale) + offset * boxIndex) * swingAmount * (degree * movementScale);
+        return MathHelper.cos(swing * (speed * this.movementScale) + offset * boxIndex) * swingAmount * (degree * this.movementScale);
     }
 
     private float calculateChainOffset(double rootOffset, AdvancedModelRenderer... boxes) {

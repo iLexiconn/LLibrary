@@ -60,16 +60,16 @@ public class BooleanPropertyWrapper implements IBooleanProperty, IStringSelectio
         } else if (value.equals(this.falseName)) {
             return this.isValidBoolean(false);
         }
-        return isValidBoolean(Boolean.parseBoolean(value));
+        return this.isValidBoolean(Boolean.parseBoolean(value));
     }
 
     @Override
     public Set<String> getValidStringValues() {
         Set<String> result = new HashSet<>();
-        if (isValidBoolean(true)) {
+        if (this.isValidBoolean(true)) {
             result.add(this.trueName);
         }
-        if (isValidBoolean(false)) {
+        if (this.isValidBoolean(false)) {
             result.add(this.falseName);
         }
         return result;

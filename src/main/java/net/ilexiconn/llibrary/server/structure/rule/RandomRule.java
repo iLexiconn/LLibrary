@@ -28,11 +28,11 @@ public class RandomRule extends FixedRule {
 
     @Override
     public void reset(World world, Random random, MutableBlockPos pos) {
-        times = random.nextInt(max - min) + min;
+        this.times = random.nextInt(this.max - this.min) + this.min;
     }
 
     @Override
     public void init(World world, Random random, MutableBlockPos pos) {
-        countdown = times;
+        this.countdown = this.times;
     }
 }

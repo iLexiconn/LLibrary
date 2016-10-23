@@ -3,7 +3,12 @@ package net.ilexiconn.llibrary.client.util;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.vecmath.*;
+import javax.vecmath.AxisAngle4d;
+import javax.vecmath.Matrix4d;
+import javax.vecmath.Point3f;
+import javax.vecmath.Quat4f;
+import javax.vecmath.Vector3d;
+import javax.vecmath.Vector3f;
 import java.util.Stack;
 
 /**
@@ -59,31 +64,31 @@ public class Matrix {
     }
 
     public void transform(Point3f point) {
-        Matrix4d matrix = matrixStack.peek();
+        Matrix4d matrix = this.matrixStack.peek();
         matrix.transform(point);
     }
 
     public void transform(Vector3f point) {
-        Matrix4d matrix = matrixStack.peek();
+        Matrix4d matrix = this.matrixStack.peek();
         matrix.transform(point);
     }
 
     public Point3f getTranslation() {
-        Matrix4d matrix = matrixStack.peek();
+        Matrix4d matrix = this.matrixStack.peek();
         Point3f translation = new Point3f();
         matrix.transform(translation);
         return translation;
     }
 
     public Quat4f getRotation() {
-        Matrix4d matrix = matrixStack.peek();
+        Matrix4d matrix = this.matrixStack.peek();
         Quat4f rotation = new Quat4f();
         matrix.get(rotation);
         return rotation;
     }
 
     public Vector3f getScale() {
-        Matrix4d matrix = matrixStack.peek();
+        Matrix4d matrix = this.matrixStack.peek();
         float x = (float) Math.sqrt(matrix.m00 * matrix.m00 + matrix.m10 * matrix.m10 + matrix.m20 * matrix.m20);
         float y = (float) Math.sqrt(matrix.m01 * matrix.m01 + matrix.m11 * matrix.m11 + matrix.m21 * matrix.m21);
         float z = (float) Math.sqrt(matrix.m02 * matrix.m02 + matrix.m12 * matrix.m12 + matrix.m22 * matrix.m22);

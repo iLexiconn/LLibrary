@@ -59,8 +59,8 @@ public abstract class EntryProperty {
 
         @Override
         protected Property createForgeConfigurationProperty(Configuration forgeConfiguration) {
-            int minInt = entry.minValue().isEmpty() ? Integer.MIN_VALUE : Integer.parseInt(entry.minValue());
-            int maxInt = entry.maxValue().isEmpty() ? Integer.MAX_VALUE : Integer.parseInt(entry.maxValue());
+            int minInt = this.entry.minValue().isEmpty() ? Integer.MIN_VALUE : Integer.parseInt(this.entry.minValue());
+            int maxInt = this.entry.maxValue().isEmpty() ? Integer.MAX_VALUE : Integer.parseInt(this.entry.maxValue());
             return forgeConfiguration.get(this.entry.category(), this.getName(), (int)this.get(), this.entry.comment(), minInt, maxInt);
         }
 
@@ -124,8 +124,8 @@ public abstract class EntryProperty {
 
         @Override
         protected Property createForgeConfigurationProperty(Configuration forgeConfiguration) {
-            float minFloat = entry.minValue().isEmpty() ? Float.MIN_VALUE : Float.parseFloat(entry.minValue());
-            float maxFloat = entry.maxValue().isEmpty() ? Float.MAX_VALUE : Float.parseFloat(entry.maxValue());
+            float minFloat = this.entry.minValue().isEmpty() ? Float.MIN_VALUE : Float.parseFloat(this.entry.minValue());
+            float maxFloat = this.entry.maxValue().isEmpty() ? Float.MAX_VALUE : Float.parseFloat(this.entry.maxValue());
             return forgeConfiguration.get(this.entry.category(), this.getName(), (float)this.get(), this.entry.comment(), minFloat, maxFloat);
         }
 
@@ -147,8 +147,8 @@ public abstract class EntryProperty {
 
         @Override
         protected Property createForgeConfigurationProperty(Configuration forgeConfiguration) {
-            double minDouble = entry.minValue().isEmpty() ? Double.MIN_VALUE : Double.parseDouble(entry.minValue());
-            double maxDouble = entry.maxValue().isEmpty() ? Double.MAX_VALUE : Double.parseDouble(entry.maxValue());
+            double minDouble = this.entry.minValue().isEmpty() ? Double.MIN_VALUE : Double.parseDouble(this.entry.minValue());
+            double maxDouble = this.entry.maxValue().isEmpty() ? Double.MAX_VALUE : Double.parseDouble(this.entry.maxValue());
             return forgeConfiguration.get(this.entry.category(), this.getName(), (float)this.get(), this.entry.comment(), minDouble, maxDouble);
         }
 

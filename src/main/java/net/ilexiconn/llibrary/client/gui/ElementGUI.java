@@ -47,7 +47,7 @@ public abstract class ElementGUI extends GuiScreen implements IElementGUI {
 
     @Override
     public void removeElement(Element element) {
-        elements.remove(element);
+        this.elements.remove(element);
     }
 
     @Override
@@ -100,12 +100,12 @@ public abstract class ElementGUI extends GuiScreen implements IElementGUI {
 
     @Override
     public int getHeight() {
-        return height;
+        return this.height;
     }
 
     @Override
     public int getWidth() {
-        return width;
+        return this.width;
     }
 
     @Override
@@ -233,7 +233,7 @@ public abstract class ElementGUI extends GuiScreen implements IElementGUI {
 
     private void traversePostOrderRecursively(List<Element> in, List<Element> out) {
         for (Element element : in) {
-            traversePostOrderRecursively(element.getChildren(), out);
+            this.traversePostOrderRecursively(element.getChildren(), out);
             out.add(element);
         }
     }
@@ -241,7 +241,7 @@ public abstract class ElementGUI extends GuiScreen implements IElementGUI {
     private void traversePreOrderRecursively(List<Element> in, List<Element> out) {
         for (Element element : in) {
             out.add(element);
-            traversePreOrderRecursively(element.getChildren(), out);
+            this.traversePreOrderRecursively(element.getChildren(), out);
         }
     }
 }

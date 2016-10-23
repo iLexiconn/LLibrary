@@ -96,6 +96,6 @@ public class TabulaCubeContainer {
     }
 
     public List<TabulaCubeContainer> getChildren() {
-        return children;
+        return this.children;
     }
 }

@@ -55,7 +55,7 @@ public class Shape {
             }
         }
         this.vertexList.add(vertex);
-        vertex.register(model);
+        vertex.register(this.model);
         return vertex;
     }
 
@@ -66,18 +66,18 @@ public class Shape {
             }
         }
         this.textureCoordsList.add(textureCoords);
-        textureCoords.register(model);
+        textureCoords.register(this.model);
         return textureCoords;
     }
 
     public void translate(Vector3f translationVector) {
-        for (Vertex vertex : vertexList) {
+        for (Vertex vertex : this.vertexList) {
             Vector3f.add(vertex.getPosition(), translationVector, vertex.getPosition());
         }
     }
 
     public void scale(Vector3f scaleVector) {
-        for (Vertex vertex : vertexList) {
+        for (Vertex vertex : this.vertexList) {
             vertex.getPosition().x *= scaleVector.x;
             vertex.getPosition().y *= scaleVector.y;
             vertex.getPosition().z *= scaleVector.z;
@@ -85,15 +85,15 @@ public class Shape {
     }
 
     public void rotate(float angle, float x, float y, float z) {
-        Matrix3f rotationMatrix = rotationMatrix(angle, x, y, z);
-        for (Vertex vertex : vertexList) {
+        Matrix3f rotationMatrix = this.rotationMatrix(angle, x, y, z);
+        for (Vertex vertex : this.vertexList) {
             Matrix3f.transform(rotationMatrix, vertex.getPosition(), vertex.getPosition());
         }
     }
 
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("o ").append(name).append("\n");
+        builder.append("o ").append(this.name).append("\n");
         for (Vertex vertex : this.vertexList) {
             builder.append(vertex.toString()).append("\n");
         }

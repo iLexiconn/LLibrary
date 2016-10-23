@@ -13,10 +13,10 @@ public class SurvivalTabClickEvent extends Event {
     }
 
     public String getLabel() {
-        return label;
+        return this.label;
     }
 
     public EntityPlayer getPlayer() {
-        return player;
+        return this.player;
     }
 }

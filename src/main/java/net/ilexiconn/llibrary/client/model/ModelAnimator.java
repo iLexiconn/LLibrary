@@ -41,7 +41,7 @@ public class ModelAnimator {
      * @return the {@link IAnimatedEntity} instance. Null if {@link ModelAnimator#update} has never been called.
      */
     public IAnimatedEntity getEntity() {
-        return entity;
+        return this.entity;
     }
 
     /**
@@ -114,7 +114,7 @@ public class ModelAnimator {
         if (!this.correctAnimation) {
             return;
         }
-        getTransform(box).addRotation(x, y, z);
+        this.getTransform(box).addRotation(x, y, z);
     }
 
     /**
@@ -129,7 +129,7 @@ public class ModelAnimator {
         if (!this.correctAnimation) {
             return;
         }
-        getTransform(box).addOffset(x, y, z);
+        this.getTransform(box).addOffset(x, y, z);
     }
 
     private Transform getTransform(ModelRenderer box) {

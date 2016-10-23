@@ -19,17 +19,17 @@ public abstract class IntPropertyWrapperBase<T extends IIntProperty> implements 
 
     @Override
     public int getInt() {
-        return delegateFor.getInt();
+        return this.delegateFor.getInt();
     }
 
     @Override
     public void setInt(int value) {
-        delegateFor.setInt(value);
+        this.delegateFor.setInt(value);
     }
 
     @Override
     public boolean isValidInt(int value) {
-        return delegateFor.isValidInt(value);
+        return this.delegateFor.isValidInt(value);
     }
 
     @Override

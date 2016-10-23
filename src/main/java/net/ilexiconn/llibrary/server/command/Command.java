@@ -118,7 +118,7 @@ public class Command extends CommandBase {
         if (this.commandUsage == null) {
             StringBuilder builder = new StringBuilder();
             builder.append("/");
-            builder.append(getCommandName());
+            builder.append(this.getCommandName());
             for (String requiredArgument : this.requiredArguments.keySet()) {
                 builder.append(" ");
                 builder.append("<");
@@ -141,9 +141,9 @@ public class Command extends CommandBase {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         if (args.length < this.requiredArguments.size()) {
-            throw new WrongUsageException(getCommandUsage(sender));
+            throw new WrongUsageException(this.getCommandUsage(sender));
         } else if (args.length > this.requiredArguments.size() + this.optionalArguments.size()) {
-            throw new WrongUsageException(getCommandUsage(sender));
+            throw new WrongUsageException(this.getCommandUsage(sender));
         } else {
             List<Argument<?>> arguments = Lists.newArrayList();
             for (int i = 0; i < args.length; i++) {

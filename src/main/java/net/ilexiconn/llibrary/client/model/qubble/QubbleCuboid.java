@@ -156,7 +156,7 @@ public class QubbleCuboid implements INBTSerializable<NBTTagCompound> {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -164,79 +164,79 @@ public class QubbleCuboid implements INBTSerializable<NBTTagCompound> {
     }
 
     public List<QubbleCuboid> getChildren() {
-        return children;
+        return this.children;
     }
 
     public int getDimensionX() {
-        return dimensionX;
+        return this.dimensionX;
     }
 
     public int getDimensionY() {
-        return dimensionY;
+        return this.dimensionY;
     }
 
     public int getDimensionZ() {
-        return dimensionZ;
+        return this.dimensionZ;
     }
 
     public float getPositionX() {
-        return positionX;
+        return this.positionX;
     }
 
     public float getPositionY() {
-        return positionY;
+        return this.positionY;
     }
 
     public float getPositionZ() {
-        return positionZ;
+        return this.positionZ;
     }
 
     public float getOffsetX() {
-        return offsetX;
+        return this.offsetX;
     }
 
     public float getOffsetY() {
-        return offsetY;
+        return this.offsetY;
     }
 
     public float getOffsetZ() {
-        return offsetZ;
+        return this.offsetZ;
     }
 
     public float getRotationX() {
-        return rotationX;
+        return this.rotationX;
     }
 
     public float getRotationY() {
-        return rotationY;
+        return this.rotationY;
     }
 
     public float getRotationZ() {
-        return rotationZ;
+        return this.rotationZ;
     }
 
     public float getScaleX() {
-        return scaleX;
+        return this.scaleX;
     }
 
     public float getScaleY() {
-        return scaleY;
+        return this.scaleY;
     }
 
     public float getScaleZ() {
-        return scaleZ;
+        return this.scaleZ;
     }
 
     public int getTextureX() {
-        return textureX;
+        return this.textureX;
     }
 
     public int getTextureY() {
-        return textureY;
+        return this.textureY;
     }
 
     public boolean isTextureMirrored() {
-        return textureMirrored;
+        return this.textureMirrored;
     }
 
     public void setTextureMirrored(boolean textureMirrored) {
@@ -244,7 +244,7 @@ public class QubbleCuboid implements INBTSerializable<NBTTagCompound> {
     }
 
     public float getOpacity() {
-        return opacity;
+        return this.opacity;
     }
 
     public void setOpacity(float opacity) {

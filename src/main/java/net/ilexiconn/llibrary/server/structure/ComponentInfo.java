@@ -20,10 +20,10 @@ public class ComponentInfo {
     public EnumFacing top;
 
     public ComponentInfo() {
-        front = EnumFacing.EAST;
-        top = EnumFacing.UP;
-        blocks = new HashMap<>();
-        repeats = new ArrayList<>();
-        repeats.add(new PlaceRule());
+        this.front = EnumFacing.EAST;
+        this.top = EnumFacing.UP;
+        this.blocks = new HashMap<>();
+        this.repeats = new ArrayList<>();
+        this.repeats.add(new PlaceRule());
     }
 }

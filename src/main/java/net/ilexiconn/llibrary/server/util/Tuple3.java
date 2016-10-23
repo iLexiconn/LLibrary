@@ -17,14 +17,14 @@ public class Tuple3<A, B, C> {
     }
 
     public Tuple3(A a, B b, C c) {
-        set(a, b, c);
+        this.set(a, b, c);
     }
 
     /**
      * @return the first object in this tuple
      */
     public A getA() {
-        return a;
+        return this.a;
     }
 
     /**
@@ -40,7 +40,7 @@ public class Tuple3<A, B, C> {
      * @return the second object in this tuple
      */
     public B getB() {
-        return b;
+        return this.b;
     }
 
     /**
@@ -56,7 +56,7 @@ public class Tuple3<A, B, C> {
      * @return the third object in this tuple
      */
     public C getC() {
-        return c;
+        return this.c;
     }
 
     /**

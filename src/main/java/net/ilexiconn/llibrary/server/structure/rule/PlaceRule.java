@@ -14,16 +14,16 @@ public class PlaceRule extends RepeatRule {
 
     @Override
     public boolean continueRepeating(World world, Random rand, MutableBlockPos position) {
-        return !placed;
+        return !this.placed;
     }
 
     @Override
     public void repeat(World world, Random rand, MutableBlockPos position) {
-        placed = true;
+        this.placed = true;
     }
 
     @Override
     public void reset(World world, Random random, MutableBlockPos pos) {
-        placed = false;
+        this.placed = false;
     }
 }

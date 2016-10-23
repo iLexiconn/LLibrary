@@ -59,7 +59,7 @@ public class QubbleAnimationKeyframe implements INBTSerializable<NBTTagCompound>
     }
 
     public int getDuration() {
-        return duration;
+        return this.duration;
     }
 
     public void setDuration(int duration) {
@@ -67,7 +67,7 @@ public class QubbleAnimationKeyframe implements INBTSerializable<NBTTagCompound>
     }
 
     public Type getType() {
-        return type;
+        return this.type;
     }
 
     public void setType(Type type) {
@@ -75,7 +75,7 @@ public class QubbleAnimationKeyframe implements INBTSerializable<NBTTagCompound>
     }
 
     public List<QubbleAnimationAction> getActions() {
-        return actions;
+        return this.actions;
     }
 
     public QubbleAnimationKeyframe copy() {

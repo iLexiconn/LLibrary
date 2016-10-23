@@ -16,7 +16,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * @author jglrxavpok
@@ -36,13 +40,13 @@ public class StructureBuilder extends StructureGenerator {
     @Override
     public void generate(World world, BlockPos pos, Random random) {
         BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
-        for (ComponentInfo layer : components) {
+        for (ComponentInfo layer : this.components) {
             for (RepeatRule rule : layer.repeats) {
                 rule.reset(world, random, mutablePos);
             }
         }
         BlockPos.PooledMutableBlockPos pooledPos = BlockPos.PooledMutableBlockPos.retain();
-        for (ComponentInfo layer : components) {
+        for (ComponentInfo layer : this.components) {
             mutablePos.setPos(pos);
             for (RepeatRule rule : layer.repeats) {
                 rule.init(world, random, mutablePos);
@@ -72,7 +76,7 @@ public class StructureBuilder extends StructureGenerator {
         StructureBuilder copy = new StructureBuilder();
         copy.front = transform(this.front, frontVec, topVec, perpVec);
         copy.top = transform(this.top, frontVec, topVec, perpVec);
-        for (ComponentInfo oldComp : components) {
+        for (ComponentInfo oldComp : this.components) {
             ComponentInfo newComp = new ComponentInfo();
             newComp.repeats.addAll(oldComp.repeats);
             newComp.front = transform(oldComp.front, frontVec, topVec, perpVec);
@@ -156,31 +160,31 @@ public class StructureBuilder extends StructureGenerator {
         if (facing.getAxis() == Axis.Y) {
             throw new IllegalArgumentException("Must be horizontal facing: " + facing);
         }
-        int idx = facing.getHorizontalIndex() - (front.getAxis() == Axis.Y ? top.getHorizontalIndex() : front.getHorizontalIndex()) - 1;
+        int idx = facing.getHorizontalIndex() - (this.front.getAxis() == Axis.Y ? this.top.getHorizontalIndex() : this.front.getHorizontalIndex()) - 1;
         idx = (idx % EnumFacing.HORIZONTALS.length + EnumFacing.HORIZONTALS.length) % EnumFacing.HORIZONTALS.length;
-        return rotate(EnumFacing.HORIZONTALS[idx], EnumFacing.UP);
+        return this.rotate(EnumFacing.HORIZONTALS[idx], EnumFacing.UP);
     }
 
     public StructureBuilder startComponent() {
-        currentLayer = new ComponentInfo();
-        blocks.clear();
-        repeats.clear();
-        offsetX = 0;
-        offsetY = 0;
-        offsetZ = 0;
+        this.currentLayer = new ComponentInfo();
+        this.blocks.clear();
+        this.repeats.clear();
+        this.offsetX = 0;
+        this.offsetY = 0;
+        this.offsetZ = 0;
         return this;
     }
 
     public StructureBuilder setOrientation(EnumFacing front, EnumFacing top) {
-        currentLayer.front = front;
-        currentLayer.top = top;
+        this.currentLayer.front = front;
+        this.currentLayer.top = top;
         return this;
     }
 
     public StructureBuilder endComponent() {
-        currentLayer.blocks.putAll(blocks);
-        currentLayer.repeats.addAll(repeats);
-        components.add(currentLayer);
+        this.currentLayer.blocks.putAll(this.blocks);
+        this.currentLayer.repeats.addAll(this.repeats);
+        this.components.add(this.currentLayer);
         return this;
     }
 
@@ -192,56 +196,56 @@ public class StructureBuilder extends StructureGenerator {
     }
 
     public StructureBuilder translate(int x, int y, int z) {
-        offsetX += x;
-        offsetY += y;
-        offsetZ += z;
+        this.offsetX += x;
+        this.offsetY += y;
+        this.offsetZ += z;
         return this;
     }
 
     public StructureBuilder setBlock(int x, int y, int z, Block block) {
-        return setBlock(x, y, z, block.getDefaultState());
+        return this.setBlock(x, y, z, block.getDefaultState());
     }
 
     public StructureBuilder setBlock(int x, int y, int z, IBlockState block) {
-        return setBlock(x, y, z, new BlockList(block));
+        return this.setBlock(x, y, z, new BlockList(block));
     }
 
     public StructureBuilder setBlock(int x, int y, int z, BlockList list) {
-        blocks.put(new BlockPos(x + offsetX, y + offsetY, z + offsetZ), list);
+        this.blocks.put(new BlockPos(x + this.offsetX, y + this.offsetY, z + this.offsetZ), list);
         return this;
     }
 
     public StructureBuilder cube(int startX, int startY, int startZ, int width, int height, int depth, IBlockState block) {
-        return cube(startX, startY, startZ, width, height, depth, new BlockList(block));
+        return this.cube(startX, startY, startZ, width, height, depth, new BlockList(block));
     }
 
     public StructureBuilder cube(int startX, int startY, int startZ, int width, int height, int depth, BlockList list) {
         if (depth > 1) {
-            fillCube(startX, startY, startZ, width, height, 1, list);
-            fillCube(startX, startY, startZ + depth - 1, width, height, 1, list);
+            this.fillCube(startX, startY, startZ, width, height, 1, list);
+            this.fillCube(startX, startY, startZ + depth - 1, width, height, 1, list);
         }
 
         if (width > 1) {
-            fillCube(startX, startY, startZ, 1, height, depth, list);
-            fillCube(startX + width - 1, startY, startZ, 1, height, depth, list);
+            this.fillCube(startX, startY, startZ, 1, height, depth, list);
+            this.fillCube(startX + width - 1, startY, startZ, 1, height, depth, list);
         }
 
         if (height > 1) {
-            fillCube(startX, startY, startZ, width, 1, depth, list);
-            fillCube(startX, startY + height - 1, startZ, width, 1, depth, list);
+            this.fillCube(startX, startY, startZ, width, 1, depth, list);
+            this.fillCube(startX, startY + height - 1, startZ, width, 1, depth, list);
         }
         return this;
     }
 
     public StructureBuilder fillCube(int startX, int startY, int startZ, int width, int height, int depth, IBlockState block) {
-        return fillCube(startX, startY, startZ, width, height, depth, new BlockList(block));
+        return this.fillCube(startX, startY, startZ, width, height, depth, new BlockList(block));
     }
 
     public StructureBuilder fillCube(int startX, int startY, int startZ, int width, int height, int depth, BlockList list) {
         for (int x = startX; x < startX + width; x++) {
             for (int y = startY; y < startY + height; y++) {
                 for (int z = startZ; z < startZ + depth; z++) {
-                    setBlock(x, y, z, list);
+                    this.setBlock(x, y, z, list);
                 }
             }
         }
@@ -249,50 +253,50 @@ public class StructureBuilder extends StructureGenerator {
     }
 
     public StructureBuilder repeat(int spacingX, int spacingY, int spacingZ, int times) {
-        return repeat(spacingX, spacingY, spacingZ, new FixedRule(times));
+        return this.repeat(spacingX, spacingY, spacingZ, new FixedRule(times));
     }
 
     public StructureBuilder repeat(int spacingX, int spacingY, int spacingZ, RepeatRule repeatRule) {
         repeatRule.setSpacing(spacingX, spacingY, spacingZ);
-        return addBakedRepeatRule(repeatRule);
+        return this.addBakedRepeatRule(repeatRule);
     }
 
     public StructureBuilder addBakedRepeatRule(RepeatRule repeatRule) {
-        repeats.add(repeatRule);
+        this.repeats.add(repeatRule);
         return this;
     }
 
     public StructureBuilder cube(int startX, int startY, int startZ, int width, int height, int depth, Block block) {
-        return cube(startX, startY, startZ, width, height, depth, block.getDefaultState());
+        return this.cube(startX, startY, startZ, width, height, depth, block.getDefaultState());
     }
 
     public StructureBuilder fillCube(int startX, int startY, int startZ, int width, int height, int depth, Block block) {
-        return fillCube(startX, startY, startZ, width, height, depth, block.getDefaultState());
+        return this.fillCube(startX, startY, startZ, width, height, depth, block.getDefaultState());
     }
 
     public StructureBuilder wireCube(int startX, int startY, int startZ, int width, int height, int depth, Block block) {
-        return wireCube(startX, startY, startZ, width, height, depth, block.getDefaultState());
+        return this.wireCube(startX, startY, startZ, width, height, depth, block.getDefaultState());
     }
 
     public StructureBuilder wireCube(int startX, int startY, int startZ, int width, int height, int depth, IBlockState state) {
-        return wireCube(startX, startY, startZ, width, height, depth, new BlockList(state));
+        return this.wireCube(startX, startY, startZ, width, height, depth, new BlockList(state));
     }
 
     private StructureBuilder wireCube(int startX, int startY, int startZ, int width, int height, int depth, BlockList list) {
-        fillCube(startX, startY, startZ, 1, height, 1, list);
-        fillCube(startX + width - 1, startY, startZ, 1, height, 1, list);
-        fillCube(startX + width - 1, startY, startZ + depth - 1, 1, height, 1, list);
-        fillCube(startX, startY, startZ + depth - 1, 1, height, 1, list);
+        this.fillCube(startX, startY, startZ, 1, height, 1, list);
+        this.fillCube(startX + width - 1, startY, startZ, 1, height, 1, list);
+        this.fillCube(startX + width - 1, startY, startZ + depth - 1, 1, height, 1, list);
+        this.fillCube(startX, startY, startZ + depth - 1, 1, height, 1, list);
 
-        fillCube(startX, startY, startZ, width, 1, 1, list);
-        fillCube(startX, startY + height, startZ, width, 1, 1, list);
-        fillCube(startX, startY, startZ + depth - 1, width, 1, 1, list);
-        fillCube(startX, startY + height, startZ + depth - 1, width, 1, 1, list);
+        this.fillCube(startX, startY, startZ, width, 1, 1, list);
+        this.fillCube(startX, startY + height, startZ, width, 1, 1, list);
+        this.fillCube(startX, startY, startZ + depth - 1, width, 1, 1, list);
+        this.fillCube(startX, startY + height, startZ + depth - 1, width, 1, 1, list);
 
-        fillCube(startX, startY, startZ, 1, 1, depth, list);
-        fillCube(startX, startY + height, startZ, 1, 1, depth, list);
-        fillCube(startX + width - 1, startY, startZ, 1, 1, depth, list);
-        fillCube(startX + width - 1, startY + height, startZ, 1, 1, depth, list);
+        this.fillCube(startX, startY, startZ, 1, 1, depth, list);
+        this.fillCube(startX, startY + height, startZ, 1, 1, depth, list);
+        this.fillCube(startX + width - 1, startY, startZ, 1, 1, depth, list);
+        this.fillCube(startX + width - 1, startY + height, startZ, 1, 1, depth, list);
         return this;
     }
 }

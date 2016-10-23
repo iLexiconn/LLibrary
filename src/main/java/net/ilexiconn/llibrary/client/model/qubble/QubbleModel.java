@@ -92,7 +92,7 @@ public class QubbleModel implements INBTSerializable<NBTTagCompound> {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -100,7 +100,7 @@ public class QubbleModel implements INBTSerializable<NBTTagCompound> {
     }
 
     public String getFileName() {
-        return fileName;
+        return this.fileName;
     }
 
     public void setFileName(String fileName) {
@@ -108,7 +108,7 @@ public class QubbleModel implements INBTSerializable<NBTTagCompound> {
     }
 
     public String getAuthor() {
-        return author;
+        return this.author;
     }
 
     public void setAuthor(String author) {
@@ -116,7 +116,7 @@ public class QubbleModel implements INBTSerializable<NBTTagCompound> {
     }
 
     public int getVersion() {
-        return version;
+        return this.version;
     }
 
     public void setVersion(int version) {
@@ -124,7 +124,7 @@ public class QubbleModel implements INBTSerializable<NBTTagCompound> {
     }
 
     public int getTextureWidth() {
-        return textureWidth;
+        return this.textureWidth;
     }
 
     public void setTextureWidth(int textureWidth) {
@@ -132,7 +132,7 @@ public class QubbleModel implements INBTSerializable<NBTTagCompound> {
     }
 
     public int getTextureHeight() {
-        return textureHeight;
+        return this.textureHeight;
     }
 
     public void setTextureHeight(int textureHeight) {
@@ -140,11 +140,11 @@ public class QubbleModel implements INBTSerializable<NBTTagCompound> {
     }
 
     public List<QubbleCuboid> getCuboids() {
-        return cuboids;
+        return this.cuboids;
     }
 
     public List<QubbleAnimation> getAnimations() {
-        return animations;
+        return this.animations;
     }
 
     public void setTexture(int width, int height) {
@@ -262,10 +262,10 @@ public class QubbleModel implements INBTSerializable<NBTTagCompound> {
             sinRotationAngleZ = 0;
             cosRotationAngleZ = 1;
         }
-        float rotationAngleX = (float) (epsilon((float) Math.atan2(sinRotationAngleX, cosRotationAngleX)) / Math.PI * 180);
-        float rotationAngleY = (float) (epsilon((float) Math.atan2(sinRotationAngleY, cosRotationAngleY)) / Math.PI * 180);
-        float rotationAngleZ = (float) (epsilon((float) Math.atan2(sinRotationAngleZ, cosRotationAngleZ)) / Math.PI * 180);
-        return new float[][]{{epsilon((float) matrix.m03), epsilon((float) matrix.m13), epsilon((float) matrix.m23)}, {rotationAngleX, rotationAngleY, rotationAngleZ}};
+        float rotationAngleX = (float) (this.epsilon((float) Math.atan2(sinRotationAngleX, cosRotationAngleX)) / Math.PI * 180);
+        float rotationAngleY = (float) (this.epsilon((float) Math.atan2(sinRotationAngleY, cosRotationAngleY)) / Math.PI * 180);
+        float rotationAngleZ = (float) (this.epsilon((float) Math.atan2(sinRotationAngleZ, cosRotationAngleZ)) / Math.PI * 180);
+        return new float[][]{{ this.epsilon((float) matrix.m03), this.epsilon((float) matrix.m13), this.epsilon((float) matrix.m23)}, {rotationAngleX, rotationAngleY, rotationAngleZ}};
     }
 
     private float epsilon(float x) {

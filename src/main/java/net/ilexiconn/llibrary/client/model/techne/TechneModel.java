@@ -38,7 +38,7 @@ public class TechneModel {
 
     private TechneModel(File file) {
         try {
-            fileName = file.getName();
+            this.fileName = file.getName();
             ZipFile zipFile = new ZipFile(file);
             InputStream stream = null;
             Enumeration<? extends ZipEntry> entries = zipFile.entries();
@@ -195,30 +195,30 @@ public class TechneModel {
     }
 
     public List<TechneCube> getCubes() {
-        return cubes;
+        return this.cubes;
     }
 
     public float getScaleX() {
-        return scaleX;
+        return this.scaleX;
     }
 
     public float getScaleY() {
-        return scaleY;
+        return this.scaleY;
     }
 
     public float getScaleZ() {
-        return scaleZ;
+        return this.scaleZ;
     }
 
     public int getTextureWidth() {
-        return textureWidth;
+        return this.textureWidth;
     }
 
     public int getTextureHeight() {
-        return textureHeight;
+        return this.textureHeight;
     }
 
     public String getFileName() {
-        return fileName;
+        return this.fileName;
     }
 }

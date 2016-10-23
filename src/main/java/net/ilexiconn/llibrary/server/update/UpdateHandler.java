@@ -84,14 +84,14 @@ public enum UpdateHandler {
      * Search for mod updates. This hook is getting called by {@link ServerProxy#onPostInit()}
      */
     public void searchForUpdates() {
-        this.updateContainerList.stream().filter(updateContainer -> updateContainer.getLatestVersion().compareTo(updateContainer.getModContainer().getProcessedVersion()) > 0).forEach(updateContainer -> outdatedModList.add(updateContainer));
+        this.updateContainerList.stream().filter(updateContainer -> updateContainer.getLatestVersion().compareTo(updateContainer.getModContainer().getProcessedVersion()) > 0).forEach(updateContainer -> this.outdatedModList.add(updateContainer));
     }
 
     /**
      * @return a list of all outdated mod containers.
      */
     public List<UpdateContainer> getOutdatedModList() {
-        return outdatedModList;
+        return this.outdatedModList;
     }
 
     /**
@@ -102,7 +102,7 @@ public enum UpdateHandler {
      * @return the changelog for a specific version
      */
     public String[] getChangelog(UpdateContainer updateContainer, ArtifactVersion version) {
-        if (hasChangelog(updateContainer, version)) {
+        if (this.hasChangelog(updateContainer, version)) {
             return updateContainer.getVersions().get(version.getVersionString());
         } else {
             return new String[]{};

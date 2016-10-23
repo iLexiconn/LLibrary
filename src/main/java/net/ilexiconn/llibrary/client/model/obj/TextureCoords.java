@@ -25,19 +25,19 @@ public class TextureCoords {
     }
 
     public int getIndex() {
-        return index;
+        return this.index;
     }
 
     @Override
     public String toString() {
-        return "vt " + String.format(Locale.US, "%.6f", uvCoords.x) + " " + String.format(Locale.US, "%.6f", uvCoords.y);
+        return "vt " + String.format(Locale.US, "%.6f", this.uvCoords.x) + " " + String.format(Locale.US, "%.6f", this.uvCoords.y);
     }
 
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof TextureCoords) {
             TextureCoords uv = (TextureCoords) obj;
-            return uv.uvCoords.x == uvCoords.x && uv.uvCoords.y == uvCoords.y;
+            return uv.uvCoords.x == this.uvCoords.x && uv.uvCoords.y == this.uvCoords.y;
         }
         return false;
     }

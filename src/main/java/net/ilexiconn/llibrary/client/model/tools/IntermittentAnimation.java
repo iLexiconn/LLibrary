@@ -64,9 +64,9 @@ public class IntermittentAnimation<T extends Entity & IIntermittentEntity> {
         this.minIdleTime = intervalDuration;
         this.startProbability = startPropbability;
         this.isOperator = isOperator;
-        timeRunning = 0;
-        isRunning = false;
-        runDirection = -1;
+        this.timeRunning = 0;
+        this.isRunning = false;
+        this.runDirection = -1;
     }
 
     public void setID(byte id) {
@@ -79,7 +79,7 @@ public class IntermittentAnimation<T extends Entity & IIntermittentEntity> {
      * @param duration is the maximum number of ticks that the timer can reach.
      */
     public void setDuration(int duration) {
-        timeRunning = 0;
+        this.timeRunning = 0;
         this.duration = duration;
     }
 
@@ -87,7 +87,7 @@ public class IntermittentAnimation<T extends Entity & IIntermittentEntity> {
      * Returns the timer of this animation. Useful to save the progress of the animation.
      */
     public int getTimeRunning() {
-        return timeRunning;
+        return this.timeRunning;
     }
 
     /**
@@ -98,8 +98,8 @@ public class IntermittentAnimation<T extends Entity & IIntermittentEntity> {
     public void setTimeRunning(int timeRunning) {
         this.timeRunning = timeRunning;
 
-        if (this.timeRunning > duration) {
-            this.timeRunning = duration;
+        if (this.timeRunning > this.duration) {
+            this.timeRunning = this.duration;
         } else if (this.timeRunning < 0) {
             this.timeRunning = 0;
         }
@@ -109,54 +109,54 @@ public class IntermittentAnimation<T extends Entity & IIntermittentEntity> {
      * Sets the timer to 0.
      */
     public void resetTimeRunning() {
-        timeRunning = 0;
+        this.timeRunning = 0;
     }
 
     /**
      * Increases the timer by 1.
      */
     public void update() {
-        if (isRunning) {
-            if (timeRunning < duration && timeRunning > 0) {
-                timeRunning += runDirection;
+        if (this.isRunning) {
+            if (this.timeRunning < this.duration && this.timeRunning > 0) {
+                this.timeRunning += this.runDirection;
             } else {
-                if (timeRunning >= duration) {
-                    timeRunning = duration;
-                } else if (timeRunning <= 0) {
-                    timeRunning = 0;
+                if (this.timeRunning >= this.duration) {
+                    this.timeRunning = this.duration;
+                } else if (this.timeRunning <= 0) {
+                    this.timeRunning = 0;
                 }
-                timeIdle = 0;
-                isRunning = false;
+                this.timeIdle = 0;
+                this.isRunning = false;
             }
-        } else if (isOperator) {
-            if (timeIdle < minIdleTime) {
-                timeIdle++;
+        } else if (this.isOperator) {
+            if (this.timeIdle < this.minIdleTime) {
+                this.timeIdle++;
             } else {
-                if (rand.nextInt(startProbability) == 0) {
-                    start();
-                    entity.worldObj.setEntityState(entity, (byte) (entity.getOffsetEntityState() + id));
+                if (this.rand.nextInt(this.startProbability) == 0) {
+                    this.start();
+                    this.entity.worldObj.setEntityState(this.entity, (byte) (this.entity.getOffsetEntityState() + this.id));
                 }
             }
         }
     }
 
     public void start() {
-        runDirection = -runDirection;
-        timeRunning += runDirection;
-        isRunning = true;
+        this.runDirection = -this.runDirection;
+        this.timeRunning += this.runDirection;
+        this.isRunning = true;
     }
 
     /**
      * Decreases the timer by 1.
      */
     public void stop() {
-        if (timeRunning > 0) {
-            timeRunning--;
+        if (this.timeRunning > 0) {
+            this.timeRunning--;
         } else {
-            timeRunning = 0;
-            isRunning = false;
-            timeIdle = 0;
-            runDirection = 1;
+            this.timeRunning = 0;
+            this.isRunning = false;
+            this.timeIdle = 0;
+            this.runDirection = 1;
         }
     }
 
@@ -166,13 +166,13 @@ public class IntermittentAnimation<T extends Entity & IIntermittentEntity> {
      * @param timeDelta is the number of ticks to be decreased in the timer
      */
     public void stop(int timeDelta) {
-        if (timeRunning - timeDelta > 0) {
-            timeRunning -= timeDelta;
+        if (this.timeRunning - timeDelta > 0) {
+            this.timeRunning -= timeDelta;
         } else {
-            timeRunning = 0;
-            isRunning = false;
-            timeIdle = 0;
-            runDirection = 1;
+            this.timeRunning = 0;
+            this.isRunning = false;
+            this.timeIdle = 0;
+            this.runDirection = 1;
         }
     }
 
@@ -180,7 +180,7 @@ public class IntermittentAnimation<T extends Entity & IIntermittentEntity> {
      * Returns a float that represents a fraction of the animation, a value between 0.0F and 1.0F.
      */
     public float getAnimationFraction() {
-        return timeRunning / (float) duration;
+        return this.timeRunning / (float) this.duration;
     }
 
     /**
@@ -188,9 +188,9 @@ public class IntermittentAnimation<T extends Entity & IIntermittentEntity> {
      * 1.0F using 1/(1 + e^(4-8*x)). It is quite uniform but slow, and needs if statements.
      */
     public float getAnimationProgressSmooth() {
-        if (timeRunning > 0) {
-            if (timeRunning < duration) {
-                return (float) (1.0D / (1.0D + Math.exp(4.0D - 8.0D * getAnimationFraction())));
+        if (this.timeRunning > 0) {
+            if (this.timeRunning < this.duration) {
+                return (float) (1.0D / (1.0D + Math.exp(4.0D - 8.0D * this.getAnimationFraction())));
             } else {
                 return 1.0F;
             }
@@ -203,7 +203,7 @@ public class IntermittentAnimation<T extends Entity & IIntermittentEntity> {
      * 1.0F using 1/(1 + e^(6-12*x)). It is quite uniform, but fast.
      */
     public float getAnimationProgressSteep() {
-        return (float) (1.0D / (1.0D + Math.exp(6.0D - 12.0D * getAnimationFraction())));
+        return (float) (1.0D / (1.0D + Math.exp(6.0D - 12.0D * this.getAnimationFraction())));
     }
 
     /**
@@ -211,7 +211,7 @@ public class IntermittentAnimation<T extends Entity & IIntermittentEntity> {
      * 1.0F using a sine function. It is fast in the beginning and slow in the end.
      */
     public float getAnimationProgressSin() {
-        return MathHelper.sin(1.57079632679F * getAnimationFraction());
+        return MathHelper.sin(1.57079632679F * this.getAnimationFraction());
     }
 
     /**
@@ -219,7 +219,7 @@ public class IntermittentAnimation<T extends Entity & IIntermittentEntity> {
      * 1.0F using a sine function squared. It is very smooth.
      */
     public float getAnimationProgressSinSqrt() {
-        float result = MathHelper.sin(1.57079632679F * getAnimationFraction());
+        float result = MathHelper.sin(1.57079632679F * this.getAnimationFraction());
         return result * result;
     }
 
@@ -228,14 +228,14 @@ public class IntermittentAnimation<T extends Entity & IIntermittentEntity> {
      * 1.0F using a sine function to the power of ten. It is slow in the beginning and fast in the end.
      */
     public float getAnimationProgressSinToTen() {
-        return (float) Math.pow(MathHelper.sin(1.57079632679F * getAnimationFraction()), 10);
+        return (float) Math.pow(MathHelper.sin(1.57079632679F * this.getAnimationFraction()), 10);
     }
 
     public float getAnimationProgressSinToTenWithoutReturn() {
-        if (runDirection == -1) {
-            return MathHelper.sin(1.57079632679F * getAnimationFraction()) * MathHelper.sin(1.57079632679F * getAnimationFraction());
+        if (this.runDirection == -1) {
+            return MathHelper.sin(1.57079632679F * this.getAnimationFraction()) * MathHelper.sin(1.57079632679F * this.getAnimationFraction());
         }
-        return (float) Math.pow(MathHelper.sin(1.57079632679F * getAnimationFraction()), 10);
+        return (float) Math.pow(MathHelper.sin(1.57079632679F * this.getAnimationFraction()), 10);
     }
 
     /**
@@ -245,7 +245,7 @@ public class IntermittentAnimation<T extends Entity & IIntermittentEntity> {
      * @param i is the power of the sine function.
      */
     public float getAnimationProgressSinPowerOf(int i) {
-        return (float) Math.pow(MathHelper.sin(1.57079632679F * getAnimationFraction()), i);
+        return (float) Math.pow(MathHelper.sin(1.57079632679F * this.getAnimationFraction()), i);
     }
 
     /**
@@ -253,7 +253,7 @@ public class IntermittentAnimation<T extends Entity & IIntermittentEntity> {
      * 1.0F using x^2 / (x^2 + (1-x)^2). It is smooth.
      */
     public float getAnimationProgressPoly2() {
-        float x = getAnimationFraction();
+        float x = this.getAnimationFraction();
         float x2 = x * x;
         return x2 / (x2 + (1 - x) * (1 - x));
     }
@@ -263,7 +263,7 @@ public class IntermittentAnimation<T extends Entity & IIntermittentEntity> {
      * 1.0F using x^3 / (x^3 + (1-x)^3). It is steep.
      */
     public float getAnimationProgressPoly3() {
-        float x = getAnimationFraction();
+        float x = this.getAnimationFraction();
         float x3 = x * x * x;
         return x3 / (x3 + (1 - x) * (1 - x) * (1 - x));
     }
@@ -276,7 +276,7 @@ public class IntermittentAnimation<T extends Entity & IIntermittentEntity> {
      */
 
     public float getAnimationProgressPolyN(int n) {
-        double x = timeRunning / duration;
+        double x = this.timeRunning / this.duration;
         double xi = Math.pow(x, n);
         return (float) (xi / (xi + Math.pow(1.0D - x, n)));
     }
@@ -286,7 +286,7 @@ public class IntermittentAnimation<T extends Entity & IIntermittentEntity> {
      * 1.0F using 0.5 + arctan(PI * (x - 0.5)) / 2.00776964. It is super smooth.
      */
     public float getAnimationProgressArcTan() {
-        return (float) (0.5F + 0.49806510671F * Math.atan(3.14159265359D * (timeRunning / duration - 0.5D)));
+        return (float) (0.5F + 0.49806510671F * Math.atan(3.14159265359D * (this.timeRunning / this.duration - 0.5D)));
     }
 
     /**
@@ -295,7 +295,7 @@ public class IntermittentAnimation<T extends Entity & IIntermittentEntity> {
      * is smooth.
      */
     public float getAnimationProgressTemporary() {
-        float x = 6.28318530718F * getAnimationFraction();
+        float x = 6.28318530718F * this.getAnimationFraction();
         return 0.5F - 0.5F * MathHelper.cos(x + MathHelper.sin(x));
     }
 
@@ -305,7 +305,7 @@ public class IntermittentAnimation<T extends Entity & IIntermittentEntity> {
      * beginning and slow in the end.
      */
     public float getAnimationProgressTemporaryFS() {
-        float x = 3.14159265359F * getAnimationFraction();
+        float x = 3.14159265359F * this.getAnimationFraction();
         return MathHelper.sin(x + MathHelper.sin(x));
     }
 
@@ -315,7 +315,7 @@ public class IntermittentAnimation<T extends Entity & IIntermittentEntity> {
      * is smooth.
      */
     public float getAnimationProgressTemporaryInvesed() {
-        float x = 6.28318530718F * getAnimationFraction();
+        float x = 6.28318530718F * this.getAnimationFraction();
         return 0.5F + 0.5F * MathHelper.cos(x + MathHelper.sin(x));
     }
 }

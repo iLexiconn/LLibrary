@@ -55,7 +55,7 @@ public class QubbleAnimationAction implements INBTSerializable<NBTTagCompound> {
     }
 
     public String getCuboid() {
-        return cuboid;
+        return this.cuboid;
     }
 
     public void setCuboid(String cuboid) {
@@ -63,7 +63,7 @@ public class QubbleAnimationAction implements INBTSerializable<NBTTagCompound> {
     }
 
     public Action getAction() {
-        return action;
+        return this.action;
     }
 
     public void setAction(Action action) {
@@ -71,15 +71,15 @@ public class QubbleAnimationAction implements INBTSerializable<NBTTagCompound> {
     }
 
     public float getValueX() {
-        return valueX;
+        return this.valueX;
     }
 
     public float getValueY() {
-        return valueY;
+        return this.valueY;
     }
 
     public float getValueZ() {
-        return valueZ;
+        return this.valueZ;
     }
 
     public void setValue(float x, float y, float z) {

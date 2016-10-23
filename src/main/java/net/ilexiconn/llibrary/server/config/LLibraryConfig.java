@@ -8,7 +8,7 @@ import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.INBTSerializable;
 
-import java.awt.*;
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 
@@ -27,35 +27,35 @@ public class LLibraryConfig implements INBTSerializable<NBTTagCompound> {
     private boolean tabsLeftSide = true;
 
     public int getPrimaryColor() {
-        return colorMode.getPrimaryColor();
+        return this.colorMode.getPrimaryColor();
     }
 
     public int getSecondaryColor() {
-        return colorMode.getSecondaryColor();
+        return this.colorMode.getSecondaryColor();
     }
 
     public int getTertiaryColor() {
-        return colorMode.getTertiaryColor();
+        return this.colorMode.getTertiaryColor();
     }
 
     public int getPrimarySubcolor() {
-        return colorMode.getPrimarySubcolor();
+        return this.colorMode.getPrimarySubcolor();
     }
 
     public int getSecondarySubcolor() {
-        return colorMode.getSecondarySubcolor();
+        return this.colorMode.getSecondarySubcolor();
     }
 
     public int getTextColor() {
-        return colorMode.getTextColor();
+        return this.colorMode.getTextColor();
     }
 
     public int getInvertedTextColor() {
-        return colorMode.getInvertedTextColor();
+        return this.colorMode.getInvertedTextColor();
     }
 
     public int getAccentColor() {
-        return accentColor;
+        return this.accentColor;
     }
 
     public void setAccentColor(int accentColor) {
@@ -72,7 +72,7 @@ public class LLibraryConfig implements INBTSerializable<NBTTagCompound> {
     }
 
     public String getColorMode() {
-        return colorMode.getName();
+        return this.colorMode.getName();
     }
 
     public void setColorMode(String colorMode) {
@@ -80,7 +80,7 @@ public class LLibraryConfig implements INBTSerializable<NBTTagCompound> {
     }
 
     public boolean hasPatreonEffects() {
-        return patreonEffects;
+        return this.patreonEffects;
     }
 
     public void setPatreonEffects(boolean patreonEffects) {
@@ -88,7 +88,7 @@ public class LLibraryConfig implements INBTSerializable<NBTTagCompound> {
     }
 
     public boolean hasVersionCheck() {
-        return versionCheck;
+        return this.versionCheck;
     }
 
     public void setVersionCheck(boolean versionCheck) {
@@ -96,7 +96,7 @@ public class LLibraryConfig implements INBTSerializable<NBTTagCompound> {
     }
 
     public boolean areTabsAlwaysVisible() {
-        return tabsAlwaysVisible;
+        return this.tabsAlwaysVisible;
     }
 
     public void setTabsAlwaysVisible(boolean tabsAlwaysVisible) {
@@ -104,7 +104,7 @@ public class LLibraryConfig implements INBTSerializable<NBTTagCompound> {
     }
 
     public boolean areTabsLeftSide() {
-        return tabsLeftSide;
+        return this.tabsLeftSide;
     }
 
     public void setTabsLeftSide(boolean tabsLeftSide) {

@@ -45,7 +45,7 @@ public class AdvancedModelRenderer extends ModelRenderer {
     }
 
     public AdvancedModelRenderer add3DTexture(float posX, float posY, float posZ, int width, int height) {
-        this.cubeList.add(new Model3DTexture(this, textureOffsetX, textureOffsetY, posX, posY, posZ, width, height));
+        this.cubeList.add(new Model3DTexture(this, this.textureOffsetX, this.textureOffsetY, posX, posY, posZ, width, height));
         return this;
     }
 
@@ -73,6 +73,7 @@ public class AdvancedModelRenderer extends ModelRenderer {
     /**
      * Creates a textured box.
      */
+    @Override
     public void addBox(float offX, float offY, float offZ, int width, int height, int depth, float scaleFactor) {
         this.cubeList.add(new ModelBox(this, this.textureOffsetX, this.textureOffsetY, offX, offY, offZ, width, height, depth, scaleFactor));
     }
@@ -277,7 +278,7 @@ public class AdvancedModelRenderer extends ModelRenderer {
      * @param walkAmount is the walk speed
      */
     public void walk(float speed, float degree, boolean invert, float offset, float weight, float walk, float walkAmount) {
-        this.rotateAngleX += calculateRotation(speed, degree, invert, offset, weight, walk, walkAmount);
+        this.rotateAngleX += this.calculateRotation(speed, degree, invert, offset, weight, walk, walkAmount);
     }
 
     /**
@@ -292,7 +293,7 @@ public class AdvancedModelRenderer extends ModelRenderer {
      * @param flapAmount is the flap speed
      */
     public void flap(float speed, float degree, boolean invert, float offset, float weight, float flap, float flapAmount) {
-        this.rotateAngleZ += calculateRotation(speed, degree, invert, offset, weight, flap, flapAmount);
+        this.rotateAngleZ += this.calculateRotation(speed, degree, invert, offset, weight, flap, flapAmount);
     }
 
     /**
@@ -307,7 +308,7 @@ public class AdvancedModelRenderer extends ModelRenderer {
      * @param swingAmount is the swing speed
      */
     public void swing(float speed, float degree, boolean invert, float offset, float weight, float swing, float swingAmount) {
-        this.rotateAngleY += calculateRotation(speed, degree, invert, offset, weight, swing, swingAmount);
+        this.rotateAngleY += this.calculateRotation(speed, degree, invert, offset, weight, swing, swingAmount);
     }
 
     /**

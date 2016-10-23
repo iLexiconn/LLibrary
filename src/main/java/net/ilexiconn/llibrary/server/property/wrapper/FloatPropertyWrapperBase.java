@@ -19,17 +19,17 @@ public abstract class FloatPropertyWrapperBase<T extends IFloatProperty> impleme
 
     @Override
     public float getFloat() {
-        return delegateFor.getFloat();
+        return this.delegateFor.getFloat();
     }
 
     @Override
     public void setFloat(float value) {
-        delegateFor.setFloat(value);
+        this.delegateFor.setFloat(value);
     }
 
     @Override
     public boolean isValidFloat(float value) {
-        return delegateFor.isValidFloat(value);
+        return this.delegateFor.isValidFloat(value);
     }
 
     @Override

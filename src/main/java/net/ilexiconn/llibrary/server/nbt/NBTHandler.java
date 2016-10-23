@@ -36,7 +36,7 @@ public enum NBTHandler {
                     if (name.isEmpty()) {
                         name = field.getName();
                     }
-                    readFromNBTToField(object, field, name, compound);
+                    this.readFromNBTToField(object, field, name, compound);
                 } else if (field.isAnnotationPresent(NBTMutatorProperty.class)) {
                     NBTMutatorProperty mutatorProperty = field.getAnnotation(NBTMutatorProperty.class);
                     String name = mutatorProperty.name();
@@ -44,8 +44,8 @@ public enum NBTHandler {
                         name = field.getName();
                     }
                     Class<?> type = mutatorProperty.type();
-                    Method setter = getSetter(clazz, name, type, mutatorProperty.setter());
-                    readFromNBTToSetter(object, setter, name, compound);
+                    Method setter = this.getSetter(clazz, name, type, mutatorProperty.setter());
+                    this.readFromNBTToSetter(object, setter, name, compound);
                 }
             }
         } while ((clazz = clazz.getSuperclass()) != null);
@@ -62,7 +62,7 @@ public enum NBTHandler {
                     if (name.isEmpty()) {
                         name = field.getName();
                     }
-                    NBTBase tag = writeFieldToNBT(object, field);
+                    NBTBase tag = this.writeFieldToNBT(object, field);
                     if (tag != null) {
                         compound.setTag(name, tag);
                     }
@@ -73,8 +73,8 @@ public enum NBTHandler {
                         name = field.getName();
                     }
                     Class<?> type = mutatorProperty.type();
-                    Method getter = getGetter(clazz, name, type, mutatorProperty.getter());
-                    NBTBase tag = writeGetterValueToNBT(object, getter);
+                    Method getter = this.getGetter(clazz, name, type, mutatorProperty.getter());
+                    NBTBase tag = this.writeGetterValueToNBT(object, getter);
                     if (tag != null) {
                         compound.setTag(name, tag);
                     }
@@ -135,7 +135,7 @@ public enum NBTHandler {
         if (valueNBT == null) {
             return;
         }
-        Object value = readFromNBT(field.getType(), valueNBT);
+        Object value = this.readFromNBT(field.getType(), valueNBT);
         try {
             field.set(object, value);
         } catch (Exception e) {
@@ -148,7 +148,7 @@ public enum NBTHandler {
         if (valueNBT == null) {
             return;
         }
-        Object value = readFromNBT(setter.getParameters()[0].getType(), valueNBT);
+        Object value = this.readFromNBT(setter.getParameters()[0].getType(), valueNBT);
         try {
             setter.invoke(object, value);
         } catch (Exception e) {
@@ -166,13 +166,13 @@ public enum NBTHandler {
     }
 
     private Method getSetter(Class<?> clazz, String name, Class<?> type, String setter) {
-        String setterName = getConventionalSetterName(name, setter);
-        return resolveMutator(clazz, setterName, type);
+        String setterName = this.getConventionalSetterName(name, setter);
+        return this.resolveMutator(clazz, setterName, type);
     }
 
     private Method getGetter(Class<?> clazz, String name, Class<?> type, String getter) {
-        String getterName = getConventionalGetterName(name, type, getter);
-        return resolveMutator(clazz, getterName);
+        String getterName = this.getConventionalGetterName(name, type, getter);
+        return this.resolveMutator(clazz, getterName);
     }
 
     private Method resolveMutator(Class<?> clazz, String name, Class<?>... param) {
@@ -196,11 +196,11 @@ public enum NBTHandler {
     }
 
     private String getConventionalSetterName(String name, String setter) {
-        return getConventionalMutatorName("set", name, setter);
+        return this.getConventionalMutatorName("set", name, setter);
     }
 
     private String getConventionalGetterName(String name, Class<?> type, String getter) {
-        return getConventionalMutatorName(type == Boolean.class || type == boolean.class ? "is" : "get", name, getter);
+        return this.getConventionalMutatorName(type == Boolean.class || type == boolean.class ? "is" : "get", name, getter);
     }
 
     private String getConventionalMutatorName(String verb, String name, String mutator) {

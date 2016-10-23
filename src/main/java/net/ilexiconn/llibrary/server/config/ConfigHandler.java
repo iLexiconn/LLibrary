@@ -9,7 +9,11 @@ import net.minecraftforge.fml.common.discovery.ASMDataTable;
 
 import java.io.File;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -32,7 +36,7 @@ public enum ConfigHandler {
                     .map(field -> {
                         Class<? extends EntryProperty> entryPropertyClass = EntryProperty.getBuiltInPropertyClass(field.getType());
                         if (entryPropertyClass == null) {
-                            entryPropertyClass = entryPropertyClasses.get(field.getType());
+                            entryPropertyClass = ConfigHandler.this.entryPropertyClasses.get(field.getType());
                         }
                         if (entryPropertyClass != null) {
                             try {

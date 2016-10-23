@@ -16,11 +16,11 @@ public class AnimationEvent<T extends Entity & IAnimatedEntity> extends Event {
     }
 
     public T getEntity() {
-        return entity;
+        return this.entity;
     }
 
     public Animation getAnimation() {
-        return animation;
+        return this.animation;
     }
 
     @Cancelable
@@ -43,7 +43,7 @@ public class AnimationEvent<T extends Entity & IAnimatedEntity> extends Event {
         }
 
         public int getTick() {
-            return tick;
+            return this.tick;
         }
     }
 }

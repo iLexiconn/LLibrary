@@ -31,7 +31,7 @@ public class Snackbar {
      * @return this snackbar's message
      */
     public String getMessage() {
-        return message;
+        return this.message;
     }
 
     /**
@@ -53,11 +53,11 @@ public class Snackbar {
     }
 
     public int getColor() {
-        return color;
+        return this.color;
     }
 
     public SnackbarPosition getPosition() {
-        return position;
+        return this.position;
     }
 
     public Snackbar setColor(int color) {

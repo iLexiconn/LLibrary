@@ -25,23 +25,23 @@ public class Vertex {
     }
 
     public Vector3f getPosition() {
-        return position;
+        return this.position;
     }
 
     public int getIndex() {
-        return index;
+        return this.index;
     }
 
     @Override
     public String toString() {
-        return "v " + String.format(Locale.US, "%.6f", position.x) + " " + String.format(Locale.US, "%.6f", position.y) + " " + String.format(Locale.US, "%.6f", position.z);
+        return "v " + String.format(Locale.US, "%.6f", this.position.x) + " " + String.format(Locale.US, "%.6f", this.position.y) + " " + String.format(Locale.US, "%.6f", this.position.z);
     }
 
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Vertex) {
             Vertex vertex = (Vertex) obj;
-            return vertex.position.x == position.x && vertex.position.y == position.y && vertex.position.z == position.z;
+            return vertex.position.x == this.position.x && vertex.position.y == this.position.y && vertex.position.z == this.position.z;
         }
         return false;
     }

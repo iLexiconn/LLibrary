@@ -31,14 +31,14 @@ public class PageButtonGUI extends GuiButton {
     @Override
     public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
         if (super.mousePressed(mc, mouseX, mouseY)) {
-            if (id == -1) {
+            if (this.id == -1) {
                 int currentPage = SurvivalTabHandler.INSTANCE.getCurrentPage();
                 if (currentPage > 0) {
                     SurvivalTabHandler.INSTANCE.setCurrentPage(currentPage - 1);
                     this.initGui();
                     this.updateState();
                 }
-            } else if (id == -2) {
+            } else if (this.id == -2) {
                 int currentPage = SurvivalTabHandler.INSTANCE.getCurrentPage();
                 if (currentPage < SurvivalTabHandler.INSTANCE.getSurvivalTabList().size() / 8) {
                     SurvivalTabHandler.INSTANCE.setCurrentPage(currentPage + 1);
@@ -70,7 +70,7 @@ public class PageButtonGUI extends GuiButton {
             }
         }
         this.screen.initGui();
-        MinecraftForge.EVENT_BUS.post(new GuiScreenEvent.InitGuiEvent.Post(screen, screen.buttonList));
+        MinecraftForge.EVENT_BUS.post(new GuiScreenEvent.InitGuiEvent.Post(this.screen, this.screen.buttonList));
     }
 }
 

@@ -27,27 +27,27 @@ public class BlockList {
         IBlockState result = null;
         int index = 0;
         while (chosen >= 0f) {
-            if (index >= states.length) {
+            if (index >= this.states.length) {
                 return null;
             }
-            chosen -= probabilities[index];
-            result = states[index];
+            chosen -= this.probabilities[index];
+            result = this.states[index];
             index++;
         }
         return result;
     }
 
     public BlockList copy() {
-        IBlockState[] newStates = Arrays.copyOf(states, states.length);
-        float[] newProbabilities = Arrays.copyOf(probabilities, probabilities.length);
+        IBlockState[] newStates = Arrays.copyOf(this.states, this.states.length);
+        float[] newProbabilities = Arrays.copyOf(this.probabilities, this.probabilities.length);
         return new BlockList(newStates, newProbabilities);
     }
 
     public IBlockState[] getStates() {
-        return states;
+        return this.states;
     }
 
     public float[] getProbabilities() {
-        return probabilities;
+        return this.probabilities;
     }
 }

@@ -71,6 +71,6 @@ public class BakedTabulaModel implements IPerspectiveAwareModel {
 
     @Override
     public Pair<? extends IBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType type) {
-        return IPerspectiveAwareModel.MapWrapper.handlePerspective(this, transforms, type);
+        return IPerspectiveAwareModel.MapWrapper.handlePerspective(this, this.transforms, type);
     }
 }

@@ -11,7 +11,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
-import java.awt.*;
+import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
@@ -36,25 +36,25 @@ public class ModUpdateGUI extends GuiScreen {
     }
 
     public ModUpdateListGUI getModList() {
-        return modList;
+        return this.modList;
     }
 
     public ModUpdateEntryGUI getModInfo() {
-        return modInfo;
+        return this.modInfo;
     }
 
     @Override
     public void initGui() {
         int width = 0;
         for (UpdateContainer mod : UpdateHandler.INSTANCE.getOutdatedModList()) {
-            width = Math.max(width, fontRendererObj.getStringWidth(mod.getModContainer().getName()) + 47);
-            width = Math.max(width, fontRendererObj.getStringWidth(mod.getModContainer().getVersion()) + 47);
+            width = Math.max(width, this.fontRendererObj.getStringWidth(mod.getModContainer().getName()) + 47);
+            width = Math.max(width, this.fontRendererObj.getStringWidth(mod.getModContainer().getVersion()) + 47);
         }
         width = Math.min(width, 150);
         this.modList = new ModUpdateListGUI(this, width);
 
-        this.buttonList.add(buttonDone = new GuiButton(6, ((this.modList.getRight() + this.width) / 2) - 100, this.height - 38, I18n.format("gui.done")));
-        this.buttonList.add(buttonUpdate = new GuiButton(20, 10, this.height - 38, this.modList.getWidth(), 20, I18n.format("gui.llibrary.update")));
+        this.buttonList.add(this.buttonDone = new GuiButton(6, ((this.modList.getRight() + this.width) / 2) - 100, this.height - 38, I18n.format("gui.done")));
+        this.buttonList.add(this.buttonUpdate = new GuiButton(20, 10, this.height - 38, this.modList.getWidth(), 20, I18n.format("gui.llibrary.update")));
 
         this.updateModInfo();
     }
@@ -71,7 +71,7 @@ public class ModUpdateGUI extends GuiScreen {
                     Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
                     if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
                         try {
-                            desktop.browse(new URI(UpdateHandler.INSTANCE.getOutdatedModList().get(selected).getUpdateURL()));
+                            desktop.browse(new URI(UpdateHandler.INSTANCE.getOutdatedModList().get(this.selected).getUpdateURL()));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -88,10 +88,10 @@ public class ModUpdateGUI extends GuiScreen {
             this.drawDefaultBackground();
             int i = this.width / 2;
             int j = this.height / 2;
-            this.buttonDone.xPosition = width / 2 - 100;
-            this.buttonDone.yPosition = height - 38;
+            this.buttonDone.xPosition = this.width / 2 - 100;
+            this.buttonDone.yPosition = this.height - 38;
             this.buttonList.clear();
-            this.buttonList.add(buttonDone);
+            this.buttonList.add(this.buttonDone);
             this.drawScaledString(I18n.format("gui.llibrary.updated.1"), i, j - 40, 0xFFFFFF, 2.0F);
             this.drawScaledString(I18n.format("gui.llibrary.updated.2"), i, j - 15, 0xFFFFFF, 1.0F);
         } else {
@@ -132,7 +132,7 @@ public class ModUpdateGUI extends GuiScreen {
         this.buttonUpdate.enabled = true;
         this.buttonUpdate.displayString = I18n.format("gui.llibrary.update");
 
-        UpdateContainer updateContainer = UpdateHandler.INSTANCE.getOutdatedModList().get(selected);
+        UpdateContainer updateContainer = UpdateHandler.INSTANCE.getOutdatedModList().get(this.selected);
         textList.add(updateContainer.getModContainer().getName());
         textList.add(I18n.format("gui.llibrary.currentVersion") + String.format(": %s", updateContainer.getModContainer().getVersion()));
         textList.add(I18n.format("gui.llibrary.latestVersion") + String.format(": %s", updateContainer.getLatestVersion().getVersionString()));
@@ -145,7 +145,7 @@ public class ModUpdateGUI extends GuiScreen {
     public void drawScaledString(String text, int x, int y, int color, float scale) {
         GL11.glPushMatrix();
         GL11.glScalef(scale, scale, scale);
-        drawCenteredString(fontRendererObj, text, (int) (x / scale), (int) (y / scale), color);
+        this.drawCenteredString(this.fontRendererObj, text, (int) (x / scale), (int) (y / scale), color);
         GL11.glPopMatrix();
     }
 

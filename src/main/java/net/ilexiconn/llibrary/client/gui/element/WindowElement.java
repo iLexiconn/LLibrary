@@ -2,7 +2,6 @@ package net.ilexiconn.llibrary.client.gui.element;
 
 import net.ilexiconn.llibrary.LLibrary;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -33,8 +32,8 @@ public class WindowElement<T extends IElementGUI> extends Element<T> {
         this.name = name;
         this.hasCloseButton = hasCloseButton;
         if (hasCloseButton) {
-            this.addElement(new ButtonElement<>(gui, "x", this.getWidth() - 14, 0, 14, 14, (v) -> {
-                gui.removeElement(this);
+            this.addElement(new ButtonElement<>(this.gui, "x", this.getWidth() - 14, 0, 14, 14, (v) -> {
+                this.gui.removeElement(this);
                 return true;
             }).withColorScheme(ButtonElement.CLOSE));
         }
@@ -68,7 +67,7 @@ public class WindowElement<T extends IElementGUI> extends Element<T> {
             this.dragOffsetX = mouseX - this.getPosX();
             this.dragOffsetY = mouseY - this.getPosY();
             this.isDragging = true;
-            gui.sendElementToFront(this);
+            this.gui.sendElementToFront(this);
             return true;
         }
         return false;

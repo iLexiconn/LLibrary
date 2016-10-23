@@ -3,9 +3,11 @@ package net.ilexiconn.llibrary.client.gui.config;
 import net.ilexiconn.llibrary.LLibrary;
 import net.ilexiconn.llibrary.client.gui.ElementGUI;
 import net.ilexiconn.llibrary.client.gui.config.property.ForgeConfigProperty;
-import net.ilexiconn.llibrary.client.gui.element.*;
+import net.ilexiconn.llibrary.client.gui.element.ButtonElement;
+import net.ilexiconn.llibrary.client.gui.element.Element;
+import net.ilexiconn.llibrary.client.gui.element.LabelElement;
+import net.ilexiconn.llibrary.client.gui.element.ListElement;
 import net.ilexiconn.llibrary.client.gui.element.color.ColorScheme;
-import net.ilexiconn.llibrary.server.config.Config;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
@@ -107,10 +109,10 @@ public class ConfigGUI extends ElementGUI {
         int x = 125;
         int y = 45;
         for (ConfigProperty property : this.selectedCategory.getProperties()) {
-            fontRendererObj.drawString(property.name, x, y, this.getTextColor());
+            this.fontRendererObj.drawString(property.name, x, y, this.getTextColor());
             y += 10;
             if (property.description != null && property.description.length() > 0) {
-                fontRendererObj.drawString(property.description, x, y, this.getTextColor());
+                this.fontRendererObj.drawString(property.description, x, y, this.getTextColor());
                 y += 10;
             }
             Element<ConfigGUI> propertyElement = this.propertyElements.get(property);

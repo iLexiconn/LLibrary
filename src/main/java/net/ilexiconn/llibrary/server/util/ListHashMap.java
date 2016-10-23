@@ -32,7 +32,7 @@ public class ListHashMap<K, V> extends LinkedHashMap<K, V> {
      * @return the entry of the index, null if the index can't be found.
      */
     public Map.Entry<K, V> getEntry(int index) {
-        Set<Map.Entry<K, V>> entries = entrySet();
+        Set<Map.Entry<K, V>> entries = this.entrySet();
         int j = 0;
         for (Map.Entry<K, V> entry : entries) {
             if (j++ == index) {

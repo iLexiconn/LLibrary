@@ -20,42 +20,42 @@ public class Transform {
      * @return the x rotation
      */
     public float getRotationX() {
-        return rotationX;
+        return this.rotationX;
     }
 
     /**
      * @return the y rotation
      */
     public float getRotationY() {
-        return rotationY;
+        return this.rotationY;
     }
 
     /**
      * @return the z rotation
      */
     public float getRotationZ() {
-        return rotationZ;
+        return this.rotationZ;
     }
 
     /**
      * @return the x offset
      */
     public float getOffsetX() {
-        return offsetX;
+        return this.offsetX;
     }
 
     /**
      * @return the y offset
      */
     public float getOffsetY() {
-        return offsetY;
+        return this.offsetY;
     }
 
     /**
      * @return the z offset
      */
     public float getOffsetZ() {
-        return offsetZ;
+        return this.offsetZ;
     }
 
     /**

@@ -23,85 +23,85 @@ public class WeakIdentityHashMap<K, V> implements Map<K, V> {
     private final Map<IdentityWeakReference, V> delegate;
 
     public WeakIdentityHashMap(int expectedMaxSize, float loadFactor) {
-        delegate = new HashMap<>(expectedMaxSize, loadFactor);
+        this.delegate = new HashMap<>(expectedMaxSize, loadFactor);
     }
 
     public WeakIdentityHashMap(int expectedMaxSize) {
-        delegate = new HashMap<>(expectedMaxSize);
+        this.delegate = new HashMap<>(expectedMaxSize);
     }
 
     public WeakIdentityHashMap() {
-        delegate = new HashMap<>();
+        this.delegate = new HashMap<>();
     }
 
     @Override
     public int size() {
-        reap();
-        return delegate.size();
+        this.reap();
+        return this.delegate.size();
     }
 
     @Override
     public boolean isEmpty() {
-        reap();
-        return delegate.isEmpty();
+        this.reap();
+        return this.delegate.isEmpty();
     }
 
     @Override
     public boolean containsKey(Object key) {
-        reap();
-        return delegate.containsKey(new IdentityWeakReference((K) key));
+        this.reap();
+        return this.delegate.containsKey(new IdentityWeakReference((K) key));
     }
 
     @Override
     public boolean containsValue(Object value) {
-        reap();
-        return delegate.containsValue(value);
+        this.reap();
+        return this.delegate.containsValue(value);
     }
 
     @Override
     public V get(Object key) {
-        reap();
-        return delegate.get(new IdentityWeakReference((K) key));
+        this.reap();
+        return this.delegate.get(new IdentityWeakReference((K) key));
     }
 
     @Override
     public V put(K key, V value) {
-        return delegate.put(new IdentityWeakReference(key), value);
+        return this.delegate.put(new IdentityWeakReference(key), value);
     }
 
     @Override
     public V remove(Object key) {
-        reap();
-        return delegate.remove(new IdentityWeakReference((K) key));
+        this.reap();
+        return this.delegate.remove(new IdentityWeakReference((K) key));
     }
 
     @Override
     public void putAll(Map<? extends K, ? extends V> m) {
         for (Entry<? extends K, ? extends V> e : m.entrySet()) {
-            put(e.getKey(), e.getValue());
+            this.put(e.getKey(), e.getValue());
         }
     }
 
     @Override
     public void clear() {
-        delegate.clear();
-        reap();
+        this.delegate.clear();
+        this.reap();
     }
 
     @Override
     public Set<K> keySet() {
-        reap();
+        this.reap();
         return new AbstractSet<K>() {
             @Override
             public int size() {
-                reap();
-                return delegate.size();
+                WeakIdentityHashMap.this.reap();
+                return WeakIdentityHashMap.this.delegate.size();
             }
 
             @Override
             public Iterator<K> iterator() {
-                reap();
-                Iterator<IdentityWeakReference> iter = delegate.keySet().iterator();
+                WeakIdentityHashMap.this.reap();
+                Iterator<IdentityWeakReference> iter = WeakIdentityHashMap.this.delegate.keySet().iterator();
                 return new Iterator<K>() {
                     @Override
                     public boolean hasNext() {
@@ -122,8 +122,8 @@ public class WeakIdentityHashMap<K, V> implements Map<K, V> {
 
             @Override
             public void clear() {
-                delegate.clear();
-                reap();
+                WeakIdentityHashMap.this.delegate.clear();
+                WeakIdentityHashMap.this.reap();
             }
         };
     }
@@ -133,44 +133,44 @@ public class WeakIdentityHashMap<K, V> implements Map<K, V> {
         return new AbstractCollection<V>() {
             @Override
             public int size() {
-                reap();
-                return delegate.size();
+                WeakIdentityHashMap.this.reap();
+                return WeakIdentityHashMap.this.delegate.size();
             }
 
             @Override
             public boolean contains(Object o) {
-                reap();
-                return containsValue(o);
+                WeakIdentityHashMap.this.reap();
+                return WeakIdentityHashMap.this.containsValue(o);
             }
 
             @Override
             public Iterator<V> iterator() {
-                reap();
-                return delegate.values().iterator();
+                WeakIdentityHashMap.this.reap();
+                return WeakIdentityHashMap.this.delegate.values().iterator();
             }
 
             @Override
             public void clear() {
-                delegate.clear();
-                reap();
+                WeakIdentityHashMap.this.delegate.clear();
+                WeakIdentityHashMap.this.reap();
             }
         };
     }
 
     @Override
     public Set<Entry<K, V>> entrySet() {
-        reap();
+        this.reap();
         return new AbstractSet<Entry<K, V>>() {
             @Override
             public int size() {
-                reap();
-                return delegate.size();
+                WeakIdentityHashMap.this.reap();
+                return WeakIdentityHashMap.this.delegate.size();
             }
 
             @Override
             public Iterator<Entry<K, V>> iterator() {
-                reap();
-                Iterator<Entry<IdentityWeakReference, V>> iter = delegate.entrySet().iterator();
+                WeakIdentityHashMap.this.reap();
+                Iterator<Entry<IdentityWeakReference, V>> iter = WeakIdentityHashMap.this.delegate.entrySet().iterator();
                 return new Iterator<Entry<K, V>>() {
                     @Override
                     public boolean hasNext() {
@@ -193,7 +193,7 @@ public class WeakIdentityHashMap<K, V> implements Map<K, V> {
 
                             @Override
                             public V setValue(V value) {
-                                return delegate.put(entry.getKey(), value);
+                                return WeakIdentityHashMap.this.delegate.put(entry.getKey(), value);
                             }
                         };
                     }
@@ -207,24 +207,24 @@ public class WeakIdentityHashMap<K, V> implements Map<K, V> {
 
             @Override
             public void clear() {
-                delegate.clear();
-                reap();
+                WeakIdentityHashMap.this.delegate.clear();
+                WeakIdentityHashMap.this.reap();
             }
         };
     }
 
     @Override
     public String toString() {
-        reap();
-        return delegate.toString();
+        this.reap();
+        return this.delegate.toString();
     }
 
     private synchronized void reap() {
-        Reference<? extends K> zombie = queue.poll();
+        Reference<? extends K> zombie = this.queue.poll();
         while (zombie != null) {
             IdentityWeakReference victim = (IdentityWeakReference) zombie;
-            delegate.remove(victim);
-            zombie = queue.poll();
+            this.delegate.remove(victim);
+            zombie = this.queue.poll();
         }
     }
 
@@ -232,23 +232,23 @@ public class WeakIdentityHashMap<K, V> implements Map<K, V> {
         private final int hash;
 
         public IdentityWeakReference(K obj) {
-            super(obj, queue);
-            hash = System.identityHashCode(obj);
+            super(obj, WeakIdentityHashMap.this.queue);
+            this.hash = System.identityHashCode(obj);
         }
 
         @Override
         public int hashCode() {
-            return hash;
+            return this.hash;
         }
 
         @Override
         public boolean equals(Object obj) {
-            return this == obj || ((IdentityWeakReference) obj).get() == get();
+            return this == obj || ((IdentityWeakReference) obj).get() == this.get();
         }
 
         @Override
         public String toString() {
-            return String.valueOf(get());
+            return String.valueOf(this.get());
         }
     }
 }

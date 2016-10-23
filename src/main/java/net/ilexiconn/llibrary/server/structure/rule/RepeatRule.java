@@ -21,15 +21,15 @@ public abstract class RepeatRule {
     }
 
     public int getSpacingX() {
-        return spacingX;
+        return this.spacingX;
     }
 
     public int getSpacingY() {
-        return spacingY;
+        return this.spacingY;
     }
 
     public int getSpacingZ() {
-        return spacingZ;
+        return this.spacingZ;
     }
 
     public abstract boolean continueRepeating(World world, Random rand, MutableBlockPos position);
@@ -39,6 +39,6 @@ public abstract class RepeatRule {
     public abstract void reset(World world, Random random, MutableBlockPos pos);
 
     public void init(World world, Random random, MutableBlockPos pos) {
-        reset(world, random, pos);
+        this.reset(world, random, pos);
     }
 }

@@ -58,7 +58,7 @@ public abstract class InputElementBase<T extends IElementGUI> extends Element<IE
 
         if (!displayString.isEmpty()) {
             String s = verticalCursor ? displayString.substring(0, cursor) : displayString;
-            line = fontRenderer.drawString(s, x + 3, y + 1 + getHeight() / 2 - fontRenderer.FONT_HEIGHT / 2, LLibrary.CONFIG.getTextColor(), false);
+            line = fontRenderer.drawString(s, x + 3, y + 1 + this.getHeight() / 2 - fontRenderer.FONT_HEIGHT / 2, LLibrary.CONFIG.getTextColor(), false);
         }
 
         boolean renderVerticalCursor = this.cursorPosition < this.text.length();
@@ -85,7 +85,7 @@ public abstract class InputElementBase<T extends IElementGUI> extends Element<IE
 
         if (cursorEnd != cursor) {
             float selectionWidth = x + fontRenderer.getStringWidth(displayString.substring(0, cursorEnd));
-            this.drawCursorVertical(lineX + (selectionEnd > cursorPosition ? 0 : 1), y, selectionWidth + (selectionEnd < cursorPosition ? 2 : 3), y + getHeight() / 2 - fontRenderer.FONT_HEIGHT / 2 + 1 + fontRenderer.FONT_HEIGHT);
+            this.drawCursorVertical(lineX + (this.selectionEnd > this.cursorPosition ? 0 : 1), y, selectionWidth + (this.selectionEnd < this.cursorPosition ? 2 : 3), y + this.getHeight() / 2 - fontRenderer.FONT_HEIGHT / 2 + 1 + fontRenderer.FONT_HEIGHT);
         }
     }
 

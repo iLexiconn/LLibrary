@@ -110,19 +110,19 @@ public class Element<T extends IElementGUI> {
     }
 
     public Element<T> getParent() {
-        return parent;
+        return this.parent;
     }
 
     public List<Element<T>> getChildren() {
-        return children;
+        return this.children;
     }
 
     public ColorScheme getColorScheme() {
-        return colorScheme;
+        return this.colorScheme;
     }
 
     public float getPosX() {
-        return posX + (this.getParent() != null ? this.getParent().getPosX() : 0);
+        return this.posX + (this.getParent() != null ? this.getParent().getPosX() : 0);
     }
 
     public Element<T> setPosX(float posX) {
@@ -131,7 +131,7 @@ public class Element<T extends IElementGUI> {
     }
 
     public float getPosY() {
-        return posY + (this.getParent() != null ? this.getParent().getPosY() : 0);
+        return this.posY + (this.getParent() != null ? this.getParent().getPosY() : 0);
     }
 
     public Element<T> setPosY(float posY) {
@@ -140,7 +140,7 @@ public class Element<T extends IElementGUI> {
     }
 
     public int getWidth() {
-        return width;
+        return this.width;
     }
 
     public Element<T> setWidth(int width) {
@@ -149,7 +149,7 @@ public class Element<T extends IElementGUI> {
     }
 
     public int getHeight() {
-        return height;
+        return this.height;
     }
 
     public Element<T> setHeight(int height) {
@@ -158,7 +158,7 @@ public class Element<T extends IElementGUI> {
     }
 
     public boolean isEnabled() {
-        return enabled;
+        return this.enabled;
     }
 
     public Element<T> setEnabled(boolean enabled) {
@@ -167,7 +167,7 @@ public class Element<T extends IElementGUI> {
     }
 
     public boolean isVisible() {
-        return visible;
+        return this.visible;
     }
 
     public Element<T> setVisible(boolean visible) {

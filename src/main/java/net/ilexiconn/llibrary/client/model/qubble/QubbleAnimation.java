@@ -55,7 +55,7 @@ public class QubbleAnimation implements INBTSerializable<NBTTagCompound> {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -63,7 +63,7 @@ public class QubbleAnimation implements INBTSerializable<NBTTagCompound> {
     }
 
     public List<QubbleAnimationKeyframe> getKeyframes() {
-        return keyframes;
+        return this.keyframes;
     }
 
     public QubbleAnimation copy() {

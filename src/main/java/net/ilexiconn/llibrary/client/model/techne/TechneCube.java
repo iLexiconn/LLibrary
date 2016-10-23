@@ -33,7 +33,7 @@ public class TechneCube {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -41,31 +41,31 @@ public class TechneCube {
     }
 
     public float getOffsetX() {
-        return offsetX;
+        return this.offsetX;
     }
 
     public float getOffsetY() {
-        return offsetY;
+        return this.offsetY;
     }
 
     public float getOffsetZ() {
-        return offsetZ;
+        return this.offsetZ;
     }
 
     public int getDimensionX() {
-        return dimensionX;
+        return this.dimensionX;
     }
 
     public int getDimensionY() {
-        return dimensionY;
+        return this.dimensionY;
     }
 
     public int getDimensionZ() {
-        return dimensionZ;
+        return this.dimensionZ;
     }
 
     public boolean isTextureMirrored() {
-        return textureMirrored;
+        return this.textureMirrored;
     }
 
     public void setTextureMirrored(boolean textureMirrored) {
@@ -73,35 +73,35 @@ public class TechneCube {
     }
 
     public int getTextureX() {
-        return textureX;
+        return this.textureX;
     }
 
     public int getTextureY() {
-        return textureY;
+        return this.textureY;
     }
 
     public float getRotationX() {
-        return rotationX;
+        return this.rotationX;
     }
 
     public float getRotationY() {
-        return rotationY;
+        return this.rotationY;
     }
 
     public float getRotationZ() {
-        return rotationZ;
+        return this.rotationZ;
     }
 
     public float getPositionX() {
-        return positionX;
+        return this.positionX;
     }
 
     public float getPositionY() {
-        return positionY;
+        return this.positionY;
     }
 
     public float getPositionZ() {
-        return positionZ;
+        return this.positionZ;
     }
 
     public void setTexture(int x, int y) {
