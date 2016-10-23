@@ -15,7 +15,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public abstract class InputElementBase<T extends IElementGUI> extends Element<IElementGUI> {
+public abstract class InputElementBase<T extends IElementGUI> extends Element<T> {
     protected String text;
     private boolean selected;
     private int lineScrollOffset;

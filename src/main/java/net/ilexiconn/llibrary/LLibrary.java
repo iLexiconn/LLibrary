@@ -4,7 +4,13 @@ import net.ilexiconn.llibrary.server.ServerProxy;
 import net.ilexiconn.llibrary.server.capability.IEntityDataCapability;
 import net.ilexiconn.llibrary.server.config.ConfigHandler;
 import net.ilexiconn.llibrary.server.config.LLibraryConfig;
-import net.ilexiconn.llibrary.server.network.*;
+import net.ilexiconn.llibrary.server.network.AnimationMessage;
+import net.ilexiconn.llibrary.server.network.BlockEntityMessage;
+import net.ilexiconn.llibrary.server.network.NetworkHandler;
+import net.ilexiconn.llibrary.server.network.NetworkWrapper;
+import net.ilexiconn.llibrary.server.network.PropertiesMessage;
+import net.ilexiconn.llibrary.server.network.SnackbarMessage;
+import net.ilexiconn.llibrary.server.network.SurvivalTabMessage;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.fml.common.Loader;
@@ -20,7 +26,7 @@ import org.apache.logging.log4j.Logger;
 
 @Mod(modid = "llibrary", name = "LLibrary", version = LLibrary.VERSION, guiFactory = "net.ilexiconn.llibrary.client.gui.LLibraryGUIFactory")
 public class LLibrary {
-    public static final String VERSION = "1.7.0";
+    public static final String VERSION = "1.7.1";
     public static final Logger LOGGER = LogManager.getLogger("LLibrary");
     @SidedProxy(serverSide = "net.ilexiconn.llibrary.server.ServerProxy", clientSide = "net.ilexiconn.llibrary.client.ClientProxy")
     public static ServerProxy PROXY;

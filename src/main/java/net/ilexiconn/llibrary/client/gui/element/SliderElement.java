@@ -11,8 +11,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class SliderElement<T extends IElementGUI, IProperty extends IFloatRangeProperty & IStringProperty> extends Element<T> {
-    private final IProperty value;
+public class SliderElement<T extends IElementGUI, P extends IFloatRangeProperty & IStringProperty> extends Element<T> {
+    private final P value;
     private float step;
     private boolean hasSlider;
     private float sliderWidth;
@@ -20,11 +20,11 @@ public class SliderElement<T extends IElementGUI, IProperty extends IFloatRangeP
     private boolean dragging;
     private PropertyInputElement<T> inputElement;
 
-    public SliderElement(T gui, float posX, float posY, IProperty value, float step) {
+    public SliderElement(T gui, float posX, float posY, P value, float step) {
         this(gui, posX, posY, 0.0F, value, step);
     }
 
-    public SliderElement(T gui, float posX, float posY, float sliderWidth, IProperty value, float step) {
+    public SliderElement(T gui, float posX, float posY, float sliderWidth, P value, float step) {
         super(gui, posX, posY, (int) (38 + sliderWidth), 12);
         this.value = value;
         this.step = step;
@@ -34,7 +34,7 @@ public class SliderElement<T extends IElementGUI, IProperty extends IFloatRangeP
 
     @Override
     public void init() {
-        this.inputElement = (PropertyInputElement<T>)new PropertyInputElement<>(this.gui, -1.0F, 0.0F, 28, this.value).withParent((Element<IElementGUI>)this);
+        this.inputElement = (PropertyInputElement<T>)new PropertyInputElement<>(this.gui, -1.0F, 0.0F, 28, this.value).withParent(this);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class SliderElement<T extends IElementGUI, IProperty extends IFloatRangeP
         this.inputElement.setEditable(editable);
     }
 
-    public SliderElement<T, IProperty> withValue(float value) {
+    public SliderElement<T, P> withValue(float value) {
         return this;
     }
 
