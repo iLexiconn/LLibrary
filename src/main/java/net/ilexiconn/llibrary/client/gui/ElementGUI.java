@@ -115,7 +115,7 @@ public abstract class ElementGUI extends GuiScreen implements IElementGUI {
 
     @Override
     public void updateScreen() {
-        Lists.reverse(this.getPostOrderElements()).forEach(Element::update);
+        this.getPostOrderElements().forEach(Element::update);
     }
 
     public abstract void drawScreen(float mouseX, float mouseY, float partialTicks);
@@ -221,27 +221,20 @@ public abstract class ElementGUI extends GuiScreen implements IElementGUI {
 
     public List<Element> getPostOrderElements() {
         List<Element> result = new ArrayList<>();
-        this.traversePostOrderRecursively(this.elements, result);
-        return result;
+        this.traverseRecursively(this.elements, result);
+        return Lists.reverse(result);
     }
 
     public List<Element> getPreOrderElements() {
         List<Element> result = new ArrayList<>();
-        this.traversePreOrderRecursively(this.elements, result);
+        this.traverseRecursively(this.elements, result);
         return result;
     }
 
-    private void traversePostOrderRecursively(List<Element> in, List<Element> out) {
-        for (Element element : in) {
-            this.traversePostOrderRecursively(element.getChildren(), out);
-            out.add(element);
-        }
-    }
-
-    private void traversePreOrderRecursively(List<Element> in, List<Element> out) {
+    private void traverseRecursively(List<Element> in, List<Element> out) {
         for (Element element : in) {
             out.add(element);
-            this.traversePreOrderRecursively(element.getChildren(), out);
+            this.traverseRecursively(element.getChildren(), out);
         }
     }
 }
