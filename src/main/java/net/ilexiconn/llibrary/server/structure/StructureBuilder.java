@@ -3,6 +3,8 @@ package net.ilexiconn.llibrary.server.structure;
 import net.ilexiconn.llibrary.server.structure.rule.FixedRule;
 import net.ilexiconn.llibrary.server.structure.rule.RepeatRule;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockLog;
+import net.minecraft.block.BlockLog.EnumAxis;
 import net.minecraft.block.BlockSlab;
 import net.minecraft.block.BlockStairs;
 import net.minecraft.block.BlockStairs.EnumHalf;
@@ -121,6 +123,11 @@ public class StructureBuilder extends StructureGenerator {
                         state = state.withProperty(BlockVine.EAST, facing == EnumFacing.EAST);
                         state = state.withProperty(BlockVine.SOUTH, facing == EnumFacing.SOUTH);
                         state = state.withProperty(BlockVine.WEST, facing == EnumFacing.WEST);
+                    } else if (state.getBlock() instanceof BlockLog) {
+                        EnumAxis axis = state.getValue(BlockLog.LOG_AXIS);
+                        EnumFacing facing = axis == EnumAxis.X ? EnumFacing.EAST : axis == EnumAxis.Y ? EnumFacing.UP : EnumFacing.SOUTH;
+                        EnumFacing transformed = transform(facing, frontVec, topVec, perpVec);
+                        state = state.withProperty(BlockLog.LOG_AXIS, EnumAxis.fromFacingAxis(transformed.getAxis()));
                     } else {
                         for (IProperty prop : state.getPropertyNames()) {
                             if (prop instanceof PropertyDirection) {
