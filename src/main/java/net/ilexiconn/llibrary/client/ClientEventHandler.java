@@ -30,7 +30,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.Rectangle;
 
 @SideOnly(Side.CLIENT)
@@ -165,11 +164,11 @@ public enum ClientEventHandler {
             for (String name : ClientProxy.PATRONS) {
                 if (event.getEntityPlayer().getGameProfile().getId().toString().equals(name)) {
                     GlStateManager.pushMatrix();
-                    GL11.glDepthMask(false);
+                    GlStateManager.depthMask(false);
                     GlStateManager.disableLighting();
                     GlStateManager.translate(0.0F, -1.37F, 0.0F);
                     this.renderVoxel(event, 1.1F, 0.23F);
-                    GL11.glDepthMask(true);
+                    GlStateManager.depthMask(true);
                     GlStateManager.enableLighting();
                     GlStateManager.translate(0.0F, 0.128F, 0.0F);
                     this.renderVoxel(event, 1.0F, 1.0F);

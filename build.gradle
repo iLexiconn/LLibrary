@@ -31,14 +31,14 @@ if (secretFile.exists()) {
     }
 }
 
-version = getLLibraryVersion() + "-1.10.2"
+version = getLLibraryVersion() + "-" + project.minecraft.version
 group = "net.ilexiconn"
 archivesBaseName = "llibrary"
 sourceCompatibility = targetCompatibility = "1.8"
-def minecraft_mappings = "snapshot_20160628"
+def minecraft_mappings = "snapshot_20161111"
 
 minecraft {
-    version = "1.10.2-12.18.0.2002-1.10.0"
+    version = "1.11-13.19.0.2130"
     runDir = "minecraft"
     mappings = minecraft_mappings
     makeObfSourceJar = false
@@ -159,7 +159,7 @@ curseforge {
             changelog = ""
         }
 
-        addGameVersion("1.10.2")
+        addGameVersion(project.minecraft.version)
 
         mainArtifact(jar) {
             displayName = "LLibrary $curse_version"
@@ -202,7 +202,7 @@ String getLLibraryVersion() {
 task generateMappings << {
     def mappingParts = minecraft_mappings.split("_");
     def mappingReplacements = new HashMap<String, String>()
-    def mappingFile = new File(System.properties["user.home"] + "/.gradle/caches/minecraft/de/oceanlabs/mcp/mcp_" + mappingParts[0] + "/" + mappingParts[1] + "/srgs/mcp-srg.srg")
+    def mappingFile = new File(System.properties["user.home"] + "/.gradle/caches/minecraft/de/oceanlabs/mcp/mcp_" + mappingParts[0] + "/" + mappingParts[1] + "/" + project.minecraft.version + "/srgs/mcp-srg.srg")
     if (mappingFile.exists()) {
         mappingFile.eachLine { line ->
             def parts = line.split(" ")
