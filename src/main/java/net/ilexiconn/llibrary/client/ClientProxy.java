@@ -41,7 +41,11 @@ public class ClientProxy extends ServerProxy {
         super.onPreInit();
         WebUtils.readPastebinAsync("aLjMgBAV", (result) -> {
             if (result != null) {
-                PATRONS = new Gson().fromJson(result, String[].class);
+                try {
+                    PATRONS = new Gson().fromJson(result, String[].class);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
