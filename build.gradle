@@ -202,7 +202,7 @@ String getLLibraryVersion() {
 task generateMappings << {
     def mappingParts = minecraft_mappings.split("_");
     def mappingReplacements = new HashMap<String, String>()
-    def mappingFile = new File(System.properties["user.home"] + "/.gradle/caches/minecraft/de/oceanlabs/mcp/mcp_" + mappingParts[0] + "/" + mappingParts[1] + "/srgs/mcp-srg.srg")
+    def mappingFile = new File(System.properties["user.home"] + "/.gradle/caches/minecraft/de/oceanlabs/mcp/mcp_" + mappingParts[0] + "/" + mappingParts[1] + "/" + project.minecraft.version + "/srgs/mcp-srg.srg")
     if (mappingFile.exists()) {
         mappingFile.eachLine { line ->
             def parts = line.split(" ")
