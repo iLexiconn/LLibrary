@@ -29,6 +29,8 @@ import java.util.List;
  */
 @SideOnly(Side.CLIENT)
 public abstract class ElementGUI extends GuiScreen implements IElementGUI {
+    private final Object elementLock = new Object();
+
     private final List<Element> elements = new ArrayList<>();
     private Element currentlyClicking;
 
@@ -36,7 +38,9 @@ public abstract class ElementGUI extends GuiScreen implements IElementGUI {
 
     @Override
     public void addElement(Element element) {
-        this.elements.add(element);
+        synchronized (this.elementLock) {
+            this.elements.add(element);
+        }
         element.init();
     }
 
@@ -47,27 +51,35 @@ public abstract class ElementGUI extends GuiScreen implements IElementGUI {
 
     @Override
     public void removeElement(Element element) {
-        this.elements.remove(element);
+        synchronized (this.elementLock) {
+            this.elements.remove(element);
+        }
     }
 
     @Override
     public void clearElements() {
-        this.elements.clear();
+        synchronized (this.elementLock) {
+            this.elements.clear();
+        }
     }
 
     @Override
     public void sendElementToFront(Element element) {
         if (this.elements.contains(element)) {
-            this.elements.remove(element);
-            this.elements.add(element);
+            synchronized (this.elementLock) {
+                this.elements.remove(element);
+                this.elements.add(element);
+            }
         }
     }
 
     @Override
     public void sendElementToBack(Element element) {
         if (this.elements.contains(element)) {
-            this.elements.remove(element);
-            this.elements.add(0, element);
+            synchronized (this.elementLock) {
+                this.elements.remove(element);
+                this.elements.add(0, element);
+            }
         }
     }
 
@@ -75,9 +87,12 @@ public abstract class ElementGUI extends GuiScreen implements IElementGUI {
     public boolean isElementOnTop(Element element) {
         float mouseX = this.getPreciseMouseX();
         float mouseY = this.getPreciseMouseY();
-        for (Element e : this.getPostOrderElements()) {
-            if (e.isVisible() && mouseX >= e.getPosX() && mouseY >= e.getPosY() && mouseX < e.getPosX() + e.getWidth() && mouseY < e.getPosY() + e.getHeight()) {
-                return element == e || (element.getParent() != null && element.getParent() == e);
+        synchronized (this.elementLock) {
+            List<Element> elements = this.getPostOrderElements();
+            for (Element e : elements) {
+                if (e.isVisible() && mouseX >= e.getPosX() && mouseY >= e.getPosY() && mouseX < e.getPosX() + e.getWidth() && mouseY < e.getPosY() + e.getHeight()) {
+                    return element == e || (element.getParent() != null && element.getParent() == e);
+                }
             }
         }
         return false;
@@ -127,7 +142,10 @@ public abstract class ElementGUI extends GuiScreen implements IElementGUI {
         float preciseMouseX = this.getPreciseMouseX();
         float preciseMouseY = this.getPreciseMouseY();
         this.drawScreen(preciseMouseX, preciseMouseY, partialTicks);
-        this.elements.forEach(element -> this.renderElement(element, preciseMouseX, preciseMouseY, partialTicks));
+
+        synchronized (this.elementLock) {
+            this.elements.forEach(element -> this.renderElement(element, preciseMouseX, preciseMouseY, partialTicks));
+        }
 
         int scrollAmount = Mouse.getDWheel();
         if (scrollAmount != 0) {
@@ -154,11 +172,14 @@ public abstract class ElementGUI extends GuiScreen implements IElementGUI {
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         float preciseMouseX = this.getPreciseMouseX();
         float preciseMouseY = this.getPreciseMouseY();
-        for (Element element : this.getPostOrderElements()) {
-            if (element.isVisible() && element.isEnabled()) {
-                if (element.mouseClicked(preciseMouseX, preciseMouseY, mouseButton)) {
-                    this.currentlyClicking = element;
-                    break;
+        synchronized (this.elementLock) {
+            List<Element> elements = this.getPostOrderElements();
+            for (Element element : elements) {
+                if (element.isVisible() && element.isEnabled()) {
+                    if (element.mouseClicked(preciseMouseX, preciseMouseY, mouseButton)) {
+                        this.currentlyClicking = element;
+                        break;
+                    }
                 }
             }
         }
@@ -169,10 +190,13 @@ public abstract class ElementGUI extends GuiScreen implements IElementGUI {
     protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
         float preciseMouseX = this.getPreciseMouseX();
         float preciseMouseY = this.getPreciseMouseY();
-        for (Element element : this.getPostOrderElements()) {
-            if (element.isVisible() && element.isEnabled() && this.currentlyClicking == element) {
-                if (element.mouseDragged(preciseMouseX, preciseMouseY, clickedMouseButton, timeSinceLastClick)) {
-                    break;
+        synchronized (this.elementLock) {
+            List<Element> elements = this.getPostOrderElements();
+            for (Element element : elements) {
+                if (element.isVisible() && element.isEnabled() && this.currentlyClicking == element) {
+                    if (element.mouseDragged(preciseMouseX, preciseMouseY, clickedMouseButton, timeSinceLastClick)) {
+                        break;
+                    }
                 }
             }
         }
@@ -183,10 +207,13 @@ public abstract class ElementGUI extends GuiScreen implements IElementGUI {
     protected void mouseReleased(int mouseX, int mouseY, int state) {
         float preciseMouseX = this.getPreciseMouseX();
         float preciseMouseY = this.getPreciseMouseY();
-        for (Element element : this.getPostOrderElements()) {
-            if (element.isVisible() && element.isEnabled() && this.currentlyClicking == element) {
-                if (element.mouseReleased(preciseMouseX, preciseMouseY, state)) {
-                    break;
+        synchronized (this.elementLock) {
+            List<Element> elements = this.getPostOrderElements();
+            for (Element element : elements) {
+                if (element.isVisible() && element.isEnabled() && this.currentlyClicking == element) {
+                    if (element.mouseReleased(preciseMouseX, preciseMouseY, state)) {
+                        break;
+                    }
                 }
             }
         }
@@ -195,10 +222,13 @@ public abstract class ElementGUI extends GuiScreen implements IElementGUI {
 
     @Override
     protected void keyTyped(char typedChar, int keyCode) throws IOException {
-        for (Element element : this.getPostOrderElements()) {
-            if (element.isVisible() && element.isEnabled()) {
-                if (element.keyPressed(typedChar, keyCode)) {
-                    break;
+        synchronized (this.elementLock) {
+            List<Element> elements = this.getPostOrderElements();
+            for (Element element : elements) {
+                if (element.isVisible() && element.isEnabled()) {
+                    if (element.keyPressed(typedChar, keyCode)) {
+                        break;
+                    }
                 }
             }
         }
@@ -217,6 +247,10 @@ public abstract class ElementGUI extends GuiScreen implements IElementGUI {
 
     public float getPreciseMouseY() {
         return this.height - (float) Mouse.getY() * this.height / (float) this.mc.displayHeight - 1.0F;
+    }
+
+    public Object getElementLock() {
+        return this.elementLock;
     }
 
     public List<Element> getPostOrderElements() {
