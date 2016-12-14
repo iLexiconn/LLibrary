@@ -308,7 +308,7 @@ public abstract class InputElementBase<T extends IElementGUI> extends Element<T>
 
     public void setCursorPosition(int position) {
         this.cursorPosition = position;
-        this.cursorPosition = MathHelper.clamp_int(this.cursorPosition, 0, this.text.length());
+        this.cursorPosition = MathHelper.clamp(this.cursorPosition, 0, this.text.length());
         this.setSelectionPos(this.cursorPosition);
     }
 
@@ -349,7 +349,7 @@ public abstract class InputElementBase<T extends IElementGUI> extends Element<T>
             this.lineScrollOffset -= this.lineScrollOffset - position;
         }
 
-        this.lineScrollOffset = MathHelper.clamp_int(this.lineScrollOffset, 0, textLength);
+        this.lineScrollOffset = MathHelper.clamp(this.lineScrollOffset, 0, textLength);
     }
 
     public void clearText() {

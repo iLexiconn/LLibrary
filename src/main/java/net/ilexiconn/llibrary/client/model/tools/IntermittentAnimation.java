@@ -134,7 +134,7 @@ public class IntermittentAnimation<T extends Entity & IIntermittentEntity> {
             } else {
                 if (this.rand.nextInt(this.startProbability) == 0) {
                     this.start();
-                    this.entity.worldObj.setEntityState(this.entity, (byte) (this.entity.getOffsetEntityState() + this.id));
+                    this.entity.world.setEntityState(this.entity, (byte) (this.entity.getOffsetEntityState() + this.id));
                 }
             }
         }

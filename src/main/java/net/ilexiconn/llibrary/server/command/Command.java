@@ -104,7 +104,7 @@ public class Command extends CommandBase {
     }
 
     @Override
-    public String getCommandName() {
+    public String getName() {
         return this.name;
     }
 
@@ -114,11 +114,11 @@ public class Command extends CommandBase {
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender) {
+    public String getUsage(ICommandSender sender) {
         if (this.commandUsage == null) {
             StringBuilder builder = new StringBuilder();
             builder.append("/");
-            builder.append(this.getCommandName());
+            builder.append(this.getName());
             for (String requiredArgument : this.requiredArguments.keySet()) {
                 builder.append(" ");
                 builder.append("<");
@@ -141,9 +141,9 @@ public class Command extends CommandBase {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         if (args.length < this.requiredArguments.size()) {
-            throw new WrongUsageException(this.getCommandUsage(sender));
+            throw new WrongUsageException(this.getUsage(sender));
         } else if (args.length > this.requiredArguments.size() + this.optionalArguments.size()) {
-            throw new WrongUsageException(this.getCommandUsage(sender));
+            throw new WrongUsageException(this.getUsage(sender));
         } else {
             List<Argument<?>> arguments = Lists.newArrayList();
             for (int i = 0; i < args.length; i++) {
@@ -152,14 +152,14 @@ public class Command extends CommandBase {
                     try {
                         arguments.add(new Argument<>(entry.getKey(), entry.getValue().parseArgument(server, sender, args[i])));
                     } catch (CommandException e) {
-                        sender.addChatMessage(new TextComponentString(e.getLocalizedMessage()).setStyle(new Style().setColor(TextFormatting.RED)));
+                        sender.sendMessage(new TextComponentString(e.getLocalizedMessage()).setStyle(new Style().setColor(TextFormatting.RED)));
                     }
                 } else {
                     Map.Entry<String, IArgumentParser<?>> entry = this.optionalArguments.getEntry(i - this.requiredArguments.size());
                     try {
                         arguments.add(new Argument<>(entry.getKey(), entry.getValue().parseArgument(server, sender, args[i])));
                     } catch (CommandException e) {
-                        sender.addChatMessage(new TextComponentString(e.getLocalizedMessage()).setStyle(new Style().setColor(TextFormatting.RED)));
+                        sender.sendMessage(new TextComponentString(e.getLocalizedMessage()).setStyle(new Style().setColor(TextFormatting.RED)));
                     }
                 }
             }
@@ -168,7 +168,7 @@ public class Command extends CommandBase {
     }
 
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
         if (args.length <= this.requiredArguments.size()) {
             return this.requiredArguments.getValue(args.length - 1).getTabCompletion(server, sender, args, pos);
         } else if (args.length <= this.requiredArguments.size() + this.optionalArguments.size()) {

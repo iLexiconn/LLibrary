@@ -74,7 +74,7 @@ public class ClientProxy extends ServerProxy {
         if (messageContext.side.isServer()) {
             super.handleMessage(message, messageContext);
         } else {
-            ClientProxy.MINECRAFT.addScheduledTask(() -> message.onClientReceived(ClientProxy.MINECRAFT, message, ClientProxy.MINECRAFT.thePlayer, messageContext));
+            ClientProxy.MINECRAFT.addScheduledTask(() -> message.onClientReceived(ClientProxy.MINECRAFT, message, ClientProxy.MINECRAFT.player, messageContext));
         }
     }
 

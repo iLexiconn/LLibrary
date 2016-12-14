@@ -27,7 +27,7 @@ public abstract class BlockEntity extends TileEntity implements ITickable {
             NBTTagCompound compound = new NBTTagCompound();
             this.saveTrackingSensitiveData(compound);
             if (!compound.equals(this.lastCompound)) {
-                if (!this.worldObj.isRemote) {
+                if (!this.world.isRemote) {
                     this.onSync();
                     LLibrary.NETWORK_WRAPPER.sendToAll(new BlockEntityMessage(this));
                 }
