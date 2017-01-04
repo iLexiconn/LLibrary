@@ -129,7 +129,7 @@ public class StructureBuilder extends StructureGenerator {
                         EnumFacing transformed = transform(facing, frontVec, topVec, perpVec);
                         state = state.withProperty(BlockLog.LOG_AXIS, EnumAxis.fromFacingAxis(transformed.getAxis()));
                     } else {
-                        for (IProperty prop : state.getPropertyNames()) {
+                        for (IProperty prop : state.getPropertyKeys()) {
                             if (prop instanceof PropertyDirection) {
                                 PropertyDirection propDir = (PropertyDirection) prop;
                                 EnumFacing facing = state.getValue(propDir);

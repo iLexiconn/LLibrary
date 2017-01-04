@@ -160,7 +160,7 @@ public enum ClientEventHandler {
 
     @SubscribeEvent
     public void onRenderModel(PlayerModelEvent.Render event) {
-        if (LLibrary.CONFIG.hasPatreonEffects() && ClientProxy.PATRONS != null && (ClientProxy.MINECRAFT.gameSettings.thirdPersonView != 0 || event.getEntityPlayer() != ClientProxy.MINECRAFT.thePlayer)) {
+        if (LLibrary.CONFIG.hasPatreonEffects() && ClientProxy.PATRONS != null && (ClientProxy.MINECRAFT.gameSettings.thirdPersonView != 0 || event.getEntityPlayer() != ClientProxy.MINECRAFT.player)) {
             for (String name : ClientProxy.PATRONS) {
                 if (event.getEntityPlayer().getGameProfile().getId().toString().equals(name)) {
                     GlStateManager.pushMatrix();
@@ -187,7 +187,7 @@ public enum ClientEventHandler {
     @SubscribeEvent
     public void onSurvivalTabClick(SurvivalTabClickEvent event) {
         if (event.getLabel().equals("container.inventory")) {
-            ClientProxy.MINECRAFT.displayGuiScreen(new GuiInventory(ClientProxy.MINECRAFT.thePlayer));
+            ClientProxy.MINECRAFT.displayGuiScreen(new GuiInventory(ClientProxy.MINECRAFT.player));
         }
     }
 

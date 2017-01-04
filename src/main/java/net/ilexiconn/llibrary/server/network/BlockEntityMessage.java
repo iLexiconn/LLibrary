@@ -29,7 +29,7 @@ public class BlockEntityMessage extends AbstractMessage<BlockEntityMessage> {
     @Override
     @SideOnly(Side.CLIENT)
     public void onClientReceived(Minecraft client, BlockEntityMessage message, EntityPlayer player, MessageContext messageContext) {
-        BlockEntity blockEntity = (BlockEntity) player.worldObj.getTileEntity(message.pos);
+        BlockEntity blockEntity = (BlockEntity) player.world.getTileEntity(message.pos);
         blockEntity.loadTrackingSensitiveData(message.compound);
     }
 

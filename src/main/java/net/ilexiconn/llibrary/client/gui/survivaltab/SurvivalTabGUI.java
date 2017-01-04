@@ -74,7 +74,7 @@ public class SurvivalTabGUI extends GuiButton {
     public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
         if (super.mousePressed(mc, mouseX, mouseY)) {
             if (mc.currentScreen.getClass() != this.survivalTab.getContainer()) {
-                MinecraftForge.EVENT_BUS.post(new SurvivalTabClickEvent(this.survivalTab.getLabel(), mc.thePlayer));
+                MinecraftForge.EVENT_BUS.post(new SurvivalTabClickEvent(this.survivalTab.getLabel(), mc.player));
                 LLibrary.NETWORK_WRAPPER.sendToServer(new SurvivalTabMessage(this.survivalTab.getLabel()));
                 return true;
             } else {

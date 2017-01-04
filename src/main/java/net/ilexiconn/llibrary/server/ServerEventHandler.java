@@ -110,7 +110,7 @@ public enum ServerEventHandler {
 
     @SubscribeEvent
     public void onEntityUpdate(LivingEvent.LivingUpdateEvent event) {
-        if (event.getEntity().worldObj.isRemote || !(event.getEntity() instanceof EntityPlayerMP)) {
+        if (event.getEntity().world.isRemote || !(event.getEntity() instanceof EntityPlayerMP)) {
             return;
         }
         EntityPlayerMP player = (EntityPlayerMP) event.getEntity();

@@ -34,7 +34,7 @@ public class PropertiesMessage extends AbstractMessage<PropertiesMessage> {
     @Override
     @SideOnly(Side.CLIENT)
     public void onClientReceived(Minecraft client, PropertiesMessage message, EntityPlayer player, MessageContext messageContext) {
-        Entity entity = player.worldObj.getEntityByID(message.entityID);
+        Entity entity = player.world.getEntityByID(message.entityID);
         if (entity != null) {
             IEntityData<?> extendedProperties = EntityDataHandler.INSTANCE.getEntityData(entity, message.propertyID);
             if (extendedProperties instanceof EntityProperties) {

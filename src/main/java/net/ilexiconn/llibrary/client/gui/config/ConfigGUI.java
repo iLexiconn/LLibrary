@@ -132,7 +132,7 @@ public class ConfigGUI extends ElementGUI {
 
     @Override
     public void onGuiClosed() {
-        MinecraftForge.EVENT_BUS.post(new ConfigChangedEvent.OnConfigChangedEvent(this.mod.modid(), null, this.mc.theWorld != null, false));
+        MinecraftForge.EVENT_BUS.post(new ConfigChangedEvent.OnConfigChangedEvent(this.mod.modid(), null, this.mc.world != null, false));
         super.onGuiClosed();
     }
 

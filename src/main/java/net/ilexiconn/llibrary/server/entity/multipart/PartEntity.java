@@ -19,7 +19,7 @@ public class PartEntity extends Entity {
     protected float damageMultiplier;
 
     public PartEntity(EntityLiving parent, float radius, float angleYaw, float offsetY, float sizeX, float sizeY, float damageMultiplier) {
-        super(parent.worldObj);
+        super(parent.world);
         this.setSize(sizeX, sizeY);
         this.parent = parent;
 
@@ -33,11 +33,11 @@ public class PartEntity extends Entity {
     @Override
     public void onUpdate() {
         this.setPositionAndUpdate(this.parent.posX + this.radius * Math.cos(this.parent.renderYawOffset * (Math.PI / 180.0F) + this.angleYaw), this.parent.posY + this.offsetY, this.parent.posZ + this.radius * Math.sin(this.parent.renderYawOffset * (Math.PI / 180.0F) + this.angleYaw));
-        if (!this.worldObj.isRemote) {
+        if (!this.world.isRemote) {
             this.collideWithNearbyEntities();
         }
         if (this.parent.isDead) {
-            this.worldObj.removeEntityDangerously(this);
+            this.world.removeEntityDangerously(this);
         }
 
         super.onUpdate();
@@ -74,7 +74,7 @@ public class PartEntity extends Entity {
     }
 
     public void collideWithNearbyEntities() {
-        List<Entity> entities = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().expand(0.20000000298023224D, 0.0D, 0.20000000298023224D));
+        List<Entity> entities = this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().expand(0.20000000298023224D, 0.0D, 0.20000000298023224D));
         entities.stream().filter(entity -> entity != this.parent && !(entity instanceof PartEntity) && entity.canBePushed()).forEach(entity -> entity.applyEntityCollision(this.parent));
     }
 

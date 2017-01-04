@@ -25,11 +25,11 @@ public enum AnimationHandler {
      * @param <T>       the entity type
      */
     public <T extends Entity & IAnimatedEntity> void sendAnimationMessage(T entity, Animation animation) {
-        if (entity.worldObj.isRemote) {
+        if (entity.world.isRemote) {
             return;
         }
         entity.setAnimation(animation);
-        for (EntityPlayer trackingPlayer : ((WorldServer) entity.worldObj).getEntityTracker().getTrackingPlayers(entity)) {
+        for (EntityPlayer trackingPlayer : ((WorldServer) entity.world).getEntityTracker().getTrackingPlayers(entity)) {
             LLibrary.NETWORK_WRAPPER.sendTo(new AnimationMessage(entity.getEntityId(), ArrayUtils.indexOf(entity.getAnimations(), animation)), (EntityPlayerMP) trackingPlayer);
         }
     }
