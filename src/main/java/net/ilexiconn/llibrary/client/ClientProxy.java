@@ -51,6 +51,7 @@ public class ClientProxy extends ServerProxy {
 
         MinecraftForge.EVENT_BUS.register(ClientEventHandler.INSTANCE);
         ModelLoaderRegistry.registerLoader(TabulaModelHandler.INSTANCE);
+        TabulaModelHandler.INSTANCE.addDomain("llibrary");
         RenderingRegistry.registerEntityRenderingHandler(PartEntity.class, new PartRenderer.Factory());
 
         Thread thread = new Thread(LanguageHandler.INSTANCE::load);
