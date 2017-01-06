@@ -7,6 +7,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
+import net.ilexiconn.llibrary.LLibrary;
 import net.ilexiconn.llibrary.client.model.tabula.baked.VanillaTabulaModel;
 import net.ilexiconn.llibrary.client.model.tabula.baked.deserializer.ItemCameraTransformsDeserializer;
 import net.ilexiconn.llibrary.client.model.tabula.baked.deserializer.ItemTransformVec3fDeserializer;
@@ -30,7 +31,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -46,6 +50,14 @@ public enum TabulaModelHandler implements ICustomModelLoader, JsonDeserializatio
     private JsonParser parser = new JsonParser();
     private ModelBlock.Deserializer modelBlockDeserializer = new ModelBlock.Deserializer();
     private IResourceManager manager;
+
+    private final Set<String> enabledDomains = new HashSet<>();
+
+    public void addDomain(String domain) {
+        domain = domain.toLowerCase(Locale.ENGLISH);
+        this.enabledDomains.add(domain);
+        LLibrary.LOGGER.info("TabulaModelHandler: Domain %s has been added.", domain);
+    }
 
     /**
      * Load a {@link TabulaModelContainer} from the path. A slash will be added if it isn't in the path already.
@@ -160,7 +172,7 @@ public enum TabulaModelHandler implements ICustomModelLoader, JsonDeserializatio
 
     @Override
     public boolean accepts(ResourceLocation modelLocation) {
-        return modelLocation.getResourcePath().endsWith(".tbl");
+        return this.enabledDomains.contains(modelLocation.getResourceDomain()) && modelLocation.getResourcePath().endsWith(".tbl");
     }
 
     @Override
