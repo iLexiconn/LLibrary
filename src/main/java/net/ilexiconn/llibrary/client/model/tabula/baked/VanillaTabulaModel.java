@@ -34,11 +34,13 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class VanillaTabulaModel implements IModel {
     private TabulaModelContainer model;
+    private ResourceLocation particle;
     private ImmutableList<ResourceLocation> textures;
     private ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> transforms;
 
-    public VanillaTabulaModel(TabulaModelContainer model, ImmutableList<ResourceLocation> textures, ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> transforms) {
+    public VanillaTabulaModel(TabulaModelContainer model, ResourceLocation particle, ImmutableList<ResourceLocation> textures, ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> transforms) {
         this.model = model;
+        this.particle = particle;
         this.textures = textures;
         this.transforms = transforms;
     }
@@ -56,13 +58,14 @@ public class VanillaTabulaModel implements IModel {
     @Override
     public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
         TextureAtlasSprite sprite = bakedTextureGetter.apply(this.textures.isEmpty() ? new ResourceLocation("missingno") : this.textures.get(0));
+        TextureAtlasSprite particleSprite = this.particle == null ? sprite : bakedTextureGetter.apply(this.particle);
         ImmutableList.Builder<BakedQuad> builder = ImmutableList.builder();
         Matrix matrix = new Matrix();
         matrix.translate(0.5F, 1.5F, 0.5F);
         matrix.scale(-0.0625F, -0.0625F, 0.0625F);
         this.build(matrix, builder, format, this.model.getCubes(), sprite);
         ImmutableList<BakedQuad> leQuads = builder.build();
-        return new BakedTabulaModel(leQuads, sprite, this.transforms);
+        return new BakedTabulaModel(leQuads, particleSprite, this.transforms);
     }
 
     private void build(Matrix mat, ImmutableList.Builder<BakedQuad> builder, VertexFormat format, List<TabulaCubeContainer> cubeContainerList, TextureAtlasSprite sprite) {
