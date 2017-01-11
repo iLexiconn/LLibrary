@@ -52,7 +52,7 @@ public enum TabulaModelHandler implements ICustomModelLoader, JsonDeserializatio
     private final Set<String> enabledDomains = new HashSet<String>();
     
     public void addDomain(String domain) {
-        enabledDomains.add(domain.toLowerCase());
+        this.enabledDomains.add(domain.toLowerCase());
         LLibrary.LOGGER.info("TabulaModelHandler: Domain %s has been added.", domain.toLowerCase());
     }
     
@@ -169,7 +169,7 @@ public enum TabulaModelHandler implements ICustomModelLoader, JsonDeserializatio
 
     @Override
     public boolean accepts(ResourceLocation modelLocation) {
-        return enabledDomains.contains(modelLocation.getResourceDomain()) && modelLocation.getResourcePath().endsWith(".tbl");
+        return this.enabledDomains.contains(modelLocation.getResourceDomain()) && modelLocation.getResourcePath().endsWith(".tbl");
     }
 
     @Override
@@ -193,7 +193,8 @@ public enum TabulaModelHandler implements ICustomModelLoader, JsonDeserializatio
         while ((texture = modelBlock.textures.get("layer" + layer++)) != null) {
             builder.add(new ResourceLocation(texture));
         }
-        return new VanillaTabulaModel(modelJson, builder.build(), IPerspectiveAwareModel.MapWrapper.getTransforms(modelBlock.getAllTransforms()));
+        String particle = modelBlock.textures.get("particle");
+        return new VanillaTabulaModel(modelJson, particle != null ? new ResourceLocation(particle) : null, builder.build(), IPerspectiveAwareModel.MapWrapper.getTransforms(modelBlock.getAllTransforms()));
     }
 
     private InputStream getModelJsonStream(String name, InputStream file) throws IOException {
