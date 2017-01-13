@@ -5,7 +5,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix4d;
+import javax.vecmath.Matrix4f;
 import javax.vecmath.Point3f;
+import javax.vecmath.Quat4d;
 import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
@@ -53,6 +55,20 @@ public class Matrix {
         matrix.mul(rotation);
     }
 
+    public void rotate(Quat4f qaut) {
+        Matrix4d matrix = this.matrixStack.peek();
+        Matrix4d rotation = new Matrix4d();
+        rotation.set(qaut);
+        matrix.mul(rotation);
+    }
+
+    public void rotate(Quat4d quat) {
+        Matrix4d matrix = this.matrixStack.peek();
+        Matrix4d rotation = new Matrix4d();
+        rotation.set(quat);
+        matrix.mul(rotation);
+    }
+
     public void scale(double x, double y, double z) {
         Matrix4d matrix = this.matrixStack.peek();
         Matrix4d scale = new Matrix4d();
@@ -93,5 +109,29 @@ public class Matrix {
         float y = (float) Math.sqrt(matrix.m01 * matrix.m01 + matrix.m11 * matrix.m11 + matrix.m21 * matrix.m21);
         float z = (float) Math.sqrt(matrix.m02 * matrix.m02 + matrix.m12 * matrix.m12 + matrix.m22 * matrix.m22);
         return new Vector3f(x, y, z);
+    }
+
+    public void multiply(Matrix matrix) {
+        this.matrixStack.peek().mul(matrix.matrixStack.peek());
+    }
+
+    public void multiply(Matrix4d matrix) {
+        this.matrixStack.peek().mul(matrix);
+    }
+
+    public void multiply(Matrix4f matrix) {
+        this.matrixStack.peek().mul(new Matrix4d(matrix));
+    }
+
+    public void add(Matrix matrix) {
+        this.matrixStack.peek().add(matrix.matrixStack.peek());
+    }
+
+    public void add(Matrix4d matrix) {
+        this.matrixStack.peek().add(matrix);
+    }
+
+    public void add(Matrix4f matrix) {
+        this.matrixStack.peek().add(new Matrix4d(matrix));
     }
 }

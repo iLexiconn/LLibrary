@@ -1,7 +1,9 @@
 package net.ilexiconn.llibrary.client.model.tabula.baked;
 
 import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMap;
 import net.ilexiconn.llibrary.client.model.tabula.container.TabulaCubeContainer;
 import net.ilexiconn.llibrary.client.model.tabula.container.TabulaModelContainer;
@@ -61,6 +63,8 @@ public class VanillaTabulaModel implements IModel {
         TextureAtlasSprite particleSprite = this.particle == null ? sprite : bakedTextureGetter.apply(this.particle);
         ImmutableList.Builder<BakedQuad> builder = ImmutableList.builder();
         Matrix matrix = new Matrix();
+        TRSRTransformation transformation = state.apply(Optional.absent()).or(TRSRTransformation.identity());
+        matrix.multiply(transformation.getMatrix());
         matrix.translate(0.5F, 1.5F, 0.5F);
         matrix.scale(-0.0625F, -0.0625F, 0.0625F);
         this.build(matrix, builder, format, this.model.getCubes(), sprite);
@@ -68,7 +72,7 @@ public class VanillaTabulaModel implements IModel {
         return new BakedTabulaModel(leQuads, particleSprite, this.transforms);
     }
 
-    private void build(Matrix mat, ImmutableList.Builder<BakedQuad> builder, VertexFormat format, List<TabulaCubeContainer> cubeContainerList, TextureAtlasSprite sprite) {
+    private void build(Matrix mat, Builder<BakedQuad> builder, VertexFormat format, List<TabulaCubeContainer> cubeContainerList, TextureAtlasSprite sprite) {
         for (TabulaCubeContainer cube : cubeContainerList) {
             int[] dimensions = cube.getDimensions();
             double[] position = cube.getPosition();
