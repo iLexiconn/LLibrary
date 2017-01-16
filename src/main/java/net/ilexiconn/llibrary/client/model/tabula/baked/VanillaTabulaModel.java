@@ -80,6 +80,7 @@ public class VanillaTabulaModel implements IModel {
             double[] rotation = cube.getRotation();
             double[] glScale = cube.getScale();
             int[] txOffset = cube.getTextureOffset();
+            boolean hasTransparency = this.hasTransparency(cube, sprite);
             mat.push();
             mat.translate(position[0], position[1], position[2]);
             if (glScale[0] != 1 || glScale[1] != 1 || glScale[2] != 1) {
@@ -136,23 +137,64 @@ public class VanillaTabulaModel implements IModel {
             Point2i frontMaxUV = new Point2i(u + d + w, v + d + h);
             Point2i backMinUV = new Point2i(u + d + w + d, v + d);
             Point2i backMaxUV = new Point2i(u + d + w + d + w, v + d + h);
-            this.buildQuad(builder, format, isTxMirror, vertex101, vertex100, vertex110, vertex111, rightMinUV, rightMaxUV, sprite);
-            this.buildQuad(builder, format, isTxMirror, vertex000, vertex001, vertex011, vertex010, leftMinUV, leftMaxUV, sprite);
-            this.buildQuad(builder, format, isTxMirror, vertex101, vertex001, vertex000, vertex100, topMinUV, rightMinUV, sprite);
-            this.buildQuad(builder, format, isTxMirror, vertex110, vertex010, vertex011, vertex111, rightMinUV, topMaxUV, sprite);
-            this.buildQuad(builder, format, isTxMirror, vertex100, vertex000, vertex010, vertex110, frontMinUV, frontMaxUV, sprite);
-            this.buildQuad(builder, format, isTxMirror, vertex001, vertex101, vertex111, vertex011, backMinUV, backMaxUV, sprite);
+            this.buildQuad(builder, format, isTxMirror, vertex101, vertex100, vertex110, vertex111, rightMinUV, rightMaxUV, sprite, hasTransparency);
+            this.buildQuad(builder, format, isTxMirror, vertex000, vertex001, vertex011, vertex010, leftMinUV, leftMaxUV, sprite, hasTransparency);
+            this.buildQuad(builder, format, isTxMirror, vertex101, vertex001, vertex000, vertex100, topMinUV, rightMinUV, sprite, hasTransparency);
+            this.buildQuad(builder, format, isTxMirror, vertex110, vertex010, vertex011, vertex111, rightMinUV, topMaxUV, sprite, hasTransparency);
+            this.buildQuad(builder, format, isTxMirror, vertex100, vertex000, vertex010, vertex110, frontMinUV, frontMaxUV, sprite, hasTransparency);
+            this.buildQuad(builder, format, isTxMirror, vertex001, vertex101, vertex111, vertex011, backMinUV, backMaxUV, sprite, hasTransparency);
             this.build(mat, builder, format, cube.getChildren(), sprite);
             mat.pop();
         }
     }
 
-    private void buildQuad(ImmutableList.Builder<BakedQuad> builder, VertexFormat format, boolean isTxMirror, Point3f vert0, Point3f vert1, Point3f vert2, Point3f vert3, Point2i minUV, Point2i maxUV, TextureAtlasSprite sprite) {
-        Point3f[] vertices = {vert0, vert1, vert2, vert3};
+    private boolean hasTransparency(TabulaCubeContainer cube, TextureAtlasSprite sprite) {
+        int textureWidth = this.model.getTextureWidth();
+        int textureHeight = this.model.getTextureHeight();
+        int width = sprite.getIconWidth();
+        int height = sprite.getIconHeight();
+        int frameCount = sprite.getFrameCount();
+        if (frameCount > 0) {
+            for (int i = 0; i < frameCount; i++) {
+                int[] pixels = sprite.getFrameTextureData(i)[0];
+                int[] textureOffset = cube.getTextureOffset();
+                int[] dimensions = cube.getDimensions();
+                int textureX = (textureOffset[0] * width) / textureWidth;
+                int textureY = (textureOffset[1] * height) / textureHeight;
+                int dimensionX = (dimensions[0] * width) / textureWidth;
+                int dimensionY = (dimensions[1] * height) / textureHeight;
+                int dimensionZ = (dimensions[2] * width) / textureWidth;
+                boolean hasTransparencyTop = this.hasTransparency(pixels, textureX + dimensionZ, textureY, dimensionX * 2, dimensionZ, width, height);
+                boolean hasTransparencyBottom = this.hasTransparency(pixels, textureX, textureY + dimensionZ, (dimensionX + dimensionZ) * 2, dimensionY, width, height);
+                if (hasTransparencyTop || hasTransparencyBottom) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean hasTransparency(int[] pixels, int minX, int minY, int dimensionX, int dimensionY, int width, int height) {
+        int maxX = Math.min(width, minX + dimensionX);
+        int maxY = Math.min(height, minY + dimensionY);
+        for (int x = Math.max(0, minX); x < maxX; x++) {
+            for (int y = Math.max(0, minY); y < maxY; y++) {
+                int pixel = pixels[x + y * width];
+                int alpha = (pixel >> 24) & 0xFF;
+                if (alpha < 255) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private void buildQuad(Builder<BakedQuad> builder, VertexFormat format, boolean isTxMirror, Point3f vert0, Point3f vert1, Point3f vert2, Point3f vert3, Point2i minUV, Point2i maxUV, TextureAtlasSprite sprite, boolean hasTransparency) {
+        Point3f[] vertices = { vert0, vert1, vert2, vert3 };
         if (this.isQuadOneDimensional(vertices)) {
             return;
         }
-        Point2i[] uvs = {new Point2i(maxUV.x, minUV.y), new Point2i(minUV.x, minUV.y), new Point2i(minUV.x, maxUV.y), new Point2i(maxUV.x, maxUV.y)};
+        Point2i[] uvs = { new Point2i(maxUV.x, minUV.y), new Point2i(minUV.x, minUV.y), new Point2i(minUV.x, maxUV.y), new Point2i(maxUV.x, maxUV.y) };
         if (isTxMirror) {
             Point3f[] verticesMirrored = new Point3f[vertices.length];
             Point2i[] uvsMirrored = new Point2i[vertices.length];
@@ -169,7 +211,8 @@ public class VanillaTabulaModel implements IModel {
         normal.cross(v21, v01);
         normal.normalize();
         UnpackedBakedQuad.Builder quadBuilder = new UnpackedBakedQuad.Builder(format);
-        quadBuilder.setQuadOrientation(EnumFacing.getFacingFromVector(normal.x, normal.y, normal.z));
+        EnumFacing quadFacing = EnumFacing.getFacingFromVector(normal.x, normal.y, normal.z);
+        quadBuilder.setQuadOrientation(quadFacing);
         float width = this.model.getTextureWidth();
         float height = this.model.getTextureHeight();
         for (int i = 0; i < vertices.length; i++) {
@@ -178,6 +221,17 @@ public class VanillaTabulaModel implements IModel {
             this.putVertexData(quadBuilder, format, vertices[i], normal, uv);
         }
         builder.add(quadBuilder.build());
+
+        if (hasTransparency) {
+            quadBuilder = new UnpackedBakedQuad.Builder(format);
+            quadBuilder.setQuadOrientation(quadFacing.getOpposite());
+            for (int i = vertices.length - 1; i >= 0; i--) {
+                Point2i uvi = uvs[i];
+                Point2f uv = new Point2f(sprite.getInterpolatedU(uvi.x / width * 16), sprite.getInterpolatedV(uvi.y / height * 16));
+                this.putVertexData(quadBuilder, format, vertices[i], normal, uv);
+            }
+            builder.add(quadBuilder.build());
+        }
     }
 
     private boolean isQuadOneDimensional(Point3f[] vertices) {
