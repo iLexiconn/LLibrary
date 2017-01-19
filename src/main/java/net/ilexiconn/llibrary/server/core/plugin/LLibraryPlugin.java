@@ -9,7 +9,7 @@ import java.io.InputStream;
 import java.util.Map;
 
 @IFMLLoadingPlugin.Name("llibrary")
-@IFMLLoadingPlugin.MCVersion("1.11")
+@IFMLLoadingPlugin.MCVersion("1.11.2")
 @IFMLLoadingPlugin.SortingIndex(1001)
 @IFMLLoadingPlugin.TransformerExclusions("net.ilexiconn.llibrary.server.asm")
 public class LLibraryPlugin implements IFMLLoadingPlugin {

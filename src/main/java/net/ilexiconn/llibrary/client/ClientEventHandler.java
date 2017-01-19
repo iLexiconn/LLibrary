@@ -22,6 +22,7 @@ import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -192,17 +193,20 @@ public enum ClientEventHandler {
     }
 
     private void renderVoxel(PlayerModelEvent.Render event, float scale, float color) {
-        float bob = MathHelper.sin(((float) event.getEntityPlayer().ticksExisted + LLibrary.PROXY.getPartialTicks()) / 15.0F) * 0.1F;
+        EntityPlayer player = event.getEntityPlayer();
+        int ticksExisted = player.ticksExisted;
+        float partialTicks = LLibrary.PROXY.getPartialTicks();
+        float bob = MathHelper.sin(((float) ticksExisted + partialTicks) / 15.0F) * 0.1F;
         GlStateManager.pushMatrix();
         GlStateManager.disableTexture2D();
-        GlStateManager.rotate(-ClientUtils.interpolate(event.getEntityPlayer().prevRenderYawOffset, event.getEntityPlayer().renderYawOffset, LLibrary.PROXY.getPartialTicks()), 0, 1.0F, 0);
+        GlStateManager.rotate(-ClientUtils.interpolateRotation(player.prevRenderYawOffset, player.renderYawOffset, partialTicks), 0, 1.0F, 0);
         GlStateManager.color(color, color, color, 1.0F);
         GlStateManager.translate(0.0F, -1.0F + bob, 0.0F);
-        GlStateManager.rotate(ClientUtils.interpolate((event.getEntityPlayer().ticksExisted - 1) % 360, event.getEntityPlayer().ticksExisted % 360, LLibrary.PROXY.getPartialTicks()), 0.0F, 1.0F, 0.0F);
+        GlStateManager.rotate(ClientUtils.interpolateRotation((ticksExisted - 1) % 360, ticksExisted % 360, partialTicks), 0.0F, 1.0F, 0.0F);
         GlStateManager.translate(0.75F, 0.0F, 0.0F);
-        GlStateManager.rotate(ClientUtils.interpolate((event.getEntityPlayer().ticksExisted - 1) % 360, event.getEntityPlayer().ticksExisted % 360, LLibrary.PROXY.getPartialTicks()), 0.0F, 1.0F, 0.0F);
+        GlStateManager.rotate(ClientUtils.interpolateRotation((ticksExisted - 1) % 360, ticksExisted % 360, partialTicks), 0.0F, 1.0F, 0.0F);
         GlStateManager.scale(scale, scale, scale);
-        this.voxelModel.render(event.getEntityPlayer(), event.getLimbSwing(), event.getLimbSwingAmount(), event.getRotation(), event.getRotationYaw(), event.getRotationPitch(), event.getScale());
+        this.voxelModel.render(player, event.getLimbSwing(), event.getLimbSwingAmount(), event.getRotation(), event.getRotationYaw(), event.getRotationPitch(), event.getScale());
         GlStateManager.enableTexture2D();
         GlStateManager.popMatrix();
     }
