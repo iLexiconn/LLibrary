@@ -213,6 +213,8 @@ public class VanillaTabulaModel implements IModel {
         UnpackedBakedQuad.Builder quadBuilder = new UnpackedBakedQuad.Builder(format);
         EnumFacing quadFacing = EnumFacing.getFacingFromVector(normal.x, normal.y, normal.z);
         quadBuilder.setQuadOrientation(quadFacing);
+        quadBuilder.setContractUVs(true);
+        quadBuilder.setTexture(sprite);
         float width = this.model.getTextureWidth();
         float height = this.model.getTextureHeight();
         for (int i = 0; i < vertices.length; i++) {
@@ -225,6 +227,8 @@ public class VanillaTabulaModel implements IModel {
         if (hasTransparency) {
             quadBuilder = new UnpackedBakedQuad.Builder(format);
             quadBuilder.setQuadOrientation(quadFacing.getOpposite());
+            quadBuilder.setContractUVs(true);
+            quadBuilder.setTexture(sprite);
             for (int i = vertices.length - 1; i >= 0; i--) {
                 Point2i uvi = uvs[i];
                 Point2f uv = new Point2f(sprite.getInterpolatedU(uvi.x / width * 16), sprite.getInterpolatedV(uvi.y / height * 16));
