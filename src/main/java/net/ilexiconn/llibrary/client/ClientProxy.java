@@ -1,5 +1,6 @@
 package net.ilexiconn.llibrary.client;
 
+import com.google.common.util.concurrent.ListenableFuture;
 import com.google.gson.Gson;
 import net.ilexiconn.llibrary.client.gui.SnackbarGUI;
 import net.ilexiconn.llibrary.client.gui.survivaltab.SurvivalTab;
@@ -39,15 +40,19 @@ public class ClientProxy extends ServerProxy {
     @Override
     public void onPreInit() {
         super.onPreInit();
-        WebUtils.readPastebinAsync("aLjMgBAV", (result) -> {
-            if (result != null) {
-                try {
+        ListenableFuture<String> patronFuture = WebUtils.readPastebinAsync("aLjMgBAV");
+        patronFuture.addListener(() -> {
+            try {
+                System.out.println("Downloaded");
+                String result = patronFuture.get();
+                if (result != null) {
                     PATRONS = new Gson().fromJson(result, String[].class);
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        });
+        }, Runnable::run);
+        System.out.println("Started");
 
         MinecraftForge.EVENT_BUS.register(ClientEventHandler.INSTANCE);
         ModelLoaderRegistry.registerLoader(TabulaModelHandler.INSTANCE);
