@@ -18,7 +18,9 @@ import java.util.List;
  *
  * @author iLexiconn
  * @since 1.0.0
+ * @deprecated Use Forge's update checker <a href="https://mcforge.readthedocs.io/en/latest/gettingstarted/autoupdate/>Forge Update Checker Docs</>
  */
+@Deprecated
 public enum UpdateHandler {
     INSTANCE;
 
@@ -46,6 +48,7 @@ public enum UpdateHandler {
      * @param mod the main mod instance
      * @param url the json url
      */
+    @Deprecated
     public void registerUpdateChecker(Object mod, String url) {
         new Thread(() -> {
             if (!mod.getClass().isAnnotationPresent(Mod.class)) {
@@ -57,7 +60,7 @@ public enum UpdateHandler {
             try {
                 UpdateContainer updateContainer = new Gson().fromJson(WebUtils.readURL(url), UpdateContainer.class);
                 if (updateContainer != null) {
-                    final ModContainer[] modContainer = {null};
+                    final ModContainer[] modContainer = { null };
                     Loader.instance().getModList().stream().filter(container -> container.getModId().equals(annotation.modid())).forEach(container -> modContainer[0] = container);
 
                     if (modContainer[0] == null) {
@@ -83,6 +86,7 @@ public enum UpdateHandler {
     /**
      * Search for mod updates. This hook is getting called by {@link ServerProxy#onPostInit()}
      */
+    @Deprecated
     public void searchForUpdates() {
         this.updateContainerList.stream().filter(updateContainer -> updateContainer.getLatestVersion().compareTo(updateContainer.getModContainer().getProcessedVersion()) > 0).forEach(updateContainer -> this.outdatedModList.add(updateContainer));
     }
@@ -90,6 +94,7 @@ public enum UpdateHandler {
     /**
      * @return a list of all outdated mod containers.
      */
+    @Deprecated
     public List<UpdateContainer> getOutdatedModList() {
         return this.outdatedModList;
     }
@@ -98,14 +103,15 @@ public enum UpdateHandler {
      * Get the changelog for a specific version. Never returns null.
      *
      * @param updateContainer the mod container
-     * @param version         the version
+     * @param version the version
      * @return the changelog for a specific version
      */
+    @Deprecated
     public String[] getChangelog(UpdateContainer updateContainer, ArtifactVersion version) {
         if (this.hasChangelog(updateContainer, version)) {
             return updateContainer.getVersions().get(version.getVersionString());
         } else {
-            return new String[]{};
+            return new String[] {};
         }
     }
 
@@ -113,9 +119,10 @@ public enum UpdateHandler {
      * Check if LLibrary has a changelog for a specific mod version.
      *
      * @param updateContainer the mod container
-     * @param version         the version
+     * @param version the version
      * @return true if LLibrary has a changelog for the version
      */
+    @Deprecated
     public boolean hasChangelog(UpdateContainer updateContainer, ArtifactVersion version) {
         return updateContainer.getVersions().containsKey(version.getVersionString());
     }

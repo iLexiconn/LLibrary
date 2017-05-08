@@ -10,7 +10,9 @@ import java.lang.annotation.Target;
  *
  * @author iLexiconn
  * @since 1.2.0
+ * @deprecated Use Forge config
  */
+@Deprecated
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface Config {

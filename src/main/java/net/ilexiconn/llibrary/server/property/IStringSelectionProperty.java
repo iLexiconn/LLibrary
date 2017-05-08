@@ -34,12 +34,8 @@ public interface IStringSelectionProperty extends IStringProperty {
      */
     @Override
     default boolean isValidString(String value) {
-        for (String validValue : this.getValidStringValues()) {
-            if (value.equals(validValue)) {
-                return true;
-            }
-        }
-        return false;
+        Set<String> validStringValues = this.getValidStringValues();
+        return validStringValues == null || validStringValues.contains(value);
     }
 
     /**

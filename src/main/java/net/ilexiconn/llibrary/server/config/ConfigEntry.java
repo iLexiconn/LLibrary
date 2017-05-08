@@ -11,6 +11,7 @@ import java.lang.annotation.Target;
  * @author iLexiconn
  * @since 1.0.0
  */
+@Deprecated
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface ConfigEntry {

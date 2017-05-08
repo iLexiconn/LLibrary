@@ -20,7 +20,7 @@ public class LLibraryConfig implements INBTSerializable<NBTTagCompound> {
     @NBTProperty
     private boolean patreonEffects = true;
     @NBTProperty
-    private boolean versionCheck = true;
+    private boolean versionCheck = false;
     @NBTProperty
     private boolean tabsAlwaysVisible = false;
     @NBTProperty
@@ -68,7 +68,7 @@ public class LLibraryConfig implements INBTSerializable<NBTTagCompound> {
         int b = this.accentColor & 255;
         float[] hsb = Color.RGBtoHSB(r, g, b, null);
         Color newColor = Color.getHSBColor(hsb[0], hsb[1], hsb[2] * 0.85F);
-        return (0xFF << 24) | ((newColor.getRed() & 0xFF) << 16) | ((newColor.getGreen() & 0xFF) << 8) | (newColor.getBlue() & 0xFF);
+        return newColor.getRGB() | 0xFF000000;
     }
 
     public String getColorMode() {

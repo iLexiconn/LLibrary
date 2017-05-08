@@ -198,6 +198,14 @@ public abstract class InputElementBase<T extends IElementGUI> extends Element<T>
         return mouseX >= this.getPosX() && mouseX < this.getPosX() + this.getWidth() && mouseY >= this.getPosY() && mouseY < this.getPosY() + this.getHeight();
     }
 
+    /**
+     * @since 1.7.5
+     */
+    public void select() {
+        this.selected = true;
+        this.setCursorPositionEnd();
+    }
+
     public String getText() {
         return this.text;
     }

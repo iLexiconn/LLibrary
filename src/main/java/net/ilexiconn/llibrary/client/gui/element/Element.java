@@ -12,6 +12,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
+import java.awt.geom.RectangularShape;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,16 +78,19 @@ public class Element<T extends IElementGUI> {
             for (Element<T> child : this.getChildren()) {
                 if (child instanceof ScrollbarElement) {
                     ((ScrollbarElement) child).setScrollVelocity(((ScrollbarElement) child).getScrollVelocity() + (amount / 120.0F) * 0.5F);
-                    break;
+                    return true;
                 }
             }
-            return true;
         }
         return false;
     }
 
     protected boolean isSelected(float mouseX, float mouseY) {
         return this.gui.isElementOnTop(this) && mouseX >= this.getPosX() && mouseY >= this.getPosY() && mouseX < this.getPosX() + this.getWidth() && mouseY < this.getPosY() + this.getHeight();
+    }
+
+    protected boolean isSelected(RectangularShape rectangle, float mouseX, float mouseY) {
+        return mouseX >= rectangle.getMinX() && mouseY >= rectangle.getMinY() && mouseX < rectangle.getMaxX() && mouseY < rectangle.getMaxY();
     }
 
     public Element<T> withParent(Element<T> parent) {
@@ -175,6 +179,15 @@ public class Element<T extends IElementGUI> {
         return this;
     }
 
+    public void renderChildren(float mouseX, float mouseY, float partialTicks) {
+        if (this.isVisible()) {
+            this.render(mouseX, mouseY, partialTicks);
+            for (Element<T> child : this.children) {
+                child.renderChildren(mouseX, mouseY, partialTicks);
+            }
+        }
+    }
+
     protected void drawRectangle(double x, double y, double width, double height, int color) {
         GlStateManager.disableTexture2D();
         GlStateManager.enableBlend();
@@ -194,6 +207,10 @@ public class Element<T extends IElementGUI> {
         GlStateManager.disableBlend();
         GlStateManager.enableAlpha();
         GlStateManager.enableTexture2D();
+    }
+
+    protected void drawRectangle(RectangularShape rectangle, int color) {
+        this.drawRectangle(rectangle.getMinX(), rectangle.getMinY(), rectangle.getWidth(), rectangle.getHeight(), color);
     }
 
     protected void drawTexturedRectangle(double x, double y, double width, double height, int color) {
@@ -217,11 +234,19 @@ public class Element<T extends IElementGUI> {
         GlStateManager.disableTexture2D();
     }
 
+    protected void drawTexturedRectangle(RectangularShape rectangle, int color) {
+        this.drawTexturedRectangle(rectangle.getMinX(), rectangle.getMinY(), rectangle.getWidth(), rectangle.getHeight(), color);
+    }
+
     protected void drawOutline(double x, double y, double width, double height, int color, double outlineSize) {
         this.drawRectangle(x, y, width - outlineSize, outlineSize, color);
         this.drawRectangle(x + width - outlineSize, y, outlineSize, height - outlineSize, color);
         this.drawRectangle(x, y + height - outlineSize, width, outlineSize, color);
         this.drawRectangle(x, y, outlineSize, height - outlineSize, color);
+    }
+
+    protected void drawOutline(RectangularShape rectangle, int color, double outlineSize) {
+        this.drawOutline(rectangle.getMinX(), rectangle.getMinY(), rectangle.getWidth(), rectangle.getHeight(), color, outlineSize);
     }
 
     protected void startScissor() {
