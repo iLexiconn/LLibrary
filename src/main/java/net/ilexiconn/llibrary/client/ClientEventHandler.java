@@ -82,11 +82,8 @@ public enum ClientEventHandler {
                 buttonX -= 24;
             }
 
-            if (LLibrary.CONFIG.hasVersionCheck()) {
-                event.getButtonList().add(new GuiButton(ClientProxy.UPDATE_BUTTON_ID, buttonX, buttonY, 20, 20, "U"));
-            }
-
             if (!this.checkedForUpdates && !UpdateHandler.INSTANCE.getOutdatedModList().isEmpty()) {
+                event.getButtonList().add(new GuiButton(ClientProxy.UPDATE_BUTTON_ID, buttonX, buttonY, 20, 20, "U"));
                 this.checkedForUpdates = true;
                 SnackbarHandler.INSTANCE.showSnackbar(Snackbar.create(I18n.format("snackbar.llibrary.updates_found")));
             }

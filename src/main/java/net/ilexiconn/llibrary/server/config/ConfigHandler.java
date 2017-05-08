@@ -13,13 +13,16 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
  * @author iLexiconn
  * @since 1.0.0
+ * @deprecated Use Forge config
  */
+@Deprecated
 public enum ConfigHandler {
     INSTANCE;
 
@@ -49,7 +52,7 @@ public enum ConfigHandler {
                         }
                         return null;
                     })
-                    .filter(entryProperty -> entryProperty != null).collect(Collectors.toList());
+                    .filter(Objects::nonNull).collect(Collectors.toList());
         }
 
         public void save() {
@@ -72,9 +75,9 @@ public enum ConfigHandler {
     /**
      * Register an entry property class.
      *
-     * @param type         the class to handle
+     * @param type the class to handle
      * @param entryAdapter the property class
-     * @param <T>          the entry type
+     * @param <T> the entry type
      */
     public <T> void registerEntryPropertyClass(Class<T> type, Class<EntryProperty> entryAdapter) {
         this.entryPropertyClasses.put(type, entryAdapter);

@@ -34,7 +34,12 @@ public class QubbleCuboid implements INBTSerializable<NBTTagCompound> {
     private int textureX;
     private int textureY;
     private boolean textureMirrored;
+    @Deprecated
     private float opacity;
+    /**
+     * @since 1.7.5
+     */
+    private String identifier;
 
     private QubbleCuboid() {
     }
@@ -102,6 +107,9 @@ public class QubbleCuboid implements INBTSerializable<NBTTagCompound> {
             textureTag.setBoolean("mirrored", this.textureMirrored);
             compound.setTag("texture", textureTag);
         }
+        if (this.identifier != null && this.identifier.length() > 0) {
+            compound.setString("identifier", this.identifier);
+        }
         compound.setFloat("opacity", this.opacity);
         return compound;
     }
@@ -151,6 +159,9 @@ public class QubbleCuboid implements INBTSerializable<NBTTagCompound> {
             this.textureX = textureTag.getInteger("x");
             this.textureY = textureTag.getInteger("y");
             this.textureMirrored = textureTag.getBoolean("mirrored");
+        }
+        if (compound.hasKey("identifier")) {
+            this.identifier = compound.getString("identifier");
         }
         this.opacity = compound.getFloat("opacity");
     }
@@ -243,12 +254,28 @@ public class QubbleCuboid implements INBTSerializable<NBTTagCompound> {
         this.textureMirrored = textureMirrored;
     }
 
+    /**
+     * @deprecated 1.7.5
+     */
+    @Deprecated
     public float getOpacity() {
         return this.opacity;
     }
 
+    /**
+     * @deprecated 1.7.5
+     */
+    @Deprecated
     public void setOpacity(float opacity) {
         this.opacity = opacity;
+    }
+
+    /**
+     * @since 1.7.5
+     * @return this cuboid's identifier, can be null
+     */
+    public String getIdentifier() {
+        return this.identifier;
     }
 
     public void setTexture(int x, int y) {
@@ -286,6 +313,15 @@ public class QubbleCuboid implements INBTSerializable<NBTTagCompound> {
         this.scaleZ = z;
     }
 
+    /**
+     * Sets this cuboid's identifier
+     * @param identifier the identifier to set
+     * @since 1.7.5
+     */
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
+
     public QubbleCuboid copy() {
         QubbleCuboid cuboid = QubbleCuboid.create(this.getName());
         cuboid.getChildren().addAll(this.getChildren().stream().map(QubbleCuboid::copy).collect(Collectors.toList()));
@@ -297,6 +333,7 @@ public class QubbleCuboid implements INBTSerializable<NBTTagCompound> {
         cuboid.setTexture(this.getTextureX(), this.getTextureY());
         cuboid.setTextureMirrored(this.isTextureMirrored());
         cuboid.setOpacity(this.getOpacity());
+        cuboid.setIdentifier(this.getIdentifier());
         return cuboid;
     }
 }

@@ -21,7 +21,6 @@ public class ServerProxy {
     }
 
     public void onInit() {
-        UpdateHandler.INSTANCE.registerUpdateChecker(LLibrary.INSTANCE, "http://pastebin.com/raw/EjsPPpVG");
     }
 
     public void onPostInit() {

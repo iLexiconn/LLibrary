@@ -6,6 +6,7 @@ import net.ilexiconn.llibrary.server.property.IFloatRangeProperty;
 import net.ilexiconn.llibrary.server.property.IStringProperty;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
@@ -88,6 +89,18 @@ public class SliderElement<T extends IElementGUI, P extends IFloatRangeProperty 
     public SliderElement<T, P> withValue(float value) {
         this.trySetValue(value);
         return this;
+    }
+
+    @Override
+    public boolean mouseScrolled(float mouseX, float mouseY, int amount) {
+        if (this.editable && (this.isSelected(mouseX, mouseY) || this.inputElement.isSelected(mouseX, mouseY))) {
+            float delta = (amount / 120.0F) * this.step;
+            if (GuiScreen.isShiftKeyDown()) {
+                delta *= 10.0F;
+            }
+            return this.trySetValue(MathHelper.clamp(this.value.getFloat() + delta, this.value.getMinFloatValue(), this.value.getMaxFloatValue()));
+        }
+        return false;
     }
 
     @Override

@@ -134,4 +134,8 @@ public class Matrix {
     public void add(Matrix4f matrix) {
         this.matrixStack.peek().add(new Matrix4d(matrix));
     }
+
+    public void invert() {
+        this.matrixStack.peek().invert();
+    }
 }

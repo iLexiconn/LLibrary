@@ -9,7 +9,9 @@ import net.minecraftforge.common.util.INBTSerializable;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Vector3d;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -25,6 +27,11 @@ public class QubbleModel implements INBTSerializable<NBTTagCompound> {
     private List<QubbleCuboid> cuboids = new ArrayList<>();
     private List<QubbleAnimation> animations = new ArrayList<>();
     private transient String fileName;
+
+    /**
+     * @since 1.7.5
+     */
+    private Map<String, String> textures = new LinkedHashMap<>();
 
     private QubbleModel() {
     }
@@ -67,6 +74,14 @@ public class QubbleModel implements INBTSerializable<NBTTagCompound> {
             animationsTag.appendTag(animation.serializeNBT());
         }
         compound.setTag("animations", animationsTag);
+        NBTTagList textures = new NBTTagList();
+        for (Map.Entry<String, String> entry : this.textures.entrySet()) {
+            NBTTagCompound texture = new NBTTagCompound();
+            texture.setString("key", entry.getKey());
+            texture.setString("value", entry.getValue());
+            textures.appendTag(texture);
+        }
+        compound.setTag("textures", textures);
         return compound;
     }
 
@@ -88,6 +103,15 @@ public class QubbleModel implements INBTSerializable<NBTTagCompound> {
         NBTTagList animationsTag = compound.getTagList("animations", Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < animationsTag.tagCount(); i++) {
             this.animations.add(QubbleAnimation.deserialize(animationsTag.getCompoundTagAt(i)));
+        }
+        if (compound.hasKey("textures")) {
+            NBTTagList textures = compound.getTagList("textures", Constants.NBT.TAG_COMPOUND);
+            for (int i = 0; i < textures.tagCount(); i++) {
+                NBTTagCompound texture = textures.getCompoundTagAt(i);
+                if (texture.hasKey("key") && texture.hasKey("value")) {
+                    this.textures.put(texture.getString("key"), texture.getString("value"));
+                }
+            }
         }
     }
 
@@ -145,6 +169,22 @@ public class QubbleModel implements INBTSerializable<NBTTagCompound> {
 
     public List<QubbleAnimation> getAnimations() {
         return this.animations;
+    }
+
+    public String getTexture(String key) {
+        return this.textures.get(key);
+    }
+
+    public void setTexture(String key, String value) {
+        if (value == null) {
+            this.textures.remove(key);
+        } else {
+            this.textures.put(key, value);
+        }
+    }
+
+    public Map<String, String> getTextures() {
+        return this.textures;
     }
 
     public void setTexture(int width, int height) {
@@ -265,7 +305,7 @@ public class QubbleModel implements INBTSerializable<NBTTagCompound> {
         float rotationAngleX = (float) (this.epsilon((float) Math.atan2(sinRotationAngleX, cosRotationAngleX)) / Math.PI * 180);
         float rotationAngleY = (float) (this.epsilon((float) Math.atan2(sinRotationAngleY, cosRotationAngleY)) / Math.PI * 180);
         float rotationAngleZ = (float) (this.epsilon((float) Math.atan2(sinRotationAngleZ, cosRotationAngleZ)) / Math.PI * 180);
-        return new float[][]{{ this.epsilon((float) matrix.m03), this.epsilon((float) matrix.m13), this.epsilon((float) matrix.m23)}, {rotationAngleX, rotationAngleY, rotationAngleZ}};
+        return new float[][] { { this.epsilon((float) matrix.m03), this.epsilon((float) matrix.m13), this.epsilon((float) matrix.m23) }, { rotationAngleX, rotationAngleY, rotationAngleZ } };
     }
 
     private float epsilon(float x) {
@@ -277,6 +317,7 @@ public class QubbleModel implements INBTSerializable<NBTTagCompound> {
         model.getCuboids().addAll(this.getCuboids().stream().map(QubbleCuboid::copy).collect(Collectors.toList()));
         model.getAnimations().addAll(this.getAnimations().stream().map(QubbleAnimation::copy).collect(Collectors.toList()));
         model.setFileName(this.getFileName());
+        model.getTextures().putAll(this.getTextures());
         return model;
     }
 }

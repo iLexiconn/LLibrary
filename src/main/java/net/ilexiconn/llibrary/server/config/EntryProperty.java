@@ -5,6 +5,7 @@ import net.minecraftforge.common.config.Property;
 
 import java.lang.reflect.Field;
 
+@Deprecated
 public abstract class EntryProperty {
     protected final ConfigEntry entry;
     protected final Object wrappedConfig;

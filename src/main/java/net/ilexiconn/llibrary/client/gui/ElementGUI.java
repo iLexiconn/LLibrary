@@ -161,10 +161,7 @@ public abstract class ElementGUI extends GuiScreen implements IElementGUI {
 
     protected void renderElement(Element element, float mouseX, float mouseY, float partialTicks) {
         if (element.isVisible()) {
-            element.render(mouseX, mouseY, partialTicks);
-            for (Element child : (List<Element>) element.getChildren()) {
-                this.renderElement(child, mouseX, mouseY, partialTicks);
-            }
+            element.renderChildren(mouseX, mouseY, partialTicks);
         }
     }
 
