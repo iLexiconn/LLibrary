@@ -34,6 +34,8 @@ public class LLibraryTransformer implements IClassTransformer {
                 }
             }
 
+            classNode.visitAnnotation("Lnet/ilexiconn/llibrary/server/asm/Transformed;", true);
+
             ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
             classNode.accept(classWriter);
             bytes = classWriter.toByteArray();
