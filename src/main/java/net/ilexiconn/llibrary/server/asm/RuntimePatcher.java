@@ -31,6 +31,13 @@ import java.util.function.Predicate;
 public abstract class RuntimePatcher implements IClassTransformer, Opcodes {
     private Map<String, ClassPatcher> patcherMap = new HashMap<>();
 
+    public RuntimePatcher() {
+        // Do not implement the annotation manually. It will be injected by LLibraryTransformer
+        if (this.getClass().getAnnotation(Transformed.class) == null) {
+            throw new RuntimeException("RuntimePatcher has not been transformed and cannot be loaded.");
+        }
+    }
+
     public abstract void onInit();
 
     @Override
