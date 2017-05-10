@@ -128,7 +128,7 @@ public abstract class RuntimePatcher implements IClassTransformer, Opcodes {
                         if (predicateData.node instanceof MethodInsnNode) {
                             MethodInsnNode methodNode = (MethodInsnNode) predicateData.node;
                             if (this.mappedDesc == null) {
-                                this.mappedDesc = MappingHandler.INSTANCE.getClassMapping(predicateData.patcher.methodDesc(Arrays.copyOfRange(args, 1, args.length)));
+                                this.mappedDesc = MappingHandler.INSTANCE.getClassMapping(Descriptors.method(Arrays.copyOfRange(args, 1, args.length)));
                             }
                             if (this.mappedName == null) {
                                 this.mappedName = MappingHandler.INSTANCE.getMethodMapping(predicateData.cls, (String) args[0], this.mappedDesc);
