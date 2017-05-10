@@ -34,7 +34,7 @@ public class Method {
     public Method field(int opcode, Object obj, String name, Object type) {
         if (obj instanceof String) {
             String cls = MappingHandler.INSTANCE.getClassMapping((String) obj);
-            String desc = MappingHandler.INSTANCE.getClassMapping(this.patcher.fieldDesc(type));
+            String desc = MappingHandler.INSTANCE.getClassMapping(Descriptors.field(type));
             this.insnList.add(new FieldInsnNode(opcode, cls, MappingHandler.INSTANCE.getFieldMapping(cls, name), desc));
         }
         return this;
@@ -86,7 +86,7 @@ public class Method {
     public Method method(int opcode, Object obj, String name, Object... params) {
         if (obj instanceof String) {
             String cls = MappingHandler.INSTANCE.getClassMapping((String) obj);
-            String desc = MappingHandler.INSTANCE.getClassMapping(this.patcher.methodDesc(params));
+            String desc = MappingHandler.INSTANCE.getClassMapping(Descriptors.method(params));
             this.insnList.add(new MethodInsnNode(opcode, cls, MappingHandler.INSTANCE.getMethodMapping(cls, name, desc), desc, opcode == Opcodes.INVOKEINTERFACE));
         }
         return this;

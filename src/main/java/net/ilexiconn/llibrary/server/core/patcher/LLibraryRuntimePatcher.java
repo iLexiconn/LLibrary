@@ -1,6 +1,7 @@
 package net.ilexiconn.llibrary.server.core.patcher;
 
 import net.ilexiconn.llibrary.client.lang.LanguageHandler;
+import net.ilexiconn.llibrary.server.asm.InsnPredicate;
 import net.ilexiconn.llibrary.server.asm.RuntimePatcher;
 import net.ilexiconn.llibrary.server.world.TickRateHandler;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -23,7 +24,7 @@ public class LLibraryRuntimePatcher extends RuntimePatcher {
     public void onInit() {
         this.patchClass(Locale.class)
             .patchMethod("loadLocaleDataFiles", IResourceManager.class, List.class, void.class)
-                .apply(Patch.BEFORE, this.at(At.METHOD, "format", String.class, Object[].class, String.class), method -> {
+                .apply(Patch.BEFORE, new InsnPredicate.Method(String.class, "format", String.class, Object[].class, String.class), method -> {
                     method.field(GETSTATIC, LanguageHandler.class, "INSTANCE", LanguageHandler.class);
                     method.var(ALOAD, 4).var(ALOAD, 0);
                     method.field(GETFIELD, Locale.class, "properties", Map.class);
@@ -32,17 +33,17 @@ public class LLibraryRuntimePatcher extends RuntimePatcher {
 
         this.patchClass(ModelPlayer.class)
             .patchMethod("setRotationAngles", 6, float.class, Entity.class, void.class)
-                .apply(Patch.BEFORE, this.at(At.RETURN), method -> {
+                .apply(Patch.BEFORE, new InsnPredicate.Op().opcode(InsnPredicate.RETURNING), method -> {
                     method.var(ALOAD, 0).var(ALOAD, 7).var(FLOAD, 1, 6);
                     method.method(INVOKESTATIC, LLibraryHooks.class, "setRotationAngles", ModelPlayer.class, Entity.class, 6, float.class, void.class);
                 }).pop()
             .patchMethod("render", Entity.class, 6, float.class, void.class)
-                .apply(Patch.BEFORE, this.at(At.RETURN), method -> {
+                .apply(Patch.BEFORE, new InsnPredicate.Op().opcode(InsnPredicate.RETURNING), method -> {
                     method.var(ALOAD, 0, 1).var(FLOAD, 2, 7);
                     method.method(INVOKESTATIC, LLibraryHooks.class, "renderModel", ModelPlayer.class, Entity.class, 6, float.class, void.class);
                 }).pop()
             .patchMethod("<init>", float.class, boolean.class, void.class)
-                .apply(Patch.BEFORE, this.at(At.RETURN), method -> {
+                .apply(Patch.BEFORE, new InsnPredicate.Op().opcode(InsnPredicate.RETURNING), method -> {
                     method.var(ALOAD, 0);
                     method.method(INVOKESTATIC, LLibraryHooks.class, "constructModel", ModelPlayer.class, void.class);
                 }).pop();
@@ -63,7 +64,7 @@ public class LLibraryRuntimePatcher extends RuntimePatcher {
                     method.node(RETURN);
                 }).pop()
             .patchMethod("<init>", RenderManager.class, boolean.class, void.class)
-                .apply(Patch.BEFORE, this.at(At.RETURN), method -> {
+                .apply(Patch.BEFORE, new InsnPredicate.Op().opcode(InsnPredicate.RETURNING), method -> {
                     method.var(ALOAD, 0).var(ALOAD, 0).var(ALOAD, 0);
                     method.method(INVOKEVIRTUAL, RenderPlayer.class, "getMainModel", ModelPlayer.class);
                     method.var(ALOAD, 0);
@@ -74,7 +75,7 @@ public class LLibraryRuntimePatcher extends RuntimePatcher {
 
         this.patchClass(MinecraftServer.class)
             .patchMethod("run", void.class)
-                .apply(Patch.REPLACE_NODE, this.at(At.LDC, 50L), method -> {
+                .apply(Patch.REPLACE_NODE, new InsnPredicate.Ldc().cst(50L), method -> {
                     method.field(GETSTATIC, TickRateHandler.class, "INSTANCE", TickRateHandler.class);
                     method.method(INVOKEVIRTUAL, TickRateHandler.class, "getTickRate", long.class);
                 }).pop();
