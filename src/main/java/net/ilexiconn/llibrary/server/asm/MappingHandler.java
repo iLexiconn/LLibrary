@@ -12,68 +12,53 @@ import java.util.Map;
 public enum MappingHandler {
     INSTANCE;
 
-    private Map<String, String> map;
+    private Map<String, String> fields;
+    private Map<String, String> methods;
 
     public void parseMappings(InputStream stream) throws IOException {
-        this.map = new HashMap<>();
+        this.fields = new HashMap<>();
+        this.methods = new HashMap<>();
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
         String line;
         while ((line = reader.readLine()) != null) {
             String[] split = line.split("=");
-            this.map.put(split[0], split[1]);
+            String key = split[0], value = split[1];
+            if (key.contains("(")) {
+                this.methods.put(key, value);
+            } else {
+                this.fields.put(key, value);
+            }
         }
         reader.close();
     }
-
     public String getClassMapping(String cls) {
         return cls.replace(".", "/");
+    }
+
+    public String getClassMapping(Object obj) {
+        if (obj instanceof String) {
+            return getClassMapping((String) obj);
+        } else if (obj instanceof Class) {
+            return ((Class) obj).getName();
+        }
+        return "";
     }
 
     public String getMethodMapping(Object obj, String method, String desc) {
         if (LLibraryPlugin.inDevelopment) {
             return method;
         }
-        String cls = "";
-        if (obj instanceof String) {
-            cls = this.getClassMapping((String) obj);
-        } else if (obj instanceof Class) {
-            cls = ((Class) obj).getName();
-        }
-        for (Map.Entry<String, String> entry : this.map.entrySet()) {
-            if (entry.getKey().contains("(")) {
-                String[] entryParts = entry.getKey().split("\\(");
-                int methodIndex = entryParts[0].lastIndexOf("/");
-                String entryClass = entryParts[0].substring(0, methodIndex);
-                String entryMethod = entryParts[0].substring(methodIndex + 1);
-                String entryDesc = "(" + entryParts[1];
-                if (cls.equals(entryClass) && method.equals(entryMethod) && desc.equals(entryDesc)) {
-                    return entry.getValue();
-                }
-            }
-        }
-        return method;
+        String cls = getClassMapping(obj);
+        String key = cls + "/" + method + desc;
+        return this.methods.getOrDefault(key, method);
     }
 
     public String getFieldMapping(Object obj, String field) {
         if (LLibraryPlugin.inDevelopment) {
             return field;
         }
-        String cls = "";
-        if (obj instanceof String) {
-            cls = this.getClassMapping((String) obj);
-        } else if (obj instanceof Class) {
-            cls = ((Class) obj).getName();
-        }
-        for (Map.Entry<String, String> entry : this.map.entrySet()) {
-            if (!entry.getKey().contains("(")) {
-                int fieldIndex = entry.getKey().lastIndexOf("/");
-                String entryClass = entry.getKey().substring(0, fieldIndex);
-                String entryField = entry.getKey().substring(fieldIndex + 1);
-                if (cls.equals(entryClass) && field.equals(entryField)) {
-                    return entry.getValue();
-                }
-            }
-        }
-        return field;
+        String cls = getClassMapping(obj);
+        String key = cls + "/" + field;
+        return this.fields.getOrDefault(key, field);
     }
 }
