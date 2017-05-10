@@ -1,7 +1,5 @@
 package net.ilexiconn.llibrary.server.core.plugin;
 
-import net.ilexiconn.llibrary.server.asm.Descriptors;
-import net.ilexiconn.llibrary.server.asm.MappingHandler;
 import net.minecraft.launchwrapper.IClassTransformer;
 import net.minecraftforge.fml.relauncher.FMLRelaunchLog;
 import org.objectweb.asm.ClassReader;
@@ -9,8 +7,6 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.*;
-
-import java.util.ArrayList;
 
 public class LLibraryTransformer implements IClassTransformer {
     private static final String RUNTIME_PATCHER = "RuntimePatcher";
