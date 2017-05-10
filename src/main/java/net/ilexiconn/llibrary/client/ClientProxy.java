@@ -52,7 +52,6 @@ public class ClientProxy extends ServerProxy {
                 e.printStackTrace();
             }
         }, Runnable::run);
-        System.out.println("Started");
 
         MinecraftForge.EVENT_BUS.register(ClientEventHandler.INSTANCE);
         ModelLoaderRegistry.registerLoader(TabulaModelHandler.INSTANCE);

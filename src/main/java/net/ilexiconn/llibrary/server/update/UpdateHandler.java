@@ -18,7 +18,7 @@ import java.util.List;
  *
  * @author iLexiconn
  * @since 1.0.0
- * @deprecated Use Forge's update checker <a href="https://mcforge.readthedocs.io/en/latest/gettingstarted/autoupdate/>Forge Update Checker Docs</>
+ * @deprecated Use Forge's update checker
  */
 @Deprecated
 public enum UpdateHandler {
