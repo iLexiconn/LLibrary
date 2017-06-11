@@ -26,7 +26,7 @@ public class SurvivalTabGUI extends GuiButton {
     }
 
     @Override
-    public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+    public void func_191745_a(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GuiContainer container = (GuiContainer) mc.currentScreen;
         boolean isSelected = mc.currentScreen.getClass() == this.survivalTab.getContainer();

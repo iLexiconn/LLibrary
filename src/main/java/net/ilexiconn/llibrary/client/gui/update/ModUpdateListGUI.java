@@ -6,7 +6,7 @@ import net.ilexiconn.llibrary.server.update.UpdateHandler;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
@@ -97,7 +97,7 @@ public class ModUpdateListGUI extends GuiScrollingList {
             float iconWidth = this.cachedLogoDimensions.get(idx).getX() * scale;
             float iconHeight = this.cachedLogoDimensions.get(idx).getY() * scale;
             int offset = 12;
-            VertexBuffer renderer = tess.getBuffer();
+            BufferBuilder renderer = tess.getBuffer();
             renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
             renderer.pos(offset, top + iconHeight, 0).tex(0, 1).endVertex();
             renderer.pos(offset + iconWidth, top + iconHeight, 0).tex(1, 1).endVertex();

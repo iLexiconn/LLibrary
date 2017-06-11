@@ -12,7 +12,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath "net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT"
+        classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT"
         classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.0.7"
     }
 }
@@ -31,14 +31,14 @@ if (secretFile.exists()) {
     }
 }
 
-version = getLLibraryVersion() + "-1.11.2"
+version = getLLibraryVersion() + "-1.12"
 group = "net.ilexiconn"
 archivesBaseName = "llibrary"
 sourceCompatibility = targetCompatibility = "1.8"
 def minecraft_mappings = "snapshot_20161220"
 
 minecraft {
-    version = "1.11.2-13.20.0.2222"
+    version = "1.12-14.21.0.2321"
     runDir = "minecraft"
     mappings = minecraft_mappings
     makeObfSourceJar = false

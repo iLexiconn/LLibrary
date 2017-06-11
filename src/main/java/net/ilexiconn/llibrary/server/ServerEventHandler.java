@@ -41,13 +41,13 @@ public enum ServerEventHandler {
     private int updateTimer;
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onAttachCapabilities(AttachCapabilitiesEvent.Entity event) {
+    public void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
         event.addCapability(new ResourceLocation("llibrary", "ExtendedEntityDataCapability"), new ICapabilitySerializable() {
             @Override
             public NBTBase serializeNBT() {
                 Capability<IEntityDataCapability> capability = LLibrary.ENTITY_DATA_CAPABILITY;
                 IEntityDataCapability instance = capability.getDefaultInstance();
-                instance.init(event.getEntity(), event.getEntity().getEntityWorld(), false);
+                instance.init(event.getObject(), event.getObject().getEntityWorld(), false);
                 return capability.getStorage().writeNBT(capability, instance, null);
             }
 
@@ -55,7 +55,7 @@ public enum ServerEventHandler {
             public void deserializeNBT(NBTBase nbt) {
                 Capability<IEntityDataCapability> capability = LLibrary.ENTITY_DATA_CAPABILITY;
                 IEntityDataCapability instance = capability.getDefaultInstance();
-                instance.init(event.getEntity(), event.getEntity().getEntityWorld(), true);
+                instance.init(event.getObject(), event.getObject().getEntityWorld(), true);
                 capability.getStorage().readNBT(capability, instance, null, nbt);
             }
 

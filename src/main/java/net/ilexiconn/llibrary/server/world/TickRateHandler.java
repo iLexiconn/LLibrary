@@ -9,22 +9,26 @@ import net.ilexiconn.llibrary.LLibrary;
 public enum TickRateHandler {
     INSTANCE;
 
-    public static final long DEFAULT_TICK_RATE = 50L;
+    public static final float DEFAULT_TPS = 20.0F;
 
-    private long tickRate = DEFAULT_TICK_RATE;
+    private float tps = DEFAULT_TPS;
+
+    public float getTPS() {
+        return this.tps;
+    }
+
+    public void setTPS(float tps) {
+        if (this.tps != tps) {
+            LLibrary.PROXY.setTPS(tps);
+        }
+        this.tps = tps;
+    }
+
+    public void resetTPS() {
+        this.setTPS(DEFAULT_TPS);
+    }
 
     public long getTickRate() {
-        return this.tickRate;
-    }
-
-    public void setTickRate(float tickRate) {
-        this.setTickRate((long) (DEFAULT_TICK_RATE / tickRate));
-    }
-
-    public void setTickRate(long tickRate) {
-        if (this.tickRate != tickRate) {
-            LLibrary.PROXY.setTickRate(tickRate);
-        }
-        this.tickRate = tickRate;
+        return (long) (this.tps / DEFAULT_TPS * 50);
     }
 }

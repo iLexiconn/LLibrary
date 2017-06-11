@@ -13,7 +13,6 @@ import net.ilexiconn.llibrary.server.entity.multipart.PartEntity;
 import net.ilexiconn.llibrary.server.network.AbstractMessage;
 import net.ilexiconn.llibrary.server.snackbar.Snackbar;
 import net.ilexiconn.llibrary.server.util.WebUtils;
-import net.ilexiconn.llibrary.server.world.TickRateHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.util.Timer;
@@ -84,7 +83,7 @@ public class ClientProxy extends ServerProxy {
 
     @Override
     public float getPartialTicks() {
-        return ClientProxy.TIMER.renderPartialTicks;
+        return ClientProxy.TIMER.field_194147_b;
     }
 
     @Override
@@ -93,7 +92,7 @@ public class ClientProxy extends ServerProxy {
     }
 
     @Override
-    public void setTickRate(long tickRate) {
-        ClientProxy.TIMER.timerSpeed = (float) TickRateHandler.DEFAULT_TICK_RATE / tickRate;
+    public void setTPS(float tickRate) {
+        ClientProxy.TIMER.field_194149_e = 1000.0F / tickRate;
     }
 }
