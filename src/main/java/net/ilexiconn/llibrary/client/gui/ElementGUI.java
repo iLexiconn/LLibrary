@@ -105,7 +105,7 @@ public abstract class ElementGUI extends GuiScreen implements IElementGUI {
 
     @Override
     public FontRenderer getFontRenderer() {
-        return this.mc.fontRendererObj;
+        return this.mc.fontRenderer;
     }
 
     @Override

@@ -33,41 +33,41 @@ public class SurvivalTabGUI extends GuiButton {
         mc.renderEngine.bindTexture(SurvivalTabGUI.TABS_TEXTURE);
 
         String label = I18n.format(this.survivalTab.getLabel());
-        int textWidth = mc.fontRendererObj.getStringWidth(label) + 4;
-        this.xPosition = container.guiLeft + (LLibrary.CONFIG.areTabsLeftSide() ? -textWidth : container.xSize);
-        this.yPosition = container.guiTop + this.survivalTab.getColumn() * 17 + 3;
+        int textWidth = mc.fontRenderer.getStringWidth(label) + 4;
+        this.x = container.guiLeft + (LLibrary.CONFIG.areTabsLeftSide() ? -textWidth : container.xSize);
+        this.y = container.guiTop + this.survivalTab.getColumn() * 17 + 3;
         this.width = textWidth;
         this.height = 17;
 
         if (LLibrary.CONFIG.areTabsLeftSide()) {
             if (isSelected) {
-                this.drawTexturedModalRect(this.xPosition + textWidth, this.yPosition, 4, 0, 3, 17);
-                this.drawTexturedModalRect(this.xPosition - 3, this.yPosition, 0, 0, 4, 17);
+                this.drawTexturedModalRect(this.x + textWidth, this.y, 4, 0, 3, 17);
+                this.drawTexturedModalRect(this.x - 3, this.y, 0, 0, 4, 17);
                 for (int i = 0; i < textWidth; i++) {
-                    this.drawTexturedModalRect(this.xPosition + i, this.yPosition, 14, 0, 1, 17);
+                    this.drawTexturedModalRect(this.x + i, this.y, 14, 0, 1, 17);
                 }
             } else {
-                this.drawTexturedModalRect(this.xPosition - 3, this.yPosition, 7, 0, 4, 17);
+                this.drawTexturedModalRect(this.x - 3, this.y, 7, 0, 4, 17);
                 for (int i = 0; i < textWidth; i++) {
-                    this.drawTexturedModalRect(this.xPosition + i, this.yPosition, 11, 0, 1, 17);
+                    this.drawTexturedModalRect(this.x + i, this.y, 11, 0, 1, 17);
                 }
             }
         } else {
             if (isSelected) {
-                this.drawTexturedModalRect(this.xPosition - 3, this.yPosition, 12, 0, 2, 17);
-                this.drawTexturedModalRect(this.xPosition - 1 + textWidth, this.yPosition, 15, 0, 4, 17);
+                this.drawTexturedModalRect(this.x - 3, this.y, 12, 0, 2, 17);
+                this.drawTexturedModalRect(this.x - 1 + textWidth, this.y, 15, 0, 4, 17);
                 for (int i = 0; i < textWidth; i++) {
-                    this.drawTexturedModalRect(this.xPosition - 1 + i, this.yPosition, 14, 0, 1, 17);
+                    this.drawTexturedModalRect(this.x - 1 + i, this.y, 14, 0, 1, 17);
                 }
             } else {
-                this.drawTexturedModalRect(this.xPosition + textWidth, this.yPosition, 20, 0, 4, 17);
+                this.drawTexturedModalRect(this.x + textWidth, this.y, 20, 0, 4, 17);
                 for (int i = 0; i < textWidth; i++) {
-                    this.drawTexturedModalRect(this.xPosition + i, this.yPosition, 19, 0, 1, 17);
+                    this.drawTexturedModalRect(this.x + i, this.y, 19, 0, 1, 17);
                 }
             }
         }
 
-        mc.fontRendererObj.drawString(label, this.xPosition + 2, this.yPosition + 5, 4210752);
+        mc.fontRenderer.drawString(label, this.x + 2, this.y + 5, 4210752);
     }
 
     @Override

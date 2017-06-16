@@ -63,7 +63,7 @@ public class ModUpdateEntryGUI extends GuiScrollingList {
             }
 
             ITextComponent chat = ForgeHooks.newChatWithLinks(text, false);
-            list.addAll(GuiUtilRenderComponents.splitText(chat, this.listWidth - 8, this.parent.mc.fontRendererObj, false, true));
+            list.addAll(GuiUtilRenderComponents.splitText(chat, this.listWidth - 8, this.parent.mc.fontRenderer, false, true));
         }
         return list;
     }
@@ -83,7 +83,7 @@ public class ModUpdateEntryGUI extends GuiScrollingList {
         for (ITextComponent text : this.textList) {
             if (text != null) {
                 GlStateManager.enableBlend();
-                this.parent.mc.fontRendererObj.drawStringWithShadow(text.getFormattedText(), this.left + 4, top, 0xFFFFFF);
+                this.parent.mc.fontRenderer.drawStringWithShadow(text.getFormattedText(), this.left + 4, top, 0xFFFFFF);
                 GlStateManager.disableAlpha();
                 GlStateManager.disableBlend();
             }
@@ -109,7 +109,7 @@ public class ModUpdateEntryGUI extends GuiScrollingList {
                 if (!(part instanceof TextComponentString)) {
                     continue;
                 }
-                k += this.parent.mc.fontRendererObj.getStringWidth(((TextComponentString) part).getText());
+                k += this.parent.mc.fontRenderer.getStringWidth(((TextComponentString) part).getText());
                 if (k >= x) {
                     this.parent.handleComponentClick(part);
                     break;

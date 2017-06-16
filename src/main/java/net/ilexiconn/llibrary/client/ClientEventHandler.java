@@ -71,7 +71,7 @@ public enum ClientEventHandler {
                 for (int i = 0; i < event.getButtonList().size(); i++) {
                     GuiButton button = event.getButtonList().get(i);
                     if (!intersects) {
-                        intersects = rectangle.intersects(new Rectangle(button.xPosition, button.yPosition, button.width, button.height));
+                        intersects = rectangle.intersects(new Rectangle(button.x, button.y, button.width, button.height));
                     }
                 }
 

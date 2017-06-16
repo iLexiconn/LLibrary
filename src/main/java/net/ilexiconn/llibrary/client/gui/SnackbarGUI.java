@@ -25,7 +25,7 @@ public class SnackbarGUI extends Gui {
 
     public SnackbarGUI(Snackbar snackbar) {
         this.snackbar = snackbar;
-        this.maxAge = snackbar.getDuration() > 0 ? snackbar.getDuration() : ClientProxy.MINECRAFT.fontRendererObj.getStringWidth(snackbar.getMessage()) * 3;
+        this.maxAge = snackbar.getDuration() > 0 ? snackbar.getDuration() : ClientProxy.MINECRAFT.fontRenderer.getStringWidth(snackbar.getMessage()) * 3;
     }
 
     public void updateSnackbar() {
@@ -43,12 +43,12 @@ public class SnackbarGUI extends Gui {
             case UP:
                 GlStateManager.translate(0.0F, -this.yOffset, 0.0F);
                 Gui.drawRect(0, 20, resolution.getScaledWidth(), 0, this.snackbar.getColor());
-                ClientProxy.MINECRAFT.fontRendererObj.drawString(this.snackbar.getMessage(), 10, 6, 0xFFFFFFFF);
+                ClientProxy.MINECRAFT.fontRenderer.drawString(this.snackbar.getMessage(), 10, 6, 0xFFFFFFFF);
                 break;
             case DOWN:
                 GlStateManager.translate(0.0F, this.yOffset, 0.0F);
                 drawRect(0, resolution.getScaledHeight() - 20, resolution.getScaledWidth(), resolution.getScaledHeight(), this.snackbar.getColor());
-                ClientProxy.MINECRAFT.fontRendererObj.drawString(this.snackbar.getMessage(), 10, resolution.getScaledHeight() - 14, 0xFFFFFFFF);
+                ClientProxy.MINECRAFT.fontRenderer.drawString(this.snackbar.getMessage(), 10, resolution.getScaledHeight() - 14, 0xFFFFFFFF);
                 break;
         }
         GlStateManager.popMatrix();

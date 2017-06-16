@@ -109,10 +109,10 @@ public class ConfigGUI extends ElementGUI {
         int x = 125;
         int y = 45;
         for (ConfigProperty property : this.selectedCategory.getProperties()) {
-            this.fontRendererObj.drawString(property.name, x, y, this.getTextColor());
+            this.fontRenderer.drawString(property.name, x, y, this.getTextColor());
             y += 10;
             if (property.description != null && property.description.length() > 0) {
-                this.fontRendererObj.drawString(property.description, x, y, this.getTextColor());
+                this.fontRenderer.drawString(property.description, x, y, this.getTextColor());
                 y += 10;
             }
             Element<ConfigGUI> propertyElement = this.propertyElements.get(property);

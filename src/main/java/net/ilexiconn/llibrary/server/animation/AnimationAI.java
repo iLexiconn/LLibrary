@@ -42,7 +42,7 @@ public abstract class AnimationAI<T extends Entity & IAnimatedEntity> extends En
     }
 
     @Override
-    public boolean continueExecuting() {
+    public boolean shouldContinueExecuting() {
         return this.entity.getAnimationTick() < this.getAnimation().getDuration();
     }
 

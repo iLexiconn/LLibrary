@@ -68,7 +68,7 @@ public class ModUpdateListGUI extends GuiScrollingList {
         UpdateContainer updateContainer = UpdateHandler.INSTANCE.getOutdatedModList().get(idx);
         String name = StringUtils.stripControlCodes(updateContainer.getModContainer().getName());
         String version = StringUtils.stripControlCodes(updateContainer.getLatestVersion().getVersionString());
-        FontRenderer font = ClientProxy.MINECRAFT.fontRendererObj;
+        FontRenderer font = ClientProxy.MINECRAFT.fontRenderer;
 
         if (!this.cachedLogo.containsKey(idx)) {
             BufferedImage icon = updateContainer.getIcon();
