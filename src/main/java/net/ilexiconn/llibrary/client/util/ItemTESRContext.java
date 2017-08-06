@@ -2,6 +2,8 @@ package net.ilexiconn.llibrary.client.util;
 
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -12,6 +14,7 @@ import javax.annotation.Nullable;
  * @author gegy1000
  * @since 1.7.7
  */
+@SideOnly(Side.CLIENT)
 public enum ItemTESRContext {
     INSTANCE;
 
