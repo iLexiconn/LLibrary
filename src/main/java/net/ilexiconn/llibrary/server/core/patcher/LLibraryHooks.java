@@ -1,6 +1,7 @@
 package net.ilexiconn.llibrary.server.core.patcher;
 
 import net.ilexiconn.llibrary.client.event.PlayerModelEvent;
+import net.ilexiconn.llibrary.client.event.PlayerViewDistanceEvent;
 import net.ilexiconn.llibrary.client.event.RenderArmEvent;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
@@ -16,29 +17,32 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class LLibraryHooks {
     @SideOnly(Side.CLIENT)
+    public static float prevRenderViewDistance = 4.0F;
+
+    @SideOnly(Side.CLIENT)
     @SuppressWarnings("unused")
     public static void renderArm(RenderPlayer renderPlayer, AbstractClientPlayer player, EnumHandSide side) {
         GlStateManager.color(1.0F, 1.0F, 1.0F);
-        ModelPlayer modelplayer = renderPlayer.getMainModel();
+        ModelPlayer modelPlayer = renderPlayer.getMainModel();
         renderPlayer.setModelVisibilities(player);
-        modelplayer.swingProgress = 0.0F;
-        modelplayer.isSneak = false;
-        modelplayer.setRotationAngles(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F, player);
+        modelPlayer.swingProgress = 0.0F;
+        modelPlayer.isSneak = false;
+        modelPlayer.setRotationAngles(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F, player);
         if (side == EnumHandSide.LEFT) {
-            modelplayer.bipedLeftArm.rotateAngleX = 0.0F;
-            modelplayer.bipedLeftArmwear.rotateAngleX = 0.0F;
+            modelPlayer.bipedLeftArm.rotateAngleX = 0.0F;
+            modelPlayer.bipedLeftArmwear.rotateAngleX = 0.0F;
         } else {
-            modelplayer.bipedRightArm.rotateAngleX = 0.0F;
-            modelplayer.bipedRightArmwear.rotateAngleX = 0.0F;
+            modelPlayer.bipedRightArm.rotateAngleX = 0.0F;
+            modelPlayer.bipedRightArmwear.rotateAngleX = 0.0F;
         }
         if (!MinecraftForge.EVENT_BUS.post(new RenderArmEvent.Pre(player, renderPlayer, renderPlayer.getMainModel(), side))) {
             GlStateManager.enableBlend();
             if (side == EnumHandSide.LEFT) {
-                modelplayer.bipedLeftArm.render(0.0625F);
-                modelplayer.bipedLeftArmwear.render(0.0625F);
+                modelPlayer.bipedLeftArm.render(0.0625F);
+                modelPlayer.bipedLeftArmwear.render(0.0625F);
             } else {
-                modelplayer.bipedRightArm.render(0.0625F);
-                modelplayer.bipedRightArmwear.render(0.0625F);
+                modelPlayer.bipedRightArm.render(0.0625F);
+                modelPlayer.bipedRightArmwear.render(0.0625F);
             }
             GlStateManager.disableBlend();
             MinecraftForge.EVENT_BUS.post(new RenderArmEvent.Post(player, renderPlayer, renderPlayer.getMainModel(), side));
@@ -73,5 +77,15 @@ public class LLibraryHooks {
     @SuppressWarnings("unused")
     public static void constructModel(ModelPlayer model) {
         MinecraftForge.EVENT_BUS.post(new PlayerModelEvent.Construct(model));
+    }
+
+    @SideOnly(Side.CLIENT)
+    @SuppressWarnings("unused")
+    public static float getViewDistance(Entity entity, float partialTicks) {
+        PlayerViewDistanceEvent event = new PlayerViewDistanceEvent(entity, partialTicks, 4.0);
+        MinecraftForge.EVENT_BUS.post(event);
+        float distance = (float) event.getNewViewDistance();
+        prevRenderViewDistance = distance;
+        return distance;
     }
 }
