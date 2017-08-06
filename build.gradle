@@ -38,7 +38,7 @@ sourceCompatibility = targetCompatibility = "1.8"
 def minecraft_mappings = "stable_32"
 
 minecraft {
-    version = "1.11.2-13.20.0.2222"
+    version = "1.11.2-13.20.1.2386"
     runDir = "minecraft"
     mappings = minecraft_mappings
     makeObfSourceJar = false
