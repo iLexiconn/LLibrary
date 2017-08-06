@@ -1,6 +1,7 @@
 package net.ilexiconn.llibrary.server.core.patcher;
 
 import net.ilexiconn.llibrary.client.event.PlayerModelEvent;
+import net.ilexiconn.llibrary.client.event.PlayerViewDistanceEvent;
 import net.ilexiconn.llibrary.client.event.RenderArmEvent;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelPlayer;
@@ -12,6 +13,8 @@ import net.minecraft.util.EnumHandSide;
 import net.minecraftforge.common.MinecraftForge;
 
 public class LLibraryHooks {
+    public static float prevRenderViewDistance = 4.0F;
+
     @SuppressWarnings("unused")
     public static void renderArm(RenderPlayer renderPlayer, AbstractClientPlayer player, EnumHandSide side) {
         GlStateManager.color(1.0F, 1.0F, 1.0F);
@@ -67,5 +70,14 @@ public class LLibraryHooks {
     @SuppressWarnings("unused")
     public static void constructModel(ModelPlayer model) {
         MinecraftForge.EVENT_BUS.post(new PlayerModelEvent.Construct(model));
+    }
+
+    @SuppressWarnings("unused")
+    public static float getViewDistance(Entity entity, float partialTicks) {
+        PlayerViewDistanceEvent event = new PlayerViewDistanceEvent(entity, partialTicks, 4.0);
+        MinecraftForge.EVENT_BUS.post(event);
+        float distance = (float) event.getNewViewDistance();
+        prevRenderViewDistance = distance;
+        return distance;
     }
 }

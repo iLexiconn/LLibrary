@@ -8,6 +8,7 @@ import net.ilexiconn.llibrary.server.world.TickRateHandler;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelPlayer;
+import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
@@ -21,6 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumHandSide;
 import net.minecraftforge.client.ForgeHooksClient;
+import org.objectweb.asm.tree.VarInsnNode;
 
 import java.util.List;
 import java.util.Map;
@@ -100,6 +102,19 @@ public class LLibraryRuntimePatcher extends RuntimePatcher {
                     method.field(GETSTATIC, ItemTESRContext.class, "INSTANCE", ItemTESRContext.class);
                     method.var(ALOAD, 1);
                     method.method(INVOKEVIRTUAL, ItemTESRContext.class, "providePerspectiveContext", ItemCameraTransforms.TransformType.class, void.class);
+                }).pop();
+
+        this.patchClass(EntityRenderer.class)
+                .patchMethod("orientCamera", float.class, void.class)
+                .apply(Patch.REPLACE_NODE, new InsnPredicate.Ldc().cst(4.0F), method -> {
+                    method.var(ALOAD, 2);
+                    method.var(FLOAD, 1);
+                    method.method(INVOKESTATIC, LLibraryHooks.class, "getViewDistance", Entity.class, float.class, float.class);
+                })
+                .apply(Patch.AFTER, data -> data.node.getOpcode() == ASTORE && ((VarInsnNode) data.node).var == 2, method -> {
+                    method.var(ALOAD, 0);
+                    method.field(GETSTATIC, LLibraryHooks.class, "prevRenderViewDistance", float.class);
+                    method.field(PUTFIELD, EntityRenderer.class, "thirdPersonDistancePrev", float.class);
                 }).pop();
     }
 }
