@@ -1,7 +1,6 @@
 package net.ilexiconn.llibrary.client;
 
 import net.ilexiconn.llibrary.LLibrary;
-import net.ilexiconn.llibrary.client.event.PlayerModelEvent;
 import net.ilexiconn.llibrary.client.gui.SnackbarGUI;
 import net.ilexiconn.llibrary.client.gui.survivaltab.PageButtonGUI;
 import net.ilexiconn.llibrary.client.gui.survivaltab.SurvivalTab;
@@ -26,6 +25,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -71,7 +71,7 @@ public enum ClientEventHandler {
                 for (int i = 0; i < event.getButtonList().size(); i++) {
                     GuiButton button = event.getButtonList().get(i);
                     if (!intersects) {
-                        intersects = rectangle.intersects(new Rectangle(button.xPosition, button.yPosition, button.width, button.height));
+                        intersects = rectangle.intersects(new Rectangle(button.x, button.y, button.width, button.height));
                     }
                 }
 
@@ -157,14 +157,14 @@ public enum ClientEventHandler {
     }
 
     @SubscribeEvent
-    public void onRenderModel(PlayerModelEvent.Render event) {
+    public void onRenderPlayer(RenderPlayerEvent.Pre event) {
         if (LLibrary.CONFIG.hasPatreonEffects() && ClientProxy.PATRONS != null && (ClientProxy.MINECRAFT.gameSettings.thirdPersonView != 0 || event.getEntityPlayer() != ClientProxy.MINECRAFT.player)) {
             for (String name : ClientProxy.PATRONS) {
                 if (event.getEntityPlayer().getGameProfile().getId().toString().equals(name)) {
                     GlStateManager.pushMatrix();
                     GlStateManager.depthMask(false);
                     GlStateManager.disableLighting();
-                    GlStateManager.translate(0.0F, -1.37F, 0.0F);
+                    GlStateManager.translate(0.0F, 1.37F, 0.0F);
                     this.renderVoxel(event, 1.1F, 0.23F);
                     GlStateManager.depthMask(true);
                     GlStateManager.enableLighting();
@@ -174,6 +174,25 @@ public enum ClientEventHandler {
                 }
             }
         }
+    }
+
+    private void renderVoxel(RenderPlayerEvent.Pre event, float scale, float color) {
+        EntityPlayer player = event.getEntityPlayer();
+        int ticksExisted = player.ticksExisted;
+        float partialTicks = LLibrary.PROXY.getPartialTicks();
+        float bob = MathHelper.sin(((float) ticksExisted + partialTicks) / 15.0F) * 0.1F;
+        GlStateManager.pushMatrix();
+        GlStateManager.disableTexture2D();
+        GlStateManager.rotate(-ClientUtils.interpolateRotation(player.prevRenderYawOffset, player.renderYawOffset, partialTicks), 0, 1.0F, 0);
+        GlStateManager.color(color, color, color, 1.0F);
+        GlStateManager.translate(0.0F, -0.6F + bob, 0.0F);
+        GlStateManager.rotate((ticksExisted + partialTicks) % 360, 0.0F, 1.0F, 0.0F);
+        GlStateManager.translate(0.75F, 0.0F, 0.0F);
+        GlStateManager.rotate((ticksExisted + partialTicks) % 360, 0.0F, 1.0F, 0.0F);
+        GlStateManager.scale(scale, scale, scale);
+        this.voxelModel.render(player, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
+        GlStateManager.enableTexture2D();
+        GlStateManager.popMatrix();
     }
 
     @SubscribeEvent
@@ -187,24 +206,5 @@ public enum ClientEventHandler {
         if (event.getLabel().equals("container.inventory")) {
             ClientProxy.MINECRAFT.displayGuiScreen(new GuiInventory(ClientProxy.MINECRAFT.player));
         }
-    }
-
-    private void renderVoxel(PlayerModelEvent.Render event, float scale, float color) {
-        EntityPlayer player = event.getEntityPlayer();
-        int ticksExisted = player.ticksExisted;
-        float partialTicks = LLibrary.PROXY.getPartialTicks();
-        float bob = MathHelper.sin(((float) ticksExisted + partialTicks) / 15.0F) * 0.1F;
-        GlStateManager.pushMatrix();
-        GlStateManager.disableTexture2D();
-        GlStateManager.rotate(-ClientUtils.interpolateRotation(player.prevRenderYawOffset, player.renderYawOffset, partialTicks), 0, 1.0F, 0);
-        GlStateManager.color(color, color, color, 1.0F);
-        GlStateManager.translate(0.0F, -1.0F + bob, 0.0F);
-        GlStateManager.rotate(ClientUtils.interpolateRotation((ticksExisted - 1) % 360, ticksExisted % 360, partialTicks), 0.0F, 1.0F, 0.0F);
-        GlStateManager.translate(0.75F, 0.0F, 0.0F);
-        GlStateManager.rotate(ClientUtils.interpolateRotation((ticksExisted - 1) % 360, ticksExisted % 360, partialTicks), 0.0F, 1.0F, 0.0F);
-        GlStateManager.scale(scale, scale, scale);
-        this.voxelModel.render(player, event.getLimbSwing(), event.getLimbSwingAmount(), event.getRotation(), event.getRotationYaw(), event.getRotationPitch(), event.getScale());
-        GlStateManager.enableTexture2D();
-        GlStateManager.popMatrix();
     }
 }

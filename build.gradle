@@ -35,10 +35,10 @@ version = getLLibraryVersion() + "-1.12"
 group = "net.ilexiconn"
 archivesBaseName = "llibrary"
 sourceCompatibility = targetCompatibility = "1.8"
-def minecraft_mappings = "snapshot_20161220"
+def minecraft_mappings = "snapshot_20170624"
 
 minecraft {
-    version = "1.12-14.21.0.2321"
+    version = "1.12-14.21.1.2443"
     runDir = "minecraft"
     mappings = minecraft_mappings
     makeObfSourceJar = false

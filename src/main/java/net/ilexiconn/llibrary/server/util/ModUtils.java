@@ -6,7 +6,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
-import net.minecraftforge.fml.common.registry.GameData;
+import net.minecraftforge.registries.ForgeRegistry;
+import net.minecraftforge.registries.GameData;
+import net.minecraftforge.registries.RegistryManager;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -17,7 +19,9 @@ import java.util.Map;
  * @since 1.0.0
  */
 public class ModUtils {
-    private static Map<String, ModContainer> resourceIDToContainerMap = new HashMap<>();
+    private static final ForgeRegistry<Item> ITEM_REGISTRY = RegistryManager.ACTIVE.getRegistry(GameData.ITEMS);
+
+    private static final Map<String, ModContainer> resourceIDToContainerMap = new HashMap<>();
 
     static {
         resourceIDToContainerMap.put("minecraft", Loader.instance().getMinecraftModContainer());
@@ -50,10 +54,13 @@ public class ModUtils {
      * @return the mod name of the specified item
      */
     public static String getModNameForItem(Item item) {
-        ResourceLocation resourceLocation = GameData.getItemRegistry().getNameForObject(item);
-        String modID = resourceLocation.getResourceDomain();
-        String resourceID = modID.toLowerCase(Locale.ENGLISH);
-        return ModUtils.getNameForResourceID(resourceID);
+        ResourceLocation resourceLocation = ITEM_REGISTRY.getKey(item);
+        if (resourceLocation != null) {
+            String modID = resourceLocation.getResourceDomain();
+            String resourceID = modID.toLowerCase(Locale.ENGLISH);
+            return ModUtils.getNameForResourceID(resourceID);
+        }
+        return null;
     }
 
     /**
@@ -88,10 +95,13 @@ public class ModUtils {
      * @since 1.2.1
      */
     public static ModContainer getContainerForItem(Item item) {
-        ResourceLocation resourceLocation = GameData.getItemRegistry().getNameForObject(item);
-        String modID = resourceLocation.getResourceDomain();
-        String resourceID = modID.toLowerCase(Locale.ENGLISH);
-        return ModUtils.getContainerForResourceID(resourceID);
+        ResourceLocation resourceLocation = ITEM_REGISTRY.getKey(item);
+        if (resourceLocation != null) {
+            String modID = resourceLocation.getResourceDomain();
+            String resourceID = modID.toLowerCase(Locale.ENGLISH);
+            return ModUtils.getContainerForResourceID(resourceID);
+        }
+        return null;
     }
 
     /**

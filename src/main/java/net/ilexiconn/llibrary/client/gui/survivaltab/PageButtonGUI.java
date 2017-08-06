@@ -21,10 +21,10 @@ public class PageButtonGUI extends GuiButton {
     }
 
     @Override
-    public void func_191745_a(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
-        super.func_191745_a(mc, mouseX, mouseY, partialTicks);
+    public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
+        super.drawButton(mc, mouseX, mouseY, partialTicks);
         if (this.id == -1) {
-            mc.fontRendererObj.drawString((SurvivalTabHandler.INSTANCE.getCurrentPage() + 1) + "/" + SurvivalTabHandler.INSTANCE.getSurvivalTabList().size() / 8 + 1, this.xPosition + 31, this.yPosition + 6, 0xFFFFFFFF);
+            mc.fontRenderer.drawString((SurvivalTabHandler.INSTANCE.getCurrentPage() + 1) + "/" + SurvivalTabHandler.INSTANCE.getSurvivalTabList().size() / 8 + 1, this.x + 31, this.y + 6, 0xFFFFFFFF);
         }
     }
 

@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.client.model.IPerspectiveAwareModel;
+import net.minecraftforge.client.model.PerspectiveMapWrapper;
 import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -23,7 +23,7 @@ import java.util.List;
  * @since 1.0.0
  */
 @SideOnly(Side.CLIENT)
-public class BakedTabulaModel implements IPerspectiveAwareModel {
+public class BakedTabulaModel implements IBakedModel {
     private ImmutableList<BakedQuad> quads;
     private TextureAtlasSprite particle;
     private ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> transforms;
@@ -71,6 +71,6 @@ public class BakedTabulaModel implements IPerspectiveAwareModel {
 
     @Override
     public Pair<? extends IBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType type) {
-        return IPerspectiveAwareModel.MapWrapper.handlePerspective(this, this.transforms, type);
+        return PerspectiveMapWrapper.handlePerspective(this, this.transforms, type);
     }
 }

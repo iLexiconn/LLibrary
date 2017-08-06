@@ -1,9 +1,6 @@
 package net.ilexiconn.llibrary.client.model.tabula.baked;
 
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMap;
 import net.ilexiconn.llibrary.client.model.tabula.container.TabulaCubeContainer;
 import net.ilexiconn.llibrary.client.model.tabula.container.TabulaModelContainer;
@@ -28,6 +25,8 @@ import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * @author pau101
@@ -63,7 +62,7 @@ public class VanillaTabulaModel implements IModel {
         TextureAtlasSprite particleSprite = this.particle == null ? sprite : bakedTextureGetter.apply(this.particle);
         ImmutableList.Builder<BakedQuad> builder = ImmutableList.builder();
         Matrix matrix = new Matrix();
-        TRSRTransformation transformation = state.apply(Optional.absent()).or(TRSRTransformation.identity());
+        TRSRTransformation transformation = state.apply(Optional.empty()).orElse(TRSRTransformation.identity());
         matrix.multiply(transformation.getMatrix());
         matrix.translate(0.5F, 1.5F, 0.5F);
         matrix.scale(-0.0625F, -0.0625F, 0.0625F);
@@ -72,7 +71,7 @@ public class VanillaTabulaModel implements IModel {
         return new BakedTabulaModel(leQuads, particleSprite, this.transforms);
     }
 
-    private void build(Matrix mat, Builder<BakedQuad> builder, VertexFormat format, List<TabulaCubeContainer> cubeContainerList, TextureAtlasSprite sprite) {
+    private void build(Matrix mat, ImmutableList.Builder<BakedQuad> builder, VertexFormat format, List<TabulaCubeContainer> cubeContainerList, TextureAtlasSprite sprite) {
         for (TabulaCubeContainer cube : cubeContainerList) {
             int[] dimensions = cube.getDimensions();
             double[] position = cube.getPosition();
@@ -189,7 +188,7 @@ public class VanillaTabulaModel implements IModel {
         return false;
     }
 
-    private void buildQuad(Builder<BakedQuad> builder, VertexFormat format, boolean isTxMirror, Point3f vert0, Point3f vert1, Point3f vert2, Point3f vert3, Point2i minUV, Point2i maxUV, TextureAtlasSprite sprite, boolean hasTransparency) {
+    private void buildQuad(ImmutableList.Builder<BakedQuad> builder, VertexFormat format, boolean isTxMirror, Point3f vert0, Point3f vert1, Point3f vert2, Point3f vert3, Point2i minUV, Point2i maxUV, TextureAtlasSprite sprite, boolean hasTransparency) {
         Point3f[] vertices = { vert0, vert1, vert2, vert3 };
         if (this.isQuadOneDimensional(vertices)) {
             return;

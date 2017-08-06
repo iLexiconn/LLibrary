@@ -1,6 +1,6 @@
 package net.ilexiconn.llibrary.client.event;
 
-import net.minecraft.client.model.ModelPlayer;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.eventhandler.Event;
@@ -9,13 +9,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class PlayerModelEvent extends Event {
-    protected ModelPlayer model;
+    protected ModelBiped model;
 
-    PlayerModelEvent(ModelPlayer model) {
+    PlayerModelEvent(ModelBiped model) {
         this.model = model;
     }
 
-    public ModelPlayer getModel() {
+    public ModelBiped getModel() {
         return this.model;
     }
 
@@ -23,7 +23,7 @@ public class PlayerModelEvent extends Event {
         private RenderPlayer renderPlayer;
         private boolean smallArms;
 
-        public Assign(RenderPlayer renderPlayer, ModelPlayer model, boolean smallArms) {
+        public Assign(RenderPlayer renderPlayer, ModelBiped model, boolean smallArms) {
             super(model);
             this.renderPlayer = renderPlayer;
             this.smallArms = smallArms;
@@ -33,7 +33,7 @@ public class PlayerModelEvent extends Event {
             return this.renderPlayer;
         }
 
-        public void setModel(ModelPlayer model) {
+        public void setModel(ModelBiped model) {
             this.model = model;
         }
 
@@ -43,13 +43,13 @@ public class PlayerModelEvent extends Event {
     }
 
     public static class Construct extends PlayerModelEvent {
-        public Construct(ModelPlayer model) {
+        public Construct(ModelBiped model) {
             super(model);
         }
     }
 
     public static class SetRotationAngles extends Render {
-        public SetRotationAngles(ModelPlayer model, EntityPlayer player, float limbSwing, float limbSwingAmount, float rotation, float rotationYaw, float rotationPitch, float scale) {
+        public SetRotationAngles(ModelBiped model, EntityPlayer player, float limbSwing, float limbSwingAmount, float rotation, float rotationYaw, float rotationPitch, float scale) {
             super(model, player, limbSwing, limbSwingAmount, rotation, rotationYaw, rotationPitch, scale);
         }
     }
@@ -63,7 +63,7 @@ public class PlayerModelEvent extends Event {
         private float rotationPitch;
         private float scale;
 
-        public Render(ModelPlayer model, EntityPlayer player, float limbSwing, float limbSwingAmount, float rotation, float rotationYaw, float rotationPitch, float scale) {
+        public Render(ModelBiped model, EntityPlayer player, float limbSwing, float limbSwingAmount, float rotation, float rotationYaw, float rotationPitch, float scale) {
             super(model);
             this.entityPlayer = player;
             this.limbSwing = limbSwing;

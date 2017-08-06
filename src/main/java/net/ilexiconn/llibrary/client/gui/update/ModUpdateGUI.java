@@ -47,8 +47,8 @@ public class ModUpdateGUI extends GuiScreen {
     public void initGui() {
         int width = 0;
         for (UpdateContainer mod : UpdateHandler.INSTANCE.getOutdatedModList()) {
-            width = Math.max(width, this.fontRendererObj.getStringWidth(mod.getModContainer().getName()) + 47);
-            width = Math.max(width, this.fontRendererObj.getStringWidth(mod.getModContainer().getVersion()) + 47);
+            width = Math.max(width, this.fontRenderer.getStringWidth(mod.getModContainer().getName()) + 47);
+            width = Math.max(width, this.fontRenderer.getStringWidth(mod.getModContainer().getVersion()) + 47);
         }
         width = Math.min(width, 150);
         this.modList = new ModUpdateListGUI(this, width);
@@ -88,8 +88,8 @@ public class ModUpdateGUI extends GuiScreen {
             this.drawDefaultBackground();
             int i = this.width / 2;
             int j = this.height / 2;
-            this.buttonDone.xPosition = this.width / 2 - 100;
-            this.buttonDone.yPosition = this.height - 38;
+            this.buttonDone.x = this.width / 2 - 100;
+            this.buttonDone.y = this.height - 38;
             this.buttonList.clear();
             this.buttonList.add(this.buttonDone);
             this.drawScaledString(I18n.format("gui.llibrary.updated.1"), i, j - 40, 0xFFFFFF, 2.0F);
@@ -101,7 +101,7 @@ public class ModUpdateGUI extends GuiScreen {
             }
 
             int left = ((this.width - this.modList.getWidth() - 38) / 2) + this.modList.getWidth() + 30;
-            this.drawCenteredString(this.fontRendererObj, I18n.format("gui.llibrary.update.title"), left, 16, 0xFFFFFF);
+            this.drawCenteredString(this.fontRenderer, I18n.format("gui.llibrary.update.title"), left, 16, 0xFFFFFF);
         }
 
         super.drawScreen(mouseX, mouseY, partialTicks);
@@ -145,7 +145,7 @@ public class ModUpdateGUI extends GuiScreen {
     public void drawScaledString(String text, int x, int y, int color, float scale) {
         GL11.glPushMatrix();
         GL11.glScalef(scale, scale, scale);
-        this.drawCenteredString(this.fontRendererObj, text, (int) (x / scale), (int) (y / scale), color);
+        this.drawCenteredString(this.fontRenderer, text, (int) (x / scale), (int) (y / scale), color);
         GL11.glPopMatrix();
     }
 

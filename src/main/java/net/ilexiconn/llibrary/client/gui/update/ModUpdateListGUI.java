@@ -4,9 +4,9 @@ import net.ilexiconn.llibrary.client.ClientProxy;
 import net.ilexiconn.llibrary.server.update.UpdateContainer;
 import net.ilexiconn.llibrary.server.update.UpdateHandler;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
@@ -68,7 +68,7 @@ public class ModUpdateListGUI extends GuiScrollingList {
         UpdateContainer updateContainer = UpdateHandler.INSTANCE.getOutdatedModList().get(idx);
         String name = StringUtils.stripControlCodes(updateContainer.getModContainer().getName());
         String version = StringUtils.stripControlCodes(updateContainer.getLatestVersion().getVersionString());
-        FontRenderer font = ClientProxy.MINECRAFT.fontRendererObj;
+        FontRenderer font = ClientProxy.MINECRAFT.fontRenderer;
 
         if (!this.cachedLogo.containsKey(idx)) {
             BufferedImage icon = updateContainer.getIcon();

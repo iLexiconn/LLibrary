@@ -83,7 +83,7 @@ public class ClientProxy extends ServerProxy {
 
     @Override
     public float getPartialTicks() {
-        return ClientProxy.TIMER.field_194147_b;
+        return ClientProxy.TIMER.renderPartialTicks;
     }
 
     @Override
@@ -93,6 +93,6 @@ public class ClientProxy extends ServerProxy {
 
     @Override
     public void setTPS(float tickRate) {
-        ClientProxy.TIMER.field_194149_e = 1000.0F / tickRate;
+        ClientProxy.TIMER.tickLength = 1000.0F / tickRate;
     }
 }
