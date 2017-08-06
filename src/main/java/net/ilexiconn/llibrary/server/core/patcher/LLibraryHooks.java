@@ -85,12 +85,12 @@ public class LLibraryHooks {
     }
 
     @SuppressWarnings("unused")
-    public static <T extends EntityLivingBase> void applyRotationsPre(RenderLivingBase<T> renderer, T entity, float partialTicks) {
-        MinecraftForge.EVENT_BUS.post(new ApplyRenderRotationsEvent.Pre<>(renderer, entity, partialTicks));
+    public static void applyRotationsPre(RenderLivingBase<EntityLivingBase> renderer, EntityLivingBase entity, float partialTicks) {
+        MinecraftForge.EVENT_BUS.post(new ApplyRenderRotationsEvent.Pre(renderer, entity, partialTicks));
     }
 
     @SuppressWarnings("unused")
-    public static <T extends EntityLivingBase> void applyRotationsPost(RenderLivingBase<T> renderer, T entity, float partialTicks) {
-        MinecraftForge.EVENT_BUS.post(new ApplyRenderRotationsEvent.Post<>(renderer, entity, partialTicks));
+    public static void applyRotationsPost(RenderLivingBase<EntityLivingBase> renderer, EntityLivingBase entity, float partialTicks) {
+        MinecraftForge.EVENT_BUS.post(new ApplyRenderRotationsEvent.Post(renderer, entity, partialTicks));
     }
 }

@@ -13,22 +13,22 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @since 1.7.7
  */
 @SideOnly(Side.CLIENT)
-public class ApplyRenderRotationsEvent<T extends EntityLivingBase> extends Event {
-    protected RenderLivingBase<T> renderer;
-    protected T entity;
+public class ApplyRenderRotationsEvent extends Event {
+    protected RenderLivingBase<EntityLivingBase> renderer;
+    protected EntityLivingBase entity;
     protected float partialTicks;
 
-    ApplyRenderRotationsEvent(RenderLivingBase<T> renderer, T entity, float partialTicks) {
+    ApplyRenderRotationsEvent(RenderLivingBase<EntityLivingBase> renderer, EntityLivingBase entity, float partialTicks) {
         this.renderer = renderer;
         this.entity = entity;
         this.partialTicks = partialTicks;
     }
 
-    public RenderLivingBase<T> getRenderer() {
+    public RenderLivingBase<EntityLivingBase> getRenderer() {
         return this.renderer;
     }
 
-    public T getEntity() {
+    public EntityLivingBase getEntity() {
         return this.entity;
     }
 
@@ -36,14 +36,14 @@ public class ApplyRenderRotationsEvent<T extends EntityLivingBase> extends Event
         return this.partialTicks;
     }
 
-    public static class Pre<T extends EntityLivingBase> extends ApplyRenderRotationsEvent<T> {
-        public Pre(RenderLivingBase<T> renderer, T entity, float partialTicks) {
+    public static class Pre extends ApplyRenderRotationsEvent {
+        public Pre(RenderLivingBase<EntityLivingBase> renderer, EntityLivingBase entity, float partialTicks) {
             super(renderer, entity, partialTicks);
         }
     }
 
-    public static class Post<T extends EntityLivingBase> extends ApplyRenderRotationsEvent<T> {
-        public Post(RenderLivingBase<T> renderer, T entity, float partialTicks) {
+    public static class Post extends ApplyRenderRotationsEvent {
+        public Post(RenderLivingBase<EntityLivingBase> renderer, EntityLivingBase entity, float partialTicks) {
             super(renderer, entity, partialTicks);
         }
     }
