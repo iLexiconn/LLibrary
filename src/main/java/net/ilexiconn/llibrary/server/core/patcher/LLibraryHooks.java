@@ -1,13 +1,16 @@
 package net.ilexiconn.llibrary.server.core.patcher;
 
+import net.ilexiconn.llibrary.client.event.ApplyRenderRotationsEvent;
 import net.ilexiconn.llibrary.client.event.PlayerModelEvent;
 import net.ilexiconn.llibrary.client.event.PlayerViewDistanceEvent;
 import net.ilexiconn.llibrary.client.event.RenderArmEvent;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumHandSide;
 import net.minecraftforge.common.MinecraftForge;
@@ -79,5 +82,15 @@ public class LLibraryHooks {
         float distance = (float) event.getNewViewDistance();
         prevRenderViewDistance = distance;
         return distance;
+    }
+
+    @SuppressWarnings("unused")
+    public static <T extends EntityLivingBase> void applyRotationsPre(RenderLivingBase<T> renderer, T entity, float partialTicks) {
+        MinecraftForge.EVENT_BUS.post(new ApplyRenderRotationsEvent.Pre<>(renderer, entity, partialTicks));
+    }
+
+    @SuppressWarnings("unused")
+    public static <T extends EntityLivingBase> void applyRotationsPost(RenderLivingBase<T> renderer, T entity, float partialTicks) {
+        MinecraftForge.EVENT_BUS.post(new ApplyRenderRotationsEvent.Post<>(renderer, entity, partialTicks));
     }
 }

@@ -18,6 +18,7 @@ import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.Locale;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumHandSide;
@@ -116,5 +117,18 @@ public class LLibraryRuntimePatcher extends RuntimePatcher {
                     method.field(GETSTATIC, LLibraryHooks.class, "prevRenderViewDistance", float.class);
                     method.field(PUTFIELD, EntityRenderer.class, "thirdPersonDistancePrev", float.class);
                 }).pop();
+
+        this.patchClass(RenderLivingBase.class)
+                .patchMethod("applyRotations", EntityLivingBase.class, float.class, float.class, float.class, void.class)
+                .apply(Patch.AFTER, data -> data.node.getPrevious() == null, method -> method
+                        .var(ALOAD, 0)
+                        .var(ALOAD, 1)
+                        .var(FLOAD, 4)
+                        .method(INVOKESTATIC, LLibraryHooks.class, "applyRotationsPre", RenderLivingBase.class, EntityLivingBase.class, float.class, void.class))
+                .apply(Patch.BEFORE, data -> data.node.getOpcode() == RETURN, method -> method
+                        .var(ALOAD, 0)
+                        .var(ALOAD, 1)
+                        .var(FLOAD, 4)
+                        .method(INVOKESTATIC, LLibraryHooks.class, "applyRotationsPost", RenderLivingBase.class, EntityLivingBase.class, float.class, void.class));
     }
 }
