@@ -43,7 +43,6 @@ public class ClientProxy extends ServerProxy {
         ListenableFuture<String> patronFuture = WebUtils.readPastebinAsync("aLjMgBAV");
         patronFuture.addListener(() -> {
             try {
-                System.out.println("Downloaded");
                 String result = patronFuture.get();
                 if (result != null) {
                     PATRONS = new Gson().fromJson(result, String[].class);
