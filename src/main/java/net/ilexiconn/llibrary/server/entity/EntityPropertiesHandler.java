@@ -49,10 +49,7 @@ public enum EntityPropertiesHandler {
         }
         this.propertiesIDMap.put(propertiesClass, properties.getID());
         Class<E> entityClass = properties.getEntityClass();
-        List<Class<? extends EntityProperties<?>>> list = this.registeredProperties.get(entityClass);
-        if (list == null) {
-            this.registeredProperties.put(entityClass, list = new ArrayList<>());
-        }
+        List<Class<? extends EntityProperties<?>>> list = this.registeredProperties.computeIfAbsent(entityClass, k -> new ArrayList<>());
         list.add(propertiesClass);
     }
 
@@ -81,10 +78,7 @@ public enum EntityPropertiesHandler {
     public <T extends Entity> void addTracker(EntityPlayerMP player, T entity) {
         List<String> entityProperties = this.entityPropertiesCache.get(entity.getClass());
         if (entityProperties != null) {
-            List<PropertiesTracker<?>> trackerList = this.trackerMap.get(player);
-            if (trackerList == null) {
-                this.trackerMap.put(player, trackerList = new ArrayList<>());
-            }
+            List<PropertiesTracker<?>> trackerList = this.trackerMap.computeIfAbsent(player, k -> new ArrayList<>());
             for (String propID : entityProperties) {
                 IEntityData extendedProperties = EntityDataHandler.INSTANCE.getEntityData(entity, propID);
                 if (extendedProperties instanceof EntityProperties) {

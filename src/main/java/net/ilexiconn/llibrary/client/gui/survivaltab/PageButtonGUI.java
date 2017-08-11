@@ -8,8 +8,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.Iterator;
-
 @SideOnly(Side.CLIENT)
 public class PageButtonGUI extends GuiButton {
     private GuiScreen screen;
@@ -63,12 +61,7 @@ public class PageButtonGUI extends GuiButton {
     }
 
     public void initGui() {
-        Iterator<GuiButton> iterator = this.screen.buttonList.iterator();
-        while (iterator.hasNext()) {
-            if (iterator.next() instanceof SurvivalTabGUI) {
-                iterator.remove();
-            }
-        }
+        this.screen.buttonList.removeIf(guiButton -> guiButton instanceof SurvivalTabGUI);
         this.screen.initGui();
         MinecraftForge.EVENT_BUS.post(new GuiScreenEvent.InitGuiEvent.Post(this.screen, this.screen.buttonList));
     }

@@ -133,12 +133,7 @@ public class ModelAnimator {
     }
 
     private Transform getTransform(ModelRenderer box) {
-        Transform transform = this.transformMap.get(box);
-        if (transform == null) {
-            transform = new Transform();
-            this.transformMap.put(box, transform);
-        }
-        return transform;
+        return this.transformMap.computeIfAbsent(box, b -> new Transform());
     }
 
     /**

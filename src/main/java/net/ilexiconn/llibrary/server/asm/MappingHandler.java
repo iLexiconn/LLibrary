@@ -37,7 +37,7 @@ public enum MappingHandler {
 
     public String getClassMapping(Object obj) {
         if (obj instanceof String) {
-            return getClassMapping((String) obj);
+            return this.getClassMapping((String) obj);
         } else if (obj instanceof Class) {
             return ((Class) obj).getName();
         }
@@ -48,7 +48,7 @@ public enum MappingHandler {
         if (LLibraryPlugin.inDevelopment) {
             return method;
         }
-        String cls = getClassMapping(obj);
+        String cls = this.getClassMapping(obj);
         String key = cls + "/" + method + desc;
         return this.methods.getOrDefault(key, method);
     }
@@ -57,7 +57,7 @@ public enum MappingHandler {
         if (LLibraryPlugin.inDevelopment) {
             return field;
         }
-        String cls = getClassMapping(obj);
+        String cls = this.getClassMapping(obj);
         String key = cls + "/" + field;
         return this.fields.getOrDefault(key, field);
     }

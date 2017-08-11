@@ -1,7 +1,11 @@
 package net.ilexiconn.llibrary.server.asm;
 
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.*;
+import org.objectweb.asm.tree.FieldInsnNode;
+import org.objectweb.asm.tree.InsnNode;
+import org.objectweb.asm.tree.LdcInsnNode;
+import org.objectweb.asm.tree.MethodInsnNode;
+import org.objectweb.asm.tree.VarInsnNode;
 
 import java.util.function.Predicate;
 
@@ -21,17 +25,13 @@ public abstract class InsnPredicate implements Predicate<MethodPatcher.Predicate
 
     @Override
     public boolean test(MethodPatcher.PredicateData predicateData) {
-        return opcodePredicate.test(predicateData.node.getOpcode());
+        return this.opcodePredicate.test(predicateData.node.getOpcode());
     }
 
     public static class Op extends InsnPredicate {
         @Override
         public boolean test(MethodPatcher.PredicateData predicateData) {
-            if (predicateData.node instanceof InsnNode) {
-                return super.test(predicateData);
-            } else {
-                return false;
-            }
+            return predicateData.node instanceof InsnNode && super.test(predicateData);
         }
     }
 

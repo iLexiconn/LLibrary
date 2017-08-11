@@ -49,7 +49,7 @@ public enum TabulaModelHandler implements ICustomModelLoader, JsonDeserializatio
     private JsonParser parser = new JsonParser();
     private ModelBlock.Deserializer modelBlockDeserializer = new ModelBlock.Deserializer();
     private IResourceManager manager;
-    private final Set<String> enabledDomains = new HashSet<String>();
+    private final Set<String> enabledDomains = new HashSet<>();
     
     public void addDomain(String domain) {
         this.enabledDomains.add(domain.toLowerCase());
