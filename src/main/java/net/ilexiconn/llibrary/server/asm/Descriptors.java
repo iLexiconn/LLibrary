@@ -1,10 +1,13 @@
 package net.ilexiconn.llibrary.server.asm;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Descriptors {
     private static final Map<String, String> PRIMITIVE_NAMES = new HashMap<>();
+    private static final Map<String, String> REVERSE_PRIMITIVE_NAMES = new HashMap<>();
 
     static {
         PRIMITIVE_NAMES.put("void", "V");
@@ -16,6 +19,32 @@ public class Descriptors {
         PRIMITIVE_NAMES.put("float", "F");
         PRIMITIVE_NAMES.put("long", "J");
         PRIMITIVE_NAMES.put("double", "D");
+
+        for (Map.Entry<String, String> entry : PRIMITIVE_NAMES.entrySet()) {
+            REVERSE_PRIMITIVE_NAMES.put(entry.getValue(), entry.getKey());
+        }
+    }
+
+    public static String[] parseMethod(String desc) {
+        if (!desc.startsWith("(")) {
+            return new String[0];
+        }
+        desc = desc.substring(1);
+        List<String> params = new ArrayList<>();
+        while (desc.length() > 0) {
+            char c = desc.charAt(0);
+            if (c == 'L') {
+                int endIndex = desc.indexOf(";") + 1;
+                params.add(parseField(desc.substring(0, endIndex)));
+                desc = desc.substring(endIndex);
+            } else {
+                if (c != ')') {
+                    params.add(parseField(String.valueOf(c)));
+                }
+                desc = desc.substring(1);
+            }
+        }
+        return params.toArray(new String[params.size()]);
     }
 
     public static String method(Object... params) {
@@ -36,6 +65,26 @@ public class Descriptors {
         }
         builder.append(")").append(field(params[params.length - 1]));
         return builder.toString();
+    }
+
+    public static String parseField(String desc) {
+        if (REVERSE_PRIMITIVE_NAMES.containsKey(desc)) {
+            return REVERSE_PRIMITIVE_NAMES.get(desc);
+        }
+        boolean array = false;
+        if (desc.startsWith("[")) {
+            desc = desc.substring(1);
+            array = true;
+        }
+        if (desc.startsWith("L") && desc.endsWith(";")) {
+            String cls = desc.substring(1, desc.length() - 1);
+            if (array) {
+                return cls + "[]";
+            } else {
+                return cls;
+            }
+        }
+        return "java/lang/Object";
     }
 
     public static String field(Object obj) {

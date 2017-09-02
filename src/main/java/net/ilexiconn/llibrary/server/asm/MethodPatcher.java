@@ -1,7 +1,8 @@
 package net.ilexiconn.llibrary.server.asm;
 
 import net.minecraftforge.fml.relauncher.FMLRelaunchLog;
-import org.objectweb.asm.tree.*;
+import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.MethodNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ public class MethodPatcher {
     private String method;
 
     private List<PatchData> patches = new ArrayList<>();
+    private List<PostProcessor> postProcessors = new ArrayList<>();
 
     public MethodPatcher(ClassPatcher patcher, String cls, String method) {
         this.patcher = patcher;
@@ -39,6 +41,7 @@ public class MethodPatcher {
                 patch.at.apply(patch, methodNode, insnNode, method);
             });
         }
+        this.postProcessors.forEach(postProcessor -> postProcessor.process(this.cls, methodNode));
     }
 
     public MethodPatcher apply(RuntimePatcher.Patch at, Consumer<Method> consumer) {
@@ -47,6 +50,11 @@ public class MethodPatcher {
 
     public MethodPatcher apply(RuntimePatcher.Patch at, Predicate<PredicateData> insnType, Consumer<Method> consumer) {
         this.patches.add(new PatchData(at, insnType, consumer));
+        return this;
+    }
+
+    public MethodPatcher apply(PostProcessor postProcessor) {
+        this.postProcessors.add(postProcessor);
         return this;
     }
 

@@ -3,9 +3,11 @@ package net.ilexiconn.llibrary.server.asm;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.FieldInsnNode;
+import org.objectweb.asm.tree.FrameNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
+import org.objectweb.asm.tree.TypeInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
 public class Method {
@@ -88,6 +90,45 @@ public class Method {
             String cls = MappingHandler.INSTANCE.getClassMapping((String) obj);
             String desc = MappingHandler.INSTANCE.getClassMapping(Descriptors.method(params));
             this.insnList.add(new MethodInsnNode(opcode, cls, MappingHandler.INSTANCE.getMethodMapping(cls, name, desc), desc, opcode == Opcodes.INVOKEINTERFACE));
+        }
+        return this;
+    }
+
+    /**
+     * Adds a frame node
+     *
+     * @param frameOpcode the frame opcode to insert
+     * @param locals local table for this frame
+     * @param stack stack table for this frame
+     * @return this
+     */
+    public Method frame(int frameOpcode, Object[] locals, Object[] stack) {
+        for (int i = 0; i < locals.length; i++) {
+            Object entry = locals[i];
+            if (entry instanceof String) {
+                locals[i] = MappingHandler.INSTANCE.getClassMapping(locals[i]);
+            }
+        }
+        for (int i = 0; i < stack.length; i++) {
+            Object entry = stack[i];
+            if (entry instanceof String) {
+                stack[i] = MappingHandler.INSTANCE.getClassMapping(stack[i]);
+            }
+        }
+        this.insnList.add(new FrameNode(frameOpcode, locals.length, locals, stack.length, stack));
+        return this;
+    }
+
+    /**
+     * Add a cast check instruction
+     *
+     * @param cast the class object or class name to cast to
+     * @return this
+     */
+    public Method cast(Object cast) {
+        if (cast instanceof String) {
+            String cls = MappingHandler.INSTANCE.getClassMapping((String) cast);
+            this.insnList.add(new TypeInsnNode(Opcodes.CHECKCAST, cls));
         }
         return this;
     }

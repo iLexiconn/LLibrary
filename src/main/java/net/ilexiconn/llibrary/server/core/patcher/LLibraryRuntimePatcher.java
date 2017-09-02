@@ -3,6 +3,7 @@ package net.ilexiconn.llibrary.server.core.patcher;
 import net.ilexiconn.llibrary.client.lang.LanguageHandler;
 import net.ilexiconn.llibrary.client.util.ItemTESRContext;
 import net.ilexiconn.llibrary.server.asm.InsnPredicate;
+import net.ilexiconn.llibrary.server.asm.PostProcessor;
 import net.ilexiconn.llibrary.server.asm.RuntimePatcher;
 import net.ilexiconn.llibrary.server.world.TickRateHandler;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -46,12 +47,16 @@ public class LLibraryRuntimePatcher extends RuntimePatcher {
                 .apply(Patch.BEFORE, new InsnPredicate.Op().opcode(InsnPredicate.RETURNING), method -> {
                     method.var(ALOAD, 0).var(ALOAD, 7).var(FLOAD, 1, 6);
                     method.method(INVOKESTATIC, LLibraryHooks.class, "setRotationAngles", ModelBiped.class, Entity.class, 6, float.class, void.class);
-                }).pop()
+                })
+                .apply(new PostProcessor.PreserveFrames(7))
+                .pop()
                 .patchMethod("render", Entity.class, 6, float.class, void.class)
                 .apply(Patch.BEFORE, new InsnPredicate.Op().opcode(InsnPredicate.RETURNING), method -> {
                     method.var(ALOAD, 0, 1).var(FLOAD, 2, 7);
                     method.method(INVOKESTATIC, LLibraryHooks.class, "renderModel", ModelBiped.class, Entity.class, 6, float.class, void.class);
-                }).pop()
+                })
+                .apply(new PostProcessor.PreserveFrames(7))
+                .pop()
                 .patchMethod("<init>", float.class, boolean.class, void.class)
                 .apply(Patch.BEFORE, new InsnPredicate.Op().opcode(InsnPredicate.RETURNING), method -> {
                     method.var(ALOAD, 0);

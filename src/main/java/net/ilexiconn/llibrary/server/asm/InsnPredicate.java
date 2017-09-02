@@ -2,6 +2,7 @@ package net.ilexiconn.llibrary.server.asm;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.FieldInsnNode;
+import org.objectweb.asm.tree.FrameNode;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
@@ -32,6 +33,19 @@ public abstract class InsnPredicate implements Predicate<MethodPatcher.Predicate
         @Override
         public boolean test(MethodPatcher.PredicateData predicateData) {
             return predicateData.node instanceof InsnNode && super.test(predicateData);
+        }
+    }
+
+    public static class Frame extends InsnPredicate {
+        private final int frameType;
+
+        public Frame(int frameType) {
+            this.frameType = frameType;
+        }
+
+        @Override
+        public boolean test(MethodPatcher.PredicateData predicateData) {
+            return predicateData.node instanceof FrameNode && ((FrameNode) predicateData.node).type == this.frameType;
         }
     }
 
