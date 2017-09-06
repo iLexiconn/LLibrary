@@ -17,6 +17,7 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLFingerprintViolationEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -24,7 +25,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = "llibrary", name = "LLibrary", version = LLibrary.VERSION, guiFactory = "net.ilexiconn.llibrary.client.gui.LLibraryGUIFactory", updateJSON = "https://gist.github.com/gegy1000/a6639456aeb8edd92cbf7cbfcf9d65d9")
+@Mod(modid = "llibrary", name = "LLibrary", version = LLibrary.VERSION, certificateFingerprint = "${fingerprint}", guiFactory = "net.ilexiconn.llibrary.client.gui.LLibraryGUIFactory", updateJSON = "https://gist.github.com/gegy1000/a6639456aeb8edd92cbf7cbfcf9d65d9")
 public class LLibrary {
     public static final String VERSION = "1.7.7";
     public static final Logger LOGGER = LogManager.getFormatterLogger("LLibrary");
@@ -58,5 +59,10 @@ public class LLibrary {
     @Mod.EventHandler
     public void onPostInit(FMLPostInitializationEvent event) {
         LLibrary.PROXY.onPostInit();
+    }
+
+    @Mod.EventHandler
+    public void onFingerprintViolation(FMLFingerprintViolationEvent event) {
+        LOGGER.warn("Detected invalid fingerprint for file " + event.getSource().getName() + "! You will not receive support with this tampered version of llibrary!");
     }
 }
