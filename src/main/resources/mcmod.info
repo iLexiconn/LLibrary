@@ -5,9 +5,10 @@
     "description": "The lightweight Minecraft modding library",
     "version": "${version}",
     "authorList": [
-      "iLexiconn"
+      "iLexiconn",
+      "gegy1000"
     ],
-    "credits": "gegy1000, pau101, BobMowzie, FiskFille, TheCyberBrick, WorldSEnder",
+    "credits": "pau101, BobMowzie, FiskFille, TheCyberBrick, WorldSEnder",
     "url": "https://github.com/iLexiconn/LLibrary"
   }
 ]

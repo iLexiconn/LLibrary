@@ -1,5 +1,6 @@
 package net.ilexiconn.llibrary.server.core.plugin;
 
+import net.ilexiconn.llibrary.LLibrary;
 import net.ilexiconn.llibrary.server.asm.MappingHandler;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import org.apache.commons.io.IOUtils;
@@ -9,7 +10,7 @@ import java.io.InputStream;
 import java.util.Map;
 
 @IFMLLoadingPlugin.Name("llibrary")
-@IFMLLoadingPlugin.MCVersion("1.12.1")
+@IFMLLoadingPlugin.MCVersion(LLibrary.MC_VERSION)
 @IFMLLoadingPlugin.SortingIndex(1001)
 @IFMLLoadingPlugin.TransformerExclusions("net.ilexiconn.llibrary.server.asm")
 public class LLibraryPlugin implements IFMLLoadingPlugin {

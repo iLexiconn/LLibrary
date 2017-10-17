@@ -25,9 +25,11 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = "llibrary", name = "LLibrary", version = LLibrary.VERSION, certificateFingerprint = "${fingerprint}", guiFactory = "net.ilexiconn.llibrary.client.gui.LLibraryGUIFactory", updateJSON = "https://gist.github.com/gegy1000/a6639456aeb8edd92cbf7cbfcf9d65d9")
+@Mod(modid = "llibrary", name = "LLibrary", version = LLibrary.VERSION, acceptedMinecraftVersions = LLibrary.MC_VERSION, certificateFingerprint = "${fingerprint}", guiFactory = "net.ilexiconn.llibrary.client.gui.LLibraryGUIFactory", updateJSON = "https://gist.github.com/gegy1000/a6639456aeb8edd92cbf7cbfcf9d65d9")
 public class LLibrary {
     public static final String VERSION = "1.7.7";
+    public static final String MC_VERSION = "1.12.2";
+
     public static final Logger LOGGER = LogManager.getFormatterLogger("LLibrary");
     @SidedProxy(serverSide = "net.ilexiconn.llibrary.server.ServerProxy", clientSide = "net.ilexiconn.llibrary.client.ClientProxy")
     public static ServerProxy PROXY;
@@ -36,7 +38,7 @@ public class LLibrary {
     @CapabilityInject(IEntityDataCapability.class)
     public static Capability<IEntityDataCapability> ENTITY_DATA_CAPABILITY;
     public static LLibraryConfig CONFIG = new LLibraryConfig();
-    @NetworkWrapper({AnimationMessage.class, PropertiesMessage.class, SnackbarMessage.class, BlockEntityMessage.class, SurvivalTabMessage.class})
+    @NetworkWrapper({ AnimationMessage.class, PropertiesMessage.class, SnackbarMessage.class, BlockEntityMessage.class, SurvivalTabMessage.class })
     public static SimpleNetworkWrapper NETWORK_WRAPPER;
     public static int QUBBLE_VERSION = 1;
     public static int QUBBLE_VANILLA_VERSION = 1;

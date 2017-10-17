@@ -33,14 +33,14 @@ if (secretFile.exists()) {
 
 def mod_file = "src/main/java/net/ilexiconn/llibrary/LLibrary.java"
 
-version = getLLibraryVersion(mod_file) + "-1.12.1"
+version = getLLibraryVersion(mod_file) + "-1.12.2"
 group = "net.ilexiconn"
 archivesBaseName = "llibrary"
 sourceCompatibility = targetCompatibility = "1.8"
 def minecraft_mappings = "snapshot_20170624"
 
 minecraft {
-    version = "1.12.1-14.22.0.2463"
+    version = "1.12.2-14.23.0.2491"
     runDir = "minecraft"
     mappings = minecraft_mappings
     makeObfSourceJar = false
@@ -97,13 +97,14 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 }
 
 task signJar(type: SignJar, dependsOn: reobfJar) {
-    onlyIf { secret }
-    keyStore = secret.keyStore
-    alias = secret.keyStoreAlias
-    storePass = secret.keyStorePass
-    keyPass = secret.keyStoreKeyPass
-    inputFile = jar.archivePath
-    outputFile = jar.archivePath
+    if (secret) {
+        keyStore = secret.keyStore
+        alias = secret.keyStoreAlias
+        storePass = secret.keyStorePass
+        keyPass = secret.keyStoreKeyPass
+        inputFile = jar.archivePath
+        outputFile = jar.archivePath
+    }
 }
 
 artifacts {
@@ -155,7 +156,7 @@ publishing {
 }
 
 curseforge {
-    def url = "http://pastebin.com/raw/EjsPPpVG".toURL()
+    def url = "https://gist.githubusercontent.com/gegy1000/a6639456aeb8edd92cbf7cbfcf9d65d9/raw/llibrary_updates.json".toURL()
     def versions = new JsonSlurper().parseText url.text
 
     if (secret) {
@@ -168,15 +169,15 @@ curseforge {
         id = "243298"
 
         releaseType = "release"
+        def game_version = project.minecraft.version
         def curse_version = getLLibraryVersion(mod_file)
-        def remoteChangelog = versions.versions[curse_version];
-        if (remoteChangelog) {
-            changelog = remoteChangelog.join("\n")
-        } else {
+        def latestVersion = versions.promos["${game_version}-latest"]
+        changelog = versions[game_version][latestVersion];
+        if (!changelog) {
             changelog = ""
         }
-
-        addGameVersion(project.minecraft.version)
+        
+        addGameVersion(game_version)
 
         mainArtifact(jar) {
             displayName = "LLibrary $curse_version"
