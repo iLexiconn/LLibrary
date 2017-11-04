@@ -157,11 +157,12 @@ public enum ClientEventHandler {
     }
 
     @SubscribeEvent
-    public void onRenderPlayer(RenderPlayerEvent.Pre event) {
+    public void onRenderPlayer(RenderPlayerEvent.Post event) {
         if (LLibrary.CONFIG.hasPatreonEffects() && ClientProxy.PATRONS != null && (ClientProxy.MINECRAFT.gameSettings.thirdPersonView != 0 || event.getEntityPlayer() != ClientProxy.MINECRAFT.player)) {
             for (String name : ClientProxy.PATRONS) {
                 if (event.getEntityPlayer().getGameProfile().getId().toString().equals(name)) {
                     GlStateManager.pushMatrix();
+                    GlStateManager.translate(event.getX(), event.getY(), event.getZ());
                     GlStateManager.depthMask(false);
                     GlStateManager.disableLighting();
                     GlStateManager.translate(0.0F, 1.37F, 0.0F);
@@ -176,7 +177,7 @@ public enum ClientEventHandler {
         }
     }
 
-    private void renderVoxel(RenderPlayerEvent.Pre event, float scale, float color) {
+    private void renderVoxel(RenderPlayerEvent.Post event, float scale, float color) {
         EntityPlayer player = event.getEntityPlayer();
         int ticksExisted = player.ticksExisted;
         float partialTicks = LLibrary.PROXY.getPartialTicks();

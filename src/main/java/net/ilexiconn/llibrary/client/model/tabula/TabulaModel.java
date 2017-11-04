@@ -77,6 +77,7 @@ public class TabulaModel extends AdvancedModelBase {
         box.rotateAngleX = (float) Math.toRadians(rotation[0]);
         box.rotateAngleY = (float) Math.toRadians(rotation[1]);
         box.rotateAngleZ = (float) Math.toRadians(rotation[2]);
+        box.mirror = cube.isTextureMirrorEnabled();
         return box;
     }
 

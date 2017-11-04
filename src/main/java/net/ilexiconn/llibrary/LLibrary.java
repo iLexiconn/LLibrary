@@ -26,7 +26,7 @@ import org.apache.logging.log4j.Logger;
 
 @Mod(modid = "llibrary", name = "LLibrary", version = LLibrary.VERSION, guiFactory = "net.ilexiconn.llibrary.client.gui.LLibraryGUIFactory", updateJSON = "https://gist.github.com/gegy1000/a6639456aeb8edd92cbf7cbfcf9d65d9")
 public class LLibrary {
-    public static final String VERSION = "1.7.7";
+    public static final String VERSION = "1.7.8";
     public static final Logger LOGGER = LogManager.getFormatterLogger("LLibrary");
     @SidedProxy(serverSide = "net.ilexiconn.llibrary.server.ServerProxy", clientSide = "net.ilexiconn.llibrary.client.ClientProxy")
     public static ServerProxy PROXY;
