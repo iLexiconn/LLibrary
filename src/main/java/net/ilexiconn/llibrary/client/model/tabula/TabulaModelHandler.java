@@ -33,6 +33,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -52,8 +53,8 @@ public enum TabulaModelHandler implements ICustomModelLoader, JsonDeserializatio
     private final Set<String> enabledDomains = new HashSet<>();
     
     public void addDomain(String domain) {
-        this.enabledDomains.add(domain.toLowerCase());
-        LLibrary.LOGGER.info("TabulaModelHandler: Domain %s has been added.", domain.toLowerCase());
+        this.enabledDomains.add(domain.toLowerCase(Locale.ROOT));
+        LLibrary.LOGGER.info("TabulaModelHandler: Domain {} has been added.", domain.toLowerCase(Locale.ROOT));
     }
     
     /**

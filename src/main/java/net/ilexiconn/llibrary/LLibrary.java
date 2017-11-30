@@ -30,7 +30,7 @@ public class LLibrary {
     public static final String VERSION = "1.7.9";
     public static final String MC_VERSION = "1.12.2";
 
-    public static final Logger LOGGER = LogManager.getFormatterLogger("LLibrary");
+    public static final Logger LOGGER = LogManager.getLogger("LLibrary");
     @SidedProxy(serverSide = "net.ilexiconn.llibrary.server.ServerProxy", clientSide = "net.ilexiconn.llibrary.client.ClientProxy")
     public static ServerProxy PROXY;
     @Mod.Instance("llibrary")
@@ -65,6 +65,6 @@ public class LLibrary {
 
     @Mod.EventHandler
     public void onFingerprintViolation(FMLFingerprintViolationEvent event) {
-        LOGGER.warn("Detected invalid fingerprint for file " + event.getSource().getName() + "! You will not receive support with this tampered version of llibrary!");
+        LOGGER.warn("Detected invalid fingerprint for file {}! You will not receive support with this tampered version of llibrary!", event.getSource().getName());
     }
 }
