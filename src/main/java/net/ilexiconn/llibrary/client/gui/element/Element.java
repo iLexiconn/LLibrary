@@ -4,9 +4,9 @@ import net.ilexiconn.llibrary.LLibrary;
 import net.ilexiconn.llibrary.client.ClientProxy;
 import net.ilexiconn.llibrary.client.gui.element.color.ColorScheme;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -54,6 +54,13 @@ public class Element<T extends IElementGUI> {
     }
 
     public void render(float mouseX, float mouseY, float partialTicks) {
+
+    }
+
+    /**
+     * Called when this element is removed or its parent gui is closed
+     */
+    public void dispose() {
 
     }
 
