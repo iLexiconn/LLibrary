@@ -33,6 +33,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.util.Rectangle;
 
+import java.util.UUID;
+
 @SideOnly(Side.CLIENT)
 public enum ClientEventHandler {
     INSTANCE;
@@ -158,21 +160,21 @@ public enum ClientEventHandler {
 
     @SubscribeEvent
     public void onRenderPlayer(RenderPlayerEvent.Post event) {
-        if (LLibrary.CONFIG.hasPatreonEffects() && ClientProxy.PATRONS != null && (ClientProxy.MINECRAFT.gameSettings.thirdPersonView != 0 || event.getEntityPlayer() != ClientProxy.MINECRAFT.player)) {
-            for (String name : ClientProxy.PATRONS) {
-                if (event.getEntityPlayer().getGameProfile().getId().toString().equals(name)) {
-                    GlStateManager.pushMatrix();
-                    GlStateManager.translate(event.getX(), event.getY(), event.getZ());
-                    GlStateManager.depthMask(false);
-                    GlStateManager.disableLighting();
-                    GlStateManager.translate(0.0F, 1.37F, 0.0F);
-                    this.renderVoxel(event, 1.1F, 0.23F);
-                    GlStateManager.depthMask(true);
-                    GlStateManager.enableLighting();
-                    GlStateManager.translate(0.0F, 0.128F, 0.0F);
-                    this.renderVoxel(event, 1.0F, 1.0F);
-                    GlStateManager.popMatrix();
-                }
+        EntityPlayer player = event.getEntityPlayer();
+        if (LLibrary.CONFIG.hasPatreonEffects() && ClientProxy.PATRONS != null && (ClientProxy.MINECRAFT.gameSettings.thirdPersonView != 0 || player != ClientProxy.MINECRAFT.player)) {
+            UUID id = player.getGameProfile().getId();
+            if (id != null && ClientProxy.PATRONS.contains(id.toString())) {
+                GlStateManager.pushMatrix();
+                GlStateManager.translate(event.getX(), event.getY(), event.getZ());
+                GlStateManager.depthMask(false);
+                GlStateManager.disableLighting();
+                GlStateManager.translate(0.0F, 1.37F, 0.0F);
+                this.renderVoxel(event, 1.1F, 0.23F);
+                GlStateManager.depthMask(true);
+                GlStateManager.enableLighting();
+                GlStateManager.translate(0.0F, 0.128F, 0.0F);
+                this.renderVoxel(event, 1.0F, 1.0F);
+                GlStateManager.popMatrix();
             }
         }
     }

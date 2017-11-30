@@ -26,14 +26,17 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends ServerProxy {
     public static final Minecraft MINECRAFT = Minecraft.getMinecraft();
     public static final int UPDATE_BUTTON_ID = "UPDATE_BUTTON_ID".hashCode();
     public static final List<SnackbarGUI> SNACKBAR_LIST = new ArrayList<>();
-    public static String[] PATRONS = new String[0];
+    public static final Set<String> PATRONS = new HashSet<>();
     public static final Timer TIMER = ReflectionHelper.getPrivateValue(Minecraft.class, ClientProxy.MINECRAFT, "timer", "field_71428_T", "aa");
     public static final SurvivalTab INVENTORY_TAB = SurvivalTabHandler.INSTANCE.create("container.inventory", GuiInventory.class);
 
@@ -45,7 +48,7 @@ public class ClientProxy extends ServerProxy {
             try {
                 String result = patronFuture.get();
                 if (result != null) {
-                    PATRONS = new Gson().fromJson(result, String[].class);
+                    Collections.addAll(PATRONS, new Gson().fromJson(result, String[].class));
                 }
             } catch (Exception e) {
                 LLibrary.LOGGER.error("Failed to load Patron list", e);
