@@ -49,7 +49,7 @@ public enum LanguageHandler {
                     Map<String, String> lang = LanguageMap.parseLangFile(new FileInputStream(child));
                     this.localizations.put(child.getName().split("\\.")[0], lang);
                 } catch (Exception e) {
-                    LLibrary.LOGGER.error("An exception occurred while loading " + child.getName() + " from cache.", e);
+                    LLibrary.LOGGER.error("An exception occurred while loading {} from cache.", child.getName(), e);
                 }
             }
         }
@@ -68,7 +68,7 @@ public enum LanguageHandler {
                     }
                 }
             } catch (Exception e) {
-                LLibrary.LOGGER.error("An exception occurred while loading remote lang container for " + modId, e);
+                LLibrary.LOGGER.error("An exception occurred while loading remote lang container for {}", modId, e);
             }
         }
         for (Map.Entry<String, Map<String, String>> entry : this.localizations.entrySet()) {
@@ -84,7 +84,7 @@ public enum LanguageHandler {
                 }
                 out.close();
             } catch (Exception e) {
-                LLibrary.LOGGER.error("An exception occurred while saving cache for " + language);
+                LLibrary.LOGGER.error("An exception occurred while saving cache for {}", language);
             }
         }
     }

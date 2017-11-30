@@ -44,7 +44,7 @@ public enum EntityPropertiesHandler {
             return;
         }
         if (this.propertiesIDMap.containsValue(properties.getID())) {
-            LLibrary.LOGGER.fatal("Duplicate entity properties with ID " + properties.getID());
+            LLibrary.LOGGER.fatal("Duplicate entity properties with ID {}", properties.getID());
             return;
         }
         this.propertiesIDMap.put(propertiesClass, properties.getID());

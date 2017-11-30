@@ -21,7 +21,7 @@ apply plugin: "net.minecraftforge.gradle.forge"
 apply plugin: "maven-publish"
 apply plugin: "com.matthewprenger.cursegradle"
 
-import groovy.json.JsonSlurper;
+import groovy.json.JsonSlurper
 
 def secretFile = file "secret.json"
 project.ext.secret = null
@@ -152,7 +152,7 @@ curseforge {
 
         releaseType = "release"
         def curse_version = getLLibraryVersion()
-        def remoteChangelog = versions.versions[curse_version];
+        def remoteChangelog = versions.versions[curse_version]
         if (remoteChangelog) {
             changelog = remoteChangelog.join("\n")
         } else {
@@ -180,27 +180,27 @@ curseforge {
 }
 
 String getLLibraryVersion() {
-    def major = "0";
-    def revision = "0";
-    def patch = "0";
-    def prefix = "public static final String VERSION = \"";
+    def major = "0"
+    def revision = "0"
+    def patch = "0"
+    def prefix = "public static final String VERSION = \""
     def file = file("src/main/java/net/ilexiconn/llibrary/LLibrary.java")
     file.eachLine { String s ->
-        s = s.trim();
+        s = s.trim()
         if (s.startsWith(prefix)) {
-            s = s.substring(prefix.length(), s.length() - 2);
-            def pts = s.split("\\.");
-            major = pts[0];
-            revision = pts[1];
-            patch = pts[2];
+            s = s.substring(prefix.length(), s.length() - 2)
+            def pts = s.split("\\.")
+            major = pts[0]
+            revision = pts[1]
+            patch = pts[2]
         }
     }
 
-    return "$major.$revision.$patch";
+    return "$major.$revision.$patch"
 }
 
 task generateMappings << {
-    def mappingParts = minecraft_mappings.split("_");
+    def mappingParts = minecraft_mappings.split("_")
     def mappingReplacements = new HashMap<String, String>()
     def mappingFile = new File(System.properties["user.home"] + "/.gradle/caches/minecraft/de/oceanlabs/mcp/mcp_" + mappingParts[0] + "/" + mappingParts[1] + "/" + project.minecraft.version + "/srgs/mcp-srg.srg")
     if (mappingFile.exists()) {
