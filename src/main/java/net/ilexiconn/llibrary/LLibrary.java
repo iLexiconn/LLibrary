@@ -27,7 +27,7 @@ import org.apache.logging.log4j.Logger;
 
 @Mod(modid = "llibrary", name = "LLibrary", version = LLibrary.VERSION, acceptedMinecraftVersions = LLibrary.MC_VERSION, certificateFingerprint = "${fingerprint}", guiFactory = "net.ilexiconn.llibrary.client.gui.LLibraryGUIFactory", updateJSON = "https://gist.github.com/gegy1000/a6639456aeb8edd92cbf7cbfcf9d65d9")
 public class LLibrary {
-    public static final String VERSION = "1.7.8";
+    public static final String VERSION = "1.7.9";
     public static final String MC_VERSION = "1.12.2";
 
     public static final Logger LOGGER = LogManager.getFormatterLogger("LLibrary");
