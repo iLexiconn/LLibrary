@@ -7,7 +7,6 @@ import net.ilexiconn.llibrary.client.event.RenderArmEvent;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelPlayer;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.Entity;
@@ -24,31 +23,30 @@ public class LLibraryHooks {
 
     @SideOnly(Side.CLIENT)
     @SuppressWarnings("unused")
-    public static void renderArm(RenderPlayer renderPlayer, AbstractClientPlayer player, EnumHandSide side) {
-        GlStateManager.color(1.0F, 1.0F, 1.0F);
+    public static void renderArmPre(RenderPlayer renderPlayer, AbstractClientPlayer player, EnumHandSide side) {
         ModelPlayer modelPlayer = renderPlayer.getMainModel();
-        renderPlayer.setModelVisibilities(player);
-        modelPlayer.swingProgress = 0.0F;
-        modelPlayer.isSneak = false;
-        modelPlayer.setRotationAngles(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F, player);
-        if (side == EnumHandSide.LEFT) {
-            modelPlayer.bipedLeftArm.rotateAngleX = 0.0F;
-            modelPlayer.bipedLeftArmwear.rotateAngleX = 0.0F;
-        } else {
-            modelPlayer.bipedRightArm.rotateAngleX = 0.0F;
-            modelPlayer.bipedRightArmwear.rotateAngleX = 0.0F;
-        }
-        if (!MinecraftForge.EVENT_BUS.post(new RenderArmEvent.Pre(player, renderPlayer, renderPlayer.getMainModel(), side))) {
-            GlStateManager.enableBlend();
+        if (MinecraftForge.EVENT_BUS.post(new RenderArmEvent.Pre(player, renderPlayer, modelPlayer, side))) {
             if (side == EnumHandSide.LEFT) {
-                modelPlayer.bipedLeftArm.render(0.0625F);
-                modelPlayer.bipedLeftArmwear.render(0.0625F);
+                modelPlayer.bipedLeftArm.showModel = false;
+                modelPlayer.bipedLeftArmwear.showModel = false;
             } else {
-                modelPlayer.bipedRightArm.render(0.0625F);
-                modelPlayer.bipedRightArmwear.render(0.0625F);
+                modelPlayer.bipedRightArm.showModel = false;
+                modelPlayer.bipedRightArmwear.showModel = false;
             }
-            GlStateManager.disableBlend();
-            MinecraftForge.EVENT_BUS.post(new RenderArmEvent.Post(player, renderPlayer, renderPlayer.getMainModel(), side));
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    @SuppressWarnings("unused")
+    public static void renderArmPost(RenderPlayer renderPlayer, AbstractClientPlayer player, EnumHandSide side) {
+        ModelPlayer modelPlayer = renderPlayer.getMainModel();
+        MinecraftForge.EVENT_BUS.post(new RenderArmEvent.Post(player, renderPlayer, modelPlayer, side));
+        if (side == EnumHandSide.LEFT) {
+            modelPlayer.bipedLeftArm.showModel = true;
+            modelPlayer.bipedLeftArmwear.showModel = true;
+        } else {
+            modelPlayer.bipedRightArm.showModel = true;
+            modelPlayer.bipedRightArmwear.showModel = true;
         }
     }
 

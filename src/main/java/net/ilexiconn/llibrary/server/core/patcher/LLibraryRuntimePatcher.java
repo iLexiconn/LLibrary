@@ -11,6 +11,7 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.EntityRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
@@ -65,18 +66,26 @@ public class LLibraryRuntimePatcher extends RuntimePatcher {
 
         this.patchClass(RenderPlayer.class)
                 .patchMethod("renderLeftArm", AbstractClientPlayer.class, void.class)
-                .apply(Patch.REPLACE, method -> {
+                .apply(Patch.AFTER, new InsnPredicate.Method(ModelPlayer.class, "setRotationAngles", 6, float.class, Entity.class, void.class), method -> {
                     method.var(ALOAD, 0, 1);
                     method.field(GETSTATIC, EnumHandSide.class, "LEFT", EnumHandSide.class);
-                    method.method(INVOKESTATIC, LLibraryHooks.class, "renderArm", RenderPlayer.class, AbstractClientPlayer.class, EnumHandSide.class, void.class);
-                    method.node(RETURN);
+                    method.method(INVOKESTATIC, LLibraryHooks.class, "renderArmPre", RenderPlayer.class, AbstractClientPlayer.class, EnumHandSide.class, void.class);
+                })
+                .apply(Patch.AFTER, new InsnPredicate.Method(GlStateManager.class, "disableBlend", void.class), method -> {
+                    method.var(ALOAD, 0, 1);
+                    method.field(GETSTATIC, EnumHandSide.class, "LEFT", EnumHandSide.class);
+                    method.method(INVOKESTATIC, LLibraryHooks.class, "renderArmPost", RenderPlayer.class, AbstractClientPlayer.class, EnumHandSide.class, void.class);
                 }).pop()
                 .patchMethod("renderRightArm", AbstractClientPlayer.class, void.class)
-                .apply(Patch.REPLACE, method -> {
+                .apply(Patch.AFTER, new InsnPredicate.Method(ModelPlayer.class, "setRotationAngles", 6, float.class, Entity.class, void.class), method -> {
                     method.var(ALOAD, 0, 1);
                     method.field(GETSTATIC, EnumHandSide.class, "RIGHT", EnumHandSide.class);
-                    method.method(INVOKESTATIC, LLibraryHooks.class, "renderArm", RenderPlayer.class, AbstractClientPlayer.class, EnumHandSide.class, void.class);
-                    method.node(RETURN);
+                    method.method(INVOKESTATIC, LLibraryHooks.class, "renderArmPre", RenderPlayer.class, AbstractClientPlayer.class, EnumHandSide.class, void.class);
+                })
+                .apply(Patch.AFTER, new InsnPredicate.Method(GlStateManager.class, "disableBlend", void.class), method -> {
+                    method.var(ALOAD, 0, 1);
+                    method.field(GETSTATIC, EnumHandSide.class, "RIGHT", EnumHandSide.class);
+                    method.method(INVOKESTATIC, LLibraryHooks.class, "renderArmPost", RenderPlayer.class, AbstractClientPlayer.class, EnumHandSide.class, void.class);
                 }).pop()
                 .patchMethod("<init>", RenderManager.class, boolean.class, void.class)
                 .apply(Patch.BEFORE, new InsnPredicate.Op().opcode(InsnPredicate.RETURNING), method -> {
