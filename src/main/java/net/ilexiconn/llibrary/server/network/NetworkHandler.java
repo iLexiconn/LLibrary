@@ -31,8 +31,8 @@ public enum NetworkHandler {
      * Register a message to both sides.
      *
      * @param networkWrapper the network wrapper
-     * @param clazz          the message class
-     * @param <T>            the message type
+     * @param clazz the message class
+     * @param <T> the message type
      */
     public <T extends AbstractMessage<T> & IMessageHandler<T, IMessage>> void registerMessage(SimpleNetworkWrapper networkWrapper, Class<T> clazz) {
         try {
@@ -52,9 +52,9 @@ public enum NetworkHandler {
      * Register a message to a specific side.
      *
      * @param networkWrapper the network wrapper
-     * @param clazz          the message class
-     * @param side           the side
-     * @param <T>            the message type
+     * @param clazz the message class
+     * @param side the side
+     * @param <T> the message type
      * @deprecated use {@link NetworkHandler#registerMessage(SimpleNetworkWrapper, Class)} in combination with {@link AbstractMessage#registerOnSide(Side)} instead.
      */
     @Deprecated
@@ -84,7 +84,7 @@ public enum NetworkHandler {
                         this.registerMessage(networkWrapper, messageClass);
                     }
                 } catch (Exception e) {
-                    LLibrary.LOGGER.fatal("Failed to inject network wrapper for mod container " + mod, e);
+                    LLibrary.LOGGER.fatal("Failed to inject network wrapper for mod container {}", mod, e);
                 }
             }
         }

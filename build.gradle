@@ -44,7 +44,7 @@ minecraft {
     runDir = "minecraft"
     mappings = minecraft_mappings
     makeObfSourceJar = false
-    
+
     if (secret) {
         replace '${fingerprint}', secret.signSHA1
         replaceIn mod_file
