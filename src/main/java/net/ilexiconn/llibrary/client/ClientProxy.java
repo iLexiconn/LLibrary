@@ -2,6 +2,7 @@ package net.ilexiconn.llibrary.client;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.gson.Gson;
+import net.ilexiconn.llibrary.LLibrary;
 import net.ilexiconn.llibrary.client.gui.SnackbarGUI;
 import net.ilexiconn.llibrary.client.gui.survivaltab.SurvivalTab;
 import net.ilexiconn.llibrary.client.gui.survivaltab.SurvivalTabHandler;
@@ -39,7 +40,7 @@ public class ClientProxy extends ServerProxy {
     @Override
     public void onPreInit() {
         super.onPreInit();
-        ListenableFuture<String> patronFuture = WebUtils.readPastebinAsync("aLjMgBAV");
+        ListenableFuture<String> patronFuture = WebUtils.readURLAsync("https://gist.githubusercontent.com/gegy1000/7a6d39cf7a2c1f794ffb9037e8146adc/raw/llibrary_patrons.json");
         patronFuture.addListener(() -> {
             try {
                 String result = patronFuture.get();
@@ -47,7 +48,7 @@ public class ClientProxy extends ServerProxy {
                     PATRONS = new Gson().fromJson(result, String[].class);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                LLibrary.LOGGER.error("Failed to load Patron list", e);
             }
         }, Runnable::run);
 
