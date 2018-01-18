@@ -7,6 +7,7 @@ import org.objectweb.asm.tree.MethodNode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -34,16 +35,18 @@ public class ClassPatcher {
             methodNode.instructions.add(m.insnList);
             classNode.methods.add(methodNode);
         }
-        for (MethodNode methodNode : new ArrayList<>(classNode.methods)) {
+        Iterator<MethodNode> methodIterator = classNode.methods.iterator();
+        while (methodIterator.hasNext()) {
+            MethodNode methodNode = methodIterator.next();
             String method = methodNode.name + methodNode.desc;
-            if (this.removeList.contains(method)) {
+            if (!this.removeList.contains(method)) {
+                MethodPatcher patcher = this.patcherMap.get(method);
+                if (patcher != null) {
+                    patcher.handlePatches(methodNode);
+                }
+            } else {
                 FMLRelaunchLog.info("   Removing method " + method);
-                classNode.methods.remove(methodNode);
-                continue;
-            }
-            MethodPatcher patcher = this.patcherMap.get(method);
-            if (patcher != null) {
-                patcher.handlePatches(methodNode);
+                methodIterator.remove();
             }
         }
     }

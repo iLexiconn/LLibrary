@@ -15,6 +15,10 @@ import java.util.Map;
 public interface PostProcessor {
     void process(String cls, MethodNode node);
 
+    /**
+     * @deprecated Should no longer be needed, as COMPUTE_FRAMES is now called safely for every patcher.
+     */
+    @Deprecated
     class PreserveFrames implements PostProcessor {
         private static final Map<String, Object> PRIMITIVES = new HashMap<>();
 

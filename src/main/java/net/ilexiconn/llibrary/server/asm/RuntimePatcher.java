@@ -63,7 +63,7 @@ public abstract class RuntimePatcher implements IClassTransformer, Opcodes {
             ClassNode classNode = new ClassNode();
             classReader.accept(classNode, 0);
             patcher.handlePatches(classNode);
-            ClassWriter classWriter = new ClassWriter(classReader, ClassWriter.COMPUTE_MAXS);
+            ClassWriter classWriter = new PatchClassWriter(classReader, ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
             classNode.accept(classWriter);
             return classWriter.toByteArray();
         }
