@@ -1,12 +1,17 @@
 package net.ilexiconn.llibrary.server.core.plugin;
 
+import net.ilexiconn.llibrary.server.asm.PatchClassWriter;
 import net.minecraft.launchwrapper.IClassTransformer;
 import net.minecraftforge.fml.relauncher.FMLRelaunchLog;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
-import org.objectweb.asm.tree.*;
+import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.InsnList;
+import org.objectweb.asm.tree.LdcInsnNode;
+import org.objectweb.asm.tree.MethodNode;
 
 public class LLibraryTransformer implements IClassTransformer {
     private static final String RUNTIME_PATCHER = "RuntimePatcher";
@@ -36,7 +41,7 @@ public class LLibraryTransformer implements IClassTransformer {
 
             classNode.visitAnnotation("Lnet/ilexiconn/llibrary/server/asm/Transformed;", true);
 
-            ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+            ClassWriter classWriter = new PatchClassWriter(ClassWriter.COMPUTE_FRAMES);
             classNode.accept(classWriter);
             bytes = classWriter.toByteArray();
         }
