@@ -1,36 +1,44 @@
 package net.ilexiconn.llibrary.server.asm;
 
 import net.ilexiconn.llibrary.server.core.plugin.LLibraryPlugin;
+import org.apache.commons.io.IOUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public enum MappingHandler {
     INSTANCE;
 
-    private Map<String, String> fields;
-    private Map<String, String> methods;
+    private final Map<String, String> fields = new HashMap<>();
+    private final Map<String, String> methods = new HashMap<>();
 
     public void parseMappings(InputStream stream) throws IOException {
-        this.fields = new HashMap<>();
-        this.methods = new HashMap<>();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-        String line;
-        while ((line = reader.readLine()) != null) {
-            String[] split = line.split("=");
-            String key = split[0], value = split[1];
-            if (key.contains("(")) {
-                this.methods.put(key, value);
-            } else {
-                this.fields.put(key, value);
+        if (stream == null) {
+            throw new IOException("Could not find LLibrary mappings file!");
+        }
+
+        this.fields.clear();
+        this.methods.clear();
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
+            List<String> lines = IOUtils.readLines(reader);
+            for (String line : lines) {
+                String[] split = line.split("=");
+                String key = split[0], value = split[1];
+                if (key.contains("(")) {
+                    this.methods.put(key, value);
+                } else {
+                    this.fields.put(key, value);
+                }
             }
         }
-        reader.close();
     }
+
     public String getClassMapping(String cls) {
         return cls.replace(".", "/");
     }

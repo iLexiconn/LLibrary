@@ -2,7 +2,6 @@ package net.ilexiconn.llibrary.server.core.plugin;
 
 import net.ilexiconn.llibrary.server.asm.PatchClassWriter;
 import net.minecraft.launchwrapper.IClassTransformer;
-import net.minecraftforge.fml.relauncher.FMLRelaunchLog;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
@@ -22,7 +21,7 @@ public class LLibraryTransformer implements IClassTransformer {
             return null;
         }
         if (!name.startsWith("$") && name.contains(RUNTIME_PATCHER)) {
-            FMLRelaunchLog.info("Found runtime patcher " + name);
+            LLibraryPlugin.LOGGER.debug("Found runtime patcher {}", name);
             ClassReader classReader = new ClassReader(bytes);
             ClassNode classNode = new ClassNode();
             classReader.accept(classNode, 0);

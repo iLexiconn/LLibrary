@@ -2,7 +2,7 @@ package net.ilexiconn.llibrary.client.lang;
 
 import com.google.common.base.Charsets;
 import com.google.gson.Gson;
-import net.ilexiconn.llibrary.LLibrary;
+import net.ilexiconn.llibrary.server.core.plugin.LLibraryPlugin;
 import net.minecraft.util.text.translation.LanguageMap;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
@@ -31,9 +31,10 @@ public enum LanguageHandler {
     private Map<String, Map<String, String>> localizations = new HashMap<>();
 
     public RemoteLanguageContainer loadRemoteLocalization(String modId) throws Exception {
-        InputStream in = LanguageHandler.class.getResourceAsStream("/assets/" + modId.toLowerCase() + "/lang.json");
-        if (in != null) {
-            return new Gson().fromJson(new InputStreamReader(in), RemoteLanguageContainer.class);
+        try (InputStream in = LanguageHandler.class.getResourceAsStream("/assets/" + modId.toLowerCase() + "/lang.json")) {
+            if (in != null) {
+                return new Gson().fromJson(new InputStreamReader(in), RemoteLanguageContainer.class);
+            }
         }
         return null;
     }
@@ -45,11 +46,11 @@ public enum LanguageHandler {
         }
         for (File child : cacheDir.listFiles()) {
             if (child.isFile()) {
-                try {
-                    Map<String, String> lang = LanguageMap.parseLangFile(new FileInputStream(child));
-                    this.localizations.put(child.getName().split("\\.")[0], lang);
+                try (FileInputStream cachedStream = new FileInputStream(child)) {
+                    Map<String, String> lang = LanguageMap.parseLangFile(cachedStream);
+                    this.localizations.put(child.getName().substring(0, child.getName().length() - ".lang".length()), lang);
                 } catch (Exception e) {
-                    LLibrary.LOGGER.error("An exception occurred while loading {} from cache.", child.getName(), e);
+                    LLibraryPlugin.LOGGER.error("An exception occurred while loading {} from cache.", child.getName(), e);
                 }
             }
         }
@@ -68,23 +69,18 @@ public enum LanguageHandler {
                     }
                 }
             } catch (Exception e) {
-                LLibrary.LOGGER.error("An exception occurred while loading remote lang container for {}", modId, e);
+                LLibraryPlugin.LOGGER.error("An exception occurred while loading remote lang container for {}", modId, e);
             }
         }
         for (Map.Entry<String, Map<String, String>> entry : this.localizations.entrySet()) {
             String language = entry.getKey();
             File cache = new File(cacheDir, language + ".lang");
-            try {
-                if (!cache.exists()) {
-                    cache.createNewFile();
-                }
-                BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(cache), Charsets.UTF_8));
+            try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(cache), Charsets.UTF_8))) {
                 for (Map.Entry<String, String> langEntry : entry.getValue().entrySet()) {
-                    out.append(langEntry.getKey()).append("=").append(langEntry.getValue()).append("\n");
+                    writer.append(langEntry.getKey()).append("=").append(langEntry.getValue()).append("\n");
                 }
-                out.close();
             } catch (Exception e) {
-                LLibrary.LOGGER.error("An exception occurred while saving cache for {}", language);
+                LLibraryPlugin.LOGGER.error("An exception occurred while saving cache for {}", language);
             }
         }
     }

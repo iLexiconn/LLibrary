@@ -1,10 +1,7 @@
 package net.ilexiconn.llibrary.server.core.patcher;
 
-import net.ilexiconn.llibrary.client.lang.LanguageHandler;
-import net.ilexiconn.llibrary.client.util.ItemTESRContext;
 import net.ilexiconn.llibrary.server.asm.InsnPredicate;
 import net.ilexiconn.llibrary.server.asm.RuntimePatcher;
-import net.ilexiconn.llibrary.server.world.TickRateHandler;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBiped;
@@ -36,10 +33,8 @@ public class LLibraryRuntimePatcher extends RuntimePatcher {
         this.patchClass(Locale.class)
                 .patchMethod("loadLocaleDataFiles", IResourceManager.class, List.class, void.class)
                 .apply(Patch.BEFORE, new InsnPredicate.Method(String.class, "format", String.class, Object[].class, String.class), method -> {
-                    method.field(GETSTATIC, LanguageHandler.class, "INSTANCE", LanguageHandler.class);
                     method.var(ALOAD, 4).var(ALOAD, 0);
-                    method.field(GETFIELD, Locale.class, "properties", Map.class);
-                    method.method(INVOKEVIRTUAL, LanguageHandler.class, "addRemoteLocalizations", String.class, Map.class, void.class);
+                    method.method(INVOKESTATIC, LLibraryHooks.class, "addRemoteLocalizations", String.class, Map.class, void.class);
                 }).pop();
 
         this.patchClass(ModelBiped.class)
@@ -97,24 +92,21 @@ public class LLibraryRuntimePatcher extends RuntimePatcher {
         this.patchClass(MinecraftServer.class)
                 .patchMethod("run", void.class)
                 .apply(Patch.REPLACE_NODE, new InsnPredicate.Ldc().cst(50L), method -> {
-                    method.field(GETSTATIC, TickRateHandler.class, "INSTANCE", TickRateHandler.class);
-                    method.method(INVOKEVIRTUAL, TickRateHandler.class, "getTickRate", long.class);
+                    method.method(INVOKESTATIC, LLibraryHooks.class, "getTickRate", long.class);
                 }).pop();
 
         this.patchClass(TileEntityItemStackRenderer.class)
                 .patchMethod("renderByItem", ItemStack.class, void.class)
                 .apply(Patch.BEFORE, data -> data.node.getPrevious() == null, method -> {
-                    method.field(GETSTATIC, ItemTESRContext.class, "INSTANCE", ItemTESRContext.class);
                     method.var(ALOAD, 1);
-                    method.method(INVOKEVIRTUAL, ItemTESRContext.class, "provideStackContext", ItemStack.class, void.class);
+                    method.method(INVOKESTATIC, LLibraryHooks.class, "provideStackContext", ItemStack.class, void.class);
                 }).pop();
 
         this.patchClass(ForgeHooksClient.class)
                 .patchMethod("handleCameraTransforms", IBakedModel.class, ItemCameraTransforms.TransformType.class, boolean.class, IBakedModel.class)
                 .apply(Patch.BEFORE, data -> data.node.getPrevious() == null, method -> {
-                    method.field(GETSTATIC, ItemTESRContext.class, "INSTANCE", ItemTESRContext.class);
                     method.var(ALOAD, 1);
-                    method.method(INVOKEVIRTUAL, ItemTESRContext.class, "providePerspectiveContext", ItemCameraTransforms.TransformType.class, void.class);
+                    method.method(INVOKESTATIC, LLibraryHooks.class, "providePerspectiveContext", ItemCameraTransforms.TransformType.class, void.class);
                 }).pop();
 
         this.patchClass(EntityRenderer.class)

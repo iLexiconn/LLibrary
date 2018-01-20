@@ -68,7 +68,36 @@ processResources {
     }
 }
 
-jar {
+sourceSets {
+    core {
+        compileClasspath = sourceSets.main.compileClasspath
+        runtimeClasspath = sourceSets.main.runtimeClasspath
+    }
+    main {
+        compileClasspath += sourceSets.core.output
+        runtimeClasspath += sourceSets.core.output
+    }
+}
+
+task coreJar(type: Jar) {
+    from sourceSets.core.output
+    manifest {
+        attributes "FMLCorePlugin": corePlugin
+    }
+
+    classifier = 'core'
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = "sources"
+    from sourceSets.main.allSource
+    from sourceSets.core.allSource
+}
+
+task devJar(type: Jar) {
+    classifier = "dev"
+    from sourceSets.main.output
+    from sourceSets.core.output
     manifest {
         attributes "FMLAT": "llibrary_at.cfg"
         attributes "FMLCorePlugin": corePlugin
@@ -76,24 +105,15 @@ jar {
     }
 }
 
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = "sources"
-    from sourceSets.main.allSource
-}
-
-task devJar(type: Jar) {
-    classifier = "dev"
-    from sourceSets.main.output
-    manifest {
-        attributes "FMLAT": "llibrary_at.cfg"
-        attributes "FMLCorePlugin": "net.ilexiconn.llibrary.server.core.plugin.LLibraryPlugin"
-        attributes "FMLCorePluginContainsFMLMod": "true"
-    }
-}
-
 task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = "javadoc"
     from javadoc.getDestinationDir()
+}
+
+reobf {
+    coreJar {
+        mappingType = 'SEARGE'
+    }
 }
 
 task signJar(type: SignJar, dependsOn: reobfJar) {
@@ -104,6 +124,26 @@ task signJar(type: SignJar, dependsOn: reobfJar) {
         keyPass = secret.keyStoreKeyPass
         inputFile = jar.archivePath
         outputFile = jar.archivePath
+    }
+}
+
+task signCoreJar(type: SignJar, dependsOn: reobfCoreJar) {
+    if (secret) {
+        keyStore = secret.keyStore
+        alias = secret.keyStoreAlias
+        storePass = secret.keyStorePass
+        keyPass = secret.keyStoreKeyPass
+        inputFile = jar.archivePath
+        outputFile = jar.archivePath
+    }
+}
+
+jar {
+    dependsOn signCoreJar
+    from coreJar.archivePath.absolutePath
+    manifest {
+        attributes "FMLAT": "llibrary_at.cfg"
+        attributes "ContainedDeps": coreJar.archivePath.name
     }
 }
 
@@ -232,7 +272,7 @@ task generateMappings << {
         }
     }
 
-    def mappingsFile = new File("src/main/resources/llibrary.mappings")
+    def mappingsFile = new File("src/core/resources/llibrary.mappings")
     mappingsFile.withWriter("UTF-8") { writer ->
         mappingReplacements.each { k, v -> writer.write(k + "=" + v + "\n") }
     }

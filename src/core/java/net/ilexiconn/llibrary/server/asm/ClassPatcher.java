@@ -1,6 +1,6 @@
 package net.ilexiconn.llibrary.server.asm;
 
-import net.minecraftforge.fml.relauncher.FMLRelaunchLog;
+import net.ilexiconn.llibrary.server.core.plugin.LLibraryPlugin;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 public class ClassPatcher {
-
     private String cls;
     private Map<String, MethodPatcher> patcherMap = new HashMap<>();
     private Map<String, Consumer<Method>> creationMap = new HashMap<>();
@@ -24,9 +23,9 @@ public class ClassPatcher {
     }
 
     void handlePatches(ClassNode classNode) {
-        FMLRelaunchLog.info("Patching class " + this.cls);
+        LLibraryPlugin.LOGGER.debug("Patching class {}", this.cls);
         for (Map.Entry<String, Consumer<Method>> entry : this.creationMap.entrySet()) {
-            FMLRelaunchLog.info("   Adding method " + entry.getKey());
+            LLibraryPlugin.LOGGER.debug("   Adding method {}", entry.getKey());
             String method = entry.getKey().substring(0, entry.getKey().indexOf("("));
             String desc = entry.getKey().substring(method.length());
             MethodNode methodNode = new MethodNode(Opcodes.ACC_PUBLIC, method, desc, null, null);
@@ -45,7 +44,7 @@ public class ClassPatcher {
                     patcher.handlePatches(methodNode);
                 }
             } else {
-                FMLRelaunchLog.info("   Removing method " + method);
+                LLibraryPlugin.LOGGER.debug("   Removing method {}", method);
                 methodIterator.remove();
             }
         }

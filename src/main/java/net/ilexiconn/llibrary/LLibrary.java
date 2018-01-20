@@ -1,9 +1,13 @@
 package net.ilexiconn.llibrary;
 
+import net.ilexiconn.llibrary.client.lang.LanguageHandler;
+import net.ilexiconn.llibrary.client.util.ItemTESRContext;
 import net.ilexiconn.llibrary.server.ServerProxy;
 import net.ilexiconn.llibrary.server.capability.IEntityDataCapability;
 import net.ilexiconn.llibrary.server.config.ConfigHandler;
 import net.ilexiconn.llibrary.server.config.LLibraryConfig;
+import net.ilexiconn.llibrary.server.core.api.LLibraryCoreAPI;
+import net.ilexiconn.llibrary.server.core.plugin.LLibraryPlugin;
 import net.ilexiconn.llibrary.server.network.AnimationMessage;
 import net.ilexiconn.llibrary.server.network.BlockEntityMessage;
 import net.ilexiconn.llibrary.server.network.NetworkHandler;
@@ -11,6 +15,9 @@ import net.ilexiconn.llibrary.server.network.NetworkWrapper;
 import net.ilexiconn.llibrary.server.network.PropertiesMessage;
 import net.ilexiconn.llibrary.server.network.SnackbarMessage;
 import net.ilexiconn.llibrary.server.network.SurvivalTabMessage;
+import net.ilexiconn.llibrary.server.world.TickRateHandler;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.fml.common.Loader;
@@ -22,13 +29,17 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = "llibrary", name = "LLibrary", version = LLibrary.VERSION, acceptedMinecraftVersions = LLibrary.MC_VERSION, certificateFingerprint = "${fingerprint}", guiFactory = "net.ilexiconn.llibrary.client.gui.LLibraryGUIFactory", updateJSON = "https://gist.github.com/gegy1000/a6639456aeb8edd92cbf7cbfcf9d65d9")
+import javax.annotation.Nonnull;
+import java.util.Map;
+
+@Mod(modid = "llibrary", name = "LLibrary", version = LLibrary.VERSION, acceptedMinecraftVersions = "1.12.2", certificateFingerprint = "${fingerprint}", guiFactory = "net.ilexiconn.llibrary.client.gui.LLibraryGUIFactory", updateJSON = "https://gist.github.com/gegy1000/a6639456aeb8edd92cbf7cbfcf9d65d9")
 public class LLibrary {
-    public static final String VERSION = "1.7.9";
-    public static final String MC_VERSION = "1.12.2";
+    public static final String VERSION = "1.8.0";
 
     public static final Logger LOGGER = LogManager.getLogger("LLibrary");
     @SidedProxy(serverSide = "net.ilexiconn.llibrary.server.ServerProxy", clientSide = "net.ilexiconn.llibrary.client.ClientProxy")
@@ -45,10 +56,13 @@ public class LLibrary {
 
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent event) {
+        LLibraryPlugin.api = new CoreAPIHandler();
+
         for (ModContainer mod : Loader.instance().getModList()) {
             ConfigHandler.INSTANCE.injectConfig(mod, event.getAsmData());
             NetworkHandler.INSTANCE.injectNetworkWrapper(mod, event.getAsmData());
         }
+
         LLibrary.CONFIG.load();
         LLibrary.PROXY.onPreInit();
     }
@@ -66,5 +80,30 @@ public class LLibrary {
     @Mod.EventHandler
     public void onFingerprintViolation(FMLFingerprintViolationEvent event) {
         LOGGER.warn("Detected invalid fingerprint for file {}! You will not receive support with this tampered version of llibrary!", event.getSource().getName());
+    }
+
+    class CoreAPIHandler implements LLibraryCoreAPI {
+        @Override
+        @SideOnly(Side.CLIENT)
+        public void addRemoteLocalizations(String language, Map<String, String> properties) {
+            LanguageHandler.INSTANCE.addRemoteLocalizations(language, properties);
+        }
+
+        @Override
+        @SideOnly(Side.CLIENT)
+        public void provideStackContext(@Nonnull ItemStack stack) {
+            ItemTESRContext.INSTANCE.provideStackContext(stack);
+        }
+
+        @Override
+        @SideOnly(Side.CLIENT)
+        public void providePerspectiveContext(@Nonnull ItemCameraTransforms.TransformType transform) {
+            ItemTESRContext.INSTANCE.providePerspectiveContext(transform);
+        }
+
+        @Override
+        public long getTickRate() {
+            return TickRateHandler.INSTANCE.getTickRate();
+        }
     }
 }

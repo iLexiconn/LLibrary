@@ -4,22 +4,57 @@ import net.ilexiconn.llibrary.client.event.ApplyRenderRotationsEvent;
 import net.ilexiconn.llibrary.client.event.PlayerModelEvent;
 import net.ilexiconn.llibrary.client.event.PlayerViewDistanceEvent;
 import net.ilexiconn.llibrary.client.event.RenderArmEvent;
+import net.ilexiconn.llibrary.server.core.api.LLibraryCoreAPI;
+import net.ilexiconn.llibrary.server.core.plugin.LLibraryPlugin;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelPlayer;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHandSide;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.Map;
+
 public class LLibraryHooks {
     @SideOnly(Side.CLIENT)
     public static float prevRenderViewDistance = 4.0F;
+
+    @SideOnly(Side.CLIENT)
+    public static void addRemoteLocalizations(String language, Map<String, String> properties) {
+        LLibraryHooks.getAPI().addRemoteLocalizations(language, properties);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void provideStackContext(ItemStack stack) {
+        if (stack != null) {
+            LLibraryHooks.getAPI().provideStackContext(stack);
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void providePerspectiveContext(ItemCameraTransforms.TransformType transforms) {
+        LLibraryHooks.getAPI().providePerspectiveContext(transforms);
+    }
+
+    public static long getTickRate() {
+        return LLibraryHooks.getAPI().getTickRate();
+    }
+
+    private static LLibraryCoreAPI getAPI() {
+        if (LLibraryPlugin.api == null) {
+            LLibraryPlugin.LOGGER.warn("Unable to call Core API! It has not been initialized yet!");
+            return new LLibraryCoreAPI.Fallback();
+        }
+        return LLibraryPlugin.api;
+    }
 
     @SideOnly(Side.CLIENT)
     @SuppressWarnings("unused")
