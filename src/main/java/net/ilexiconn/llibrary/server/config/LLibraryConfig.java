@@ -1,5 +1,6 @@
 package net.ilexiconn.llibrary.server.config;
 
+import net.ilexiconn.llibrary.LLibrary;
 import net.ilexiconn.llibrary.client.gui.element.color.ColorMode;
 import net.ilexiconn.llibrary.server.nbt.NBTHandler;
 import net.ilexiconn.llibrary.server.nbt.NBTMutatorProperty;
@@ -10,7 +11,6 @@ import net.minecraftforge.common.util.INBTSerializable;
 
 import java.awt.Color;
 import java.io.File;
-import java.io.IOException;
 
 public class LLibraryConfig implements INBTSerializable<NBTTagCompound> {
     @NBTProperty
@@ -124,28 +124,29 @@ public class LLibraryConfig implements INBTSerializable<NBTTagCompound> {
     }
 
     public void load() {
+        if (!LLibrary.LLIBRARY_ROOT.exists()) {
+            LLibrary.LLIBRARY_ROOT.mkdirs();
+        }
+        File file = new File(LLibrary.LLIBRARY_ROOT, "config.dat");
         try {
-            this.deserializeNBT(CompressedStreamTools.read(new File(".", "llibrary" + File.separator + "config.dat")));
-        } catch (Exception e) {
-            if (!(e instanceof NullPointerException)) {
-                e.printStackTrace();
-            } else {
-                try {
-                    if (new File(".", "llibrary" + File.separator + "config.dat").createNewFile()) {
-                        this.save();
-                    }
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
+            if (!file.exists() && file.createNewFile()) {
+                this.save();
             }
+            this.deserializeNBT(CompressedStreamTools.read(file));
+        } catch (Exception e) {
+            LLibrary.LOGGER.error("Failed to load config", e);
         }
     }
 
     public void save() {
+        if (!LLibrary.LLIBRARY_ROOT.exists()) {
+            LLibrary.LLIBRARY_ROOT.mkdirs();
+        }
+        File file = new File(LLibrary.LLIBRARY_ROOT, "config.dat");
         try {
-            CompressedStreamTools.write(this.serializeNBT(), new File(".", "llibrary" + File.separator + "config.dat"));
+            CompressedStreamTools.write(this.serializeNBT(), file);
         } catch (Exception e) {
-            e.printStackTrace();
+            LLibrary.LOGGER.error("Failed to save config", e);
         }
     }
 }
