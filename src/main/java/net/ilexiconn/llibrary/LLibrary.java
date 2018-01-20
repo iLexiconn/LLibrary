@@ -35,6 +35,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
+import java.io.File;
 import java.util.Map;
 
 @Mod(modid = "llibrary", name = "LLibrary", version = LLibrary.VERSION, acceptedMinecraftVersions = "1.12.2", certificateFingerprint = "${fingerprint}", guiFactory = "net.ilexiconn.llibrary.client.gui.LLibraryGUIFactory", updateJSON = "https://gist.github.com/gegy1000/a6639456aeb8edd92cbf7cbfcf9d65d9")
@@ -54,8 +55,14 @@ public class LLibrary {
     public static int QUBBLE_VERSION = 1;
     public static int QUBBLE_VANILLA_VERSION = 1;
 
+    public static final File LLIBRARY_ROOT = new File(".", "llibrary");
+
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent event) {
+        if (!LLibrary.LLIBRARY_ROOT.exists()) {
+            LLibrary.LLIBRARY_ROOT.mkdirs();
+        }
+
         LLibraryPlugin.api = new CoreAPIHandler();
 
         for (ModContainer mod : Loader.instance().getModList()) {
