@@ -1,20 +1,29 @@
 package net.ilexiconn.llibrary.server.core.patcher;
 
 import net.ilexiconn.llibrary.client.lang.LanguageHandler;
+import net.ilexiconn.llibrary.client.util.ItemTESRContext;
 import net.ilexiconn.llibrary.server.asm.InsnPredicate;
 import net.ilexiconn.llibrary.server.asm.RuntimePatcher;
 import net.ilexiconn.llibrary.server.world.TickRateHandler;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelPlayer;
+import net.minecraft.client.renderer.EntityRenderer;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.Locale;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumHandSide;
+import net.minecraftforge.client.ForgeHooksClient;
+import org.objectweb.asm.tree.VarInsnNode;
 
 import java.util.List;
 import java.util.Map;
@@ -79,5 +88,47 @@ public class LLibraryRuntimePatcher extends RuntimePatcher {
                     method.field(GETSTATIC, TickRateHandler.class, "INSTANCE", TickRateHandler.class);
                     method.method(INVOKEVIRTUAL, TickRateHandler.class, "getTickRate", long.class);
                 }).pop();
+
+        this.patchClass(TileEntityItemStackRenderer.class)
+                .patchMethod("renderByItem", ItemStack.class, void.class)
+                .apply(Patch.BEFORE, data -> data.node.getPrevious() == null, method -> {
+                    method.field(GETSTATIC, ItemTESRContext.class, "INSTANCE", ItemTESRContext.class);
+                    method.var(ALOAD, 1);
+                    method.method(INVOKEVIRTUAL, ItemTESRContext.class, "provideStackContext", ItemStack.class, void.class);
+                }).pop();
+
+        this.patchClass(ForgeHooksClient.class)
+                .patchMethod("handleCameraTransforms", IBakedModel.class, ItemCameraTransforms.TransformType.class, boolean.class, IBakedModel.class)
+                .apply(Patch.BEFORE, data -> data.node.getPrevious() == null, method -> {
+                    method.field(GETSTATIC, ItemTESRContext.class, "INSTANCE", ItemTESRContext.class);
+                    method.var(ALOAD, 1);
+                    method.method(INVOKEVIRTUAL, ItemTESRContext.class, "providePerspectiveContext", ItemCameraTransforms.TransformType.class, void.class);
+                }).pop();
+
+        this.patchClass(EntityRenderer.class)
+                .patchMethod("orientCamera", float.class, void.class)
+                .apply(Patch.REPLACE_NODE, new InsnPredicate.Ldc().cst(4.0F), method -> {
+                    method.var(ALOAD, 2);
+                    method.var(FLOAD, 1);
+                    method.method(INVOKESTATIC, LLibraryHooks.class, "getViewDistance", Entity.class, float.class, float.class);
+                })
+                .apply(Patch.AFTER, data -> data.node.getOpcode() == ASTORE && ((VarInsnNode) data.node).var == 2, method -> {
+                    method.var(ALOAD, 0);
+                    method.field(GETSTATIC, LLibraryHooks.class, "prevRenderViewDistance", float.class);
+                    method.field(PUTFIELD, EntityRenderer.class, "thirdPersonDistancePrev", float.class);
+                }).pop();
+
+        this.patchClass(RenderLivingBase.class)
+                .patchMethod("applyRotations", EntityLivingBase.class, float.class, float.class, float.class, void.class)
+                .apply(Patch.AFTER, data -> data.node.getPrevious() == null, method -> method
+                        .var(ALOAD, 0)
+                        .var(ALOAD, 1)
+                        .var(FLOAD, 4)
+                        .method(INVOKESTATIC, LLibraryHooks.class, "applyRotationsPre", RenderLivingBase.class, EntityLivingBase.class, float.class, void.class))
+                .apply(Patch.BEFORE, data -> data.node.getOpcode() == RETURN, method -> method
+                        .var(ALOAD, 0)
+                        .var(ALOAD, 1)
+                        .var(FLOAD, 4)
+                        .method(INVOKESTATIC, LLibraryHooks.class, "applyRotationsPost", RenderLivingBase.class, EntityLivingBase.class, float.class, void.class));
     }
 }
