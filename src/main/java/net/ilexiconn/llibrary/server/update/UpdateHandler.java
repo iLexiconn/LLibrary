@@ -50,9 +50,9 @@ public enum UpdateHandler {
      */
     @Deprecated
     public void registerUpdateChecker(Object mod, String url) {
-        new Thread(() -> {
+        Thread thread = new Thread(() -> {
             if (!mod.getClass().isAnnotationPresent(Mod.class)) {
-                LLibrary.LOGGER.warn("Please register the update checker using the main mod class. Skipping registration of object " + mod + ".");
+                LLibrary.LOGGER.warn("Please register the update checker using the main mod class. Skipping registration of object {}.", mod);
                 return;
             }
 
@@ -64,7 +64,7 @@ public enum UpdateHandler {
                     Loader.instance().getModList().stream().filter(container -> container.getModId().equals(annotation.modid())).forEach(container -> modContainer[0] = container);
 
                     if (modContainer[0] == null) {
-                        LLibrary.LOGGER.warn("Couldn't find mod container with id " + annotation.modid() + ". Skipping registration of object " + mod + ".");
+                        LLibrary.LOGGER.warn("Couldn't find mod container with id {}. Skipping registration of object {}.", annotation.modid(), mod);
                         return;
                     }
 
@@ -75,12 +75,14 @@ public enum UpdateHandler {
 
                     UpdateHandler.this.updateContainerList.add(updateContainer);
                 } else {
-                    LLibrary.LOGGER.warn("Failed to load update container for mod " + annotation.name() + " (" + annotation.modid() + ")!");
+                    LLibrary.LOGGER.warn("Failed to load update container for mod {} ({})!", annotation.name(), annotation.modid());
                 }
             } catch (JsonSyntaxException e) {
-                LLibrary.LOGGER.warn("Failed to load update container for mod " + annotation.name() + " (" + annotation.modid() + ")!");
+                LLibrary.LOGGER.warn("Failed to load update container for mod {} ({})!", annotation.name(), annotation.modid());
             }
-        }).start();
+        });
+        thread.setName("Update Checker: " + mod);
+        thread.start();
     }
 
     /**

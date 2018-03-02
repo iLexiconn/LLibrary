@@ -84,7 +84,7 @@ public enum NetworkHandler {
                         this.registerMessage(networkWrapper, messageClass);
                     }
                 } catch (Exception e) {
-                    LLibrary.LOGGER.fatal("Failed to inject network wrapper for mod container " + mod, e);
+                    LLibrary.LOGGER.fatal("Failed to inject network wrapper for mod container {}", mod, e);
                 }
             }
         }

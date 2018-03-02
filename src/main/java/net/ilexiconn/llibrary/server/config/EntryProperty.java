@@ -150,7 +150,7 @@ public abstract class EntryProperty {
         protected Property createForgeConfigurationProperty(Configuration forgeConfiguration) {
             double minDouble = this.entry.minValue().isEmpty() ? Double.MIN_VALUE : Double.parseDouble(this.entry.minValue());
             double maxDouble = this.entry.maxValue().isEmpty() ? Double.MAX_VALUE : Double.parseDouble(this.entry.maxValue());
-            return forgeConfiguration.get(this.entry.category(), this.getName(), (float)this.get(), this.entry.comment(), minDouble, maxDouble);
+            return forgeConfiguration.get(this.entry.category(), this.getName(), (double)this.get(), this.entry.comment(), minDouble, maxDouble);
         }
 
         @Override

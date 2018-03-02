@@ -1,6 +1,6 @@
 package net.ilexiconn.llibrary.server.asm;
 
-import net.minecraftforge.fml.relauncher.FMLRelaunchLog;
+import net.ilexiconn.llibrary.server.core.plugin.LLibraryPlugin;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
@@ -28,7 +28,7 @@ public class MethodPatcher {
     }
 
     void handlePatches(MethodNode methodNode) {
-        FMLRelaunchLog.info("   Patching method " + this.method);
+        LLibraryPlugin.LOGGER.debug("   Patching method {}", this.method);
         this.patches.stream().filter(patch -> patch.predicate == null).forEach(patch -> {
             Method method = new Method(this.patcher, null);
             patch.consumer.accept(method);

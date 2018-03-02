@@ -53,12 +53,14 @@ public abstract class ElementGUI extends GuiScreen implements IElementGUI {
     public void removeElement(Element element) {
         synchronized (this.elementLock) {
             this.elements.remove(element);
+            element.dispose();
         }
     }
 
     @Override
     public void clearElements() {
         synchronized (this.elementLock) {
+            this.elements.forEach(Element::dispose);
             this.elements.clear();
         }
     }

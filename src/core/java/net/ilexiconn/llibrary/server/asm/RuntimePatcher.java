@@ -1,5 +1,7 @@
 package net.ilexiconn.llibrary.server.asm;
 
+import net.ilexiconn.llibrary.server.core.patcher.LLibraryRuntimePatcher;
+import net.ilexiconn.llibrary.server.core.plugin.LLibraryPlugin;
 import net.minecraft.launchwrapper.IClassTransformer;
 import org.apache.commons.io.IOUtils;
 import org.objectweb.asm.ClassReader;
@@ -21,10 +23,13 @@ import java.util.function.Predicate;
 
 /**
  * Class to patch other classes at runtime. Return a class extending this class as class transformer in your coremod.
- * NOTE: Do NOT place the patcher in the same directory or in a subdirectory of the plugin. Also make sure to put
- * 'RuntimePatcher' in the name of the class.
  *
- * @see net.ilexiconn.llibrary.server.core.patcher.LLibraryRuntimePatcher
+ * NOTES:
+ *  Do NOT place the patcher in the same directory or in a subdirectory of the plugin. The plugin should also have a
+ *  sorting index >1001, or LLibrary will be unable to call the patcher properly.
+ *  Also make sure to put 'RuntimePatcher' in the name of the class.
+ *
+ * @see LLibraryRuntimePatcher
  * @since 1.5.0
  * @author iLexiconn
  */
@@ -63,7 +68,7 @@ public abstract class RuntimePatcher implements IClassTransformer, Opcodes {
             ClassNode classNode = new ClassNode();
             classReader.accept(classNode, 0);
             patcher.handlePatches(classNode);
-            ClassWriter classWriter = new ClassWriter(classReader, ClassWriter.COMPUTE_MAXS);
+            ClassWriter classWriter = new PatchClassWriter(classReader, ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
             classNode.accept(classWriter);
             return classWriter.toByteArray();
         }
@@ -98,20 +103,15 @@ public abstract class RuntimePatcher implements IClassTransformer, Opcodes {
     }
 
     private void saveBytecode(String name, byte[] bytes) {
-        FileOutputStream out = null;
-        try {
-            File debugDir = new File("llibrary/debug/");
-            if (debugDir.exists()) {
-                debugDir.delete();
-            }
+        File debugDir = new File("llibrary/debug/");
+        if (!debugDir.exists()) {
             debugDir.mkdirs();
-            out = new FileOutputStream(new File(debugDir, name + ".class"));
-            out.write(bytes);
-            out.close();
+        }
+        File outputFile = new File(debugDir, name + ".class");
+        try (FileOutputStream out = new FileOutputStream(outputFile)) {
+            IOUtils.write(bytes, out);
         } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            IOUtils.closeQuietly(out);
+            LLibraryPlugin.LOGGER.error("Failed to save debug patched class for {}", name, e);
         }
     }
 

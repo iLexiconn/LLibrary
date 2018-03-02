@@ -8,6 +8,7 @@ import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
 
 import java.io.File;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -43,12 +44,13 @@ public enum ConfigHandler {
                         }
                         if (entryPropertyClass != null) {
                             try {
-                                return entryPropertyClass.getConstructor(Object.class, Field.class, Configuration.class).newInstance(wrappedConfig, field, forgeConfiguration);
+                                Constructor<? extends EntryProperty> constructor = entryPropertyClass.getConstructor(Object.class, Field.class, Configuration.class);
+                                return constructor.newInstance(wrappedConfig, field, forgeConfiguration);
                             } catch (Exception e) {
-                                e.printStackTrace();
+                                LLibrary.LOGGER.error("Failed to create property entry {} for mod {}", field.getName(), mod.getName(), e);
                             }
                         } else {
-                            LLibrary.LOGGER.error("Found unsupported config entry " + field.getName() + " for mod " + mod.getName());
+                            LLibrary.LOGGER.error("Found unsupported config entry {} for mod {}", field.getName(), mod.getName());
                         }
                         return null;
                     })
@@ -167,7 +169,7 @@ public enum ConfigHandler {
                     File configFile = new File(".", "config" + File.separator + mod.getModId() + ".cfg");
                     field.set(null, this.registerConfig(mod, configFile, configClass.newInstance()));
                 } catch (Exception e) {
-                    LLibrary.LOGGER.fatal("Failed to inject config for mod container " + mod, e);
+                    LLibrary.LOGGER.fatal("Failed to inject config for mod container {}", e, mod);
                 }
             }
         }

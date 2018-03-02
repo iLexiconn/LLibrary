@@ -68,14 +68,14 @@ public class Command extends CommandBase {
      */
     public <T> Command addRequiredArgument(String argument, Class<T> type) {
         if (!this.optionalArguments.isEmpty()) {
-            LLibrary.LOGGER.error("Please register required arguments before optional ones! Skipping argument " + argument + " with type " + type + ".");
+            LLibrary.LOGGER.error("Please register required arguments before optional ones! Skipping argument {} with type {}.", argument, type);
             return this;
         }
         IArgumentParser<T> argumentParser = CommandHandler.INSTANCE.getParserForType(type);
         if (argumentParser != null) {
             this.requiredArguments.put(argument, argumentParser);
         } else {
-            LLibrary.LOGGER.error("Unable to find argument parser for type " + type + ". Skipping argument.");
+            LLibrary.LOGGER.error("Unable to find argument parser for type {}. Skipping argument.", type);
         }
         return this;
     }
@@ -93,7 +93,7 @@ public class Command extends CommandBase {
         if (argumentParser != null) {
             this.optionalArguments.put(argument, argumentParser);
         } else {
-            LLibrary.LOGGER.error("Unable to find argument parser for type " + type + ". Skipping argument.");
+            LLibrary.LOGGER.error("Unable to find argument parser for type {}. Skipping argument.", type);
         }
         return this;
     }

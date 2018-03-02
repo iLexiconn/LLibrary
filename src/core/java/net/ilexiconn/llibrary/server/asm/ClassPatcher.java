@@ -1,18 +1,18 @@
 package net.ilexiconn.llibrary.server.asm;
 
-import net.minecraftforge.fml.relauncher.FMLRelaunchLog;
+import net.ilexiconn.llibrary.server.core.plugin.LLibraryPlugin;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
 public class ClassPatcher {
-
     private String cls;
     private Map<String, MethodPatcher> patcherMap = new HashMap<>();
     private Map<String, Consumer<Method>> creationMap = new HashMap<>();
@@ -23,9 +23,9 @@ public class ClassPatcher {
     }
 
     void handlePatches(ClassNode classNode) {
-        FMLRelaunchLog.info("Patching class " + this.cls);
+        LLibraryPlugin.LOGGER.debug("Patching class {}", this.cls);
         for (Map.Entry<String, Consumer<Method>> entry : this.creationMap.entrySet()) {
-            FMLRelaunchLog.info("   Adding method " + entry.getKey());
+            LLibraryPlugin.LOGGER.debug("   Adding method {}", entry.getKey());
             String method = entry.getKey().substring(0, entry.getKey().indexOf("("));
             String desc = entry.getKey().substring(method.length());
             MethodNode methodNode = new MethodNode(Opcodes.ACC_PUBLIC, method, desc, null, null);
@@ -34,16 +34,18 @@ public class ClassPatcher {
             methodNode.instructions.add(m.insnList);
             classNode.methods.add(methodNode);
         }
-        for (MethodNode methodNode : new ArrayList<>(classNode.methods)) {
+        Iterator<MethodNode> methodIterator = classNode.methods.iterator();
+        while (methodIterator.hasNext()) {
+            MethodNode methodNode = methodIterator.next();
             String method = methodNode.name + methodNode.desc;
-            if (this.removeList.contains(method)) {
-                FMLRelaunchLog.info("   Removing method " + method);
-                classNode.methods.remove(methodNode);
-                continue;
-            }
-            MethodPatcher patcher = this.patcherMap.get(method);
-            if (patcher != null) {
-                patcher.handlePatches(methodNode);
+            if (!this.removeList.contains(method)) {
+                MethodPatcher patcher = this.patcherMap.get(method);
+                if (patcher != null) {
+                    patcher.handlePatches(methodNode);
+                }
+            } else {
+                LLibraryPlugin.LOGGER.debug("   Removing method {}", method);
+                methodIterator.remove();
             }
         }
     }
