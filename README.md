@@ -11,12 +11,12 @@ To use this library, all you have to do is adding it as dependency in the Gradle
 repositories {
     maven {
         name = "ilexiconn"
-        url = "http://maven.ilexiconn.net"
+        url = "https://maven.mcmoddev.com"
     }
 }
 
 dependencies {
-    compile "net.ilexiconn:llibrary:1.0.0-1.9.4:dev"
+    compile "net.ilexiconn:llibrary:1.7.9-1.1.12.2:dev"
 }
 ```
 
