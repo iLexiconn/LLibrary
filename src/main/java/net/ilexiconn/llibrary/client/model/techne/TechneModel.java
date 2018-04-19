@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
+import net.ilexiconn.llibrary.LLibrary;
 import org.apache.commons.io.IOUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -141,10 +142,9 @@ public class TechneModel {
                         cube.setDimensions(Integer.parseInt(size[0]), Integer.parseInt(size[1]), Integer.parseInt(size[2]));
                         cube.setPosition(Float.parseFloat(position[0]), Float.parseFloat(position[1]) - 23.4f, Float.parseFloat(position[2]));
                         cube.setRotation(Float.parseFloat(rotation[0]), Float.parseFloat(rotation[1]), Float.parseFloat(rotation[2]));
-                        cube.setTexture(this.textureWidth, this.textureHeight);
                         this.cubes.add(cube);
                     } catch (NumberFormatException e) {
-                        e.printStackTrace();
+                        LLibrary.LOGGER.error("Failed to parse techne cuboid", e);
                     }
                     ++shapeIndex;
                 }
