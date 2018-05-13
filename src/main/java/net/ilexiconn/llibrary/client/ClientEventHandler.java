@@ -1,7 +1,6 @@
 package net.ilexiconn.llibrary.client;
 
 import net.ilexiconn.llibrary.LLibrary;
-import net.ilexiconn.llibrary.client.event.PlayerModelEvent;
 import net.ilexiconn.llibrary.client.gui.SnackbarGUI;
 import net.ilexiconn.llibrary.client.gui.survivaltab.PageButtonGUI;
 import net.ilexiconn.llibrary.client.gui.survivaltab.SurvivalTab;
@@ -26,6 +25,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -159,12 +159,13 @@ public enum ClientEventHandler {
     }
 
     @SubscribeEvent
-    public void onRenderModel(PlayerModelEvent.Render event) {
+    public void onRenderPlayer(RenderPlayerEvent.Post event) {
         EntityPlayer player = event.getEntityPlayer();
         if (LLibrary.CONFIG.hasPatreonEffects() && (ClientProxy.MINECRAFT.gameSettings.thirdPersonView != 0 || player != ClientProxy.MINECRAFT.player)) {
             UUID id = player.getGameProfile().getId();
             if (id != null && ClientProxy.PATRONS.contains(id.toString())) {
                 GlStateManager.pushMatrix();
+                GlStateManager.translate(event.getX(), event.getY(), event.getZ());
                 GlStateManager.depthMask(false);
                 GlStateManager.disableLighting();
                 GlStateManager.translate(0.0F, -1.37F, 0.0F);
@@ -191,7 +192,7 @@ public enum ClientEventHandler {
         }
     }
 
-    private void renderVoxel(PlayerModelEvent.Render event, float scale, float color) {
+    private void renderVoxel(RenderPlayerEvent.Post event, float scale, float color) {
         EntityPlayer player = event.getEntityPlayer();
         int ticksExisted = player.ticksExisted;
         float partialTicks = LLibrary.PROXY.getPartialTicks();
@@ -205,7 +206,7 @@ public enum ClientEventHandler {
         GlStateManager.translate(0.75F, 0.0F, 0.0F);
         GlStateManager.rotate(ClientUtils.interpolateRotation((ticksExisted - 1) % 360, ticksExisted % 360, partialTicks), 0.0F, 1.0F, 0.0F);
         GlStateManager.scale(scale, scale, scale);
-        this.voxelModel.render(player, event.getLimbSwing(), event.getLimbSwingAmount(), event.getRotation(), event.getRotationYaw(), event.getRotationPitch(), event.getScale());
+        this.voxelModel.render(player, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
         GlStateManager.enableTexture2D();
         GlStateManager.popMatrix();
     }
