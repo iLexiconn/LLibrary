@@ -24,9 +24,11 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
+
 @Mod(modid = "llibrary", name = "LLibrary", version = LLibrary.VERSION, guiFactory = "net.ilexiconn.llibrary.client.gui.LLibraryGUIFactory", updateJSON = "https://gist.github.com/gegy1000/a6639456aeb8edd92cbf7cbfcf9d65d9")
 public class LLibrary {
-    public static final String VERSION = "1.7.7";
+    public static final String VERSION = "1.7.10";
     public static final Logger LOGGER = LogManager.getFormatterLogger("LLibrary");
     @SidedProxy(serverSide = "net.ilexiconn.llibrary.server.ServerProxy", clientSide = "net.ilexiconn.llibrary.client.ClientProxy")
     public static ServerProxy PROXY;
@@ -35,13 +37,17 @@ public class LLibrary {
     @CapabilityInject(IEntityDataCapability.class)
     public static Capability<IEntityDataCapability> ENTITY_DATA_CAPABILITY;
     public static LLibraryConfig CONFIG = new LLibraryConfig();
-    @NetworkWrapper({AnimationMessage.class, PropertiesMessage.class, SnackbarMessage.class, BlockEntityMessage.class, SurvivalTabMessage.class})
+    @NetworkWrapper({ AnimationMessage.class, PropertiesMessage.class, SnackbarMessage.class, BlockEntityMessage.class, SurvivalTabMessage.class })
     public static SimpleNetworkWrapper NETWORK_WRAPPER;
     public static int QUBBLE_VERSION = 1;
     public static int QUBBLE_VANILLA_VERSION = 1;
+    public static final File LLIBRARY_ROOT = new File(".", "llibrary");
 
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent event) {
+        if (!LLibrary.LLIBRARY_ROOT.exists()) {
+            LLibrary.LLIBRARY_ROOT.mkdirs();
+        }
         for (ModContainer mod : Loader.instance().getModList()) {
             ConfigHandler.INSTANCE.injectConfig(mod, event.getAsmData());
             NetworkHandler.INSTANCE.injectNetworkWrapper(mod, event.getAsmData());
