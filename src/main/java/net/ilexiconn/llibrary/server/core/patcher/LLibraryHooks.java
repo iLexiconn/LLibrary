@@ -18,7 +18,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class LLibraryHooks {
-    @SideOnly(Side.CLIENT)
     public static float prevRenderViewDistance = 4.0F;
 
     @SideOnly(Side.CLIENT)
