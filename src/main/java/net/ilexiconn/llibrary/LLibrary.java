@@ -38,9 +38,18 @@ import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.Map;
 
-@Mod(modid = "llibrary", name = "LLibrary", version = LLibrary.VERSION, acceptedMinecraftVersions = "1.12.2", certificateFingerprint = "${fingerprint}", guiFactory = "net.ilexiconn.llibrary.client.gui.LLibraryGUIFactory", updateJSON = "https://gist.github.com/gegy1000/a6639456aeb8edd92cbf7cbfcf9d65d9")
+@Mod(
+        modid = "llibrary",
+        name = "LLibrary",
+        version = LLibrary.VERSION,
+        acceptedMinecraftVersions = "1.12.2",
+        certificateFingerprint = "${fingerprint}",
+        guiFactory = "net.ilexiconn.llibrary.client.gui.LLibraryGUIFactory",
+        updateJSON = "https://gist.githubusercontent.com/gegy1000/a6639456aeb8edd92cbf7cbfcf9d65d9/raw/llibrary_updates.json",
+        dependencies = "required-after:forge@[14.23.3.2655,)"
+)
 public class LLibrary {
-    public static final String VERSION = "1.7.10";
+    public static final String VERSION = "1.7.11";
 
     public static final Logger LOGGER = LogManager.getLogger("LLibrary");
     @SidedProxy(serverSide = "net.ilexiconn.llibrary.server.ServerProxy", clientSide = "net.ilexiconn.llibrary.client.ClientProxy")

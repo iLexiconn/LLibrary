@@ -1,20 +1,19 @@
 buildscript {
-    ext.corePlugin = "net.ilexiconn.llibrary.server.core.plugin.LLibraryPlugin"
-    repositories {
-        jcenter()
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
-        maven {
-            name = "gradle"
-            url "https://plugins.gradle.org/m2/"
-        }
+  repositories {
+    jcenter()
+    maven {
+      name = "forge"
+      url = "http://files.minecraftforge.net/maven"
     }
-    dependencies {
-        classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT"
-        classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.0.9"
+    maven {
+      name = "gradle"
+      url "https://plugins.gradle.org/m2/"
     }
+  }
+  dependencies {
+    classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT"
+    classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.0.9"
+  }
 }
 
 apply plugin: "net.minecraftforge.gradle.forge"
@@ -26,258 +25,199 @@ import groovy.json.JsonSlurper
 def secretFile = file "secret.json"
 project.ext.secret = null
 if (secretFile.exists()) {
-    secretFile.withReader {
-        project.ext.secret = new JsonSlurper().parse it
-    }
+  secretFile.withReader {
+    project.ext.secret = new JsonSlurper().parse it
+  }
 }
 
-def mod_file = "src/main/java/net/ilexiconn/llibrary/LLibrary.java"
+def mod_file = getModFile()
+def mod_version = getModField("VERSION", mod_file)
+version = "$mod_version-1.12.2"
 
-version = getLLibraryVersion(mod_file) + "-1.12.2"
 group = "net.ilexiconn"
 archivesBaseName = "llibrary"
 sourceCompatibility = targetCompatibility = "1.8"
-def minecraft_mappings = "snapshot_20170624"
+def minecraft_mappings = "snapshot_20180503"
+def core_plugin = "net.ilexiconn.llibrary.server.core.plugin.LLibraryPlugin"
 
 minecraft {
-    version = "1.12.2-14.23.0.2491"
-    runDir = "minecraft"
-    mappings = minecraft_mappings
-    makeObfSourceJar = false
+  version = "1.12.2-14.23.3.2655"
+  runDir = "minecraft"
+  mappings = minecraft_mappings
+  makeObfSourceJar = false
 
-    if (secret) {
-        replace '${fingerprint}', secret.signSHA1
-        replaceIn mod_file
-    }
+  if (secret) {
+    replace '${fingerprint}', secret.signSHA1
+    replaceIn mod_file
+  }
 
-    clientJvmArgs = ["-Dfml.coreMods.load=$corePlugin"]
-    serverJvmArgs = ["-Dfml.coreMods.load=$corePlugin"]
+  clientJvmArgs = ["-Dfml.coreMods.load=$core_plugin"]
+  serverJvmArgs = ["-Dfml.coreMods.load=$core_plugin"]
+}
+
+configurations {
+  embedMod
+  deobfCompile.extendsFrom(embedMod)
+  embedMod.transitive = false
+}
+
+repositories {
+  maven { url = "https://maven.mcmoddev.com" }
+}
+
+dependencies {
+  embedMod "net.ilexiconn:llibrary-core:1.0.5-1.12.2"
 }
 
 processResources {
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
+  inputs.property "version", project.version
+  inputs.property "mcversion", project.minecraft.version
 
-    from(sourceSets.main.resources.srcDirs) {
-        include "mcmod.info"
-        expand "version": project.version, "mcversion": project.minecraft.version
-    }
+  from(sourceSets.main.resources.srcDirs) {
+    include "mcmod.info"
+    expand "version": project.version, "mcversion": project.minecraft.version
+  }
 
-    from(sourceSets.main.resources.srcDirs) {
-        exclude "mcmod.info"
-    }
-}
-
-sourceSets {
-    core {
-        compileClasspath = sourceSets.main.compileClasspath
-        runtimeClasspath = sourceSets.main.runtimeClasspath
-    }
-    main {
-        compileClasspath += sourceSets.core.output
-        runtimeClasspath += sourceSets.core.output
-    }
-}
-
-task coreJar(type: Jar) {
-    from sourceSets.core.output
-    manifest {
-        attributes "FMLCorePlugin": corePlugin
-    }
-
-    classifier = 'core'
+  from(sourceSets.main.resources.srcDirs) {
+    exclude "mcmod.info"
+  }
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = "sources"
-    from sourceSets.main.allSource
-    from sourceSets.core.allSource
+  classifier = "sources"
+  from sourceSets.main.allSource
 }
 
 task devJar(type: Jar) {
-    classifier = "dev"
-    from sourceSets.main.output
-    from sourceSets.core.output
-    manifest {
-        attributes "FMLAT": "llibrary_at.cfg"
-        attributes "FMLCorePlugin": corePlugin
-        attributes "FMLCorePluginContainsFMLMod": "true"
-    }
+  classifier = "dev"
+  from sourceSets.main.output
+  manifest {
+    attributes "FMLAT": "llibrary_at.cfg"
+  }
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = "javadoc"
-    from javadoc.getDestinationDir()
-}
-
-reobf {
-    coreJar {
-        mappingType = 'SEARGE'
-    }
+  classifier = "javadoc"
+  from javadoc.getDestinationDir()
 }
 
 task signJar(type: SignJar, dependsOn: reobfJar) {
-    if (secret) {
-        keyStore = secret.keyStore
-        alias = secret.keyStoreAlias
-        storePass = secret.keyStorePass
-        keyPass = secret.keyStoreKeyPass
-        inputFile = jar.archivePath
-        outputFile = jar.archivePath
-    }
-}
-
-task signCoreJar(type: SignJar, dependsOn: reobfCoreJar) {
-    if (secret) {
-        keyStore = secret.keyStore
-        alias = secret.keyStoreAlias
-        storePass = secret.keyStorePass
-        keyPass = secret.keyStoreKeyPass
-        inputFile = jar.archivePath
-        outputFile = jar.archivePath
-    }
+  if (secret) {
+    keyStore = secret.keyStore
+    alias = secret.keyStoreAlias
+    storePass = secret.keyStorePass
+    keyPass = secret.keyStoreKeyPass
+    inputFile = jar.archivePath
+    outputFile = jar.archivePath
+  }
 }
 
 jar {
-    dependsOn signCoreJar
-    from coreJar.archivePath.absolutePath
-    manifest {
-        attributes "FMLAT": "llibrary_at.cfg"
-        attributes "ContainedDeps": coreJar.archivePath.name
-    }
+  from(configurations.embedMod.files) {
+    include '*'
+  }
+  manifest {
+    attributes "FMLAT": "llibrary_at.cfg"
+    attributes "ContainedDeps": configurations.embedMod.files.collect { it.name }.join(" ")
+    attributes "Maven-Artifact": "${project.group}:${project.archivesBaseName}:${project.version}"
+    attributes "Timestamp": System.currentTimeMillis()
+  }
 }
 
 artifacts {
-    archives sourcesJar
-    archives devJar
-    archives javadocJar
+  archives sourcesJar
+  archives devJar
+  archives javadocJar
 }
 
 publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            groupId "net.ilexiconn"
-            artifactId "llibrary"
-            version project.version
+  publications {
+    mavenJava(MavenPublication) {
+      groupId project.group
+      artifactId project.archivesBaseName
+      version project.version
 
-            from components.java
+      from components.java
 
-            artifact devJar {
-                classifier "dev"
-            }
-
-            artifact sourcesJar {
-                classifier "sources"
-            }
-
-            artifact javadocJar {
-                classifier "javadoc"
-            }
-        }
+      artifact devJar { classifier "dev" }
+      artifact sourcesJar { classifier "sources" }
+      artifact javadocJar { classifier "javadoc" }
     }
-    repositories {
-        maven {
-            credentials {
-                if (secret) {
-                    username secret.username
-                    password secret.password
-                } else {
-                    username ""
-                    password ""
-                }
-            }
-            if (secret) {
-                url secret.url
-            } else {
-                url ""
-            }
-        }
+  }
+  repositories {
+    maven {
+      credentials {
+        username secret?.username ?: ""
+        password secret?.password ?: ""
+      }
+      url secret?.url ?: ""
     }
+  }
 }
 
 curseforge {
-    def url = "https://gist.githubusercontent.com/gegy1000/a6639456aeb8edd92cbf7cbfcf9d65d9/raw/llibrary_updates.json".toURL()
-    def versions = new JsonSlurper().parseText url.text
+  def url = "https://gist.githubusercontent.com/gegy1000/a6639456aeb8edd92cbf7cbfcf9d65d9/raw/llibrary_updates.json".toURL()
+  def versions = new JsonSlurper().parseText url.text
 
-    if (secret) {
-        apiKey = secret.apiKey
-    } else {
-        apiKey = ""
+  if (secret) {
+    apiKey = secret.apiKey
+  } else {
+    apiKey = ""
+  }
+
+  project {
+    id = "243298"
+
+    releaseType = "release"
+    def game_version = project.minecraft.version
+    def curse_version = mod_version
+    def latestVersion = versions.promos["${game_version}-latest"]
+    changelog = versions[game_version][latestVersion]
+    if (!changelog) {
+      changelog = ""
     }
 
-    project {
-        id = "243298"
+    addGameVersion(game_version)
 
-        releaseType = "release"
-        def game_version = project.minecraft.version
-        def curse_version = getLLibraryVersion(mod_file)
-        def latestVersion = versions.promos["${game_version}-latest"]
-        changelog = versions[game_version][latestVersion]
-        if (!changelog) {
-            changelog = ""
-        }
-        
-        addGameVersion(game_version)
-
-        mainArtifact(jar) {
-            displayName = "LLibrary $curse_version"
-        }
-
-        addArtifact(sourcesJar) {
-            displayName = "LLibrary $curse_version Sources"
-        }
-
-        addArtifact(devJar) {
-            displayName = "LLibrary $curse_version Development"
-        }
-
-        addArtifact(javadocJar) {
-            displayName = "LLibrary $curse_version Javadoc"
-        }
-    }
+    mainArtifact(jar) { displayName = "LLibrary $curse_version" }
+    addArtifact(sourcesJar) { displayName = "LLibrary $curse_version Sources" }
+    addArtifact(devJar) { displayName = "LLibrary $curse_version Development" }
+    addArtifact(javadocJar) { displayName = "LLibrary $curse_version Javadoc" }
+  }
 }
 
-String getLLibraryVersion(String modFile) {
-    def major = "0"
-    def revision = "0"
-    def patch = "0"
-    def prefix = "public static final String VERSION = \""
-    def file = file(modFile)
-    file.eachLine { String s ->
+String getModFile() {
+  String path = ""
+  FileTree tree = fileTree(dir: 'src/main/java')
+  tree.include '**/*.java'
+  tree.visit { element ->
+    if (element.file.isFile()) {
+      element.file.eachLine { String s ->
         s = s.trim()
-        if (s.startsWith(prefix)) {
-            s = s.substring(prefix.length(), s.length() - 2)
-            def pts = s.split("\\.")
-            major = pts[0]
-            revision = pts[1]
-            patch = pts[2]
+        if (s.matches("@Mod\\s*\\(.*")) {
+          path = "src/main/java/$element.relativePath"
         }
+      }
     }
-
-    return "$major.$revision.$patch"
+  }
+  return path
 }
 
-task generateMappings << {
-    def mappingParts = minecraft_mappings.split("_")
-    def mappingReplacements = new HashMap<String, String>()
-    def mappingFile = new File(System.properties["user.home"] + "/.gradle/caches/minecraft/de/oceanlabs/mcp/mcp_" + mappingParts[0] + "/" + mappingParts[1] + "/" + project.minecraft.version + "/srgs/mcp-srg.srg")
-    if (mappingFile.exists()) {
-        mappingFile.eachLine { line ->
-            def parts = line.split(" ")
-            if (line.startsWith("FD")) {
-                mappingReplacements[parts[1]] = parts[2].substring(parts[2].lastIndexOf("/") + 1, parts[2].length())
-            } else if (line.startsWith("MD")) {
-                mappingReplacements[parts[1] + parts[2]] = parts[3].substring(parts[3].lastIndexOf("/") + 1, parts[3].length())
-            }
-        }
+String getModField(String type, String mod_file) {
+  if (mod_file.length() == 0) {
+    return ""
+  }
+  String field = ""
+  String prefix = "public static final String $type = \""
+  File file = file(mod_file)
+  file.eachLine { String s ->
+    s = s.trim()
+    if (s.startsWith(prefix)) {
+      s = s.substring(prefix.length(), s.length() - 2)
+      field = s
     }
-
-    def mappingsFile = new File("src/core/resources/llibrary.mappings")
-    mappingsFile.withWriter("UTF-8") { writer ->
-        mappingReplacements.each { k, v -> writer.write(k + "=" + v + "\n") }
-    }
+  }
+  return field
 }
 
-compileJava.dependsOn generateMappings
-decompileMc.dependsOn generateMappings
 build.dependsOn signJar
