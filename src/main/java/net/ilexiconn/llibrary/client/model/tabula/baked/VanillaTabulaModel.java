@@ -64,7 +64,7 @@ public class VanillaTabulaModel implements IModel {
             locations.add(new ResourceLocation("missingno"));
         }
         ImmutableList.Builder<BakedQuad> builder = ImmutableList.builder();
-        TextureAtlasSprite particleSprite = this.particle == null ? bakedTextureGetter.apply(locations.get(0)) : bakedTextureGetter.apply(this.particle);
+        TextureAtlasSprite particleSprite = bakedTextureGetter.apply(this.particle == null ? locations.get(0) : this.particle);
         int layer = 0;
         for(ResourceLocation resourceLocation : locations) {
             Matrix matrix = new Matrix();
