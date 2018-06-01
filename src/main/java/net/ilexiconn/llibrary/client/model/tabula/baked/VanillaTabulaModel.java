@@ -2,6 +2,7 @@ package net.ilexiconn.llibrary.client.model.tabula.baked;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import net.ilexiconn.llibrary.client.model.tabula.container.TabulaCubeContainer;
 import net.ilexiconn.llibrary.client.model.tabula.container.TabulaModelContainer;
 import net.ilexiconn.llibrary.client.util.Matrix;
@@ -58,15 +59,21 @@ public class VanillaTabulaModel implements IModel {
 
     @Override
     public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
-        TextureAtlasSprite sprite = bakedTextureGetter.apply(this.textures.isEmpty() ? new ResourceLocation("missingno") : this.textures.get(0));
-        TextureAtlasSprite particleSprite = this.particle == null ? sprite : bakedTextureGetter.apply(this.particle);
+        List<ResourceLocation> locations = Lists.newArrayList(this.textures);
+        if(locations.isEmpty()) {
+            locations.add(new ResourceLocation("missingno"));
+        }
         ImmutableList.Builder<BakedQuad> builder = ImmutableList.builder();
-        Matrix matrix = new Matrix();
-        TRSRTransformation transformation = state.apply(Optional.empty()).orElse(TRSRTransformation.identity());
-        matrix.multiply(transformation.getMatrix());
-        matrix.translate(0.5F, 1.5F, 0.5F);
-        matrix.scale(-0.0625F, -0.0625F, 0.0625F);
-        this.build(matrix, builder, format, this.model.getCubes(), sprite);
+        TextureAtlasSprite particleSprite = this.particle == null ? bakedTextureGetter.apply(locations.get(0)) : bakedTextureGetter.apply(this.particle);
+        for(ResourceLocation resourceLocation : locations) {
+            Matrix matrix = new Matrix();
+            TextureAtlasSprite sprite = bakedTextureGetter.apply(resourceLocation);
+            TRSRTransformation transformation = state.apply(Optional.empty()).orElse(TRSRTransformation.identity());
+            matrix.multiply(transformation.getMatrix());
+            matrix.translate(0.5F, 1.5F, 0.5F);
+            matrix.scale(-0.0625F, -0.0625F, 0.0625F);
+            this.build(matrix, builder, format, this.model.getCubes(), sprite);
+        }
         ImmutableList<BakedQuad> leQuads = builder.build();
         return new BakedTabulaModel(leQuads, particleSprite, this.transforms);
     }
