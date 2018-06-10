@@ -155,7 +155,11 @@ publishing {
   }
 }
 
+build.dependsOn signJar
+
 curseforge {
+  tasks.curseforge.dependsOn build
+
   def url = "https://gist.githubusercontent.com/gegy1000/a6639456aeb8edd92cbf7cbfcf9d65d9/raw/llibrary_updates.json".toURL()
   def versions = new JsonSlurper().parseText url.text
 
@@ -172,10 +176,7 @@ curseforge {
     def game_version = project.minecraft.version
     def curse_version = mod_version
     def latestVersion = versions.promos["${game_version}-latest"]
-    changelog = versions[game_version][latestVersion]
-    if (!changelog) {
-      changelog = ""
-    }
+    changelog = versions[game_version][latestVersion] ?: ""
 
     addGameVersion(game_version)
 
@@ -219,5 +220,3 @@ String getModField(String type, String mod_file) {
   }
   return field
 }
-
-build.dependsOn signJar

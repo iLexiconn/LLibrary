@@ -13,6 +13,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ClassInheritanceMultiMap;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.WorldServer;
@@ -24,6 +25,7 @@ import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -200,6 +202,22 @@ public enum ServerEventHandler {
     public void onWorldSave(WorldEvent.Save event) {
         if (!event.getWorld().isRemote) {
             WorldDataHandler.INSTANCE.saveWorldData(event.getWorld().getSaveHandler(), event.getWorld());
+        }
+    }
+
+    @SubscribeEvent
+    public void onWorldUnload(WorldEvent.Unload event) {
+        List<Entity> entities = event.getWorld().loadedEntityList;
+        entities.forEach(EntityDataHandler.INSTANCE::removeEntity);
+    }
+
+    @SubscribeEvent
+    public void onChunkUnload(ChunkEvent.Unload event) {
+        ClassInheritanceMultiMap<Entity>[] entitySections = event.getChunk().getEntityLists();
+        for (ClassInheritanceMultiMap<Entity> section : entitySections) {
+            for (Entity entity : section) {
+                EntityDataHandler.INSTANCE.removeEntity(entity);
+            }
         }
     }
 }

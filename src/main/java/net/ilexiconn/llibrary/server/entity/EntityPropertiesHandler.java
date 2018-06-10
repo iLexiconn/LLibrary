@@ -1,18 +1,21 @@
 package net.ilexiconn.llibrary.server.entity;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import net.ilexiconn.llibrary.LLibrary;
 import net.ilexiconn.llibrary.server.capability.EntityDataHandler;
 import net.ilexiconn.llibrary.server.capability.IEntityData;
-import net.ilexiconn.llibrary.server.util.WeakIdentityHashMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Stream;
 
 /**
@@ -25,7 +28,7 @@ public enum EntityPropertiesHandler {
     private Map<Class<? extends EntityProperties>, String> propertiesIDMap = new HashMap<>();
     private Map<Class<? extends Entity>, List<Class<? extends EntityProperties<?>>>> registeredProperties = new HashMap<>();
     private Map<Class<? extends Entity>, List<String>> entityPropertiesCache = new HashMap<>();
-    private Map<EntityPlayerMP, List<PropertiesTracker<?>>> trackerMap = new WeakIdentityHashMap<>();
+    private Cache<EntityPlayerMP, List<PropertiesTracker<?>>> trackerMap = CacheBuilder.newBuilder().weakKeys().softValues().build();
 
     /**
      * Register a new properties class.
@@ -78,7 +81,7 @@ public enum EntityPropertiesHandler {
     public <T extends Entity> void addTracker(EntityPlayerMP player, T entity) {
         List<String> entityProperties = this.entityPropertiesCache.get(entity.getClass());
         if (entityProperties != null) {
-            List<PropertiesTracker<?>> trackerList = this.trackerMap.computeIfAbsent(player, k -> new ArrayList<>());
+            List<PropertiesTracker<?>> trackerList = this.getEntityTrackers(player);
             for (String propID : entityProperties) {
                 IEntityData extendedProperties = EntityDataHandler.INSTANCE.getEntityData(entity, propID);
                 if (extendedProperties instanceof EntityProperties) {
@@ -100,8 +103,8 @@ public enum EntityPropertiesHandler {
      * @param entity the entity instance
      */
     public void removeTracker(EntityPlayerMP player, Entity entity) {
-        List<PropertiesTracker<?>> trackerList = this.trackerMap.get(player);
-        if (trackerList != null && trackerList.size() > 0) {
+        List<PropertiesTracker<?>> trackerList = this.getEntityTrackers(player);
+        if (trackerList != null && !trackerList.isEmpty()) {
             Iterator<PropertiesTracker<?>> iterator = trackerList.iterator();
             while (iterator.hasNext()) {
                 PropertiesTracker<?> tracker = iterator.next();
@@ -145,13 +148,18 @@ public enum EntityPropertiesHandler {
      * @return all entity trackers
      */
     public List<PropertiesTracker<?>> getEntityTrackers(EntityPlayerMP player) {
-        return this.trackerMap.get(player);
+        try {
+            return this.trackerMap.get(player, ArrayList::new);
+        } catch (ExecutionException e) {
+            LLibrary.LOGGER.error("Failed to add tracker to player", e);
+            return Collections.emptyList();
+        }
     }
 
     /**
      * @return the Iterator of the current trackers
      */
     public Iterator<Map.Entry<EntityPlayerMP, List<PropertiesTracker<?>>>> getTrackerIterator() {
-        return this.trackerMap.entrySet().iterator();
+        return this.trackerMap.asMap().entrySet().iterator();
     }
 }

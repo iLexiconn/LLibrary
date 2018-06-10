@@ -18,7 +18,7 @@ import java.util.Set;
  * @author pau101
  */
 public class WeakIdentityHashMap<K, V> implements Map<K, V> {
-    private final ReferenceQueue<K> queue = new ReferenceQueue();
+    private final ReferenceQueue<K> queue = new ReferenceQueue<>();
 
     private final Map<IdentityWeakReference, V> delegate;
 
