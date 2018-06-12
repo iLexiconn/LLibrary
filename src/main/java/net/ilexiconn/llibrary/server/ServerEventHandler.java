@@ -3,29 +3,26 @@ package net.ilexiconn.llibrary.server;
 import net.ilexiconn.llibrary.LLibrary;
 import net.ilexiconn.llibrary.server.capability.EntityDataCapabilityImplementation;
 import net.ilexiconn.llibrary.server.capability.EntityDataHandler;
+import net.ilexiconn.llibrary.server.capability.IEntityData;
 import net.ilexiconn.llibrary.server.capability.IEntityDataCapability;
 import net.ilexiconn.llibrary.server.entity.EntityProperties;
 import net.ilexiconn.llibrary.server.entity.EntityPropertiesHandler;
 import net.ilexiconn.llibrary.server.entity.PropertiesTracker;
+import net.ilexiconn.llibrary.server.event.CollectEntityDataEvent;
 import net.ilexiconn.llibrary.server.network.PropertiesMessage;
 import net.ilexiconn.llibrary.server.world.WorldDataHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ClassInheritanceMultiMap;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -40,63 +37,40 @@ import java.util.Map;
 public enum ServerEventHandler {
     INSTANCE;
 
+    private static final ResourceLocation EXTENDED_DATA_ID = new ResourceLocation("llibrary", "ExtendedEntityDataCapability");
+
     private int updateTimer;
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
-        event.addCapability(new ResourceLocation("llibrary", "ExtendedEntityDataCapability"), new ICapabilitySerializable() {
-            @Override
-            public NBTBase serializeNBT() {
-                Capability<IEntityDataCapability> capability = LLibrary.ENTITY_DATA_CAPABILITY;
-                IEntityDataCapability instance = capability.getDefaultInstance();
-                instance.init(event.getObject(), event.getObject().getEntityWorld(), false);
-                return capability.getStorage().writeNBT(capability, instance, null);
-            }
-
-            @Override
-            public void deserializeNBT(NBTBase nbt) {
-                Capability<IEntityDataCapability> capability = LLibrary.ENTITY_DATA_CAPABILITY;
-                IEntityDataCapability instance = capability.getDefaultInstance();
-                instance.init(event.getObject(), event.getObject().getEntityWorld(), true);
-                capability.getStorage().readNBT(capability, instance, null, nbt);
-            }
-
-            @Override
-            public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-                return LLibrary.ENTITY_DATA_CAPABILITY == capability;
-            }
-
-            @Override
-            public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-                if (capability == LLibrary.ENTITY_DATA_CAPABILITY) {
-                    return LLibrary.ENTITY_DATA_CAPABILITY.cast(new EntityDataCapabilityImplementation());
-                } else {
-                    return null;
-                }
-            }
-        });
+        // TODO: 1.13: Only support adding entity data through this event
+        List<IEntityData> collectedData = new ArrayList<>();
+        MinecraftForge.EVENT_BUS.post(new CollectEntityDataEvent(event.getObject(), collectedData));
+        event.addCapability(EXTENDED_DATA_ID, new EntityDataCapabilityImplementation(collectedData));
     }
 
-    @SubscribeEvent
-    public void onPlayerClone(PlayerEvent.Clone event) {
-        if (event.isWasDeath()) {
-            NBTTagCompound compound = new NBTTagCompound();
-            EntityDataCapabilityImplementation.getCapability(event.getOriginal()).saveToNBT(compound);
-            EntityDataCapabilityImplementation.getCapability(event.getEntityPlayer()).loadFromNBT(compound);
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onFinishAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
+        ICapabilityProvider extendedData = event.getCapabilities().get(EXTENDED_DATA_ID);
+        if (extendedData instanceof IEntityDataCapability) {
+            EntityDataHandler.INSTANCE.putQueuedData(event.getObject(), (IEntityDataCapability) extendedData);
+        } else {
+            EntityDataHandler.INSTANCE.releaseQueuedData(event.getObject());
         }
     }
 
     @SubscribeEvent
-    public void onEntityConstructing(EntityEvent.EntityConstructing event) {
-        boolean cached = EntityPropertiesHandler.INSTANCE.hasEntityInCache(event.getEntity().getClass());
+    public void onCollectEntityData(CollectEntityDataEvent event) {
+        Entity entity = event.getEntity();
+        boolean cached = EntityPropertiesHandler.INSTANCE.hasEntityInCache(entity.getClass());
         List<String> entityPropertiesIDCache = !cached ? new ArrayList<>() : null;
-        EntityPropertiesHandler.INSTANCE.getRegisteredProperties().filter(propEntry -> propEntry.getKey().isAssignableFrom(event.getEntity().getClass())).forEach(propEntry -> {
+        EntityPropertiesHandler.INSTANCE.getRegisteredProperties().filter(propEntry -> propEntry.getKey().isAssignableFrom(entity.getClass())).forEach(propEntry -> {
             for (Class<? extends EntityProperties> propClass : propEntry.getValue()) {
                 try {
                     Constructor<? extends EntityProperties> constructor = propClass.getConstructor();
                     EntityProperties prop = constructor.newInstance();
                     String propID = prop.getID();
-                    EntityDataHandler.INSTANCE.registerExtendedEntityData(event.getEntity(), prop);
+                    event.registerData(prop);
                     if (!cached) {
                         entityPropertiesIDCache.add(propID);
                     }
@@ -106,7 +80,18 @@ public enum ServerEventHandler {
             }
         });
         if (!cached) {
-            EntityPropertiesHandler.INSTANCE.addEntityToCache(event.getEntity().getClass(), entityPropertiesIDCache);
+            EntityPropertiesHandler.INSTANCE.addEntityToCache(entity.getClass(), entityPropertiesIDCache);
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerClone(PlayerEvent.Clone event) {
+        NBTTagCompound compound = new NBTTagCompound();
+        IEntityDataCapability originalCap = event.getOriginal().getCapability(LLibrary.ENTITY_DATA_CAPABILITY, null);
+        IEntityDataCapability newCap = event.getEntityPlayer().getCapability(LLibrary.ENTITY_DATA_CAPABILITY, null);
+        if (originalCap != null && newCap != null) {
+            originalCap.saveToNBT(compound);
+            newCap.loadFromNBT(compound);
         }
     }
 
@@ -202,22 +187,6 @@ public enum ServerEventHandler {
     public void onWorldSave(WorldEvent.Save event) {
         if (!event.getWorld().isRemote) {
             WorldDataHandler.INSTANCE.saveWorldData(event.getWorld().getSaveHandler(), event.getWorld());
-        }
-    }
-
-    @SubscribeEvent
-    public void onWorldUnload(WorldEvent.Unload event) {
-        List<Entity> entities = event.getWorld().loadedEntityList;
-        entities.forEach(EntityDataHandler.INSTANCE::removeEntity);
-    }
-
-    @SubscribeEvent
-    public void onChunkUnload(ChunkEvent.Unload event) {
-        ClassInheritanceMultiMap<Entity>[] entitySections = event.getChunk().getEntityLists();
-        for (ClassInheritanceMultiMap<Entity> section : entitySections) {
-            for (Entity entity : section) {
-                EntityDataHandler.INSTANCE.removeEntity(entity);
-            }
         }
     }
 }

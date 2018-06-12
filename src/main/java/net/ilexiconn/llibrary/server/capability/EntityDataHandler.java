@@ -1,15 +1,13 @@
 package net.ilexiconn.llibrary.server.capability;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import net.ilexiconn.llibrary.LLibrary;
 import net.minecraft.entity.Entity;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
+import java.util.Map;
 
 /**
  * @author gegy1000
@@ -18,7 +16,8 @@ import java.util.concurrent.ExecutionException;
 public enum EntityDataHandler {
     INSTANCE;
 
-    private Cache<Entity, List<IEntityData<?>>> registeredEntityData = CacheBuilder.newBuilder().weakKeys().softValues().build();
+    // TODO: Remove in 1.13
+    private final Map<Entity, List<IEntityData>> queuedEntityData = new HashMap<>();
 
     /**
      * Registers an Extended Entity Data Manager to the given entity
@@ -26,16 +25,17 @@ public enum EntityDataHandler {
      * @param entity the entity to add data to
      * @param entityData the data manager
      * @param <T> the entity type
+     *
+     * @deprecated Use {@link net.ilexiconn.llibrary.server.event.CollectEntityDataEvent} to register data
      */
+    @Deprecated
     public <T extends Entity> void registerExtendedEntityData(T entity, IEntityData<T> entityData) {
-        try {
-            List<IEntityData<?>> registered = this.registeredEntityData.get(entity, ArrayList::new);
-            if (!registered.contains(entityData)) {
-                registered.add(entityData);
-            }
-            this.registeredEntityData.put(entity, registered);
-        } catch (ExecutionException e) {
-            LLibrary.LOGGER.error("Failed to register extended entity data", e);
+        IEntityDataCapability dataCap = entity.getCapability(LLibrary.ENTITY_DATA_CAPABILITY, null);
+        if (dataCap == null) {
+            List<IEntityData> data = this.queuedEntityData.computeIfAbsent(entity, e -> new ArrayList<>());
+            data.add(entityData);
+        } else {
+            dataCap.registerData(entityData);
         }
     }
 
@@ -47,15 +47,11 @@ public enum EntityDataHandler {
      */
     @Nullable
     public <T extends Entity> IEntityData<T> getEntityData(T entity, String identifier) {
-        List<IEntityData<T>> managers = this.getEntityData(entity);
-        if (managers != null) {
-            for (IEntityData manager : managers) {
-                if (manager.getID().equals(identifier)) {
-                    return manager;
-                }
-            }
+        IEntityDataCapability dataCap = entity.getCapability(LLibrary.ENTITY_DATA_CAPABILITY, null);
+        if (dataCap == null) {
+            throw new IllegalStateException("Cannot get entity data on entity without data cap");
         }
-        return null;
+        return dataCap.getData(identifier);
     }
 
     /**
@@ -66,14 +62,23 @@ public enum EntityDataHandler {
      * @return a list with all the data managers, never null
      */
     public <T extends Entity> List<IEntityData<T>> getEntityData(T entity) {
-        List<?> entityData = this.registeredEntityData.getIfPresent(entity);
-        if (entityData != null) {
-            return (List<IEntityData<T>>) entityData;
+        IEntityDataCapability dataCap = entity.getCapability(LLibrary.ENTITY_DATA_CAPABILITY, null);
+        if (dataCap == null) {
+            throw new IllegalStateException("Cannot get entity data on entity without data cap");
         }
-        return Collections.emptyList();
+        return dataCap.getData();
     }
 
-    public void removeEntity(Entity entity) {
-        this.registeredEntityData.invalidate(entity);
+    @Deprecated
+    public void putQueuedData(Entity entity, IEntityDataCapability dataCap) {
+        List<IEntityData> queuedData = this.queuedEntityData.remove(entity);
+        if (queuedData != null) {
+            queuedData.forEach(dataCap::registerData);
+        }
+    }
+
+    @Deprecated
+    public void releaseQueuedData(Entity entity) {
+        this.queuedEntityData.remove(entity);
     }
 }

@@ -49,7 +49,7 @@ import java.util.Map;
         dependencies = "required-after:forge@[14.23.3.2655,)"
 )
 public class LLibrary {
-    public static final String VERSION = "1.7.12";
+    public static final String VERSION = "1.7.13";
 
     public static final Logger LOGGER = LogManager.getLogger("LLibrary");
     @SidedProxy(serverSide = "net.ilexiconn.llibrary.server.ServerProxy", clientSide = "net.ilexiconn.llibrary.client.ClientProxy")

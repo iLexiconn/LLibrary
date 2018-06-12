@@ -4,6 +4,7 @@ import net.ilexiconn.llibrary.LLibrary;
 import net.ilexiconn.llibrary.server.capability.EntityDataCapabilityImplementation;
 import net.ilexiconn.llibrary.server.capability.EntityDataCapabilityStorage;
 import net.ilexiconn.llibrary.server.capability.IEntityDataCapability;
+import net.ilexiconn.llibrary.server.entity.EntityPropertiesHandler;
 import net.ilexiconn.llibrary.server.network.AbstractMessage;
 import net.ilexiconn.llibrary.server.network.SnackbarMessage;
 import net.ilexiconn.llibrary.server.snackbar.Snackbar;
@@ -17,6 +18,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 public class ServerProxy {
     public void onPreInit() {
         MinecraftForge.EVENT_BUS.register(ServerEventHandler.INSTANCE);
+        MinecraftForge.EVENT_BUS.register(EntityPropertiesHandler.INSTANCE);
         CapabilityManager.INSTANCE.register(IEntityDataCapability.class, new EntityDataCapabilityStorage(), EntityDataCapabilityImplementation.class);
     }
 

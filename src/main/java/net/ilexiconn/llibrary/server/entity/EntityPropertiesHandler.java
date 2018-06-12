@@ -1,21 +1,22 @@
 package net.ilexiconn.llibrary.server.entity;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import net.ilexiconn.llibrary.LLibrary;
 import net.ilexiconn.llibrary.server.capability.EntityDataHandler;
 import net.ilexiconn.llibrary.server.capability.IEntityData;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Stream;
 
 /**
@@ -28,14 +29,14 @@ public enum EntityPropertiesHandler {
     private Map<Class<? extends EntityProperties>, String> propertiesIDMap = new HashMap<>();
     private Map<Class<? extends Entity>, List<Class<? extends EntityProperties<?>>>> registeredProperties = new HashMap<>();
     private Map<Class<? extends Entity>, List<String>> entityPropertiesCache = new HashMap<>();
-    private Cache<EntityPlayerMP, List<PropertiesTracker<?>>> trackerMap = CacheBuilder.newBuilder().weakKeys().softValues().build();
+    private Map<EntityPlayerMP, List<PropertiesTracker<?>>> trackerMap = new IdentityHashMap<>();
 
     /**
      * Register a new properties class.
      *
      * @param propertiesClass the properties class
-     * @param <E>             the entity type
-     * @param <T>             the properties type
+     * @param <E> the entity type
+     * @param <T> the properties type
      */
     public <E extends Entity, T extends EntityProperties<E>> void registerProperties(Class<T> propertiesClass) {
         T properties;
@@ -59,9 +60,9 @@ public enum EntityPropertiesHandler {
     /**
      * Get the properties from a specific type for an entity.
      *
-     * @param entity          the entity instance
+     * @param entity the entity instance
      * @param propertiesClass the properties class
-     * @param <T>             the properties type
+     * @param <T> the properties type
      * @return the entity properties, null if they don't exist
      */
     public <T extends EntityProperties<?>> T getProperties(Entity entity, Class<T> propertiesClass) {
@@ -76,7 +77,7 @@ public enum EntityPropertiesHandler {
      *
      * @param player the player instance
      * @param entity the entity instance
-     * @param <T>    the entity type
+     * @param <T> the entity type
      */
     public <T extends Entity> void addTracker(EntityPlayerMP player, T entity) {
         List<String> entityProperties = this.entityPropertiesCache.get(entity.getClass());
@@ -148,18 +149,28 @@ public enum EntityPropertiesHandler {
      * @return all entity trackers
      */
     public List<PropertiesTracker<?>> getEntityTrackers(EntityPlayerMP player) {
-        try {
-            return this.trackerMap.get(player, ArrayList::new);
-        } catch (ExecutionException e) {
-            LLibrary.LOGGER.error("Failed to add tracker to player", e);
-            return Collections.emptyList();
-        }
+        return this.trackerMap.computeIfAbsent(player, p -> new ArrayList<>());
     }
 
     /**
      * @return the Iterator of the current trackers
      */
     public Iterator<Map.Entry<EntityPlayerMP, List<PropertiesTracker<?>>>> getTrackerIterator() {
-        return this.trackerMap.asMap().entrySet().iterator();
+        return this.trackerMap.entrySet().iterator();
+    }
+
+    @SubscribeEvent
+    public void onPlayerLogOut(PlayerLoggedOutEvent event) {
+        if (event.player instanceof EntityPlayerMP) {
+            this.trackerMap.remove(event.player);
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerClone(PlayerEvent.Clone event) {
+        EntityPlayer player = event.getOriginal();
+        if (player instanceof EntityPlayerMP) {
+            this.trackerMap.remove(player);
+        }
     }
 }
