@@ -90,8 +90,11 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 
 task devJar(type: Jar) {
   classifier = "dev"
+  from configurations.embedMod.collect {
+    exclude 'META-INF/*'
+    it.isDirectory() ? it : zipTree(it) 
+  }
   from sourceSets.main.output
-  from configurations.embedMod.collect { it.isDirectory() ? it : zipTree(it) }
   manifest {
     attributes "FMLAT": "llibrary_at.cfg"
   }

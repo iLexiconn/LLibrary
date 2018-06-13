@@ -157,8 +157,8 @@ public enum ServerEventHandler {
                     EntityPlayerMP player = trackerEntry.getKey();
                     WorldServer playerWorld = DimensionManager.getWorld(player.dimension);
                     if (player == null || player.isDead || playerWorld == null || !playerWorld.loadedEntityList.contains(player)) {
-                        iterator.remove();
                         trackerEntry.getValue().forEach(PropertiesTracker::removeTracker);
+                        iterator.remove();
                     } else {
                         Iterator<PropertiesTracker<?>> it = trackerEntry.getValue().iterator();
                         while (it.hasNext()) {
