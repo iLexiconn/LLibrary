@@ -49,7 +49,7 @@ import java.util.Map;
         dependencies = "required-after:forge@[14.23.3.2655,)"
 )
 public class LLibrary {
-    public static final String VERSION = "1.7.13";
+    public static final String VERSION = "1.7.14";
 
     public static final Logger LOGGER = LogManager.getLogger("LLibrary");
     @SidedProxy(serverSide = "net.ilexiconn.llibrary.server.ServerProxy", clientSide = "net.ilexiconn.llibrary.client.ClientProxy")
@@ -72,7 +72,11 @@ public class LLibrary {
             LLibrary.LLIBRARY_ROOT.mkdirs();
         }
 
-        LLibraryPlugin.api = new CoreAPIHandler();
+        try {
+            LLibraryPlugin.api = new CoreAPIHandler();
+        } catch (Exception e) {
+            LOGGER.error("Failed to load LLibrary Core API. Is it missing?", e);
+        }
 
         for (ModContainer mod : Loader.instance().getModList()) {
             ConfigHandler.INSTANCE.injectConfig(mod, event.getAsmData());
