@@ -57,7 +57,6 @@ minecraft {
 
 configurations {
   embedMod
-  embedMod.transitive = false
 }
 
 repositories {
@@ -65,8 +64,7 @@ repositories {
 }
 
 dependencies {
-  deobfCompile "net.ilexiconn:llibrary-core:1.0.6-1.12.2"
-
+  compile "net.ilexiconn:llibrary-core:1.0.6-1.12.2"
   embedMod "net.ilexiconn:llibrary-core:1.0.6-1.12.2"
 }
 
@@ -91,10 +89,6 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 
 task devJar(type: Jar) {
   classifier = "dev"
-  from configurations.embedMod.collect {
-    exclude 'META-INF/*'
-    it.isDirectory() ? it : zipTree(it)
-  }
   from sourceSets.main.output
   manifest {
     attributes "FMLAT": "llibrary_at.cfg"

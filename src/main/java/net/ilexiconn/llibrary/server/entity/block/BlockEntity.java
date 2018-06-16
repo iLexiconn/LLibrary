@@ -7,6 +7,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 /**
  * @author iLexiconn
@@ -29,7 +30,8 @@ public abstract class BlockEntity extends TileEntity implements ITickable {
             if (!compound.equals(this.lastCompound)) {
                 if (!this.world.isRemote) {
                     this.onSync();
-                    LLibrary.NETWORK_WRAPPER.sendToAll(new BlockEntityMessage(this));
+                    NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(this.world.provider.getDimension(), this.pos.getX(), this.pos.getY(), this.pos.getZ(), 0);
+                    LLibrary.NETWORK_WRAPPER.sendToAllTracking(new BlockEntityMessage(this), point);
                 }
                 this.lastCompound = compound;
             }
@@ -39,12 +41,19 @@ public abstract class BlockEntity extends TileEntity implements ITickable {
 
     @Override
     public SPacketUpdateTileEntity getUpdatePacket() {
-        return new SPacketUpdateTileEntity(this.pos, 0, this.getUpdateTag());
+        return new SPacketUpdateTileEntity(this.pos, 0, super.getUpdateTag());
     }
 
     @Override
     public void onDataPacket(NetworkManager networkManager, SPacketUpdateTileEntity packet) {
         this.readFromNBT(packet.getNbtCompound());
+    }
+
+    @Override
+    public NBTTagCompound getUpdateTag() {
+        NBTTagCompound compound = new NBTTagCompound();
+        this.saveNBTData(compound);
+        return compound;
     }
 
     @Override

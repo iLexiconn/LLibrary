@@ -66,16 +66,18 @@ public class LLibrary {
 
     public static final File LLIBRARY_ROOT = new File(".", "llibrary");
 
-    @Mod.EventHandler
-    public void onPreInit(FMLPreInitializationEvent event) {
-        if (!LLibrary.LLIBRARY_ROOT.exists()) {
-            LLibrary.LLIBRARY_ROOT.mkdirs();
-        }
-
+    static {
         try {
             LLibraryPlugin.api = new CoreAPIHandler();
         } catch (Exception e) {
             LOGGER.error("Failed to load LLibrary Core API. Is it missing?", e);
+        }
+    }
+
+    @Mod.EventHandler
+    public void onPreInit(FMLPreInitializationEvent event) {
+        if (!LLibrary.LLIBRARY_ROOT.exists()) {
+            LLibrary.LLIBRARY_ROOT.mkdirs();
         }
 
         for (ModContainer mod : Loader.instance().getModList()) {
@@ -102,7 +104,7 @@ public class LLibrary {
         LOGGER.warn("Detected invalid fingerprint for file {}! You will not receive support with this tampered version of llibrary!", event.getSource().getName());
     }
 
-    class CoreAPIHandler implements LLibraryCoreAPI {
+    static class CoreAPIHandler implements LLibraryCoreAPI {
         @Override
         @SideOnly(Side.CLIENT)
         public void addRemoteLocalizations(String language, Map<String, String> properties) {

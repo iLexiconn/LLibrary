@@ -29,8 +29,11 @@ public class BlockEntityMessage extends AbstractMessage<BlockEntityMessage> {
     @Override
     @SideOnly(Side.CLIENT)
     public void onClientReceived(Minecraft client, BlockEntityMessage message, EntityPlayer player, MessageContext messageContext) {
-        BlockEntity blockEntity = (BlockEntity) player.world.getTileEntity(message.pos);
-        blockEntity.loadTrackingSensitiveData(message.compound);
+        BlockPos pos = message.pos;
+        if (player.world.isBlockLoaded(pos)) {
+            BlockEntity blockEntity = (BlockEntity) player.world.getTileEntity(pos);
+            blockEntity.loadTrackingSensitiveData(message.compound);
+        }
     }
 
     @Override
@@ -50,5 +53,10 @@ public class BlockEntityMessage extends AbstractMessage<BlockEntityMessage> {
         buf.writeInt(this.pos.getY());
         buf.writeInt(this.pos.getZ());
         ByteBufUtils.writeTag(buf, this.compound);
+    }
+
+    @Override
+    public boolean registerOnSide(Side side) {
+        return side.isClient();
     }
 }
