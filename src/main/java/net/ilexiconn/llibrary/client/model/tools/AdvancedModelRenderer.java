@@ -23,6 +23,7 @@ public class AdvancedModelRenderer extends ModelRenderer {
     public float defaultOffsetX, defaultOffsetY, defaultOffsetZ;
     public float defaultPositionX, defaultPositionY, defaultPositionZ;
     public float scaleX = 1.0F, scaleY = 1.0F, scaleZ = 1.0F;
+    public float opacity = 1.0F;
     public int textureOffsetX, textureOffsetY;
     public boolean scaleChildren;
     private AdvancedModelBase model;
@@ -112,6 +113,10 @@ public class AdvancedModelRenderer extends ModelRenderer {
 
     public void setScaleZ(float scaleZ) {
         this.scaleZ = scaleZ;
+    }
+    
+    public void setOpacity(float opacity) {
+        this.opacity = opacity;
     }
 
     /**
@@ -219,7 +224,16 @@ public class AdvancedModelRenderer extends ModelRenderer {
                 if (this.scaleX != 1.0F || this.scaleY != 1.0F || this.scaleZ != 1.0F) {
                     GlStateManager.scale(this.scaleX, this.scaleY, this.scaleZ);
                 }
+                if (this.opacity != 1.0F) {
+                    GlStateManager.enableBlend();
+                    GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+                    GlStateManager.color(1F, 1F, 1F, opacity);
+                }
                 GlStateManager.callList(this.displayList);
+                if (this.opacity != 1.0F) {
+                    GlStateManager.disableBlend();
+                    GlStateManager.color(1F, 1F, 1F, 1F);
+                }
                 if (!this.scaleChildren && (this.scaleX != 1.0F || this.scaleY != 1.0F || this.scaleZ != 1.0F)) {
                     GlStateManager.popMatrix();
                     GlStateManager.pushMatrix();
@@ -350,5 +364,53 @@ public class AdvancedModelRenderer extends ModelRenderer {
         this.offsetX += ((to.offsetX - this.offsetX) / maxTime) * timer;
         this.offsetY += ((to.offsetY - this.offsetY) / maxTime) * timer;
         this.offsetZ += ((to.offsetZ - this.offsetZ) / maxTime) * timer;
+    }
+    
+    /**
+     * Returns the position of the model renderer in world space.
+     */
+    public Vec3d getWorldPos(Entity entity) {
+        Vec3d modelPos = getModelPos(this, new Vec3d(rotationPointX/16, rotationPointY/16, rotationPointZ/16));
+        double x = modelPos.x;
+        double y = modelPos.y + 1.5f;
+        double z = modelPos.z;
+        Matrix4d entityTranslate = new Matrix4d();
+        Matrix4d entityRotate = new Matrix4d();
+        entityTranslate.set(new Vector3d(entity.posX, entity.posY, entity.posZ));
+        entityRotate.rotY(-Math.toRadians(entity.rotationYaw));
+        Point3d rendererPos = new Point3d(x, y, z);
+        entityRotate.transform(rendererPos);
+        entityTranslate.transform(rendererPos);
+        return new Vec3d(rendererPos.getX(), rendererPos.getY(), rendererPos.getZ());
+    }
+
+    /**
+     * Returns the position of the model renderer relative to the center and facing axis of the model.
+     */
+    public Vec3d getModelPos(AdvancedModelRenderer modelRenderer, Vec3d recurseValue) {
+        double x = recurseValue.x;
+        double y = recurseValue.y;
+        double z = recurseValue.z;
+        Point3d rendererPos = new Point3d(x, y, z);
+
+        AdvancedModelRenderer parent = modelRenderer.getParent();
+        if (parent != null) {
+            Matrix4d boxTranslate = new Matrix4d();
+            Matrix4d boxRotateX = new Matrix4d();
+            Matrix4d boxRotateY = new Matrix4d();
+            Matrix4d boxRotateZ = new Matrix4d();
+            boxTranslate.set(new Vector3d(parent.rotationPointX/16, -parent.rotationPointY/16, -parent.rotationPointZ/16));
+            boxRotateX.rotX(parent.rotateAngleX);
+            boxRotateY.rotY(-parent.rotateAngleY);
+            boxRotateZ.rotZ(-parent.rotateAngleZ);
+
+            boxRotateX.transform(rendererPos);
+            boxRotateY.transform(rendererPos);
+            boxRotateZ.transform(rendererPos);
+            boxTranslate.transform(rendererPos);
+
+            return getModelPos(parent, new Vec3d(rendererPos.getX(), rendererPos.getY(), rendererPos.getZ()));
+        }
+        return new Vec3d(rendererPos.getX(), rendererPos.getY(), rendererPos.getZ());
     }
 }
