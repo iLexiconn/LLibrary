@@ -5,7 +5,7 @@ import net.minecraft.entity.Entity;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +17,7 @@ public enum EntityDataHandler {
     INSTANCE;
 
     // TODO: Remove in 1.13
-    private final Map<Entity, List<IEntityData>> queuedEntityData = new HashMap<>();
+    private final Map<Entity, List<IEntityData>> queuedEntityData = new IdentityHashMap<>();
 
     /**
      * Registers an Extended Entity Data Manager to the given entity

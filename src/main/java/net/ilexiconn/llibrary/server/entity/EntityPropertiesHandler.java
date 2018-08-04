@@ -66,8 +66,11 @@ public enum EntityPropertiesHandler {
      * @return the entity properties, null if they don't exist
      */
     public <T extends EntityProperties<?>> T getProperties(Entity entity, Class<T> propertiesClass) {
-        if (entity != null && this.propertiesIDMap.containsKey(propertiesClass)) {
-            return (T) EntityDataHandler.INSTANCE.getEntityData(entity, this.propertiesIDMap.get(propertiesClass));
+        if (entity != null) {
+            String identifier = this.propertiesIDMap.get(propertiesClass);
+            if (identifier != null) {
+                return (T) EntityDataHandler.INSTANCE.getEntityData(entity, identifier);
+            }
         }
         return null;
     }
