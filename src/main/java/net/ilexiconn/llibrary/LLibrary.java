@@ -69,7 +69,7 @@ public class LLibrary {
     static {
         try {
             LLibraryPlugin.api = new CoreAPIHandler();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             LOGGER.error("Failed to load LLibrary Core API. Is it missing?", e);
         }
     }
