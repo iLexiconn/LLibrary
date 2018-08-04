@@ -7,9 +7,15 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.vecmath.Matrix4d;
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
 
 /**
  * An enhanced ModelRenderer
@@ -227,7 +233,7 @@ public class AdvancedModelRenderer extends ModelRenderer {
                 if (this.opacity != 1.0F) {
                     GlStateManager.enableBlend();
                     GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-                    GlStateManager.color(1F, 1F, 1F, opacity);
+                    GlStateManager.color(1F, 1F, 1F, this.opacity);
                 }
                 GlStateManager.callList(this.displayList);
                 if (this.opacity != 1.0F) {
@@ -370,7 +376,7 @@ public class AdvancedModelRenderer extends ModelRenderer {
      * Returns the position of the model renderer in world space.
      */
     public Vec3d getWorldPos(Entity entity) {
-        Vec3d modelPos = getModelPos(this, new Vec3d(rotationPointX/16, rotationPointY/16, rotationPointZ/16));
+        Vec3d modelPos = this.getModelPos(this, new Vec3d(this.rotationPointX /16, this.rotationPointY /16, this.rotationPointZ /16));
         double x = modelPos.x;
         double y = modelPos.y + 1.5f;
         double z = modelPos.z;
@@ -409,7 +415,7 @@ public class AdvancedModelRenderer extends ModelRenderer {
             boxRotateZ.transform(rendererPos);
             boxTranslate.transform(rendererPos);
 
-            return getModelPos(parent, new Vec3d(rendererPos.getX(), rendererPos.getY(), rendererPos.getZ()));
+            return this.getModelPos(parent, new Vec3d(rendererPos.getX(), rendererPos.getY(), rendererPos.getZ()));
         }
         return new Vec3d(rendererPos.getX(), rendererPos.getY(), rendererPos.getZ());
     }
