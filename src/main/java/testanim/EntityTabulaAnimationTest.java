@@ -14,13 +14,18 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
-public class EntityAnimationTest extends EntityLiving implements IAnimatedEntity {
+/**
+ * @author jglrxavpok
+ */
+public class EntityTabulaAnimationTest extends EntityLiving implements IAnimatedEntity {
     private int animationTick;
     private Animation currentAnimation = IAnimatedEntity.NO_ANIMATION;
+
+    // the names used must be the **exact** same than in Tabula
     private Animation TEST_ANIMATION = NamedAnimation.create("Looping animation", 20).setLooping(true);
     private Animation TEST_ANIMATION2 = NamedAnimation.create("Non-looping animation", 20);//.setLooping(false);
 
-    public EntityAnimationTest(World worldIn) {
+    public EntityTabulaAnimationTest(World worldIn) {
         super(worldIn);
         setSize(1f, 1f);
     }

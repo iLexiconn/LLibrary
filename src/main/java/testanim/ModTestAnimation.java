@@ -9,6 +9,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.EntityEntryBuilder;
 
+/**
+ * @author jglrxavpok
+ */
 @Mod(modid = "llibrary_animtest", name = "LLibrary Animation Test")
 @Mod.EventBusSubscriber
 public class ModTestAnimation {
@@ -24,10 +27,10 @@ public class ModTestAnimation {
     @SubscribeEvent
     public static void registerEntities(RegistryEvent.Register<EntityEntry> event) {
         EntityEntry entry = EntityEntryBuilder.create()
-                .entity(EntityAnimationTest.class)
+                .entity(EntityTabulaAnimationTest.class)
                 .name("entity_test")
                 .egg(0, 0xFFFFFF)
-                .factory(EntityAnimationTest::new)
+                .factory(EntityTabulaAnimationTest::new)
                 .id(new ResourceLocation("llibrary_animtest", "entity_test"), 0)
                 .tracker(64, 1, false)
                 .build();

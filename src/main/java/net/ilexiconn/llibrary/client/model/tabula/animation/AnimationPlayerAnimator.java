@@ -11,6 +11,11 @@ import net.ilexiconn.llibrary.server.animation.NamedAnimation;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 
+/**
+ * Tabula Model animator that can play Tabula animations. USE {@link NamedAnimation} !!
+ * @author jglrxavpok
+ * @param <T> the entity type, needs to be an {@link IAnimatedEntity}
+ */
 public class AnimationPlayerAnimator<T extends Entity&IAnimatedEntity> implements ITabulaModelAnimator<T> {
     @Override
     public void setRotationAngles(TabulaModel model, T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float rotationYaw, float rotationPitch, float scale) {
@@ -27,14 +32,34 @@ public class AnimationPlayerAnimator<T extends Entity&IAnimatedEntity> implement
 
         model.resetToDefaultPose();
 
+        preAnimationCallback(model, entity, limbSwing, limbSwingAmount, ageInTicks, rotationYaw, rotationPitch);
+
         animation.getComponents().entrySet().forEach(entry -> {
             for(TabulaAnimationComponentContainer component : entry.getValue()) {
-                applyComponent(component, model, model.getCubeByIdentifier(entry.getKey()), entity);
+                applyComponent(component, model.getCubeByIdentifier(entry.getKey()), entity);
             }
         });
+
+        postAnimationCallback(model, entity, limbSwing, limbSwingAmount, ageInTicks, rotationYaw, rotationPitch);
     }
 
-    private void applyComponent(TabulaAnimationComponentContainer component, TabulaModel model, AdvancedModelRenderer cube, T entity) {
+    /**
+     * Callback to use if you want to change model parts **before animating** but **after resetting to the default pose**. Uses the same argument as {@link #setRotationAngles(TabulaModel, Entity, float, float, float, float, float, float)}
+     */
+    protected void preAnimationCallback(TabulaModel model, T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float rotationYaw, float rotationPitch) { }
+
+    /**
+     * Callback to use if you want to change model parts **after animating**. Uses the same argument as {@link #setRotationAngles(TabulaModel, Entity, float, float, float, float, float, float)}
+     */
+    protected void postAnimationCallback(TabulaModel model, T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float rotationYaw, float rotationPitch) { }
+
+    /**
+     * Animates a given cube with the component
+     * @param component the animation component
+     * @param cube the cube to animate
+     * @param entity the animated entity
+     */
+    private void applyComponent(TabulaAnimationComponentContainer component, AdvancedModelRenderer cube, T entity) {
         int tick = entity.getAnimationTick();
         double progress = (tick - component.getStartKey()) / (double)component.getLength();
         progress = MathHelper.clamp(progress, 0.0, 1.0);
