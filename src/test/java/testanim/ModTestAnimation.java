@@ -16,7 +16,7 @@ import net.minecraftforge.fml.common.registry.EntityEntryBuilder;
 @Mod.EventBusSubscriber
 public class ModTestAnimation {
 
-    @SidedProxy(clientSide = "testanim.ClientProxy", serverSide = "testanim.TestProxy")
+    @SidedProxy(clientSide = "ClientProxy", serverSide = "TestProxy")
     private static TestProxy proxy;
 
     @Mod.EventHandler
