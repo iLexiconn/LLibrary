@@ -23,7 +23,7 @@ public class RenderEntityTest extends Render<EntityTabulaAnimationTest> {
         super(renderManager);
         try {
             model = new TabulaModel(TabulaModelHandler.INSTANCE.loadTabulaModel("assets/llibrary_animtest/models/testmodel.tbl"),
-                    new AnimationPlayerAnimator()); // the animation player animator is the only thing you have to add to animate your model
+                    new AnimationPlayerAnimator<EntityTabulaAnimationTest>()); // the animation player animator is the only thing you have to add to animate your model
         } catch (Exception e) {
             e.printStackTrace(); // don't do that, handle your errors properly. this is just a simple example
         }
