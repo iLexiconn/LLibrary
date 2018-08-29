@@ -42,9 +42,29 @@ public class AnimationPlayerAnimator<T extends Entity&IAnimatedEntity> implement
             cube.rotateAngleX += Math.toRadians(component.getRotationOffset()[0]);
             cube.rotateAngleY += Math.toRadians(component.getRotationOffset()[1]);
             cube.rotateAngleZ += Math.toRadians(component.getRotationOffset()[2]);
+
+            cube.rotationPointX += component.getPositionOffset()[0];
+            cube.rotationPointY += component.getPositionOffset()[1];
+            cube.rotationPointZ += component.getPositionOffset()[2];
+
+            cube.scaleX += component.getScaleOffset()[0];
+            cube.scaleY += component.getScaleOffset()[1];
+            cube.scaleZ += component.getScaleOffset()[2];
+
+            cube.opacity += component.getOpacityOffset();
         }
         cube.rotateAngleX += Math.toRadians(component.getRotationChange()[0] * progress);
         cube.rotateAngleY += Math.toRadians(component.getRotationChange()[1] * progress);
         cube.rotateAngleZ += Math.toRadians(component.getRotationChange()[2] * progress);
+
+        cube.rotationPointX += component.getPositionChange()[0] * progress;
+        cube.rotationPointY += component.getPositionChange()[1] * progress;
+        cube.rotationPointZ += component.getPositionChange()[2] * progress;
+
+        cube.scaleX += component.getScaleChange()[0] * progress;
+        cube.scaleY += component.getScaleChange()[1] * progress;
+        cube.scaleZ += component.getScaleChange()[2] * progress;
+
+        cube.opacity += component.getOpacityChange() * progress;
     }
 }
