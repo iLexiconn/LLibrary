@@ -8,8 +8,9 @@ public class Animation {
     @Deprecated
     private int id;
     private int duration;
+    private boolean looping;
 
-    private Animation(int duration) {
+    protected Animation(int duration) {
         this.duration = duration;
     }
 
@@ -49,5 +50,14 @@ public class Animation {
      */
     public int getDuration() {
         return this.duration;
+    }
+
+    public Animation setLooping(boolean loops) {
+        looping = loops;
+        return this;
+    }
+
+    public boolean doesLoops() {
+        return looping;
     }
 }
