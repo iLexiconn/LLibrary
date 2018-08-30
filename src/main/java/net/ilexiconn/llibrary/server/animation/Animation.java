@@ -68,7 +68,7 @@ public class Animation {
      * Returns whether this animation is supposed to loop
      * @return does the animation loop?
      */
-    public boolean doesLoops() {
+    public boolean doesLoop() {
         return looping;
     }
 }
