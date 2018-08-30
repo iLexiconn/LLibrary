@@ -1,5 +1,6 @@
 package net.ilexiconn.llibrary.client.model.tabula.animation;
 
+import net.ilexiconn.llibrary.LLibrary;
 import net.ilexiconn.llibrary.client.model.tabula.ITabulaModelAnimator;
 import net.ilexiconn.llibrary.client.model.tabula.TabulaModel;
 import net.ilexiconn.llibrary.client.model.tabula.container.TabulaAnimationComponentContainer;
@@ -8,7 +9,6 @@ import net.ilexiconn.llibrary.client.model.tools.AdvancedModelRenderer;
 import net.ilexiconn.llibrary.server.animation.Animation;
 import net.ilexiconn.llibrary.server.animation.IAnimatedEntity;
 import net.ilexiconn.llibrary.server.animation.NamedAnimation;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 
@@ -20,8 +20,7 @@ import net.minecraft.util.math.MathHelper;
 public class AnimationPlayerAnimator<T extends Entity&IAnimatedEntity> implements ITabulaModelAnimator<T> {
     @Override
     public void setRotationAngles(TabulaModel model, T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float rotationYaw, float rotationPitch, float scale) {
-        Minecraft mc = Minecraft.getMinecraft();
-        float partialTicks = mc.getRenderPartialTicks();
+        float partialTicks = LLibrary.PROXY.getPartialTicks();
         Animation anim = entity.getAnimation();
         TabulaAnimationContainer animation;
         if(anim instanceof NamedAnimation) {
@@ -33,9 +32,7 @@ public class AnimationPlayerAnimator<T extends Entity&IAnimatedEntity> implement
         if(animation == null)
             return;
 
-        model.resetToDefaultPose();
-
-        preAnimationCallback(model, entity, limbSwing, limbSwingAmount, ageInTicks, rotationYaw, rotationPitch, partialTicks);
+        prepareAnimation(model, entity, limbSwing, limbSwingAmount, ageInTicks, rotationYaw, rotationPitch, partialTicks);
 
         animation.getComponents().entrySet().forEach(entry -> {
             for(TabulaAnimationComponentContainer component : entry.getValue()) {
@@ -43,18 +40,18 @@ public class AnimationPlayerAnimator<T extends Entity&IAnimatedEntity> implement
             }
         });
 
-        postAnimationCallback(model, entity, limbSwing, limbSwingAmount, ageInTicks, rotationYaw, rotationPitch, partialTicks);
+        finishAnimation(model, entity, limbSwing, limbSwingAmount, ageInTicks, rotationYaw, rotationPitch, partialTicks);
     }
 
     /**
      * Callback to use if you want to change model parts **before animating** but **after resetting to the default pose**. Uses the same argument as {@link #setRotationAngles(TabulaModel, Entity, float, float, float, float, float, float)}
      */
-    protected void preAnimationCallback(TabulaModel model, T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float rotationYaw, float rotationPitch, float partialTicks) { }
+    protected void prepareAnimation(TabulaModel model, T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float rotationYaw, float rotationPitch, float partialTicks) { }
 
     /**
      * Callback to use if you want to change model parts **after animating**. Uses the same argument as {@link #setRotationAngles(TabulaModel, Entity, float, float, float, float, float, float)}
      */
-    protected void postAnimationCallback(TabulaModel model, T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float rotationYaw, float rotationPitch, float partialTicks) { }
+    protected void finishAnimation(TabulaModel model, T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float rotationYaw, float rotationPitch, float partialTicks) { }
 
     /**
      * Animates a given cube with the component
