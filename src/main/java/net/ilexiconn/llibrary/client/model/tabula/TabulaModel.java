@@ -1,5 +1,6 @@
 package net.ilexiconn.llibrary.client.model.tabula;
 
+import net.ilexiconn.llibrary.client.model.tabula.container.TabulaAnimationContainer;
 import net.ilexiconn.llibrary.client.model.tabula.container.TabulaCubeContainer;
 import net.ilexiconn.llibrary.client.model.tabula.container.TabulaCubeGroupContainer;
 import net.ilexiconn.llibrary.client.model.tabula.container.TabulaModelContainer;
@@ -26,6 +27,8 @@ public class TabulaModel extends AdvancedModelBase {
     protected ITabulaModelAnimator tabulaAnimator;
     protected Map<String, AdvancedModelRenderer> identifierMap = new HashMap<>();
     protected double[] scale;
+    protected List<TabulaAnimationContainer> animationDefinitions = new ArrayList<>();
+    protected Map<String, TabulaAnimationContainer> animations = new HashMap<>();
 
     public TabulaModel(TabulaModelContainer container, ITabulaModelAnimator tabulaAnimator) {
         this.textureWidth = container.getTextureWidth();
@@ -37,6 +40,10 @@ public class TabulaModel extends AdvancedModelBase {
         container.getCubeGroups().forEach(this::parseCubeGroup);
         this.updateDefaultPose();
         this.scale = container.getScale();
+        animationDefinitions.addAll(container.getAnimations());
+        animationDefinitions.forEach(definition -> {
+            animations.put(definition.getName(), definition);
+        });
     }
 
     public TabulaModel(TabulaModelContainer container) {
@@ -111,5 +118,9 @@ public class TabulaModel extends AdvancedModelBase {
 
     public Map<String, AdvancedModelRenderer> getCubes() {
         return this.cubes;
+    }
+
+    public TabulaAnimationContainer getAnimation(String name) {
+        return this.animations.get(name);
     }
 }

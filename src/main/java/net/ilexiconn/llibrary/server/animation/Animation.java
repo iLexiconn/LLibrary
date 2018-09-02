@@ -1,5 +1,7 @@
 package net.ilexiconn.llibrary.server.animation;
 
+import net.minecraft.entity.Entity;
+
 /**
  * @author iLexiconn
  * @since 1.0.0
@@ -8,8 +10,9 @@ public class Animation {
     @Deprecated
     private int id;
     private int duration;
+    private boolean looping;
 
-    private Animation(int duration) {
+    protected Animation(int duration) {
         this.duration = duration;
     }
 
@@ -49,5 +52,23 @@ public class Animation {
      */
     public int getDuration() {
         return this.duration;
+    }
+
+    /**
+     * Sets the 'looping' parameter of this animation. Used in {@link AnimationHandler#updateAnimations(Entity)}
+     * @param loops true if the animation should loop, false if not
+     * @return does the animation loop?
+     */
+    public Animation setLooping(boolean loops) {
+        looping = loops;
+        return this;
+    }
+
+    /**
+     * Returns whether this animation is supposed to loop
+     * @return does the animation loop?
+     */
+    public boolean doesLoop() {
+        return looping;
     }
 }
