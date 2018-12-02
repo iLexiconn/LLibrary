@@ -72,8 +72,8 @@ public class StructureBuilder extends StructureGenerator {
         if (front == top || front.getOpposite() == top) {
             throw new IllegalArgumentException("Invalid rotation: " + front + " & " + top);
         }
-        Vec3i frontVec = new Vec3i(front.getFrontOffsetX(), front.getFrontOffsetY(), front.getFrontOffsetZ());
-        Vec3i topVec = new Vec3i(-top.getFrontOffsetX(), -top.getFrontOffsetY(), -top.getFrontOffsetZ());
+        Vec3i frontVec = new Vec3i(front.getXOffset(), front.getYOffset(), front.getZOffset());
+        Vec3i topVec = new Vec3i(-top.getXOffset(), -top.getYOffset(), -top.getZOffset());
         Vec3i perpVec = topVec.crossProduct(frontVec);
         StructureBuilder copy = new StructureBuilder();
         copy.front = transform(this.front, frontVec, topVec, perpVec);

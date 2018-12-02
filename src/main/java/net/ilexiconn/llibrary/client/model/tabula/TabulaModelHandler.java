@@ -170,14 +170,14 @@ public enum TabulaModelHandler implements ICustomModelLoader, JsonDeserializatio
 
     @Override
     public boolean accepts(ResourceLocation modelLocation) {
-        return this.enabledDomains.contains(modelLocation.getResourceDomain()) && modelLocation.getResourcePath().endsWith(".tbl");
+        return this.enabledDomains.contains(modelLocation.getNamespace()) && modelLocation.getPath().endsWith(".tbl");
     }
 
     @Override
     public IModel loadModel(ResourceLocation modelLocation) throws IOException {
-        String modelPath = modelLocation.getResourcePath();
+        String modelPath = modelLocation.getPath();
         modelPath = modelPath.substring(0, modelPath.lastIndexOf('.')) + ".json";
-        IResource resource = this.manager.getResource(new ResourceLocation(modelLocation.getResourceDomain(), modelPath));
+        IResource resource = this.manager.getResource(new ResourceLocation(modelLocation.getNamespace(), modelPath));
         InputStreamReader jsonStream = new InputStreamReader(resource.getInputStream());
         JsonElement json = this.parser.parse(jsonStream);
         jsonStream.close();

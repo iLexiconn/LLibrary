@@ -46,10 +46,10 @@ import java.util.Map;
         certificateFingerprint = "${fingerprint}",
         guiFactory = "net.ilexiconn.llibrary.client.gui.LLibraryGUIFactory",
         updateJSON = "https://gist.githubusercontent.com/gegy1000/a6639456aeb8edd92cbf7cbfcf9d65d9/raw/llibrary_updates.json",
-        dependencies = "required-after:forge@[14.23.3.2655,)"
+        dependencies = "required-after:forge@[14.23.5.2772,)"
 )
 public class LLibrary {
-    public static final String VERSION = "1.7.15";
+    public static final String VERSION = "1.7.16";
 
     public static final Logger LOGGER = LogManager.getLogger("LLibrary");
     @SidedProxy(serverSide = "net.ilexiconn.llibrary.server.ServerProxy", clientSide = "net.ilexiconn.llibrary.client.ClientProxy")
