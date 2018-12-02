@@ -56,7 +56,7 @@ public class ModUtils {
     public static String getModNameForItem(Item item) {
         ResourceLocation resourceLocation = ITEM_REGISTRY.getKey(item);
         if (resourceLocation != null) {
-            String modID = resourceLocation.getResourceDomain();
+            String modID = resourceLocation.getNamespace();
             String resourceID = modID.toLowerCase(Locale.ENGLISH);
             return ModUtils.getNameForResourceID(resourceID);
         }
@@ -97,7 +97,7 @@ public class ModUtils {
     public static ModContainer getContainerForItem(Item item) {
         ResourceLocation resourceLocation = ITEM_REGISTRY.getKey(item);
         if (resourceLocation != null) {
-            String modID = resourceLocation.getResourceDomain();
+            String modID = resourceLocation.getNamespace();
             String resourceID = modID.toLowerCase(Locale.ENGLISH);
             return ModUtils.getContainerForResourceID(resourceID);
         }
