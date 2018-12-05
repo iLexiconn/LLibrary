@@ -41,7 +41,7 @@ def minecraft_mappings = "stable_39"
 def core_plugin = "net.ilexiconn.llibrary.server.core.plugin.LLibraryPlugin"
 
 minecraft {
-  version = "1.12.2-14.23.5.2772"
+  version = "1.12.2-14.23.5.2795"
   runDir = "minecraft"
   mappings = minecraft_mappings
   makeObfSourceJar = false
@@ -64,8 +64,8 @@ repositories {
 }
 
 dependencies {
-  compile "net.ilexiconn:llibrary-core:1.0.8-1.12.2"
-  embedMod "net.ilexiconn:llibrary-core:1.0.8-1.12.2"
+  compile "net.ilexiconn:llibrary-core:1.0.9-1.12.2"
+  embedMod "net.ilexiconn:llibrary-core:1.0.9-1.12.2"
 }
 
 processResources {
@@ -129,27 +129,29 @@ artifacts {
   archives javadocJar
 }
 
-publishing {
-  publications {
-    mavenJava(MavenPublication) {
-      groupId project.group
-      artifactId project.archivesBaseName
-      version project.version
+if (secret) {
+  publishing {
+    publications {
+      mavenJava(MavenPublication) {
+        groupId project.group
+        artifactId project.archivesBaseName
+        version project.version
 
-      from components.java
+        from components.java
 
-      artifact devJar { classifier "dev" }
-      artifact sourcesJar { classifier "sources" }
-      artifact javadocJar { classifier "javadoc" }
-    }
-  }
-  repositories {
-    maven {
-      credentials {
-        username secret?.username ?: ""
-        password secret?.password ?: ""
+        artifact devJar { classifier "dev" }
+        artifact sourcesJar { classifier "sources" }
+        artifact javadocJar { classifier "javadoc" }
       }
-      url secret?.url ?: ""
+    }
+    repositories {
+      maven {
+        credentials {
+          username secret?.username ?: ""
+          password secret?.password ?: ""
+        }
+        url secret?.url ?: ""
+      }
     }
   }
 }
