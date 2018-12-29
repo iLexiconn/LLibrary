@@ -2,6 +2,7 @@ package net.ilexiconn.llibrary.client.model.tabula.baked;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -36,7 +37,7 @@ public class BakedTabulaModel implements IPerspectiveAwareModel {
 
     @Override
     public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
-        return this.quads;
+        return side == null ? this.quads : Lists.newArrayList();
     }
 
     @Override
