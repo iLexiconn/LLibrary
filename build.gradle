@@ -64,8 +64,8 @@ repositories {
 }
 
 dependencies {
-  compile "net.ilexiconn:llibrary-core:1.0.10-1.12.2"
-  embedMod "net.ilexiconn:llibrary-core:1.0.10-1.12.2"
+  deobfCompile "net.ilexiconn:llibrary-core:1.0.11-1.12.2"
+  embedMod "net.ilexiconn:llibrary-core:1.0.11-1.12.2"
 }
 
 processResources {
