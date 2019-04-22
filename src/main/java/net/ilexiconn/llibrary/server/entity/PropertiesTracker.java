@@ -14,7 +14,7 @@ public class PropertiesTracker<T extends Entity> {
     private boolean trackerReady = false;
     private boolean trackerDataChanged = false;
 
-    private NBTTagCompound prevTrackerData = new NBTTagCompound();
+    private SensitiveTagCompound trackingTag = new SensitiveTagCompound();
 
     private T entity;
     private EntityProperties properties;
@@ -42,12 +42,11 @@ public class PropertiesTracker<T extends Entity> {
         if (this.trackingUpdateTimer >= trackingUpdateFrequency) {
             if (!this.trackerDataChanged) {
                 this.trackingUpdateTimer = 0;
-                NBTTagCompound currentTrackingData = new NBTTagCompound();
-                this.properties.saveTrackingSensitiveData(currentTrackingData);
-                if (!currentTrackingData.equals(this.prevTrackerData)) {
+                this.properties.saveTrackingSensitiveData(trackingTag);
+                if (trackingTag.hasChanged()) {
                     this.trackerDataChanged = true;
+                    trackingTag.reset();
                 }
-                this.prevTrackerData = currentTrackingData;
             }
         }
     }

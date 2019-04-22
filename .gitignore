@@ -12,3 +12,4 @@ llibrary.mappings
 .project
 .settings/
 *.launch
+/bin/
