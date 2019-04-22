@@ -8,3 +8,7 @@ out/
 *.iws
 secret.json
 llibrary.mappings
+.classpath
+.project
+.settings/
+*.launch
