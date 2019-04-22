@@ -1,7 +1,6 @@
 package net.ilexiconn.llibrary.server.entity;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NBTTagCompound;
 
 /**
  * @param <T> the entity type
@@ -17,7 +16,7 @@ public class PropertiesTracker<T extends Entity> {
     private SensitiveTagCompound trackingTag = new SensitiveTagCompound();
 
     private T entity;
-    private EntityProperties properties;
+    private EntityProperties<T> properties;
 
     public PropertiesTracker(T entity, EntityProperties<T> properties) {
         this.entity = entity;
@@ -62,15 +61,7 @@ public class PropertiesTracker<T extends Entity> {
      * @return true if the data has changed and the tracking timer is ready and resets the tracking timer
      */
     public boolean isTrackerReady() {
-        boolean ready = this.properties.getTrackingTime() >= 0 && this.trackerReady && this.trackerDataChanged;
-        if (ready) {
-            this.trackingTimer = 0;
-            this.trackerReady = false;
-            this.trackerDataChanged = false;
-            this.trackingTag.reset();
-            return true;
-        }
-        return false;
+        return this.properties.getTrackingTime() >= 0 && this.trackerReady && this.trackerDataChanged;
     }
 
     /**
@@ -83,7 +74,7 @@ public class PropertiesTracker<T extends Entity> {
     /**
      * @return the properties
      */
-    public EntityProperties getProperties() {
+    public EntityProperties<T> getProperties() {
         return this.properties;
     }
 
@@ -100,4 +91,21 @@ public class PropertiesTracker<T extends Entity> {
     public void removeTracker() {
         this.properties.getTrackers().remove(this);
     }
+
+    /**
+     * @return The sensitive tag compound that keeps track of when things change.
+     */
+	public SensitiveTagCompound getTrackingTag() {
+		return trackingTag;
+	}
+
+	/**
+	 * Resets check states back to defaults (false or 0).
+	 */
+	public void reset() {
+        this.trackingTimer = 0;
+        this.trackerReady = false;
+        this.trackerDataChanged = false;
+        this.trackingTag.reset();
+	}
 }
