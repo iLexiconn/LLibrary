@@ -42,10 +42,9 @@ public class PropertiesTracker<T extends Entity> {
         if (this.trackingUpdateTimer >= trackingUpdateFrequency) {
             if (!this.trackerDataChanged) {
                 this.trackingUpdateTimer = 0;
-                this.properties.saveTrackingSensitiveData(trackingTag);
-                if (trackingTag.hasChanged()) {
+                if (!this.trackingTag.hasChanged()) this.properties.saveTrackingSensitiveData(trackingTag);
+                if (this.trackingTag.hasChanged()) {
                     this.trackerDataChanged = true;
-                    trackingTag.reset();
                 }
             }
         }
@@ -68,6 +67,7 @@ public class PropertiesTracker<T extends Entity> {
             this.trackingTimer = 0;
             this.trackerReady = false;
             this.trackerDataChanged = false;
+            this.trackingTag.reset();
             return true;
         }
         return false;
