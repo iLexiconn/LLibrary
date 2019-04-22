@@ -104,7 +104,7 @@ public enum ServerEventHandler {
         List<PropertiesTracker<?>> trackers = EntityPropertiesHandler.INSTANCE.getEntityTrackers(player);
         if (trackers != null && trackers.size() > 0) {
             boolean hasPlayer = false;
-            for (PropertiesTracker tracker : trackers) {
+            for (PropertiesTracker<?> tracker : trackers) {
                 if (hasPlayer = tracker.getEntity() == player) {
                     break;
                 }
@@ -116,8 +116,9 @@ public enum ServerEventHandler {
                 tracker.updateTracker();
                 if (tracker.isTrackerReady()) {
                     tracker.onSync();
-                    PropertiesMessage message = new PropertiesMessage(tracker.getProperties(), tracker.getEntity());
+                    PropertiesMessage message = new PropertiesMessage(tracker, tracker.getEntity());
                     LLibrary.NETWORK_WRAPPER.sendTo(message, player);
+                    tracker.reset();
                 }
             }
         }

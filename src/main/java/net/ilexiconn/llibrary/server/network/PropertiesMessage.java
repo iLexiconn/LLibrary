@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import net.ilexiconn.llibrary.server.capability.EntityDataHandler;
 import net.ilexiconn.llibrary.server.capability.IEntityData;
 import net.ilexiconn.llibrary.server.entity.EntityProperties;
+import net.ilexiconn.llibrary.server.entity.PropertiesTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,11 +24,9 @@ public class PropertiesMessage extends AbstractMessage<PropertiesMessage> {
 
     }
 
-    public PropertiesMessage(EntityProperties<?> properties, Entity entity) {
-        this.propertyID = properties.getID();
-        NBTTagCompound compound = new NBTTagCompound();
-        properties.saveTrackingSensitiveData(compound);
-        this.compound = compound;
+    public PropertiesMessage(PropertiesTracker<?> tracker, Entity entity) {
+        this.propertyID = tracker.getProperties().getID();
+        this.compound = tracker.getTrackingTag().getChangedCopy();
         this.entityID = entity.getEntityId();
     }
 
@@ -38,7 +37,7 @@ public class PropertiesMessage extends AbstractMessage<PropertiesMessage> {
         if (entity != null) {
             IEntityData<?> extendedProperties = EntityDataHandler.INSTANCE.getEntityData(entity, message.propertyID);
             if (extendedProperties instanceof EntityProperties) {
-                EntityProperties<?> properties = (EntityProperties) extendedProperties;
+                EntityProperties<?> properties = (EntityProperties<?>) extendedProperties;
                 properties.loadTrackingSensitiveData(message.compound);
                 properties.onSync();
             }
