@@ -43,7 +43,7 @@ public class ClientProxy extends ServerProxy {
     @Override
     public void onPreInit() {
         super.onPreInit();
-        ListenableFuture<String> patronFuture = WebUtils.readURLAsync("https://gist.githubusercontent.com/gegy1000/7a6d39cf7a2c1f794ffb9037e8146adc/raw/llibrary_patrons.json");
+        ListenableFuture<String> patronFuture = WebUtils.readURLAsync("https://gist.githubusercontent.com/gegy/7a6d39cf7a2c1f794ffb9037e8146adc/raw/llibrary_patrons.json");
         patronFuture.addListener(() -> {
             try {
                 String result = patronFuture.get();
