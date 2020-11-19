@@ -4,7 +4,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import net.ilexiconn.llibrary.LLibrary;
-import net.minecraft.crash.CrashReport;
 import org.apache.commons.io.IOUtils;
 
 import javax.imageio.ImageIO;
@@ -60,7 +59,7 @@ public class WebUtils {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new URL(url).openStream()))) {
             return IOUtils.toString(reader);
         } catch (IOException e) {
-            LLibrary.LOGGER.error(CrashReport.makeCrashReport(e, "Failed to receive data from URL: " + url).getCompleteReport());
+            LLibrary.LOGGER.error("Failed to receive data from URL: {}", url, e);
             return null;
         }
     }
@@ -75,7 +74,7 @@ public class WebUtils {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new URL(url).openStream()))) {
             return IOUtils.readLines(reader);
         } catch (IOException e) {
-            LLibrary.LOGGER.error(CrashReport.makeCrashReport(e, "Failed to receive data from URL: " + url).getCompleteReport());
+            LLibrary.LOGGER.error("Failed to receive data from URL: {}", url, e);
             return null;
         }
     }
@@ -90,7 +89,7 @@ public class WebUtils {
         try (BufferedInputStream in = new BufferedInputStream(new URL(url).openStream())){
             return ImageIO.read(in);
         } catch (IOException e) {
-            LLibrary.LOGGER.error(CrashReport.makeCrashReport(e, "Failed to receive data from URL: " + url).getCompleteReport());
+            LLibrary.LOGGER.error("Failed to receive data from URL: {}", url, e);
             return null;
         }
     }

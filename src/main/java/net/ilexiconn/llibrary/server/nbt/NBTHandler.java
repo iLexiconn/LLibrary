@@ -3,7 +3,6 @@ package net.ilexiconn.llibrary.server.nbt;
 import net.ilexiconn.llibrary.LLibrary;
 import net.ilexiconn.llibrary.server.nbt.parser.INBTParser;
 import net.ilexiconn.llibrary.server.nbt.parser.NBTParsers;
-import net.minecraft.crash.CrashReport;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -99,7 +98,7 @@ public enum NBTHandler {
         try {
             value = (V) field.get(object);
         } catch (Exception e) {
-            LLibrary.LOGGER.fatal(CrashReport.makeCrashReport(e.getCause(), e.getCause().getLocalizedMessage()).getCompleteReport());
+            LLibrary.LOGGER.fatal(e);
             return null;
         }
         return this.writeToNBT((Class<V>) field.getType(), value);
@@ -110,7 +109,7 @@ public enum NBTHandler {
         try {
             value = (V) getter.invoke(object);
         } catch (Exception e) {
-            LLibrary.LOGGER.fatal(CrashReport.makeCrashReport(e.getCause(), e.getCause().getLocalizedMessage()).getCompleteReport());
+            LLibrary.LOGGER.fatal(e);
             return null;
         }
         return this.writeToNBT((Class<V>) getter.getReturnType(), value);
@@ -139,7 +138,7 @@ public enum NBTHandler {
         try {
             field.set(object, value);
         } catch (Exception e) {
-            LLibrary.LOGGER.fatal(CrashReport.makeCrashReport(e.getCause(), e.getCause().getLocalizedMessage()).getCompleteReport());
+            LLibrary.LOGGER.fatal(e);
         }
     }
 
@@ -152,7 +151,7 @@ public enum NBTHandler {
         try {
             setter.invoke(object, value);
         } catch (Exception e) {
-            LLibrary.LOGGER.fatal(CrashReport.makeCrashReport(e.getCause(), e.getCause().getLocalizedMessage()).getCompleteReport());
+            LLibrary.LOGGER.fatal(e);
         }
     }
 
@@ -188,7 +187,7 @@ public enum NBTHandler {
         } while ((methodClass = methodClass.getSuperclass()) != null);
         if (method == null) {
             String message = clazz.getName() + "." + name + "(" + (param.length == 0 ? "" : param[0] == null ? "null" : param[0].getName()) + ")";
-            LLibrary.LOGGER.fatal(CrashReport.makeCrashReport(new RuntimeException(message), message));
+            LLibrary.LOGGER.fatal(new RuntimeException(message));
             return null;
         }
         method.setAccessible(true);

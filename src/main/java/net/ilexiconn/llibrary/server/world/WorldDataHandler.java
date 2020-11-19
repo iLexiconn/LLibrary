@@ -1,7 +1,6 @@
 package net.ilexiconn.llibrary.server.world;
 
 import net.ilexiconn.llibrary.LLibrary;
-import net.minecraft.crash.CrashReport;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -44,7 +43,7 @@ public enum WorldDataHandler {
                         dataAdapter.loadNBTData(CompressedStreamTools.readCompressed(inputStream), world);
                         inputStream.close();
                     } catch (IOException e) {
-                        LLibrary.LOGGER.error(CrashReport.makeCrashReport(e, "Failed to read file " + dataFile.getName()).getCompleteReport());
+                        LLibrary.LOGGER.error("Failed to read file", e);
                     }
                 }
             }
@@ -59,7 +58,7 @@ public enum WorldDataHandler {
                     try {
                         dataFile.createNewFile();
                     } catch (IOException e) {
-                        LLibrary.LOGGER.error(CrashReport.makeCrashReport(e, "Failed to create file " + dataFile.getName()).getCompleteReport());
+                        LLibrary.LOGGER.error("Failed to create file {}", dataFile.getName(), e);
                         continue;
                     }
 
@@ -71,7 +70,7 @@ public enum WorldDataHandler {
                         CompressedStreamTools.writeCompressed(compound, outputStream);
                         outputStream.close();
                     } catch (IOException e) {
-                        LLibrary.LOGGER.error(CrashReport.makeCrashReport(e, "Failed to write file " + dataFile.getName()).getCompleteReport());
+                        LLibrary.LOGGER.error("Failed to write file {}", dataFile.getName(), e);
                     }
                 }
             }

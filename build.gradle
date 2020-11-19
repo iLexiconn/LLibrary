@@ -161,7 +161,7 @@ build.dependsOn signJar
 curseforge {
   tasks.curseforge.dependsOn build
 
-  def url = "https://gist.githubusercontent.com/gegy1000/a6639456aeb8edd92cbf7cbfcf9d65d9/raw/llibrary_updates.json".toURL()
+  def url = "https://gist.githubusercontent.com/Gegy/a6639456aeb8edd92cbf7cbfcf9d65d9/raw/llibrary_updates.json".toURL()
   def versions = new JsonSlurper().parseText url.text
 
   if (secret) {
