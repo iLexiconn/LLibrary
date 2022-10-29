@@ -1,0 +1,8 @@
+gui.llibrary.update=Atualizar
+gui.llibrary.update.title=Atualizações de mod
+gui.llibrary.currentVersion=Versão Atual
+gui.llibrary.latestVersion=Última versão
+gui.llibrary.updated.1=Tudo em dia!
+gui.llibrary.updated.2=LLibrary não encontrou nenhum mod desatualizado.
+
+snackbar.llibrary.updates_found=LLibrary encontrou mods desatualizados!
